@@ -4,5 +4,9 @@
     <string name="app_name">StuderaEffektivt</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="button_timer">Timer</string>
+    <string name="title_timer">Timer</string>
+    <string name="title_home">Studera Effektivt</string>
+    <string name="title_activity_timer">TimerActivity</string>
 
 </resources>
