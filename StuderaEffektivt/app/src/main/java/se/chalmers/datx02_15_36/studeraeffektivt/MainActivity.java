@@ -39,7 +39,8 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /** Called when the user clicks the Timer button */
+    /** Go to TimerActivity.
+     * Called when the user clicks the Timer button. */
     public void goToTimer(View view) {
         Intent intent = new Intent(this, TimerActivity.class);
         startActivity(intent);

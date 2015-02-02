@@ -1,17 +1,26 @@
 package se.chalmers.datx02_15_36.studeraeffektivt;
 
+import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 
 public class TimerActivity extends ActionBarActivity {
+
+    private CountDownTimer cdt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+
+        cdt = getTimer(10000, 1000);
+
     }
 
 
@@ -36,4 +45,33 @@ public class TimerActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Set the timer.
+     */
+    public CountDownTimer getTimer(long millisInFuture, long countDownInterval){
+
+        cdt = new CountDownTimer(millisInFuture, countDownInterval) {
+
+            public void onTick(long millisUntilFinished) {
+                TextView textView = (TextView) findViewById(R.id.text_timer);
+                textView.setText("seconds remaining: " + millisUntilFinished / 1000);
+            }
+        }
+
+    }
+
+    /**
+     * Start the timer.
+     * Called when the user clicks the Start Timer button.
+     */
+    public void startTimer(View view) {
+        cdt.start();
+    }
+
+    /**
+     * Stop the timer.
+     */
+
+
 }
