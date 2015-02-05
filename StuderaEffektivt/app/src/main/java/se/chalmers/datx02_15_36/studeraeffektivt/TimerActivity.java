@@ -57,7 +57,13 @@ public class TimerActivity extends ActionBarActivity {
                 TextView textView = (TextView) findViewById(R.id.text_timer);
                 textView.setText("seconds remaining: " + millisUntilFinished / 1000);
             }
-        }
+
+            @Override
+            public void onFinish() {
+                //TODO
+            }
+        };
+        return cdt;
 
     }
 
