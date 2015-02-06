@@ -60,7 +60,8 @@ public class TimerActivity extends ActionBarActivity {
 
             @Override
             public void onFinish() {
-                //TODO
+                TextView textView = (TextView) findViewById(R.id.text_timer);
+                textView.setText("KLART");
             }
         };
         return cdt;
