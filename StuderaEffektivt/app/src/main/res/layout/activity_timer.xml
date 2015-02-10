@@ -2,17 +2,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
-    <TextView android:id="@+id/text_timer"
-        android:text="@string/hello_world"
+
+
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Time left"
+        android:id="@+id/text_timer"
+        android:layout_weight="0.10" />
+
+
 
     <Button android:id="@+id/button_start_timer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_start_timer"
-        android:onClick="startTimer"/>
+        android:onClick="startTimer"
+        android:layout_weight="0.10" />
+
+    <TimePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timePicker"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.10" />
 
 </LinearLayout>
