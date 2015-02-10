@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,7 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 
 public class CalendarActivity extends ActionBarActivity {
@@ -106,10 +110,10 @@ public class CalendarActivity extends ActionBarActivity {
 
     public void addEventManually(View view) {
 
-        int year = 2015;
-        int month = 2;
-        int day = 12;
-        //TODO get date from phone
+        Date date = getDate();
+        int year = getYear(date);
+        int month = getMonth(date);
+        int day = getDay(date);
 
 
         calIntent = new Intent(Intent.ACTION_INSERT);
@@ -147,16 +151,16 @@ public class CalendarActivity extends ActionBarActivity {
     public void addEventAuto(View view) {
 
         TextView textView = (TextView) findViewById(R.id.calendar_text);
-        textView.setText("Kalender");
+        textView.setText(getYear(getDate()) + " " + getMonth(getDate()) + " " + getDay(getDate()));
+
         /*
         int year = 2015;
         int month = 2;
         int day = 10;
-        //TODO get date from phone
         // add hour and min and sec?
-        */
 
-        /*
+
+
         long calID = 3;
         long startMillis = 0;
         long endMillis = 0;
@@ -182,6 +186,7 @@ public class CalendarActivity extends ActionBarActivity {
         //
         // ... do something with event ID
         */
+
     }
 
     static Uri asSyncAdapter(Uri uri, String account, String accountType) {
@@ -190,6 +195,58 @@ public class CalendarActivity extends ActionBarActivity {
                 .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account)
                 .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, accountType).build();
     }
+
+    private Date getDate() {
+        return Calendar.getInstance().getTime();
+    }
+
+    private int getYear(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.YEAR);
+    }
+
+    private int getMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.MONTH) + 1;
+    }
+
+    private int getDay(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.DATE);
+    }
+
+    private Date futureDate(Date date, int daysFromNow) {
+        Calendar cal = Calendar.getInstance();
+        int year = getYear(date);
+        int month = getMonth(date);
+        int day = getDay(date);
+
+        if (month == 2) {
+            int newYear = year + (month + (day + daysFromNow) / 28) / 12;
+            int newMonth = (month + (day + daysFromNow) / 28) % 28;
+            int newDay = (day + daysFromNow) % 28;
+            cal.set(newYear, newMonth, newDay);
+
+        } else if (month == 1 || month == 3 || month == 5 || month == 7 ||month == 8 || month == 10 || month == 12) {
+            int newYear = year + (month + (day + daysFromNow) / 31) / 12;
+            int newMonth = (month + (day + daysFromNow) / 31) % 31;
+            int newDay = (day + daysFromNow) % 31;
+            cal.set(newYear, newMonth, newDay);
+
+        } else {
+            int newYear = year + (month + (day + daysFromNow) / 30) / 12;
+            int newMonth = (month + (day + daysFromNow) / 30) % 30;
+            int newDay = (day + daysFromNow) % 30;
+            cal.set(newYear, newMonth, newDay);
+        }
+        return cal.getTime();
+        //TODO fixa så det funkar för skottår också + test
+    }
+
+
 
 
 
