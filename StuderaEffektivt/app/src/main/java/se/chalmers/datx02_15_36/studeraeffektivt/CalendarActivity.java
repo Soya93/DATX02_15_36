@@ -157,10 +157,11 @@ public class CalendarActivity extends ActionBarActivity {
         int year = 2015;
         int month = 2;
         int day = 10;
+        //TODO get date from phone
         // add hour and min and sec?
+        */
 
-
-
+        /*
         long calID = 3;
         long startMillis = 0;
         long endMillis = 0;
@@ -186,7 +187,6 @@ public class CalendarActivity extends ActionBarActivity {
         //
         // ... do something with event ID
         */
-
     }
 
     static Uri asSyncAdapter(Uri uri, String account, String accountType) {
@@ -248,6 +248,11 @@ public class CalendarActivity extends ActionBarActivity {
 
 
 
-
+    /** Go to Calendar View.
+     * Called when the user clicks the CalendarView button. */
+    public void goToCalendarView(View view){
+        Intent intent = new Intent(this, CalendarView.class);
+        startActivity(intent);
+    }
 
 }
