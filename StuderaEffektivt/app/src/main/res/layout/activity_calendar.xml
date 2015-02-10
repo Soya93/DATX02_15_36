@@ -7,6 +7,27 @@
     tools:context="se.chalmers.datx02_15_36.studeraeffektivt.CalendarActivity">
 
     <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/calendar_text" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Event Auto"
+        android:id="@+id/button_add_event_a"
+        android:layout_below="@+id/calendar_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="85dp"
+        android:onClick="addEvenAuto" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Event Manually"
+        android:id="@+id/button_add_event_m"
+        android:layout_below="@+id/button_add_event_a"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="39dp"
+        android:onClick="addEventManually" />
 
 </RelativeLayout>

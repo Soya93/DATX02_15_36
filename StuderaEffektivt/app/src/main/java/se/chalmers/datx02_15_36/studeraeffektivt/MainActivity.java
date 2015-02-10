@@ -45,4 +45,12 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, TimerActivity.class);
         startActivity(intent);
     }
+
+
+    /** Go to CalendarActivity.
+     * Called when the user clicks the Calendar button. */
+    public void goToCalendar(View view) {
+        Intent intent = new Intent(this, CalendarActivity.class);
+        startActivity(intent);
+    }
 }
