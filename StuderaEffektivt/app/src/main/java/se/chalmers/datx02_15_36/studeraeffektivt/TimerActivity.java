@@ -1,27 +1,50 @@
 package se.chalmers.datx02_15_36.studeraeffektivt;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 
 public class TimerActivity extends ActionBarActivity {
 
     private CountDownTimer cdt;
-
+    private TimePicker t1;
+    private long seconds;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+        t1 = (TimePicker) findViewById(R.id.timePicker);
+        t1.setIs24HourView(true);
+       t1.clearFocus();
 
-        cdt = getTimer(10000, 1000);
 
-    }
+        t1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener(){
+                                                @Override
+                                                public void onTimeChanged(    TimePicker view,    int hourOfDay,    int minute){
+                                                    seconds=minute*60+hourOfDay*3600;
+                                                    getTimer(seconds* 1000, 100);
+
+                                                }
+                                            }
+        );
+
+
+
+
+
+
+
+}
 
 
     @Override
@@ -46,6 +69,7 @@ public class TimerActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     /**
      * Set the timer.
      */
@@ -56,6 +80,10 @@ public class TimerActivity extends ActionBarActivity {
             public void onTick(long millisUntilFinished) {
                 TextView textView = (TextView) findViewById(R.id.text_timer);
                 textView.setText("seconds remaining: " + millisUntilFinished / 1000);
+                int hour = (int) (millisUntilFinished/1000 / 3600);
+                int minute = ((int) ((millisUntilFinished/1000 % 3600))+60)/60;
+                t1.setCurrentHour(hour);
+                t1.setCurrentMinute(minute);
             }
 
             @Override
@@ -73,6 +101,7 @@ public class TimerActivity extends ActionBarActivity {
      * Called when the user clicks the Start Timer button.
      */
     public void startTimer(View view) {
+        t1.setEnabled(false);
         cdt.start();
     }
 
