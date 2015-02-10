@@ -143,7 +143,6 @@ public class CalendarActivity extends ActionBarActivity {
 
     }
 
-
     public void addEventAuto(View view) {
 
         TextView textView = (TextView) findViewById(R.id.calendar_text);
@@ -191,6 +190,11 @@ public class CalendarActivity extends ActionBarActivity {
                 .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, accountType).build();
     }
 
-
+    /** Go to Calendar View.
+     * Called when the user clicks the CalendarView button. */
+    public void goToCalendarView(View view){
+        Intent intent = new Intent(this, CalendarView.class);
+        startActivity(intent);
+    }
 
 }

@@ -53,4 +53,5 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, CalendarActivity.class);
         startActivity(intent);
     }
+
 }

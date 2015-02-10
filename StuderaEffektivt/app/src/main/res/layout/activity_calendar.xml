@@ -30,4 +30,14 @@
         android:layout_marginTop="39dp"
         android:onClick="addEventManually" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="See calendar view"
+        android:id="@+id/button_calendarview"
+        android:layout_marginTop="62dp"
+        android:onClick="goToCalendarView"
+        android:layout_below="@+id/button_add_event_m"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
