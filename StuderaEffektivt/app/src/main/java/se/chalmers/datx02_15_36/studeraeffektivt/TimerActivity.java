@@ -9,42 +9,54 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+
 
 
 public class TimerActivity extends ActionBarActivity {
 
     private CountDownTimer cdt;
     private TimePicker t1;
+    private Button startButton;
+    private Button pauseButton;
     private long seconds;
+    private boolean isRunning=false;
+    private long totalSeconds;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
         t1 = (TimePicker) findViewById(R.id.timePicker);
+        pauseButton=(Button) findViewById(R.id.button_pause);
+        startButton = (Button) findViewById(R.id.button_start_timer);
         t1.setIs24HourView(true);
-       t1.clearFocus();
+        t1.clearFocus();
+           setTime();
+
+        getTimer(5000, 100);
 
 
+    }
+    private void setTime(){
         t1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener(){
-                                                @Override
-                                                public void onTimeChanged(    TimePicker view,    int hourOfDay,    int minute){
-                                                    seconds=minute*60+hourOfDay*3600;
-                                                    getTimer(seconds* 1000, 100);
+                                        @Override
+                                        public void onTimeChanged(    TimePicker view,    int hourOfDay,    int minute){
+                                            seconds=minute*60+hourOfDay*3600;
+                                            getTimer(seconds* 1000, 100);
 
-                                                }
-                                            }
+                                        }
+                                    }
         );
 
+    }
 
 
 
 
-
-
-}
 
 
     @Override
@@ -78,18 +90,23 @@ public class TimerActivity extends ActionBarActivity {
         cdt = new CountDownTimer(millisInFuture, countDownInterval) {
 
             public void onTick(long millisUntilFinished) {
-                TextView textView = (TextView) findViewById(R.id.text_timer);
-                textView.setText("seconds remaining: " + millisUntilFinished / 1000);
-                int hour = (int) (millisUntilFinished/1000 / 3600);
-                int minute = ((int) ((millisUntilFinished/1000 % 3600))+60)/60;
-                t1.setCurrentHour(hour);
-                t1.setCurrentMinute(minute);
+                if(isRunning) {
+                    TextView textView = (TextView) findViewById(R.id.text_timer);
+                    textView.setText("seconds remaining: " + millisUntilFinished / 1000);
+                    int hour = (int) (millisUntilFinished / 1000 / 3600);
+                    int minute = ((int) ((millisUntilFinished / 1000 % 3600)) + 60) / 60;
+                    t1.setCurrentHour(hour);
+                    t1.setCurrentMinute(minute);
+                    seconds = millisUntilFinished;
+                    totalSeconds+=1;
+                }
             }
 
             @Override
             public void onFinish() {
-                TextView textView = (TextView) findViewById(R.id.text_timer);
-                textView.setText("KLART");
+               setTime();
+               startButton.setEnabled(true);
+               isRunning=false;
             }
         };
         return cdt;
@@ -101,8 +118,24 @@ public class TimerActivity extends ActionBarActivity {
      * Called when the user clicks the Start Timer button.
      */
     public void startTimer(View view) {
-        t1.setEnabled(false);
-        cdt.start();
+        if(!pauseButton.isEnabled()&& startButton.isEnabled()){
+            getTimer(seconds,100);
+            cdt.start();
+            startButton.setEnabled(false);
+            pauseButton.setEnabled(true);
+        }
+        else if (startButton.isEnabled()&& pauseButton.isEnabled()){
+            isRunning=true;
+            cdt.start();
+            startButton.setEnabled(false);
+            pauseButton.setEnabled(true);
+        }
+    }
+
+    public void pauseTimer(View view) {
+        cdt.cancel();
+        startButton.setEnabled(true);
+        pauseButton.setEnabled(false);
     }
 
     /**
