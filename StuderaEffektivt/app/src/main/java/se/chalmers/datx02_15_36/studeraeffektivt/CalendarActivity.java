@@ -29,43 +29,6 @@ public class CalendarActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-
-    /*
-
-        // Run query
-
-        Cursor cur = null;
-        ContentResolver cr = getContentResolver();
-        uri = CalendarContract.Calendars.CONTENT_URI;
-        String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
-                + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
-                + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))";
-        String[] selectionArgs = new String[] {"eewestman@gmail.com", "com.google",
-                "eewestman@gmail.com"};
-        // Submit the query and get a Cursor object back.
-        cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
-
-
-        while (cur.moveToNext()) {
-            long calID = 0;
-            String displayName = null;
-            String accountName = null;
-            String ownerName = null;
-
-            // Get the field values
-            calID = cur.getLong(PROJECTION_ID_INDEX);
-            displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
-            accountName = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX);
-            ownerName = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX);
-
-            // Do something with the values...
-
-
-
-        }
-    */
-
-
     }
 
 
@@ -108,7 +71,46 @@ public class CalendarActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    //TODO fix gmail adress
+    public void readCalendar(View view) {
+        TextView outputText = (TextView) findViewById(R.id.readCalOutput);
+        outputText.setText("Hej!!");
+        // Run query
+        Cursor cur = null;
+        ContentResolver cr = getContentResolver();
+        Uri uri = CalendarContract.Calendars.CONTENT_URI;
 
+        String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
+                + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
+                + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))";
+
+        String[] selectionArgs = new String[] {"eewestman@gmail.com", "com.google",
+                "eewestman@gmail.com"};
+        // Submit the query and get a Cursor object back.
+        cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
+
+        // Use the cursor to step through the returned records
+        while (cur.moveToNext()) {
+            long calID = 0;
+            String displayName = null;
+            String accountName = null;
+            String ownerName = null;
+
+            // Get the field values
+            calID = cur.getLong(PROJECTION_ID_INDEX);
+            displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
+            accountName = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX);
+            ownerName = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX);
+
+
+           outputText.setText("calID: " + calID + " Name: " + displayName +
+            " Account: " + accountName + " Owner: " + ownerName);
+
+
+        }
+
+    }
+        //TODO fix so this works
     public void addEventManually(View view) {
 
         Date date = getDate();
@@ -123,7 +125,7 @@ public class CalendarActivity extends ActionBarActivity {
 
 
 
-        /*
+
         calIntent = new Intent(Intent.ACTION_INSERT);
         calIntent.setType("vnd.android.cursor.item/event");
         calIntent.putExtra(CalendarContract.Events.TITLE, "TEST!!!!!");
@@ -136,7 +138,7 @@ public class CalendarActivity extends ActionBarActivity {
                 calDate.getTimeInMillis());
         calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
                 calDate.getTimeInMillis());
-                */
+
 
         startActivity(calIntent);
         //asSyncAdapter(uri, "eewestman@gmail.com", "com.google");
@@ -148,21 +150,21 @@ public class CalendarActivity extends ActionBarActivity {
 
     }
 
-
+        //TODO fix this!
     public void addEventAuto(View view) {
 
         TextView textView = (TextView) findViewById(R.id.calendar_text);
-        textView.setText(getYear(getDate()) + " " + getMonth(getDate()) + " " + getDay(getDate()));
+        textView.setText(getYear(getDate()) + " " + getMonth(getDate())  + " " + getDay(getDate()));
 
-        /*
+
         int year = 2015;
         int month = 2;
         int day = 10;
         //TODO get date from phone
         // add hour and min and sec?
-        */
 
-        /*
+
+
         long calID = 3;
         long startMillis = 0;
         long endMillis = 0;
@@ -187,7 +189,7 @@ public class CalendarActivity extends ActionBarActivity {
         long eventID = Long.parseLong(uri.getLastPathSegment());
         //
         // ... do something with event ID
-        */
+
     }
 
     static Uri asSyncAdapter(Uri uri, String account, String accountType) {
@@ -210,7 +212,7 @@ public class CalendarActivity extends ActionBarActivity {
     private int getMonth(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        return cal.get(Calendar.MONTH) + 1;
+        return cal.get(Calendar.MONTH);
     }
 
     private int getDay(Date date) {
@@ -244,7 +246,9 @@ public class CalendarActivity extends ActionBarActivity {
             cal.set(newYear, newMonth, newDay);
         }
         return cal.getTime();
-        //TODO fixa så det funkar för skottår också + test
+        //TODO fixa så det funkar för skottår också
+        //TODO testa
+
     }
 
 

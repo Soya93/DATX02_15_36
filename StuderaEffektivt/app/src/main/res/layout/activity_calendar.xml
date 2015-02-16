@@ -35,9 +35,29 @@
         android:layout_height="wrap_content"
         android:text="See calendar view"
         android:id="@+id/button_calendarview"
-        android:layout_marginTop="62dp"
         android:onClick="goToCalendarView"
         android:layout_below="@+id/button_add_event_m"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="46dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Read Calendar"
+        android:id="@+id/button_read_calendar"
+        android:layout_marginTop="46dp"
+        android:onClick="readCalendar"
+        android:layout_below="@+id/button_calendarview"
+        android:layout_alignLeft="@+id/button_add_event_a"
+        android:layout_alignStart="@+id/button_add_event_a" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/readCalOutput"
+        android:layout_below="@+id/button_read_calendar"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
