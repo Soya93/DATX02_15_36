@@ -24,7 +24,7 @@ public class TimerActivity extends ActionBarActivity {
     private CountDownTimer cdt;
     private TimePicker t1;
     private Button startButton;
-    private Button pauseButton;
+    private Button resetButton;
     private String usersTimelog= "usersTimelog";
     private long seconds;
     private long timePassed ;
@@ -56,7 +56,7 @@ public class TimerActivity extends ActionBarActivity {
                                         @Override
                                         public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                                             seconds = minute * 60 + hourOfDay * 3600;
-                                            getTimer(seconds * 1000, 100);
+                                            getTimer(seconds*1000,100);
 
                                         }
                                     }
@@ -65,7 +65,7 @@ public class TimerActivity extends ActionBarActivity {
     }
      private void instantiate () {
         t1 = (TimePicker) findViewById(R.id.timePicker);
-        pauseButton=(Button) findViewById(R.id.button_pause);
+        resetButton=(Button) findViewById(R.id.button_reset);
         startButton = (Button) findViewById(R.id.button_start_timer);
         timePassedText = (TextView) findViewById(R.id.textView);
 
@@ -136,11 +136,8 @@ public class TimerActivity extends ActionBarActivity {
 
             @Override
             public void onFinish() {
-
-
                 editor.putLong("Alex", timePassed / 10);
                 editor.commit();
-
                 long apa = timeLog.getLong("Alex",-1);
                 timePassedText.setText(Long.toString(apa));
                 setTime();
@@ -157,25 +154,30 @@ public class TimerActivity extends ActionBarActivity {
      */
     public void startTimer(View view) {
         t1.setEnabled(false);
-        if(!pauseButton.isEnabled()&& startButton.isEnabled()){
+        if(startButton.getText().equals("Pause")){
+
+            startButton.setText("Start");
+            cdt.cancel();
+            startButton.setEnabled(true);
+            resetButton.setEnabled(true);
             getTimer(seconds,100);
-            cdt.start();
-            startButton.setEnabled(false);
-            pauseButton.setEnabled(true);
         }
-        else if (startButton.isEnabled()&& pauseButton.isEnabled()){
+        else if (startButton.getText().equals("Start")){
 
             cdt.start();
-            startButton.setEnabled(false);
-            pauseButton.setEnabled(true);
+            startButton.setText("Pause");
+            resetButton.setEnabled(true);
 
         }
     }
 
-    public void pauseTimer(View view) {
+    public void resetTimer(View view) {
         cdt.cancel();
+        startButton.setText("Start");
         startButton.setEnabled(true);
-        pauseButton.setEnabled(false);
+        resetButton.setEnabled(false);
+        t1.setEnabled(true);
+        setTime();
     }
 @Override
     public void onSaveInstanceState(Bundle outState ){
