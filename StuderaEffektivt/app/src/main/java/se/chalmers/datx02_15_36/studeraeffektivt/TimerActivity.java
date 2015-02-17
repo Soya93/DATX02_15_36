@@ -2,6 +2,8 @@ package se.chalmers.datx02_15_36.studeraeffektivt;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -23,36 +25,53 @@ public class TimerActivity extends ActionBarActivity {
     private TimePicker t1;
     private Button startButton;
     private Button pauseButton;
+    private String usersTimelog= "usersTimelog";
     private long seconds;
-    private boolean isRunning=false;
-    private long totalSeconds;
+    private long timePassed ;
+    private SharedPreferences timeLog;
+    private TextView timePassedText;
+    private Editor editor;
+      ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
-        t1 = (TimePicker) findViewById(R.id.timePicker);
-        pauseButton=(Button) findViewById(R.id.button_pause);
-        startButton = (Button) findViewById(R.id.button_start_timer);
+        instantiate();
         t1.setIs24HourView(true);
         t1.clearFocus();
-           setTime();
 
-        getTimer(5000, 100);
 
+
+            setTime();
+
+
+            getTimer(5000, 100);
+
+        timeLog= getSharedPreferences(usersTimelog, MODE_PRIVATE);
+       editor = timeLog.edit();
 
     }
-    private void setTime(){
-        t1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener(){
+    private void setTime() {
+        t1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
                                         @Override
-                                        public void onTimeChanged(    TimePicker view,    int hourOfDay,    int minute){
-                                            seconds=minute*60+hourOfDay*3600;
-                                            getTimer(seconds* 1000, 100);
+                                        public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                                            seconds = minute * 60 + hourOfDay * 3600;
+                                            getTimer(seconds * 1000, 100);
 
                                         }
                                     }
         );
 
     }
+     private void instantiate () {
+        t1 = (TimePicker) findViewById(R.id.timePicker);
+        pauseButton=(Button) findViewById(R.id.button_pause);
+        startButton = (Button) findViewById(R.id.button_start_timer);
+        timePassedText = (TextView) findViewById(R.id.textView);
+
+    }
+
+
 
 
 
@@ -90,23 +109,42 @@ public class TimerActivity extends ActionBarActivity {
         cdt = new CountDownTimer(millisInFuture, countDownInterval) {
 
             public void onTick(long millisUntilFinished) {
-                if(isRunning) {
+
                     TextView textView = (TextView) findViewById(R.id.text_timer);
                     textView.setText("seconds remaining: " + millisUntilFinished / 1000);
-                    int hour = (int) (millisUntilFinished / 1000 / 3600);
-                    int minute = ((int) ((millisUntilFinished / 1000 % 3600)) + 60) / 60;
-                    t1.setCurrentHour(hour);
-                    t1.setCurrentMinute(minute);
+                    setTimePicker(millisUntilFinished);
+
                     seconds = millisUntilFinished;
-                    totalSeconds+=1;
-                }
+                    timePassed+=1;
+                timePassedText.setText(Long.toString(timePassed));
+
             }
+     private int secondsToHour(long millisUntilFinished){
+         return (int) (millisUntilFinished / 1000 / 3600);
+     }
+
+     private int secondsToMin(long millisUntilFinished){
+         return ((int) ((millisUntilFinished / 1000 % 3600)) + 60) / 60;
+     }
+
+     private void setTimePicker(long millisUntilFinished){
+         int hour = secondsToHour(millisUntilFinished);
+         int minute = secondsToMin(millisUntilFinished);
+         t1.setCurrentHour(hour);
+         t1.setCurrentMinute(minute);
+     }
 
             @Override
             public void onFinish() {
-               setTime();
-               startButton.setEnabled(true);
-               isRunning=false;
+
+
+                editor.putLong("Alex", timePassed / 10);
+                editor.commit();
+
+                long apa = timeLog.getLong("Alex",-1);
+                timePassedText.setText(Long.toString(apa));
+                setTime();
+                startButton.setEnabled(true);
             }
         };
         return cdt;
@@ -118,6 +156,7 @@ public class TimerActivity extends ActionBarActivity {
      * Called when the user clicks the Start Timer button.
      */
     public void startTimer(View view) {
+        t1.setEnabled(false);
         if(!pauseButton.isEnabled()&& startButton.isEnabled()){
             getTimer(seconds,100);
             cdt.start();
@@ -125,10 +164,11 @@ public class TimerActivity extends ActionBarActivity {
             pauseButton.setEnabled(true);
         }
         else if (startButton.isEnabled()&& pauseButton.isEnabled()){
-            isRunning=true;
+
             cdt.start();
             startButton.setEnabled(false);
             pauseButton.setEnabled(true);
+
         }
     }
 
@@ -137,10 +177,12 @@ public class TimerActivity extends ActionBarActivity {
         startButton.setEnabled(true);
         pauseButton.setEnabled(false);
     }
+@Override
+    public void onSaveInstanceState(Bundle outState ){
+        outState.putLong("Alex", timePassed);
+        super.onSaveInstanceState(outState);
+    }
 
-    /**
-     * Stop the timer.
-     */
 
 
 }
