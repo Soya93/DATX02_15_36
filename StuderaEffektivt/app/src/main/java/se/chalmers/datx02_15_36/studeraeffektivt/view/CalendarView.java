@@ -1,10 +1,8 @@
-package se.chalmers.datx02_15_36.studeraeffektivt;
+package se.chalmers.datx02_15_36.studeraeffektivt.view;
 
-        import android.app.Activity;
         import android.graphics.RectF;
         import android.os.Bundle;
         import android.support.v7.app.ActionBarActivity;
-        import android.util.TypedValue;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.widget.Toast;
@@ -12,9 +10,10 @@ package se.chalmers.datx02_15_36.studeraeffektivt;
         import com.alamkanak.weekview.WeekView;
         import com.alamkanak.weekview.WeekViewEvent;
 
-        import java.util.ArrayList;
         import java.util.Calendar;
         import java.util.List;
+
+        import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
         import static se.chalmers.datx02_15_36.studeraeffektivt.R.id.weekView;
 
@@ -221,7 +220,9 @@ public class CalendarView extends ActionBarActivity implements WeekView.MonthCha
 
 
     private String getEventTitle(Calendar time) {
-        return String.format("Event of %02d:%02d %s/%d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.MONTH)+1, time.get(Calendar.DAY_OF_MONTH));
+        return String.format("Event of %02d:%02d %s/%d",
+                time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE),
+                time.get(Calendar.MONTH)+1, time.get(Calendar.DAY_OF_MONTH));
     }
 
     @Override

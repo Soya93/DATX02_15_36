@@ -1,4 +1,4 @@
-package se.chalmers.datx02_15_36.studeraeffektivt;
+package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.Intent;
 import android.os.CountDownTimer;
@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 
 public class TimerActivity extends ActionBarActivity {

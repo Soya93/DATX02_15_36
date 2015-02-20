@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,15 +21,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TimerActivity"
+            android:name=".activity.TimerActivity"
             android:label="@string/title_activity_timer" >
         </activity>
         <activity
-            android:name=".CalendarActivity"
+            android:name=".activity.CalendarActivity"
             android:label="@string/title_activity_calendar" >
         </activity>
         <activity
-            android:name=".CalendarView"
+            android:name=".view.CalendarView"
             android:label="@string/title_activity_calendar_view" >
         </activity>
     </application>

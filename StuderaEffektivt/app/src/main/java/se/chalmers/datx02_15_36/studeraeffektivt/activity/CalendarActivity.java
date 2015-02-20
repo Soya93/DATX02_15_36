@@ -1,4 +1,4 @@
-package se.chalmers.datx02_15_36.studeraeffektivt;
+package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -18,6 +18,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+
+import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 
 public class CalendarActivity extends ActionBarActivity {
