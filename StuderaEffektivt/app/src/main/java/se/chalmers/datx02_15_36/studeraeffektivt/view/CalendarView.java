@@ -17,7 +17,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
 
         import static se.chalmers.datx02_15_36.studeraeffektivt.R.id.weekView;
 
-
+//TODO: delete this class
 public class CalendarView extends ActionBarActivity implements WeekView.MonthChangeListener,
         WeekView.EventClickListener, WeekView.EventLongPressListener {
 
