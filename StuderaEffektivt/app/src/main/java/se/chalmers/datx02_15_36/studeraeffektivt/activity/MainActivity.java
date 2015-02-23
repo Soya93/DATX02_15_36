@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import se.chalmers.datx02_15_36.studeraeffektivt.CounterUpTimer;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 
@@ -55,20 +56,24 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
-<<<<<<< HEAD:StuderaEffektivt/app/src/main/java/se/chalmers/datx02_15_36/studeraeffektivt/activity/MainActivity.java
-
     /** Go to CalendarActivity.
      * Called when the user clicks the Calendar button. */
     public void goToCalendar(View view) {
         Intent intent = new Intent(this, CalendarActivity.class);
         startActivity(intent);
     }
-=======
    public void goToCountUp(View view){
        Intent intent = new Intent(this, CounterUpTimer.class);
        startActivity(intent);
    }
 
->>>>>>> timer:StuderaEffektivt/app/src/main/java/se/chalmers/datx02_15_36/studeraeffektivt/MainActivity.java
+    /** Go to TipActivity.
+     * Called when the user clicks the Tip button. */
+    public void goToTip(View view){
+        Intent intent = new Intent(this, TipActivity.class);
+        startActivity(intent);
+    }
+
+
 
 }

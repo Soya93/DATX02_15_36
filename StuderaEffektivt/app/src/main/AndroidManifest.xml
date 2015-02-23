@@ -20,15 +20,8 @@
             </intent-filter>
         </activity>
         <activity
-<<<<<<< HEAD
             android:name=".activity.TimerActivity"
-            android:label="@string/title_activity_timer" >
-=======
-            android:name=".TimerActivity" >
-        </activity>
-        <activity
-            android:name=".CounterUpTimer" >
->>>>>>> timer
+            android:label="TimerActivity" >
         </activity>
         <activity
             android:name=".activity.CalendarActivity"
