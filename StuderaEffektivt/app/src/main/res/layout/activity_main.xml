@@ -19,4 +19,12 @@
         android:layout_gravity="center_horizontal"
         android:onClick="goToCalendar" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CountUpTimer"
+        android:id="@+id/button"
+        android:onClick="goToCountUp"
+        android:layout_gravity="center_horizontal" />
+
 </LinearLayout>
