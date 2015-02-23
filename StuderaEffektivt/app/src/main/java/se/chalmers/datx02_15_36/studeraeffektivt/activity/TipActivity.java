@@ -10,6 +10,9 @@ import android.widget.Button;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
+/**
+ * A class displaying the available tip of studytechniques.
+ */
 public class TipActivity extends ActionBarActivity {
 
     @Override
@@ -46,7 +49,7 @@ public class TipActivity extends ActionBarActivity {
     public void goToTip(View view) {
         Button b = (Button)view;
         String tipName = b.getText().toString();
-        Intent intent = new Intent(this, TipViewActivity.class);
+        Intent intent = new Intent(this, TipDetailedInfoActivity.class);
         intent.putExtra("tipName", tipName);
         startActivity(intent);
     }

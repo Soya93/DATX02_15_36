@@ -36,7 +36,7 @@
             android:label="@string/title_activity_tips" >
         </activity>
         <activity
-            android:name=".activity.TipViewActivity"
+            android:name=".activity.TipDetailedInfoActivity"
             android:label="@string/title_activity_tip_view" >
         </activity>
     </application>

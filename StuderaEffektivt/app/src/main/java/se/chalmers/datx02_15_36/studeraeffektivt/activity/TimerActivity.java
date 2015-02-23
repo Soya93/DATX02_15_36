@@ -26,7 +26,7 @@ public class TimerActivity extends ActionBarActivity {
     private long chosenSeconds;
     private long seconds;
     private long timePassed;
-   private DbAccess dbAccess;
+   //private DbAccess dbAccess;
 
 
     @Override
@@ -39,7 +39,7 @@ public class TimerActivity extends ActionBarActivity {
         t1.clearFocus();
         setTime();
         getTimer(5000, 100);
-        DbAccess dbAccess = new DbAccess(this);
+        //DbAccess dbAccess = new DbAccess(this);
 
 
 
