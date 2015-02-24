@@ -1,23 +1,27 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
@@ -26,30 +30,55 @@ public class CalendarActivity extends ActionBarActivity {
 
     private Intent calIntent;
     private Uri uri;
+    private Calendar cal;
+    private Calendar beginDay;
+    private Calendar endDay;
+    private int year;
+    private int month;
+    private int day;
+    private long startMillis;
+    private long endMillis;
+    private Cursor cur;
+    private ContentResolver cr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+
+        uri = CalendarContract.Calendars.CONTENT_URI;
+        cal = Calendar.getInstance();
+
+        //get todays date
+        year = cal.get(Calendar.YEAR);
+        month = cal.get(Calendar.MONTH);
+        day = cal.get(Calendar.DATE);
+
+        //set start day
+        beginDay = Calendar.getInstance();
+        beginDay.set(year, month, day);
+        startMillis = beginDay.getTimeInMillis();
+        //set end day
+        endDay = Calendar.getInstance();
+        endDay.setTime(futureDate(beginDay.getTime(), 1));
+        endMillis = endDay.getTimeInMillis();
+
+        cur = null;
+        cr = getContentResolver();
     }
 
-
-
-    // Projection array. Creating indices for this array instead of doing
-    // dynamic lookups improves performance.
-    public static final String[] EVENT_PROJECTION = new String[] {
-            CalendarContract.Calendars._ID,                           // 0
-            CalendarContract.Calendars.ACCOUNT_NAME,                  // 1
-            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 2
-            CalendarContract.Calendars.OWNER_ACCOUNT                  // 3
+    //Events in a calendar
+    private static final String DEBUG_TAG = "MyActivity";
+    public static final String[] INSTANCE_PROJECTION = new String[] {
+            CalendarContract.Instances.EVENT_ID,      // 0
+            CalendarContract.Instances.BEGIN,         // 1
+            CalendarContract.Instances.TITLE          // 2
     };
 
     // The indices for the projection array above.
-    private static final int PROJECTION_ID_INDEX = 0;
-    private static final int PROJECTION_ACCOUNT_NAME_INDEX = 1;
-    private static final int PROJECTION_DISPLAY_NAME_INDEX = 2;
-    private static final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
-
+    private static final int PROJECTION_EVENT_ID_INDEX = 0;
+    private static final int PROJECTION_BEGIN_INDEX = 1;
+    private static final int PROJECTION_TITLE_INDEX = 2;
 
 
     @Override
@@ -73,60 +102,60 @@ public class CalendarActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    //TODO fix gmail adress
+
+
     public void readCalendar(View view) {
-        TextView outputText = (TextView) findViewById(R.id.readCalOutput);
-        outputText.setText("Hej!!");
-        // Run query
-        Cursor cur = null;
-        ContentResolver cr = getContentResolver();
-        Uri uri = CalendarContract.Calendars.CONTENT_URI;
+        readEvent();
+    }
 
-        String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
-                + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
-                + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))";
+    private Date futureDate(Date date, int daysFromNow) {
 
-        String[] selectionArgs = new String[] {"eewestman@gmail.com", "com.google",
-                "eewestman@gmail.com"};
-        // Submit the query and get a Cursor object back.
-        cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
+        if (month == 2) {
+            int newYear = year + (month + (day + daysFromNow) / 28) / 12;
+            int newMonth = (month + (day + daysFromNow) / 28) % 28;
+            int newDay = (day + daysFromNow) % 28;
+            cal.set(newYear, newMonth, newDay);
 
-        // Use the cursor to step through the returned records
-        while (cur.moveToNext()) {
-            long calID = 0;
-            String displayName = null;
-            String accountName = null;
-            String ownerName = null;
+        } else if (month == 1 || month == 3 || month == 5 || month == 7 ||month == 8 || month == 10 || month == 12) {
+            int newYear = year + (month + (day + daysFromNow) / 31) / 12;
+            int newMonth = (month + (day + daysFromNow) / 31) % 31;
+            int newDay = (day + daysFromNow) % 31;
+            cal.set(newYear, newMonth, newDay);
 
-            // Get the field values
-            calID = cur.getLong(PROJECTION_ID_INDEX);
-            displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
-            accountName = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX);
-            ownerName = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX);
-
-
-           outputText.setText("calID: " + calID + " Name: " + displayName +
-            " Account: " + accountName + " Owner: " + ownerName);
-
-
+        } else {
+            int newYear = year + (month + (day + daysFromNow) / 30) / 12;
+            int newMonth = (month + (day + daysFromNow) / 30) % 30;
+            int newDay = (day + daysFromNow) % 30;
+            cal.set(newYear, newMonth, newDay);
         }
+        return cal.getTime();
+        //TODO fixa så det funkar för skottår också
+        //TODO testa
 
     }
-        //TODO fix so this works
+
+
+    public void readEvent() {
+        Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
+                .buildUpon();
+        ContentUris.appendId(eventsUriBuilder, startMillis);
+        ContentUris.appendId(eventsUriBuilder, endMillis);
+        Uri eventsUri = eventsUriBuilder.build();
+        cur = this.getContentResolver().query(eventsUri, INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+
+        while (cur.moveToNext()) {
+
+            Log.d("title: ", cur.getString(PROJECTION_TITLE_INDEX));
+
+        }
+        TextView outputText = (TextView) findViewById(R.id.readCalOutput);
+        outputText.setText(cur.getString(PROJECTION_TITLE_INDEX) +"");
+    }
+
     public void addEventManually(View view) {
-
-        Date date = getDate();
-        int year = getYear(date);
-        int month = getMonth(date);
-        int day = getDay(date);
-
 
         calIntent = new Intent(Intent.ACTION_INSERT);
         calIntent.setData(CalendarContract.Events.CONTENT_URI);
-        //startActivity(calIntent);
-
-
-
 
         calIntent = new Intent(Intent.ACTION_INSERT);
         calIntent.setType("vnd.android.cursor.item/event");
@@ -141,22 +170,17 @@ public class CalendarActivity extends ActionBarActivity {
         calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
                 calDate.getTimeInMillis());
 
-
         startActivity(calIntent);
-        //asSyncAdapter(uri, "eewestman@gmail.com", "com.google");
-
-
-
-
-        //TODO insert toast message saying tha tan event has successfully been added to the calender
-
     }
 
-        //TODO fix this!
+
+
+
+    //TODO fix this!
     public void addEventAuto(View view) {
 
         TextView textView = (TextView) findViewById(R.id.calendar_text);
-        textView.setText(getYear(getDate()) + " " + getMonth(getDate())  + " " + getDay(getDate()));
+        textView.setText(year + " " + month  + " " + day);
 
 
         int year = 2015;
@@ -199,67 +223,6 @@ public class CalendarActivity extends ActionBarActivity {
                 .appendQueryParameter(android.provider.CalendarContract.CALLER_IS_SYNCADAPTER,"true")
                 .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account)
                 .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, accountType).build();
-    }
-
-    private Date getDate() {
-        return Calendar.getInstance().getTime();
-    }
-
-    private int getYear(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal.get(Calendar.YEAR);
-    }
-
-    private int getMonth(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal.get(Calendar.MONTH);
-    }
-
-    private int getDay(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal.get(Calendar.DATE);
-    }
-
-    private Date futureDate(Date date, int daysFromNow) {
-        Calendar cal = Calendar.getInstance();
-        int year = getYear(date);
-        int month = getMonth(date);
-        int day = getDay(date);
-
-        if (month == 2) {
-            int newYear = year + (month + (day + daysFromNow) / 28) / 12;
-            int newMonth = (month + (day + daysFromNow) / 28) % 28;
-            int newDay = (day + daysFromNow) % 28;
-            cal.set(newYear, newMonth, newDay);
-
-        } else if (month == 1 || month == 3 || month == 5 || month == 7 ||month == 8 || month == 10 || month == 12) {
-            int newYear = year + (month + (day + daysFromNow) / 31) / 12;
-            int newMonth = (month + (day + daysFromNow) / 31) % 31;
-            int newDay = (day + daysFromNow) % 31;
-            cal.set(newYear, newMonth, newDay);
-
-        } else {
-            int newYear = year + (month + (day + daysFromNow) / 30) / 12;
-            int newMonth = (month + (day + daysFromNow) / 30) % 30;
-            int newDay = (day + daysFromNow) % 30;
-            cal.set(newYear, newMonth, newDay);
-        }
-        return cal.getTime();
-        //TODO fixa så det funkar för skottår också
-        //TODO testa
-
-    }
-
-
-
-    /** Go to Calendar View.
-     * Called when the user clicks the CalendarView button. */
-    public void goToCalendarView(View view){
-        Intent intent = new Intent(this, CalendarView.class);
-        startActivity(intent);
     }
 
 }
