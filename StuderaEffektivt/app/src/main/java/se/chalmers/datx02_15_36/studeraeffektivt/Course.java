@@ -6,9 +6,10 @@ import java.util.List;
  * Created by jesper on 2015-02-24.
  */
 public class Course {
-    public List<Class> classList;
+    public List<StudySession> studySessionList;
     public String name;
     public String courseCode;
+    public int id;
 
     public Course(String name) {
         this.name = name;
@@ -19,17 +20,17 @@ public class Course {
         this.courseCode = courseCode;
     }
 
-    public void addClass(Class c) {
-        if (!classList.contains(c)) {
-            classList.add(c);
+    public void addClass(StudySession c) {
+        if (!studySessionList.contains(c)) {
+            studySessionList.add(c);
         }
     }
 
-    public void deleteClass(Class c) {
-        classList.remove(c);
+    public void deleteClass(StudySession c) {
+        studySessionList.remove(c);
     }
 
-    public String getame(){
+    public String geName(){
         return name;
     }
 

@@ -14,6 +14,10 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Tillfällig kod för testning
+        Intent intent = new Intent(this, CourseActivity.class);
+        startActivity(intent);
+        //Slut på tillfällig kod för testning
     }
 
 

@@ -12,6 +12,6 @@
     <string name="title_timer">Timer</string>
     <string name="title_activity_timer">TimerActivity</string>
     <string name="button_start_timer">Start Timer</string>
-
+    <string name="title_activity_course">CourseActivity</string>
 
 </resources>
