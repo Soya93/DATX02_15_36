@@ -169,25 +169,24 @@ public class CalendarActivity extends ActionBarActivity {
     }
 
     public void addEventManually(View view) {
-
         calIntent = new Intent(Intent.ACTION_INSERT);
         calIntent.setData(CalendarContract.Events.CONTENT_URI);
-
         calIntent = new Intent(Intent.ACTION_INSERT);
-        calIntent.setType("vnd.android.cursor.item/event");
-        calIntent.putExtra(CalendarContract.Events.TITLE, "TEST!!!!!");
-        calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, "6207");
-        calIntent.putExtra(CalendarContract.Events.DESCRIPTION, "Bra jobbat!!! :)");
-        Log.i("cal", CalendarContract.Calendars.CALENDAR_DISPLAY_NAME);
-
         GregorianCalendar calDate = new GregorianCalendar(year, month, day);
-        calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
-        calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                calDate.getTimeInMillis());
-        calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
-                calDate.getTimeInMillis());
+        addEventManually(calDate.getTimeInMillis(),calDate.getTimeInMillis(), true, "TEST!!!!!", "6207",  "Bra jobbat!!! :)");
+    }
 
+    public void addEventManually(Long startTime, Long endTime, Boolean allDay, String title, String location, String description){
+
+        calIntent.setType("vnd.android.cursor.item/event");
+        calIntent.putExtra(CalendarContract.Events.TITLE, title);
+        calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, location);
+        calIntent.putExtra(CalendarContract.Events.DESCRIPTION, description);
+        calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, allDay);
+        calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
+        calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
         startActivity(calIntent);
+        //Log.i("cal", CalendarContract.Calendars.CALENDAR_DISPLAY_NAME);
     }
 
 
@@ -199,8 +198,6 @@ public class CalendarActivity extends ActionBarActivity {
         getCalendars();
 
         TextView textView = (TextView) findViewById(R.id.calendar_text);
-
-
 
         long calID = 3;
 
@@ -223,16 +220,7 @@ public class CalendarActivity extends ActionBarActivity {
 
     }
 
-    static Uri asSyncAdapter(Uri uri, String account, String accountType) {
-        return uri.buildUpon()
-                .appendQueryParameter(android.provider.CalendarContract.CALLER_IS_SYNCADAPTER,"true")
-                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account)
-                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, accountType).build();
-    }
-
     public void getCalendars() {
-        // Run query
-
         cr = getContentResolver();
         uri = CalendarContract.Calendars.CONTENT_URI;
         String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
@@ -250,6 +238,13 @@ public class CalendarActivity extends ActionBarActivity {
             i++;
 
         }
+    }
+
+    static Uri asSyncAdapter(Uri uri, String account, String accountType) {
+        return uri.buildUpon()
+                .appendQueryParameter(android.provider.CalendarContract.CALLER_IS_SYNCADAPTER,"true")
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account)
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, accountType).build();
     }
 
 }
