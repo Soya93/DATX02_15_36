@@ -15,39 +15,39 @@
         android:layout_height="wrap_content"
         android:text="Add Event Auto"
         android:id="@+id/button_add_event_a"
+        android:onClick="addEventAuto"
+        android:layout_below="@+id/readCalOutput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="49dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add study session"
+        android:id="@+id/button_add_study_session"
+        android:onClick="addStudySession"
         android:layout_below="@+id/calendar_text"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="85dp"
-        android:onClick="addEventAuto" />
+        android:layout_marginTop="41dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Event Manually"
-        android:id="@+id/button_add_event_m"
-        android:layout_below="@+id/button_add_event_a"
+        android:text="Add repetition session"
+        android:id="@+id/button_add_repetition_session"
+        android:onClick="addRepetitionSession"
+        android:layout_below="@+id/button_add_study_session"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="39dp"
-        android:onClick="addEventManually" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="See calendar view"
-        android:id="@+id/button_calendarview"
-        android:onClick="goToCalendarView"
-        android:layout_below="@+id/button_add_event_m"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="46dp" />
+        android:layout_marginTop="47dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Read Calendar"
         android:id="@+id/button_read_calendar"
-        android:layout_marginTop="46dp"
+        android:layout_marginTop="41dp"
         android:onClick="readCalendar"
-        android:layout_below="@+id/button_calendarview"
+        android:layout_below="@+id/button_add_repetition_session"
         android:layout_alignLeft="@+id/button_add_event_a"
         android:layout_alignStart="@+id/button_add_event_a" />
 

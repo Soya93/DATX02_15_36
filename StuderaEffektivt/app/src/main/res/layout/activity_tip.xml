@@ -12,40 +12,47 @@
         android:layout_height="wrap_content"
         android:text="Tip 1"
         android:id="@+id/tip1"
+        android:visibility="visible"
+        android:enabled="true"
+        android:onClick="goToTip"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_marginTop="70dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="visible"
-        android:enabled="true"
-        android:onClick="goToTip" />
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tip 2"
         android:id="@+id/tip2"
-        android:layout_below="@+id/tip1"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:visibility="visible"
         android:enabled="true"
-        android:onClick="goToTip" />
+        android:onClick="goToTip"
+        android:layout_below="@+id/tip1"
+        android:layout_alignParentLeft="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tip 3"
         android:id="@+id/tip3"
-        android:layout_below="@+id/tip2"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:visibility="visible"
         android:enabled="true"
-        android:onClick="goToTip" />
+        android:onClick="goToTip"
+        android:layout_below="@+id/tip2"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="TipName"
+        android:id="@+id/tip_header"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

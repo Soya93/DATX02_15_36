@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -68,9 +69,12 @@ public class MainActivity extends ActionBarActivity {
    }
 
     /** Go to TipActivity.
-     * Called when the user clicks the Tip button. */
+     * Called when the user clicks the Tip button.  */
     public void goToTip(View view){
+        Button b = (Button)view;
+        String buttonText = b.getText().toString();
         Intent intent = new Intent(this, TipActivity.class);
+        intent.putExtra("studyType",buttonText);
         startActivity(intent);
     }
 

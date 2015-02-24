@@ -30,8 +30,16 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tip"
-        android:id="@+id/button_tipmain"
+        android:text="Studytips"
+        android:id="@+id/button_studytips"
+        android:layout_gravity="center_horizontal"
+        android:onClick="goToTip" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Studytechniques"
+        android:id="@+id/button_techniques"
         android:layout_gravity="center_horizontal"
         android:onClick="goToTip" />
 
