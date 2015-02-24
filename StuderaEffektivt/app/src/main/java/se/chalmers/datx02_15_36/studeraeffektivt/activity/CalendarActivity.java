@@ -151,7 +151,7 @@ public class CalendarActivity extends ActionBarActivity {
 
         }
         TextView outputText = (TextView) findViewById(R.id.readCalOutput);
-        outputText.setText(cur.getString(PROJECTION_TITLE_INDEX) +"");
+
     }
 
     public void addEventManually(View view) {
