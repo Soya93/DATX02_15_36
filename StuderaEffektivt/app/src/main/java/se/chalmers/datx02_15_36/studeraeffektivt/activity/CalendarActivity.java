@@ -130,6 +130,8 @@ public class CalendarActivity extends ActionBarActivity {
         }
         return cal.getTime();
         //TODO fixa så det funkar för skottår också
+
+
         //TODO testa
 
     }
