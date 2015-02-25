@@ -1,12 +1,20 @@
 package se.chalmers.datx02_15_36.studeraeffektivt;
+/* Saker att göra
+toString i Course - för att skicka till annan aktivitet och för att skriva ut bättre i listan
+Fortsätta på onclick till listview
 
+ */
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -20,27 +28,23 @@ import java.util.Map;
 
 public class CourseActivity extends ActionBarActivity {
 
-    private ListView courseList;
+    private ListView listOfCourses;
     private Button addButton;
-    List<Map<String, String>> planetsList = new ArrayList<Map<String,String>>();
+    private Button addButtonInner;
+    private EditText nameEditText;
+    private EditText codeEditText;
+    List<Map<String, Course>> courseList = new ArrayList<Map<String,Course>>();
     SimpleAdapter simpleAdpt;
-    ArrayAdapter simpleAdpt2;
     LinearLayout popUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
-        addButton = (Button) findViewById(R.id.addButton);
+        initComponents();
         initList();
-        courseList = (ListView) findViewById(R.id.listView);
-        popUp = (LinearLayout) findViewById(R.id.linLayout);
-        //courseList.
-        //courseList.add
-        setAddButton();
-        //simpleAdpt2 = new ArrayAdapter(this, planetsList, android.R.layout.simple_list_item_1, new String[] {"planet"}, new int[] {android.R.id.text1})
-        simpleAdpt = new SimpleAdapter(this, planetsList, android.R.layout.simple_list_item_1, new String[] {"planet"}, new int[] {android.R.id.text1});
-        courseList.setAdapter(simpleAdpt);
+        simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[] {"Courses"}, new int[] {android.R.id.text1});
+        listOfCourses.setAdapter(simpleAdpt);
 
     }
 
@@ -68,48 +72,85 @@ public class CourseActivity extends ActionBarActivity {
     }
 
     public void initList(){
-        planetsList.add(createPlanet("planet", "Mercury"));
-        planetsList.add(createPlanet("planet", "Venus"));
-        planetsList.add(createPlanet("planet", "Mars"));
-        planetsList.add(createPlanet("planet", "Jupiter"));
-        planetsList.add(createPlanet("planet", "Saturn"));
-        planetsList.add(createPlanet("planet", "Uranus"));
-        planetsList.add(createPlanet("planet", "Neptune"));
+        courseList.add(createCourse("Courses", new Course("Objektorienterad", "TDA043")));
+        courseList.add(createCourse("Courses", new Course("Design", "DAT216")));
     }
 
 
-    private HashMap<String, String> createPlanet(String key, String name) {
-        HashMap<String, String> planet = new HashMap<String, String>();
-        planet.put(key, name);
+    private HashMap<String, Course> createCourse(String key, Course course) {
+        HashMap<String, Course> newCourse = new HashMap<String, Course>();
+        newCourse.put(key, course);
 
-        return planet;
+        return newCourse;
     }
 
-    public void updateList(String planet, String whichPlanet){
-        HashMap<String, String> a = createPlanet(planet, whichPlanet);
-        planetsList.add(a);
+    public void updateList(String group, Course course){
+        HashMap<String, Course> a = createCourse(group, course);
+        courseList.add(a);
     }
 
     public void setAddButton(){
         addButton.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v){
-                if(popUp.getVisibility()==View.INVISIBLE)
+            public void onClick(View v) {
+                if (popUp.getVisibility() == View.INVISIBLE) {
                     popUp.setVisibility(View.VISIBLE);
-                else
+                    addButton.setText("Show");
+                } else {
                     popUp.setVisibility(View.INVISIBLE);
-
-                updateList("planet", "Earth");
-                adapter();
+                    addButton.setText("Lägg till kurs");
+                }
             }
-
         });
 
     }
 
+    public void setAddButtonInner(){
+        addButtonInner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popUp.setVisibility(View.INVISIBLE);
+                addButton.setText("Lägg till kurs");
+
+                updateList("Courses", new Course(nameEditText.getText().toString(), codeEditText.getText().toString()));
+                adapter();
+            }
+
+        });
+    }
+
+    public void setListOfCourses() {
+        listOfCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView parent, View v, int position, long id){
+
+                HashMap course = (HashMap) parent.getItemAtPosition(position);
+                Course course1 = (Course) course.get("Courses");
+                Intent intent = new Intent(CourseActivity.this, CourseDetails.class);
+                String courseString = course.toString();
+                intent.putExtra("kurs", courseString);
+                Log.d("HHHHHHHHHHHHHH",courseString);
+                startActivity(intent);
+                // Start your Activity according to the item just clicked.
+            }
+        });
+    }
+
     public void adapter(){
-        simpleAdpt = new SimpleAdapter(this, planetsList, android.R.layout.simple_list_item_1, new String[] {"planet"}, new int[] {android.R.id.text1});
-        courseList.setAdapter(simpleAdpt);
+        simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[] {"Courses"}, new int[] {android.R.id.text1});
+        listOfCourses.setAdapter(simpleAdpt);
+    }
+
+    public void initComponents(){
+        addButton = (Button) findViewById(R.id.addButton);
+        listOfCourses = (ListView) findViewById(R.id.listView);
+        popUp = (LinearLayout) findViewById(R.id.linLayout);
+        addButtonInner = (Button) findViewById(R.id.addButtonInner);
+        nameEditText = (EditText) findViewById(R.id.nameEditText);
+        codeEditText = (EditText) findViewById(R.id.codeEditText);
+
+        setAddButton();
+        setAddButtonInner();
+        setListOfCourses();
     }
 
 }
