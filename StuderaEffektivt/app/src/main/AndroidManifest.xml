@@ -10,7 +10,6 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name" >
@@ -22,12 +21,27 @@
         </activity>
         <activity
             android:name=".activity.TimerActivity"
-            android:label="@string/title_activity_timer" >
+            android:label="TimerActivity" >
         </activity>
         <activity
             android:name=".activity.CalendarActivity"
             android:label="@string/title_activity_calendar" >
         </activity>
+<<<<<<< HEAD
+=======
+        <activity
+            android:name=".view.CalendarView"
+            android:label="@string/title_activity_calendar_view" >
+        </activity>
+        <activity
+            android:name=".activity.TipActivity"
+            android:label="@string/title_activity_tips" >
+        </activity>
+        <activity
+            android:name=".activity.TipDetailedInfoActivity"
+            android:label="@string/title_activity_tip_view" >
+        </activity>
+>>>>>>> tips
     </application>
 
 </manifest>

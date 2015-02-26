@@ -1,21 +1,29 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
+import se.chalmers.datx02_15_36.studeraeffektivt.CounterUpTimer;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 
 public class MainActivity extends ActionBarActivity {
+    private String userName = "user_Name";
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
     }
 
 
@@ -45,9 +53,9 @@ public class MainActivity extends ActionBarActivity {
      * Called when the user clicks the Timer button. */
     public void goToTimer(View view) {
         Intent intent = new Intent(this, TimerActivity.class);
+        intent.putExtra(userName,"Alex");
         startActivity(intent);
     }
-
 
     /** Go to CalendarActivity.
      * Called when the user clicks the Calendar button. */
@@ -55,5 +63,21 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, CalendarActivity.class);
         startActivity(intent);
     }
+   public void goToCountUp(View view){
+       Intent intent = new Intent(this, CounterUpTimer.class);
+       startActivity(intent);
+   }
+
+    /** Go to TipActivity.
+     * Called when the user clicks the Tip button.  */
+    public void goToTip(View view){
+        Button b = (Button)view;
+        String buttonText = b.getText().toString();
+        Intent intent = new Intent(this, TipActivity.class);
+        intent.putExtra("studyType",buttonText);
+        startActivity(intent);
+    }
+
+
 
 }
