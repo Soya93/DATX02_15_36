@@ -4,14 +4,23 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 public class CourseDetails extends ActionBarActivity {
+    TextView kursDetaljer;
+    Course course;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_details);
+
+        course = (Course) CourseActivity.courseList.get(getIntent().getIntExtra("kurs", 2)).get("Courses");
+
+        kursDetaljer = (TextView) findViewById(R.id.kursDetaljer);
+        fillActivity(course);
     }
 
 
@@ -35,5 +44,9 @@ public class CourseDetails extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void fillActivity(Course course){
+        kursDetaljer.setText(course.toString());
     }
 }

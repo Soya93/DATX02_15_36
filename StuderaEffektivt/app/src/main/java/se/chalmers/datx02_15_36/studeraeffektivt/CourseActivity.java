@@ -1,9 +1,5 @@
 package se.chalmers.datx02_15_36.studeraeffektivt;
-/* Saker att göra
-toString i Course - för att skicka till annan aktivitet och för att skriva ut bättre i listan
-Fortsätta på onclick till listview
 
- */
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -33,7 +29,7 @@ public class CourseActivity extends ActionBarActivity {
     private Button addButtonInner;
     private EditText nameEditText;
     private EditText codeEditText;
-    List<Map<String, Course>> courseList = new ArrayList<Map<String,Course>>();
+    public static List<Map<String, Course>> courseList = new ArrayList<Map<String,Course>>();
     SimpleAdapter simpleAdpt;
     LinearLayout popUp;
 
@@ -123,12 +119,12 @@ public class CourseActivity extends ActionBarActivity {
         listOfCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v, int position, long id){
 
-                HashMap course = (HashMap) parent.getItemAtPosition(position);
-                Course course1 = (Course) course.get("Courses");
+                HashMap courseMap = (HashMap) parent.getItemAtPosition(position);
+                Course course1 = (Course) courseMap.get("Courses");
                 Intent intent = new Intent(CourseActivity.this, CourseDetails.class);
-                String courseString = course.toString();
-                intent.putExtra("kurs", courseString);
-                Log.d("HHHHHHHHHHHHHH",courseString);
+                //String courseString = course.toString();
+                intent.putExtra("kurs", (int)courseList.indexOf(courseMap));
+                Log.d("HHHHHHHHHHHHHH","" + courseList.indexOf(courseMap));
                 startActivity(intent);
                 // Start your Activity according to the item just clicked.
             }

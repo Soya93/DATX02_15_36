@@ -7,16 +7,16 @@ import java.util.List;
  */
 public class Course {
     public List<StudySession> studySessionList;
-    public String name;
+    public String courseName;
     public String courseCode;
     public int id;
 
-    public Course(String name) {
-        this.name = name;
+    public Course(String courseName) {
+        this.courseName = courseName;
     }
 
-    public Course(String name, String courseCode){
-        this.name = name;
+    public Course(String courseName, String courseCode){
+        this.courseName = courseName;
         this.courseCode = courseCode;
     }
 
@@ -31,11 +31,15 @@ public class Course {
     }
 
     public String geName(){
-        return name;
+        return courseName;
     }
 
-    public void setName(String name){
-        this.name = name;
+    public void setName(String courseName){
+        this.courseName = courseName;
+    }
+
+    public String toString(){
+        return courseCode + " - " + courseName;
     }
 
 
