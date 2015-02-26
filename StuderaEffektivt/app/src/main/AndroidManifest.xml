@@ -27,8 +27,6 @@
             android:name=".activity.CalendarActivity"
             android:label="@string/title_activity_calendar" >
         </activity>
-<<<<<<< HEAD
-=======
         <activity
             android:name=".view.CalendarView"
             android:label="@string/title_activity_calendar_view" >
@@ -41,7 +39,6 @@
             android:name=".activity.TipDetailedInfoActivity"
             android:label="@string/title_activity_tip_view" >
         </activity>
->>>>>>> tips
     </application>
 
 </manifest>

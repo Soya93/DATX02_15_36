@@ -15,7 +15,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
 
         import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
-        import static se.chalmers.datx02_15_36.studeraeffektivt.R.id.weekView;
+       // import static se.chalmers.datx02_15_36.studeraeffektivt.R.id.weekView;
 
 //TODO: delete this class
 public class CalendarView extends ActionBarActivity implements WeekView.MonthChangeListener,
@@ -30,10 +30,10 @@ public class CalendarView extends ActionBarActivity implements WeekView.MonthCha
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar_view);
+       // setContentView(R.layout.activity_calendar_view);
 
         // Get a reference for the week view in the layout.
-        mWeekView = (WeekView) findViewById(weekView);
+     //   mWeekView = (WeekView) findViewById(weekView);
 
         // Show a toast message about the touched event.
         mWeekView.setOnEventClickListener(this);
