@@ -1,17 +1,13 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
-
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import se.chalmers.datx02_15_36.studeraeffektivt.CounterUpTimer;
 import se.chalmers.datx02_15_36.studeraeffektivt.CourseActivity;
@@ -79,6 +75,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreateOptionsMenu(menu);
         return true;
     }
+
 
 
 
