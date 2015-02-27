@@ -1,18 +1,15 @@
-package se.chalmers.datx02_15_36.studeraeffektivt;
+package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -21,6 +18,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.CourseDetails;
+import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 
 public class CourseActivity extends Activity {

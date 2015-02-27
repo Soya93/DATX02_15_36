@@ -1,4 +1,4 @@
-package se.chalmers.datx02_15_36.studeraeffektivt;
+package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 
 import android.app.Activity;
@@ -11,6 +11,8 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 
 public class CounterUpTimer extends Activity {

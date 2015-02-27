@@ -4,8 +4,6 @@ import android.text.format.Time;
 
 import java.util.Date;
 
-import se.chalmers.datx02_15_36.studeraeffektivt.Course;
-
 /**
  * Created by jesper on 2015-02-24.
  */
