@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.HomeActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.CalendarActivity;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.LoginActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.Statistics;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerActivity;
 

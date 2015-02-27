@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 
 import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,17 +20,20 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
  */
 public class CalendarActivity extends Fragment {
 
-    CalendarModel calendarModel;
+    CalendarModel calendarModel = new CalendarModel();
     ContentResolver cr;
     Button repButton;
+    View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.activity_calendar, container, false);
+       rootView = inflater.inflate(R.layout.activity_calendar, container, false);
 
         cr = getActivity().getContentResolver();
+
+        calendarModel = new CalendarModel();
 
         repButton = (Button)rootView.findViewById(R.id.button_add_repetition_session);
       /*  repButton.setOnClickListener(new View.OnClickListener() {
@@ -45,18 +49,19 @@ public class CalendarActivity extends Fragment {
 
 
     public void readCalendar(View view) {
+
         calendarModel.readEvents(cr, 0L, 0L);
     }
 
-    public void addStudySession(View view){
-        startActivity(calendarModel.addEventManually(0L, 0L, false, "Studiepass", null, null));
+    public Intent addStudySession(){
+        return calendarModel.addEventManually(0L, 0L, false, "Studiepass", null, null);
     }
 
     public void addEventAuto(View view) {
         //calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
         calendarModel.getCalendars(cr, "eewestman@gmail.com", "com.google");
 
-        TextView textView = (TextView) getView().findViewById(R.id.calendar_text);
+        TextView textView = (TextView) rootView.findViewById(R.id.calendar_text);
         Long eventID = this.calendarModel.addEventAuto(cr);
         textView.setText(eventID +"");
     }
