@@ -1,58 +1,47 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
+import android.support.v4.app.Fragment;
 import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.CalendarContract;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.app.Activity;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 
 /**
  * A class representing the controller of a calendar object
  */
-public class CalendarActivity extends Activity {
+public class CalendarActivity extends Fragment {
 
     CalendarModel calendarModel;
     ContentResolver cr;
     Button repButton;
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar);
-        calendarModel = new CalendarModel();
-        cr = getContentResolver();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-        repButton = (Button) findViewById(R.id.button_add_repetition_session);
-        repButton.setOnClickListener(new View.OnClickListener() {
+        View rootView = inflater.inflate(R.layout.activity_calendar, container, false);
+
+        cr = getActivity().getContentResolver();
+
+        repButton = (Button)rootView.findViewById(R.id.button_add_repetition_session);
+      /*  repButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openDialog(v);
             }
-        });
+        });*/
+        return rootView;
     }
+
+
+
 
     public void readCalendar(View view) {
         calendarModel.readEvents(cr, 0L, 0L);
@@ -72,14 +61,14 @@ public class CalendarActivity extends Activity {
         //calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
         calendarModel.getCalendars(cr, "eewestman@gmail.com", "com.google");
 
-        TextView textView = (TextView) findViewById(R.id.calendar_text);
+        TextView textView = (TextView) getView().findViewById(R.id.calendar_text);
         Long eventID = this.calendarModel.addEventAuto(cr);
         textView.setText(eventID +"");
     }
 
 
     public void openDialog(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         //the alternatives
         String [] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
