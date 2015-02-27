@@ -8,13 +8,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.app.Activity;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 /**
  * A class displaying the available tip of studytechniques or studytips depending on what is chosen.
  */
-public class TipActivity extends ActionBarActivity {
+public class TipActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

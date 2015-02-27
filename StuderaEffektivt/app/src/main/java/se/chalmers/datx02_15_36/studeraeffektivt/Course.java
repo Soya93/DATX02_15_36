@@ -2,6 +2,8 @@ package se.chalmers.datx02_15_36.studeraeffektivt;
 
 import java.util.List;
 
+import se.chalmers.datx02_15_36.studeraeffektivt.model.StudySession;
+
 /**
  * Created by jesper on 2015-02-24.
  */

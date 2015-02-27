@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.app.Activity;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 /**
  * A class displaying the text of an studytechnique tip.
  */
-public class TipDetailedInfoActivity extends ActionBarActivity {
+public class TipDetailedInfoActivity extends Activity {
 
     TextView tipViewInfoText;
 
