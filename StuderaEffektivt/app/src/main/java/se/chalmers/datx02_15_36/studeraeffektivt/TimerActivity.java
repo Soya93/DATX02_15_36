@@ -1,138 +1,152 @@
 package se.chalmers.datx02_15_36.studeraeffektivt;
 
 
+import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.CountDownTimer;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.List;
+
 
 public class TimerActivity extends ActionBarActivity {
-    private String userName;
-    private CountDownTimer cdt;
+
     private TimePicker t1;
+
     private Button startButton;
     private Button resetButton;
+
     private long chosenSeconds;
-    private long seconds;
+    private long secondsUntilFinished;
+
     private long timePassed;
-   private DbAccess dbAccess;
+    private final long default_StudyTime = (50*60*1000);
+    private final long default_PauseTime = (25*60*1000);
+
+    private final long update_Time=1000;
+    private TextView textView;
+    private boolean studyTimerIsRunning=false;
+
+    private BroadcastReceiver receiver;
+    private boolean hasRestarted;
+
+    private SharedPreferences prefs;
+    private String prefName = "MyPref";
+
+    private SharedPreferences statusPrefs;
+    private String statusPrefName = "MyPref";
+
+    private final int dialog_setPause = 1;
+    private final int dialog_setStart = 0;
+
+
+    private IntentFilter intentFilter;
+    private MyCountDownTimer serviceMCDT;
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+        serviceMCDT = ((MyCountDownTimer.MCDTBinder)service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+
+
+
+    private BroadcastReceiver serviceReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            secondsUntilFinished = intent.getLongExtra("TIME_LEFT", -1);
+            Log.d("receiver", "Got message: " + secondsUntilFinished);
+            t1.setCurrentMinute(secondsToMin(secondsUntilFinished));
+            t1.setCurrentHour(secondsToHour(secondsUntilFinished));
+            textView.setText("seconds remainig" + secondsUntilFinished/1000);
+        }
+    };
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        userName = getIntent().getStringExtra("user_Name");
         setContentView(R.layout.activity_timer);
         instantiate();
-        t1.setIs24HourView(true);
-        t1.clearFocus();
-        setTime();
-        getTimer(5000, 100);
-        DbAccess dbAccess = new DbAccess(this);
+        t1.setCurrentHour(0);
+        t1.setCurrentMinute(secondsToMin(default_StudyTime));
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("TIME_LEFT_SERVICE_ACTION");
+        this.registerReceiver(serviceReceiver,intentFilter);
+
+
+
 
 
 
 
     }
 
-    private void setTime() {
-        t1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-                                        @Override
-                                        public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                                            chosenSeconds = minute * 60 + hourOfDay * 3600;
-                                            getTimer(chosenSeconds * 1000, 100);
+    protected void onPause() {
+        super.onPause();
+    }
 
-                                        }
-                                    }
-        );
+    protected void onResume () {
+       super.onResume();
+
+
 
     }
+
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(serviceReceiver);
+    }
+
 
     private void instantiate() {
         t1 = (TimePicker) findViewById(R.id.timePicker);
+        t1.setIs24HourView(true);
         resetButton = (Button) findViewById(R.id.button_reset);
         startButton = (Button) findViewById(R.id.button_start_timer);
+        prefs = getSharedPreferences(prefName,MODE_PRIVATE);
+        textView = (TextView) findViewById(R.id.text_timer);
+        statusPrefs= getSharedPreferences(statusPrefName,MODE_PRIVATE);
 
 
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_timer, menu);
-        return true;
+    private int secondsToHour(long millisUntilFinished) {
+        return (int) (millisUntilFinished / 1000 / 3600);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    private int secondsToMin(long millisUntilFinished) {
+        return ((int) ((millisUntilFinished / 1000 % 3600)) + 60) / 60;
     }
 
 
-    /**
-     * Set the timer.
-     */
-    public CountDownTimer getTimer(long millisInFuture, long countDownInterval) {
-
-        cdt = new CountDownTimer(millisInFuture, countDownInterval) {
-
-            public void onTick(long millisUntilFinished) {
-
-                TextView textView = (TextView) findViewById(R.id.text_timer);
-                textView.setText("seconds remaining: " + millisUntilFinished / 1000);
-                setTimePicker(millisUntilFinished);
-
-                seconds = millisUntilFinished;
-                timePassed += 100;
-            }
-
-            private int secondsToHour(long millisUntilFinished) {
-                return (int) (millisUntilFinished / 1000 / 3600);
-            }
-
-            private int secondsToMin(long millisUntilFinished) {
-                return ((int) ((millisUntilFinished / 1000 % 3600)) + 60) / 60;
-            }
-
-            private void setTimePicker(long millisUntilFinished) {
-                int hour = secondsToHour(millisUntilFinished);
-                int minute = secondsToMin(millisUntilFinished);
-                t1.setCurrentHour(hour);
-                t1.setCurrentMinute(minute);
-            }
-
-            @Override
-            public void onFinish() {
-                t1.setEnabled(true);
-                setTime();
-                startButton.setText("Start");
-                startButton.setEnabled(true);
-                //dbAccess.insertValue("Alex",Long.toString(timePassed));
-
-            }
-        };
-        return cdt;
-
+    private void setTimePicker(long millisUntilFinished) {
+        int hour = secondsToHour(millisUntilFinished);
+        int minute = secondsToMin(millisUntilFinished);
+        t1.setCurrentHour(hour);
+        t1.setCurrentMinute(minute);
     }
 
     /**
@@ -140,33 +154,44 @@ public class TimerActivity extends ActionBarActivity {
      * Called when the user clicks the Start Timer button.
      */
     public void startTimer(View view) {
-        t1.setEnabled(false);
-        if (startButton.getText().equals("Pause")) {
-            startButton.setText("Start");
-            cdt.cancel();
-            getTimer(seconds, 100);
-        } else if (startButton.getText().equals("Start")) {
-            cdt.start();
-            startButton.setText("Pause");
-            resetButton.setEnabled(true);
+        if(startButton.getText().equals("Start")) {
+            Intent temp = new Intent(getBaseContext(), MyCountDownTimer.class);
+            temp.putExtra("STUDY_TIME",default_StudyTime);
+            startService(temp);
 
         }
+        else if (startButton.getText().equals("Pause")){
+
+        }
+        else if (startButton.getText().equals("Resume")){
+
+        }
+
     }
-    /*
-    If you hit pause and then reset button and then not choose another time. Timer will count down
-    the seconds that are left.
-    */
+
+
 
     public void resetTimer(View view) {
-        cdt.cancel();
-        startButton.setText("Start");
-        startButton.setEnabled(true);
-        resetButton.setEnabled(false);
-        t1.setEnabled(true);
-        setTime();
+        Intent temp = new Intent(getBaseContext(), MyCountDownTimer.class);
+        temp.putExtra("STUDY_TIME",default_StudyTime);
+        stopService(temp);
+    }
+    /*
+    public void settingsTimer (View view){
+        showDialog(0);
     }
 
+    protected Dialog onCreateDialog(int choice) {
+        switch (choice) {
 
+            case : 0
+                return new AlertDialog.Builder(this).
+                       setTitle("Timer settings");
+
+        }
+    return null;}
+
+    */
 
 
 }

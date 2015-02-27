@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <Button android:id="@+id/button_timer"
         android:layout_width="match_parent"
@@ -17,5 +18,23 @@
         android:id="@+id/button"
         android:onClick="goToCountUp"
         android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Assignments"
+        android:onClick="goToAddAssignment"
+        android:id="@+id/button2"
+        android:layout_gravity="center_horizontal" />
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Timer 4"
+        android:id="@+id/button5"
+        android:onClick="goToTimer2"
+        android:layout_gravity="center_horizontal" />
+
 
 </LinearLayout>

@@ -17,11 +17,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TimerActivity" >
+            android:name=".TimerActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
         </activity>
         <activity
             android:name=".CounterUpTimer" >
         </activity>
+        <activity
+            android:name=".AddAssignment">
+        </activity>
+        <activity
+            android:name=".NewTimer"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
+        </activity>
+        <service android:name=".MyCountDownTimer"/>
     </application>
+    <receiver android:name=".MyReceiver" >
+        <intent-filter>
+            <action android:name="se.chalmers.datx02_15_36.studeraeffektivt.TIME_LEFT_SERVICE_ACTION" />
+        </intent-filter>
+    </receiver>
 
 </manifest>
