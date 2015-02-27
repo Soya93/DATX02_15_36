@@ -1,8 +1,11 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,11 +16,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
@@ -29,6 +34,8 @@ public class CalendarActivity extends ActionBarActivity {
 
     CalendarModel calendarModel;
     ContentResolver cr;
+    Button repButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,14 @@ public class CalendarActivity extends ActionBarActivity {
         setContentView(R.layout.activity_calendar);
         calendarModel = new CalendarModel();
         cr = getContentResolver();
+
+        repButton = (Button) findViewById(R.id.button_add_repetition_session);
+        repButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog(v);
+            }
+        });
     }
 
 
@@ -67,20 +82,48 @@ public class CalendarActivity extends ActionBarActivity {
     }
 
     public void addStudySession(View view){
-        startActivity(calendarModel.addEventManually(0L, 0L, false, null, null, null));
+        startActivity(calendarModel.addEventManually(0L, 0L, false, "Studiepass", null, null));
     }
 
     public void addRepetitionSession(View view){
-        startActivity(calendarModel.addEventManually(0L, 0L, true, "TEST!!!!!", "6207", "Bra jobbat!!! :)"));
+
+
+        //startActivity(calendarModel.addEventManually(0L, 0L, true, "Repititonspass", null, "Repetera " +  repitition));
     }
 
     public void addEventAuto(View view) {
-        calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
-        //calendarModel.getCalendars(cr, "eewestman@gmail.com", "com.google");
+        //calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
+        calendarModel.getCalendars(cr, "eewestman@gmail.com", "com.google");
 
         TextView textView = (TextView) findViewById(R.id.calendar_text);
         Long eventID = this.calendarModel.addEventAuto(cr);
         textView.setText(eventID +"");
+    }
+
+
+    public void openDialog(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
+
+        //the alternatives
+        String [] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
+
+        builder.setTitle("Välj ett pass att repetera")
+                .setItems(alternatives, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO hämta några random uppgifter
+                        String tasks = "";
+                        int studyWeek = which+1;
+                        startActivity(calendarModel.addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " +  tasks));
+
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+
     }
 
 }

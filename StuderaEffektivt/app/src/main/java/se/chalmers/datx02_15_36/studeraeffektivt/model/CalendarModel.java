@@ -8,8 +8,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 /**
@@ -98,7 +102,7 @@ public class CalendarModel {
      * @param accountEmail
      * @param accountType
      */
-    public void getCalendars(ContentResolver cr, String accountEmail, String accountType) {
+    public List<String> getCalendars(ContentResolver cr, String accountEmail, String accountType) {
         uri = CalendarContract.Calendars.CONTENT_URI;
         String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
                 + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
@@ -108,13 +112,34 @@ public class CalendarModel {
         // Submit the query and get a Cursor object back.
         cur = cr.query(uri, CalendarUtils.EVENT_PROJECTION, selection, selectionArgs, null);
 
+        List<String> calendars = new ArrayList<String>();
+
         int i = 0;
         while (cur.moveToNext()) {
+
+            calendars.add(cur.getColumnName(i));
 
             Log.d("title: ", cur.getColumnName(i));
             i++;
 
         }
+        return calendars;
+    }
+
+    public List<String> getRepAlt(ContentResolver cr, String accountEmail, String accountType) {
+        List<String> events = getCalendars(cr, accountEmail, accountType);
+        List<String> studySessions = filter(events, "Studiepass");
+        return studySessions;
+    }
+
+    public List<String> filter(List<String> events, String filterOn) {
+        List<String> filteredList = new ArrayList<String>();
+        for(String e :events) {
+            if(e == filterOn) {
+                filteredList.add(e);
+            }
+        }
+        return filteredList;
     }
 
     /**
@@ -190,8 +215,8 @@ public class CalendarModel {
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, startMillis);
         values.put(CalendarContract.Events.DTEND, endMillis);
-        values.put(CalendarContract.Events.TITLE, "TEST");
-        values.put(CalendarContract.Events.DESCRIPTION, "TEST");
+        values.put(CalendarContract.Events.TITLE, "Studiepass");
+        values.put(CalendarContract.Events.DESCRIPTION, "Studiepass");
         values.put(CalendarContract.Events.CALENDAR_ID, calID);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, "Sweden");
         uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
