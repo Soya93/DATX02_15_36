@@ -1,26 +1,16 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
-<<<<<<< HEAD
+
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.os.Bundle;
-=======
 import android.support.v4.app.Fragment;
-import android.content.ContentResolver;
-import android.content.DialogInterface;
-import android.os.Bundle;
 import android.view.LayoutInflater;
->>>>>>> calendar
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-<<<<<<< HEAD
-import android.app.Activity;
-
-=======
->>>>>>> calendar
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 
@@ -71,14 +61,8 @@ public class CalendarActivity extends Fragment {
         textView.setText(eventID +"");
     }
 
-<<<<<<< HEAD
-    public void OpenRepetitionDialog(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
-=======
-
     public void openDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
->>>>>>> calendar
 
         //the alternatives
         String [] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
