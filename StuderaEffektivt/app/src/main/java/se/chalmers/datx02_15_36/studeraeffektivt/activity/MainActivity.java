@@ -22,8 +22,15 @@ public class MainActivity extends ActionBarActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+<<<<<<< HEAD:StuderaEffektivt/app/src/main/java/se/chalmers/datx02_15_36/studeraeffektivt/activity/MainActivity.java
 
 
+=======
+        //Tillfällig kod för testning
+        Intent intent = new Intent(this, CourseActivity.class);
+        startActivity(intent);
+        //Slut på tillfällig kod för testning
+>>>>>>> CourseAndClass:StuderaEffektivt/app/src/main/java/se/chalmers/datx02_15_36/studeraeffektivt/MainActivity.java
     }
 
 
