@@ -12,6 +12,10 @@
     <string name="title_timer">Timer</string>
     <string name="title_activity_timer">TimerActivity</string>
     <string name="button_start_timer">Start Timer</string>
+    <string name="title_activity_calendar">CalendarActivity</string>
+    <string name="title_activity_calendar_view">CalendarView</string>
+    <string name="title_activity_tips">Tips</string>
+    <string name="title_activity_tip_view">TipViewActivity</string>
 
 
 </resources>

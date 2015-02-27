@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="distributionType" value="LOCAL" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="C:\Program Files\Android\Android Studio\gradle\gradle-2.2.1" />
         <option name="modules">
@@ -11,9 +12,21 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
           </set>
+=======
+    <component name="GradleSettings">
+        <option name="linkedExternalProjectsSettings">
+            <GradleProjectSettings>
+                <option name="distributionType" value="LOCAL" />
+                <option name="externalProjectPath" value="$PROJECT_DIR$" />
+                <option name="gradleHome" value="C:\Program Files\Android\Android Studio\gradle\gradle-2.2.1" />
+                <option name="modules">
+                    <set>
+                        <option value="$PROJECT_DIR$" />
+                        <option value="$PROJECT_DIR$/app" />
+                    </set>
+                </option>
+            </GradleProjectSettings>
+>>>>>>> tips
         </option>
-      </GradleProjectSettings>
-    </option>
-  </component>
+    </component>
 </project>
-

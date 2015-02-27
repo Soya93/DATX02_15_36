@@ -2,6 +2,7 @@
 <items version="2" >
 
     <item
+<<<<<<< HEAD
         jar="C:\Users\jesper\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
         jumboMode="false"
         revision="19.1.0"
@@ -28,6 +29,41 @@
         revision="19.1.0"
         sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
         <dex dex="C:\Users\jesper\Documents\Skola\Kandidatarbete\DATX02_15_36\StuderaEffektivt\app\build\intermediates\pre-dexed\debug\classes-534b12eda203d8dc189a287b661330ae57eec830.jar" />
+=======
+        jar="/Users/SoyaPanda/Documents/GitHub/DATX02_15_36/StuderaEffektivt/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/SoyaPanda/Documents/GitHub/DATX02_15_36/StuderaEffektivt/app/build/intermediates/pre-dexed/debug/classes-c37a4124506d162500581f31795187a0e7dd2c62.jar" />
+    </item>
+    <item
+        jar="/Users/SoyaPanda/Documents/GitHub/DATX02_15_36/StuderaEffektivt/app/build/intermediates/exploded-aar/com.github.alamkanak/android-week-view/1.2.1/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="246fd881b6edca03120d2b653662664b6c2b35da">
+        <dex dex="/Users/SoyaPanda/Documents/GitHub/DATX02_15_36/StuderaEffektivt/app/build/intermediates/pre-dexed/debug/classes-12c415959c609a4736a2347059b99e31bb486c69.jar" />
+    </item>
+    <item
+        jar="/Users/SoyaPanda/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/SoyaPanda/Documents/GitHub/DATX02_15_36/StuderaEffektivt/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-32a4b8321964c1dedd27d85ad800cdaff9dd9967.jar" />
+    </item>
+    <item
+        jar="/Users/SoyaPanda/Documents/GitHub/DATX02_15_36/StuderaEffektivt/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/SoyaPanda/Documents/GitHub/DATX02_15_36/StuderaEffektivt/app/build/intermediates/pre-dexed/debug/classes-b108928d257a1e59976f8def28b9eb825d66a7d2.jar" />
+    </item>
+    <item
+        jar="/Users/SoyaPanda/Documents/GitHub/DATX02_15_36/StuderaEffektivt/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/SoyaPanda/Documents/GitHub/DATX02_15_36/StuderaEffektivt/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-8c221c2613136c670362a1ead49786212abd1903.jar" />
+>>>>>>> calendar
     </item>
 
 </items>

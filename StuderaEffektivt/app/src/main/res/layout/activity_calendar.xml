@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.CalendarActivity">
+
+    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/calendar_text" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Event Auto"
+        android:id="@+id/button_add_event_a"
+        android:onClick="addEventAuto"
+        android:layout_below="@+id/readCalOutput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="49dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add study session"
+        android:id="@+id/button_add_study_session"
+        android:onClick="addStudySession"
+        android:layout_below="@+id/calendar_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="41dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add repetition session"
+        android:id="@+id/button_add_repetition_session"
+        android:onClick="addRepetitionSession"
+        android:layout_below="@+id/button_add_study_session"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="47dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Read Calendar"
+        android:id="@+id/button_read_calendar"
+        android:layout_marginTop="41dp"
+        android:onClick="readCalendar"
+        android:layout_below="@+id/button_add_repetition_session"
+        android:layout_alignLeft="@+id/button_add_event_a"
+        android:layout_alignStart="@+id/button_add_event_a" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/readCalOutput"
+        android:layout_below="@+id/button_read_calendar"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
