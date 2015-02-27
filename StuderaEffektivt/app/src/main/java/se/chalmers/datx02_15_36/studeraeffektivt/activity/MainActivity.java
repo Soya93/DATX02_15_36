@@ -58,7 +58,7 @@ public class MainActivity extends TabActivity implements OnTabChangeListener{
         tabHost.addTab(spec);
 
         /************* TAB4 ************/
-        intent = new Intent().setClass(this, Statistics.class);
+        intent = new Intent().setClass(this, LoginActivity.class);
         spec = tabHost.newTabSpec("Forth").setIndicator("")
                 .setContent(intent);
         tabHost.addTab(spec);
