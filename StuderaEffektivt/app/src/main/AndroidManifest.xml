@@ -28,6 +28,7 @@
             android:label="@string/title_activity_calendar" >
         </activity>
         <activity
+<<<<<<< HEAD
             android:name=".view.CalendarView"
             android:label="@string/title_activity_calendar_view" >
         </activity>
@@ -46,6 +47,10 @@
         <activity
             android:name=".CourseDetails"
             android:label="@string/title_activity_course_details" >
+=======
+            android:name=".activity.Statistics"
+            android:label="@string/title_activity_statistics" >
+>>>>>>> origin/statistics
         </activity>
     </application>
 

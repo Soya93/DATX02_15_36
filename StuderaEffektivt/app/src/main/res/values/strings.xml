@@ -7,12 +7,17 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
-    <!-- Timer related -->
+    <!-- Timer -->
     <string name="button_timer">Timer</string>
     <string name="title_timer">Timer</string>
     <string name="title_activity_timer">TimerActivity</string>
     <string name="button_start_timer">Start Timer</string>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+    <!-- Calendar -->
+>>>>>>> origin/statistics
     <string name="title_activity_calendar">CalendarActivity</string>
     <string name="title_activity_calendar_view">CalendarView</string>
     <string name="title_activity_tips">Tips</string>
@@ -22,5 +27,8 @@
     <string name="title_activity_course">CourseActivity</string>
     <string name="title_activity_course_details">CourseDetails</string>
 >>>>>>> CourseAndClass
+
+    <!-- Statistics -->
+    <string name="title_activity_statistics">Statistics</string>
 
 </resources>
