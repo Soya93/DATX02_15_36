@@ -17,7 +17,7 @@ import org.achartengine.renderer.SimpleSeriesRenderer;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
-public class Statistics extends Activity {
+public class StatsActivity extends Activity {
 
     private static int[] COLORS = new int[] { Color.GREEN, Color.BLUE,Color.MAGENTA, Color.CYAN };
 
@@ -34,7 +34,7 @@ public class Statistics extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
+        setContentView(R.layout.activity_stats);
 
         mRenderer.setApplyBackgroundColor(true);
         mRenderer.setBackgroundColor(Color.argb(100, 50, 50, 50));
@@ -73,10 +73,10 @@ public class Statistics extends Activity {
                     SeriesSelection seriesSelection = mChartView.getCurrentSeriesAndPoint();
 
                     if (seriesSelection == null) {
-                        Toast.makeText(Statistics.this, "No chart element was clicked", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StatsActivity.this, "No chart element was clicked", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        Toast.makeText(Statistics.this,"Chart element data point index "+ (seriesSelection.getPointIndex()+1) + " was clicked" + " point value="+ seriesSelection.getValue(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StatsActivity.this,"Chart element data point index "+ (seriesSelection.getPointIndex()+1) + " was clicked" + " point value="+ seriesSelection.getValue(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -86,11 +86,11 @@ public class Statistics extends Activity {
                 public boolean onLongClick(View v) {
                     SeriesSelection seriesSelection = mChartView.getCurrentSeriesAndPoint();
                     if (seriesSelection == null) {
-                        Toast.makeText(Statistics.this,"No chart element was long pressed", Toast.LENGTH_SHORT);
+                        Toast.makeText(StatsActivity.this,"No chart element was long pressed", Toast.LENGTH_SHORT);
                         return false;
                     }
                     else {
-                        Toast.makeText(Statistics.this,"Chart element data point index "+ seriesSelection.getPointIndex()+ " was long pressed",Toast.LENGTH_SHORT);
+                        Toast.makeText(StatsActivity.this,"Chart element data point index "+ seriesSelection.getPointIndex()+ " was long pressed",Toast.LENGTH_SHORT);
                         return true;
                     }
                 }

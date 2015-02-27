@@ -59,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
     /** Go to Stats.
      * Called when the user clicks the Calendar button. */
     public void goToStats(View view) {
-        Intent intent = new Intent(this, Statistics.class);
+        Intent intent = new Intent(this, StatsActivity.class);
         startActivity(intent);
     }
 

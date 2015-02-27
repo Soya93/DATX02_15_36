@@ -28,7 +28,7 @@
             android:label="@string/title_activity_calendar" >
         </activity>
         <activity
-            android:name=".activity.Statistics"
+            android:name=".activity.StatsActivity"
             android:label="@string/title_activity_statistics" >
         </activity>
     </application>
