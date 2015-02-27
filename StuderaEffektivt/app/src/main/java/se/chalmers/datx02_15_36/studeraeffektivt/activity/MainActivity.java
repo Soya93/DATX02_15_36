@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.Intent;
+<<<<<<< HEAD
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -10,14 +11,32 @@ import android.widget.TabHost;
 import android.app.TabActivity;
 import android.widget.TabHost.OnTabChangeListener;
 
+=======
+import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
+import se.chalmers.datx02_15_36.studeraeffektivt.CounterUpTimer;
+import se.chalmers.datx02_15_36.studeraeffektivt.CourseActivity;
+>>>>>>> calendar
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.TabAdapter;
 
 
-public class MainActivity extends TabActivity implements OnTabChangeListener{
+public class MainActivity extends ActionBarActivity {
+
     private String userName = "user_Name";
-
     /** Called when the activity is first created. */
-    TabHost tabHost;
+
+    private ViewPager viewPager;
+    private TabAdapter mAdapter;
+    private android.support.v7.app.ActionBar actionBar;
+    // Tab titles
+    private String[] tabs = { "Home", "Calendar", "Timer", "Statistics" };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,31 +44,31 @@ public class MainActivity extends TabActivity implements OnTabChangeListener{
         setContentView(R.layout.activity_main);
 
 
+        // Initilization
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        Log.i("Main", viewPager.toString());
 
-        // Get TabHost Refference
-        tabHost = getTabHost();
+        actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setHomeButtonEnabled(false);
+        mAdapter = new TabAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(mAdapter);
 
-        // Set TabChangeListener called when tab changed
-        tabHost.setOnTabChangedListener(this);
+        /** Defining tab listener */
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
 
-        TabHost.TabSpec spec;
-        Intent intent;
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
-        /************* TAB1 ************/
-        // Create  Intents to launch an Activity for the tab (to be reused)
-        intent = new Intent().setClass(this, HomeActivity.class);
-        spec = tabHost.newTabSpec("First").setIndicator("")
-                .setContent(intent);
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
 
-        //Add intent to tab
-        tabHost.addTab(spec);
+            }
 
-        /************* TAB2 ************/
-        intent = new Intent().setClass(this, CalendarActivity.class);
-        spec = tabHost.newTabSpec("Second").setIndicator("")
-                .setContent(intent);
-        tabHost.addTab(spec);
-
+<<<<<<< HEAD
         /************* TAB3 ************/
         intent = new Intent().setClass(this, TimerActivity.class);
         intent.putExtra(userName,"Alex");
@@ -70,32 +89,30 @@ public class MainActivity extends TabActivity implements OnTabChangeListener{
         // Set Tab1 as Default tab and change image
         tabHost.getTabWidget().setCurrentTab(0);
         tabHost.getTabWidget().getChildAt(0).setBackgroundColor(Color.MAGENTA);
+=======
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+>>>>>>> calendar
 
+            }
+        };
 
+        // Adding Tabs
+        for (String tab_name : tabs) {
+            actionBar.addTab(actionBar.newTab().setText(tab_name)
+                    .setTabListener(tabListener));
+        }
     }
 
     @Override
-    public void onTabChanged(String tabId) {
-
-        /************ Called when tab changed *************/
-
-        //********* Check current selected tab and change colours *******/
-
-        for(int i=0;i<tabHost.getTabWidget().getChildCount();i++)
-        {
-            if(i==0)
-                tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.CYAN);
-            else if(i==1)
-                tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.CYAN);
-            else if(i==2)
-                tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.CYAN);
-            else if(i==3)
-                tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.CYAN);
-        }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu);
+        return true;
+    }
 
 
-        Log.i("tabs", "CurrentTab: "+tabHost.getCurrentTab());
-
+<<<<<<< HEAD
         if(tabHost.getCurrentTab()==0)
             tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundColor(Color.MAGENTA);
         else if(tabHost.getCurrentTab()==1)
@@ -105,6 +122,8 @@ public class MainActivity extends TabActivity implements OnTabChangeListener{
         else if(tabHost.getCurrentTab()==3)
             tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundColor(Color.MAGENTA);
     }
+=======
+>>>>>>> calendar
 
 
 
@@ -126,5 +145,4 @@ public class MainActivity extends TabActivity implements OnTabChangeListener{
         startActivity(intent);
         //Slut på tillfällig kod för testning
     }
-
 }

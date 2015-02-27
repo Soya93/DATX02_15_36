@@ -1,24 +1,19 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
-
-
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.CountDownTimer;
-import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.app.Activity;
+
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 
-public class TimerActivity extends Activity {
+public class TimerActivity extends Fragment {
     private String userName;
     private CountDownTimer cdt;
     private TimePicker t1;
@@ -29,23 +24,26 @@ public class TimerActivity extends Activity {
     private long timePassed;
    //private DbAccess dbAccess;
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        userName = getIntent().getStringExtra("user_Name");
-        setContentView(R.layout.activity_timer);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.activity_timer, container, false);
+
         instantiate();
+        t1 = (TimePicker) rootView.findViewById(R.id.timePicker);
+        resetButton = (Button) rootView.findViewById(R.id.button_reset);
+        startButton = (Button) rootView.findViewById(R.id.button_start_timer);
+
+
         t1.setIs24HourView(true);
         t1.clearFocus();
         setTime();
         getTimer(5000, 100);
-        //DbAccess dbAccess = new DbAccess(this);
 
-
-
-
+        return rootView;
     }
+
 
     private void setTime() {
         t1.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
@@ -61,9 +59,6 @@ public class TimerActivity extends Activity {
     }
 
     private void instantiate() {
-        t1 = (TimePicker) findViewById(R.id.timePicker);
-        resetButton = (Button) findViewById(R.id.button_reset);
-        startButton = (Button) findViewById(R.id.button_start_timer);
 
 
     }
@@ -77,7 +72,7 @@ public class TimerActivity extends Activity {
 
             public void onTick(long millisUntilFinished) {
 
-                TextView textView = (TextView) findViewById(R.id.text_timer);
+                TextView textView = (TextView) getView().findViewById(R.id.text_timer);
                 textView.setText("seconds remaining: " + millisUntilFinished / 1000);
                 setTimePicker(millisUntilFinished);
 
