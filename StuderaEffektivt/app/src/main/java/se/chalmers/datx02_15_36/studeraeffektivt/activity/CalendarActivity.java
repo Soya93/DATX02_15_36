@@ -1,29 +1,13 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.CalendarContract;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.app.Activity;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
@@ -49,7 +33,7 @@ public class CalendarActivity extends Activity {
         repButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDialog(v);
+                OpenRepetitionDialog(v);
             }
         });
     }
@@ -62,12 +46,6 @@ public class CalendarActivity extends Activity {
         startActivity(calendarModel.addEventManually(0L, 0L, false, "Studiepass", null, null));
     }
 
-    public void addRepetitionSession(View view){
-
-
-        //startActivity(calendarModel.addEventManually(0L, 0L, true, "Repititonspass", null, "Repetera " +  repitition));
-    }
-
     public void addEventAuto(View view) {
         //calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
         calendarModel.getCalendars(cr, "eewestman@gmail.com", "com.google");
@@ -77,8 +55,7 @@ public class CalendarActivity extends Activity {
         textView.setText(eventID +"");
     }
 
-
-    public void openDialog(View view) {
+    public void OpenRepetitionDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
 
         //the alternatives
@@ -102,5 +79,9 @@ public class CalendarActivity extends Activity {
 
 
     }
+    public void openCalendar(View view){
+        startActivity(calendarModel.openCalendar());
+    }
+
 
 }

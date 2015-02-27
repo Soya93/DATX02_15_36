@@ -171,13 +171,22 @@ public class CalendarModel {
         //Log.i("cal", CalendarContract.Calendars.CALENDAR_DISPLAY_NAME);
     }
 
-
     /**
-     * Calculates the future date depending on the number set in daysFromNow
-     * @param date
-     * @param daysFromNow
+     * Opens the calendar of the users phone where the user may choose which one
      * @return
      */
+    public Intent openCalendar() {
+        calIntent = new Intent(Intent.ACTION_VIEW);
+        calIntent.setData(Uri.parse("content://com.android.calendar/time"));
+        return calIntent;
+    }
+
+        /**
+         * Calculates the future date depending on the number set in daysFromNow
+         * @param date
+         * @param daysFromNow
+         * @return
+         */
     private Date futureDate(Date date, int daysFromNow) {
 
         if (month == 2) {
