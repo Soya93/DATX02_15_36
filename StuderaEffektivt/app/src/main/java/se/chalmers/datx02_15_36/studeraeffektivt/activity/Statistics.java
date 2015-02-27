@@ -12,7 +12,15 @@ public class Statistics extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD:StuderaEffektivt/app/src/main/java/se/chalmers/datx02_15_36/studeraeffektivt/activity/Statistics.java
         setContentView(R.layout.activity_statistics);
+=======
+        setContentView(R.layout.activity_main);
+        //Tillfällig kod för testning
+        Intent intent = new Intent(this, CourseActivity.class);
+        startActivity(intent);
+        //Slut på tillfällig kod för testning
+>>>>>>> CourseAndClass:StuderaEffektivt/app/src/main/java/se/chalmers/datx02_15_36/studeraeffektivt/MainActivity.java
     }
 
 
