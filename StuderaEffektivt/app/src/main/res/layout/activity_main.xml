@@ -9,7 +9,6 @@
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
-<<<<<<< HEAD
         android:layout_height="match_parent"/>
     <!-- The navigation drawer -->
     <ListView
@@ -21,44 +20,46 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:background="#111"/>
+
+
+    <Button
+        android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="@string/button_timer"
+       android:onClick="goToTimer"
+       android:background="@color/bright_foreground_material_dark" />
+
+   <Button
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="Kalender"
+       android:id="@+id/button_calendar"
+       android:layout_gravity="center_horizontal"
+       android:onClick="goToCalendar" />
+
+   <Button
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="CountUpTimer"
+       android:id="@+id/button"
+       android:onClick="goToCountUp"
+       android:layout_gravity="center_horizontal" />
+
+   <Button
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="Studytips"
+       android:id="@+id/button_studytips"
+       android:layout_gravity="center_horizontal"
+       android:onClick="goToTip" />
+
+   <Button
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="Studytechniques"
+       android:id="@+id/button_techniques"
+       android:layout_gravity="center_horizontal"
+       android:onClick="goToTip" />
+
+
 </android.support.v4.widget.DrawerLayout>
-=======
-        android:layout_height="wrap_content"
-        android:text="@string/button_timer"
-        android:onClick="goToTimer"
-        android:background="@color/bright_foreground_material_dark" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Kalender"
-        android:id="@+id/button_calendar"
-        android:layout_gravity="center_horizontal"
-        android:onClick="goToCalendar" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CountUpTimer"
-        android:id="@+id/button"
-        android:onClick="goToCountUp"
-        android:layout_gravity="center_horizontal" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Studytips"
-        android:id="@+id/button_studytips"
-        android:layout_gravity="center_horizontal"
-        android:onClick="goToTip" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Studytechniques"
-        android:id="@+id/button_techniques"
-        android:layout_gravity="center_horizontal"
-        android:onClick="goToTip" />
-
-</LinearLayout>
->>>>>>> calendar

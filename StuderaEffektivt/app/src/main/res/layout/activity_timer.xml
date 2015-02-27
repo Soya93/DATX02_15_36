@@ -20,16 +20,9 @@
     <Button android:id="@+id/button_start_timer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-<<<<<<< HEAD
         android:text="@string/button_start_timer"
         android:onClick="startTimer"
         android:layout_weight="0.10" />
-
-=======
-        android:text="Start"
-        android:onClick="startTimer"
-        android:layout_weight="0.10" />
-
 
     <Button
         android:layout_width="377dp"
@@ -40,15 +33,12 @@
         android:onClick="resetTimer"
         android:layout_weight="0.10" />
 
->>>>>>> calendar
     <TimePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/timePicker"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.10" />
-<<<<<<< HEAD
-=======
 
     <TextView
         android:layout_width="wrap_content"
@@ -58,7 +48,5 @@
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.10" />
-
->>>>>>> calendar
 
 </LinearLayout>
