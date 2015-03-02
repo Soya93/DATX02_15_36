@@ -7,11 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.IO.LogInHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -33,9 +36,12 @@ public class CalendarActivity extends Fragment {
                              Bundle savedInstanceState) {
 
        rootView = inflater.inflate(R.layout.activity_calendar, container, false);
-       cr = getActivity().getContentResolver();
        calendarModel = new CalendarModel();
        return rootView;
+    }
+
+    public void setContentResolver(ContentResolver cr){
+        this.cr = cr;
     }
 
     public Intent addStudySession(){
@@ -74,13 +80,19 @@ public class CalendarActivity extends Fragment {
         return calendarModel.openCalendar();
     }
 
+    public List<String> getTodaysEvents() {
+        return calendarModel.readEventsToday(cr);
+    }
+
     //Används inte men kommer vara användbart
     public void readCalendar() {
+        calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
+
         calendarModel.readEvents(cr, 0L, 0L);
     }
 
     public void addEventAuto(View view) {
-        //calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
+        calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
         calendarModel.getCalendars(cr, "eewestman@gmail.com", "com.google");
         Long eventID = this.calendarModel.addEventAuto(cr);;
     }

@@ -24,6 +24,7 @@ public class CalendarModel {
     private Intent calIntent;
     private Uri uri;
     private Calendar cal;
+    private Calendar todayDate;
     private Calendar beginDay;
     private Calendar endDay;
     private int year;
@@ -31,6 +32,7 @@ public class CalendarModel {
     private int day;
     private long startMillis;
     private long endMillis;
+    private long todayMillis;
     private Cursor cur;
 
     public CalendarModel() {
@@ -42,10 +44,16 @@ public class CalendarModel {
         month = cal.get(Calendar.MONTH);
         day = cal.get(Calendar.DATE);
 
+        //set todays date
+        todayDate = Calendar.getInstance();
+        todayDate.set(year, month, day);
+        todayMillis = todayDate.getTimeInMillis();
+
         //set start day
-        beginDay = Calendar.getInstance();
-        beginDay.set(year, month, day);
-        startMillis = beginDay.getTimeInMillis();
+        beginDay = todayDate;
+        startMillis = todayDate.getTimeInMillis();
+
+
         //set end day
         endDay = Calendar.getInstance();
         endDay.setTime(futureDate(beginDay.getTime(), 1));
@@ -54,13 +62,20 @@ public class CalendarModel {
         cur = null;
     }
 
+
+    public List <String>  readEventsToday(ContentResolver cr){
+        return this.readEvents(cr, todayMillis, todayMillis);
+    }
+
     /**
      * Method which reads the events from a given start- and endinterval
      * @param cr
      * @param startInterval
      * @param endInterval
      */
-    public void readEvents(ContentResolver cr, Long startInterval, Long endInterval) {
+    public List <String> readEvents(ContentResolver cr, Long startInterval, Long endInterval) {
+        List <String> eventTitles = new ArrayList<String>();
+
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
         startInterval = checkStartInterval(startInterval);
@@ -68,12 +83,18 @@ public class CalendarModel {
         ContentUris.appendId(eventsUriBuilder, startInterval);
         ContentUris.appendId(eventsUriBuilder, endInterval);
         Uri eventsUri = eventsUriBuilder.build();
+
         cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+
+
 
         //Prints out all the events in the given interval
         while (cur.moveToNext()) {
-            Log.d("title: ", cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
+            eventTitles.add(cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
+
+            //Log.d("title: ", cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
         }
+        return eventTitles;
     }
 
     /**

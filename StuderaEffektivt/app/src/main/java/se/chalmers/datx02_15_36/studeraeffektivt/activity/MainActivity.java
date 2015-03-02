@@ -12,9 +12,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.TabAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -23,7 +27,6 @@ public class MainActivity extends ActionBarActivity {
     private CalendarActivity calendarActivity;
     private TimerActivity timerActivity;
     private Statistics statistics;
-
 
     private String userName = "user_Name";
     /**
@@ -52,18 +55,24 @@ public class MainActivity extends ActionBarActivity {
         mAdapter = new TabAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mAdapter);
 
-        homeActivity = (HomeActivity) mAdapter.getItem(0);
         calendarActivity = (CalendarActivity) mAdapter.getItem(1);
+        calendarActivity.setContentResolver(this.getContentResolver());
+
+        homeActivity = (HomeActivity) mAdapter.getItem(0);
+        homeActivity.setCalendarActivity(calendarActivity);
+
         timerActivity = (TimerActivity) mAdapter.getItem(2);
         statistics = (Statistics) mAdapter.getItem(3);
-
-        homeActivity.setCalendarActivity(calendarActivity);
 
         /** Defining tab listener */
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
+                if(viewPager.getCurrentItem() ==  1){
+                    //calendarActivity.readCalendar();
+                    homeActivity.setCalendarInfo();
+                }
             }
 
             @Override
@@ -152,3 +161,4 @@ public class MainActivity extends ActionBarActivity {
     }
 
 }
+
