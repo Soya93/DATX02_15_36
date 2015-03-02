@@ -57,6 +57,8 @@ public class MainActivity extends ActionBarActivity {
         timerActivity = (TimerActivity) mAdapter.getItem(2);
         statistics = (Statistics) mAdapter.getItem(3);
 
+        homeActivity.setCalendarActivity(calendarActivity);
+
         /** Defining tab listener */
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
