@@ -11,11 +11,8 @@
       <sourceFolder url="file://$MODULE_DIR$/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
     </content>
-<<<<<<< HEAD
     <orderEntry type="inheritedJdk" />
-=======
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
->>>>>>> adcb330730b7484c9e9ad3778290adc052d932fd
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
