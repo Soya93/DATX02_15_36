@@ -122,6 +122,14 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
+    public void startTimer(View view){
+       timerActivity.startTimer();
+    }
+
+    public void resetTimer(View view){
+        timerActivity.resetTimer();
+    }
+
     /**
      * Go to TipActivity.
      * Called when the user clicks the Tip button.

@@ -36,63 +36,32 @@
         </fragment>
         <fragment
             android:name=".activity.CalendarActivity"
-            android:label="@string/title_activity_calendar" >
+            android:label="CalendarActivity" >
         </fragment>
         <activity
             android:name=".view.CalendarView"
-            android:label="@string/title_activity_calendar_view" >
+            android:label="CalenderView" >
         </activity>
         <activity
             android:name=".activity.TipActivity"
-            android:label="@string/title_activity_tips" >
+            android:label="Tips" >
         </activity>
         <activity
             android:name=".activity.TipDetailedInfoActivity"
-            android:label="@string/title_activity_tip_view" >
+            android:label="TipViewActivity" >
         </activity>
         <activity
             android:name=".activity.CourseActivity"
-            android:label="@string/title_activity_course" >
-        </activity>
-        <activity
-<<<<<<< HEAD
-            android:name=".TimerActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden"
-            >
-            <receiver android:name=".MyReceiver" >
-                <intent-filter>
-                    <action android:name="se.chalmers.datx02_15_36.studeraeffektivt.TIME_LEFT_SERVICE_ACTION" />
-                    <category android:name = "android.intent.category.DEFAULT"/>
-                </intent-filter>
-            </receiver>
-
-        </activity>
-        <activity
-            android:name=".CounterUpTimer" >
-        </activity>
-        <activity
-            android:name=".AddAssignment">
-        </activity>
-        <activity
-            android:name=".NewTimer"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden">
-        </activity>
-        <service android:name=".MyCountDownTimer"/>
-=======
-            android:name=".view.CourseDetails"
-            android:label="@string/title_activity_course_details" >
+            android:label="CourseActivity" >
         </activity>
         <fragment
             android:name=".activity.Statistics"
-            android:label="@string/title_activity_statistics" >
+            android:label="Statistics" >
         </fragment>
         <fragment
             android:name=".HomeActivity"
             android:label="Home" >
         </fragment>
->>>>>>> develop
     </application>
 
 </manifest>

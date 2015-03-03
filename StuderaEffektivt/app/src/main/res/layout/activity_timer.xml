@@ -16,8 +16,6 @@
         android:layout_weight="0.10" />
 
 
-<<<<<<< HEAD
-=======
 
     <Button android:id="@+id/button_start_timer"
         android:layout_width="match_parent"
@@ -35,7 +33,7 @@
         android:onClick="resetTimer"
         android:layout_weight="0.10" />
 
->>>>>>> develop
+
     <TimePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,20 +41,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.10" />
 
-<<<<<<< HEAD
 
-    <Button
-        android:layout_width="143dp"
-        android:layout_height="wrap_content"
-        android:text="Reset"
-        android:id="@+id/button_reset"
-        android:onClick="resetTimer" />
-
-    <Button android:id="@+id/button_start_timer"
-        android:layout_width="144dp"
-        android:layout_height="wrap_content"
-        android:text="Start"
-        android:onClick="startTimer" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -68,15 +53,4 @@
         android:layout_weight="0.10" />
 
 
-=======
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text=""
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.10" />
-
->>>>>>> develop
 </LinearLayout>

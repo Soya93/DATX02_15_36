@@ -18,6 +18,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerActivity;
 public class TabAdapter extends FragmentPagerAdapter {
     HomeActivity homeActivity = new HomeActivity();
     CalendarActivity calendarActivity = new CalendarActivity();
+    TimerActivity timerActivity = new TimerActivity();
 
     public TabAdapter(FragmentManager fm) {
         super(fm);
@@ -35,7 +36,7 @@ public class TabAdapter extends FragmentPagerAdapter {
                 return calendarActivity;
             case 2:
                 // Timer fragment activity
-                return new TimerActivity();
+                return timerActivity;
             case 3:
                 //Statistics fragment activity
                 return new Statistics();

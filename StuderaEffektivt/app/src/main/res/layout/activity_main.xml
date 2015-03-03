@@ -2,44 +2,6 @@
     android:id="@+id/pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-<<<<<<< HEAD
-    android:orientation="vertical"
-    android:weightSum="1">
-
-    <Button android:id="@+id/button_timer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_timer"
-        android:onClick="goToTimer"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CountUpTimer"
-        android:id="@+id/button"
-        android:onClick="goToCountUp"
-        android:layout_gravity="center_horizontal" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Assignments"
-        android:onClick="goToAddAssignment"
-        android:id="@+id/button2"
-        android:layout_gravity="center_horizontal" />
-
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Timer 4"
-        android:id="@+id/button5"
-        android:onClick="goToTimer2"
-        android:layout_gravity="center_horizontal" />
-
-
-</LinearLayout>
-=======
     android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
 </android.support.v4.view.ViewPager>
->>>>>>> develop
+
