@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -150,14 +151,43 @@ public class MainActivity extends ActionBarActivity {
         calendarActivity.readCalendar();
     }
 
-    public void openDialog(View view) {
-        startActivity(calendarActivity.openDialog());
-        AlertDialog alertDialog = calendarActivity.getBuilder().create();
+    public void openCalendar(View view){
+        startActivity(calendarActivity.openCalendar());
+    }
+    //WORKS!
+    public void openDialog(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(calendarActivity.getActivity());
+
+        //the alternatives
+        String [] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
+
+        builder.setTitle("Välj ett pass att repetera")
+                .setItems(alternatives, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO hämta några random uppgifter
+                        String tasks = "";
+                        int studyWeek = which+1;
+                        startActivity(calendarActivity.getCalendarModel().addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " +  tasks));
+
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
-    public void openCalendar(View view){
-        startActivity(calendarActivity.openCalendar());
+       //Does not work properly, but looks more beautiful...
+    public void openDialog2(View view) {
+        calendarActivity.openDialog();
+
+        Log.i("week",calendarActivity.getWeek() + "" );
+
+        if (calendarActivity.getWeek() != -1) {
+            startActivity(calendarActivity.addRepetition());
+        }
+        calendarActivity.createBuilder();
     }
 
 }
