@@ -28,7 +28,7 @@ public class CalendarActivity extends Fragment {
     CalendarModel calendarModel = new CalendarModel();
     ContentResolver cr;
     View rootView;
-    int week;
+    int week = -1;
     AlertDialog.Builder builder;
 
     @Override
@@ -48,40 +48,16 @@ public class CalendarActivity extends Fragment {
         return calendarModel.addEventManually(0L, 0L, false, "Studiepass", null, null);
     }
 
-    //TODO: fix this
-    public Intent openDialog() {
-        builder = new AlertDialog.Builder(getActivity());
-        //the alternatives
-        String [] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
-        //TODO hämta några random uppgifter
-        String tasks = "";
-
-        builder.setTitle("Välj ett pass att repetera")
-                .setItems(alternatives, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        int studyWeek = which+1;
-                        setWeek(studyWeek);
-                        // The 'which' argument contains the index position
-                        // of the selected item
-                    }
-                });
-        return calendarModel.addEventManually(0L, 0L, true, "Repititonspass för LV" + week, null, "Repetera " +  tasks);
-    }
-
-    private void setWeek(int week){
-        this.week = week;
-    }
-
-    public AlertDialog.Builder getBuilder(){
-        return builder;
-    }
-
     public Intent openCalendar(){
         return calendarModel.openCalendar();
     }
 
     public List<String> getTodaysEvents() {
         return calendarModel.readEventsToday(cr);
+    }
+
+    public CalendarModel getCalendarModel(){
+        return this.calendarModel;
     }
 
     //Används inte men kommer vara användbart
@@ -97,4 +73,44 @@ public class CalendarActivity extends Fragment {
         Long eventID = this.calendarModel.addEventAuto(cr);;
     }
 
+    /*  Whatever is below this line does not work and is not invoked */
+    public void createBuilder(){
+        builder.create().show();
+    }
+
+    public void openDialog(){
+       builder = new AlertDialog.Builder(getActivity());
+
+       //the alternatives
+       String [] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
+       String tasks = "";
+
+       builder.setTitle("Välj ett pass att repetera")
+               .setItems(alternatives, new DialogInterface.OnClickListener() {
+                   public void onClick(DialogInterface dialog, int which) {
+                       int studyWeek = which+1;
+                       setWeek(studyWeek);
+                      Log.i("weekInOpen", week + "");
+                       // The 'which' argument contains the index position
+                       // of the selected item
+                   }
+               });
+        //builder.create().show();
+   }
+
+    public Intent addRepetition() {
+        return calendarModel.addEventManually(0L, 0L, true, "Repititonspass för LV" + week, null, "Repetera " +  "");
+    }
+
+    private void setWeek(int week){
+        this.week = week;
+    }
+
+    public int getWeek(){
+        return this.week;
+    }
+
+    public AlertDialog.Builder getBuilder(){
+        return builder;
+    }
 }
