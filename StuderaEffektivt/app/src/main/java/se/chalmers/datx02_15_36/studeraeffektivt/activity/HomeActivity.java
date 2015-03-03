@@ -79,10 +79,10 @@ public class HomeActivity extends Fragment {
             Log.i("HomeActivity: setCalendarInfo", "view:" + view);
 
             //Crashes because view is null...
-            initComponents(view);
-            studySession1_course1.setText(todaysEventsTitles.get(0));
-            studySession2_course1.setText(todaysEventsTitles.get(1));
-            studySession3_course1.setText(todaysEventsTitles.get(2));
+            //initComponents(view);
+            //studySession1_course1.setText(todaysEventsTitles.get(0));
+            //studySession2_course1.setText(todaysEventsTitles.get(1));
+            //studySession3_course1.setText(todaysEventsTitles.get(2));
 
             return todaysEventsTitles;
         }
