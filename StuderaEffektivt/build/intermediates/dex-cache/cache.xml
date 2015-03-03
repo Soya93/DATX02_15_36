@@ -23,6 +23,20 @@
         <dex dex="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-ecdb6550dc330cf8674df84f68f06656b6e27962.jar" />
     </item>
     <item
+        jar="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\exploded-aar\com.google.android.gms\play-services\6.5.87\classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
+        <dex dex="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\pre-dexed\debug\classes-2f33455ca08d50c76a36f05630cd4889e37cba11.jar" />
+    </item>
+    <item
+        jar="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\exploded-aar\com.github.alamkanak\android-week-view\1.2.1\classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="246fd881b6edca03120d2b653662664b6c2b35da">
+        <dex dex="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\pre-dexed\debug\classes-bc09292668a7e88c958d09d6645bdf428cadf5ab.jar" />
+    </item>
+    <item
         jar="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
         jumboMode="false"
         revision="19.1.0"

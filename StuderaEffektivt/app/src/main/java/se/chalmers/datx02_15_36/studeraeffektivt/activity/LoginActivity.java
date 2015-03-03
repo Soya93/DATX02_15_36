@@ -44,8 +44,6 @@ import se.chalmers.datx02_15_36.studeraeffektivt.IO.LogInHandler;
  */
 
 public class LoginActivity extends Activity {
-
-
         LogInHandler logInHandler;
 
     /**
