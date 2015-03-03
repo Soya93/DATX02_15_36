@@ -1,20 +1,32 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.content.res.AssetManager;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.app.Activity;
+
+import java.io.InputStream;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 /**
  * A class displaying the text of an studytechnique tip.
  */
-public class TipDetailedInfoActivity extends Activity {
+public class TipDetailedInfoActivity extends Fragment {
 
-    TextView tipViewInfoText;
+    private TextView tipViewInfoText;
+    private  TextView tipViewHeader;
+    private View view;
+    private  Bundle bundleFromPreviousFragment;
+    private String tipName;
 
     /**
      * Instansiates the view with the name of the tip as a header and
@@ -23,41 +35,28 @@ public class TipDetailedInfoActivity extends Activity {
      * @param savedInstanceState
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tip_view);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                Bundle savedInstanceState)         {
 
-        String tipName = getIntent().getStringExtra("tipName");
-        TextView tipHeader= (TextView)findViewById(R.id.tipHeader);
-        tipHeader.setText(tipName);
+        View rootView = inflater.inflate(R.layout.activity_tip_view, container, false);
+        this.view = rootView;
+        initComponents();
 
-       tipViewInfoText = (TextView)findViewById(R.id.tipViewInfoText);
-        tipViewInfoText.setText(getTipInfoText(tipName));
+        bundleFromPreviousFragment = this.getArguments();
+        tipName = bundleFromPreviousFragment.getString("key", "");
 
+        tipViewInfoText.setText(tipName);
+
+        getTipInfoText(tipName);
+
+        return rootView;
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tip_view, menu);
-        return true;
+    private void initComponents(){
+        tipViewInfoText = (TextView) view.findViewById(R.id.tipViewInfoText);
+        tipViewHeader = (TextView) view.findViewById(R.id.tipHeader);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
      * A method getting the text describing a certain tip.
@@ -67,6 +66,8 @@ public class TipDetailedInfoActivity extends Activity {
     public String getTipInfoText(String tipName){
 
         //TODO: Read strings from a file/database? depending on the tipName
+
+        
 
         return tipName + ": Lorem ipsum dolor sit amet, consectetuer adipiscing elit, " +
                 "sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat " +

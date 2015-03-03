@@ -11,6 +11,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.activity.CalendarActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.LoginActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.Statistics;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerActivity;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.TipActivity;
 
 /**
  * Created by emmawestman on 15-02-27.
@@ -39,6 +40,9 @@ public class TabAdapter extends FragmentPagerAdapter {
             case 3:
                 //Statistics fragment activity
                 return new Statistics();
+            case 4:
+                //Tips fragment activity
+                return new TipActivity();
         }
 
         return null;
@@ -47,6 +51,6 @@ public class TabAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // get item count - equal to number of tabs
-        return 4;
+        return 5;
     }
 }

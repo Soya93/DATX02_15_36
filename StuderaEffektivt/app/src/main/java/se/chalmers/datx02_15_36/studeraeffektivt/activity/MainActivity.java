@@ -37,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
     private TabAdapter mAdapter;
     private android.support.v7.app.ActionBar actionBar;
     // Tab titles
-    private String[] tabs = {"Home", "Calendar", "Timer", "Statistics"};
+    private String[] tabs = {"Home", "Calendar", "Timer", "Statistics", "Tips"};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
