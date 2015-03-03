@@ -69,40 +69,29 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
 
-        /*logInHandler = new LogInHandler(this.getApplicationContext());
-        mLoginFormView = findViewById(R.id.login_form);
+        logInHandler = new LogInHandler(this.getApplicationContext());
+
+        /*mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mEmailLoginFormView = findViewById(R.id.email_login_form);
         mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-                mPasswordView = (EditText) findViewById(R.id.password);
-
-                String email = mEmailView.getText().toString();
-                String password = mPasswordView.getText().toString();
-
-                logInHandler.writeToFile(email, password);
-
-                email = logInHandler.getEmail();
-                password = logInHandler.getPassword();
-
-                Intent intent = new Intent(LoginActivity, MainActivity.class);
-                startActivity(intent);
-
-
-               // Log.i("getEmail", email);
-               // Log.i("getPassword", password);
-            }
-        });*/
-
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);*/
     }
 
     public void goToMain(View view){
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mPasswordView = (EditText) findViewById(R.id.password);
+
+        String email = mEmailView.getText().toString();
+        String password = mPasswordView.getText().toString();
+
+        logInHandler.writeToFile(email, password);
+
+        email = logInHandler.getEmail();
+        password = logInHandler.getPassword();
+
+        //TODO: Actually verify and log in to the account specified.
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
