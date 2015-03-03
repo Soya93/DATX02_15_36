@@ -25,4 +25,6 @@ dependencies {
 
     compile 'com.github.alamkanak:android-week-view:1.2.1'
     compile files('libs/achartengine-1.2.0.jar')
+    compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'com.android.support:appcompat-v7:21.0.0'
 }

@@ -8,8 +8,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 /**
@@ -20,6 +24,7 @@ public class CalendarModel {
     private Intent calIntent;
     private Uri uri;
     private Calendar cal;
+    private Calendar todayDate;
     private Calendar beginDay;
     private Calendar endDay;
     private int year;
@@ -27,6 +32,7 @@ public class CalendarModel {
     private int day;
     private long startMillis;
     private long endMillis;
+    private long todayMillis;
     private Cursor cur;
 
     public CalendarModel() {
@@ -38,10 +44,16 @@ public class CalendarModel {
         month = cal.get(Calendar.MONTH);
         day = cal.get(Calendar.DATE);
 
+        //set todays date
+        todayDate = Calendar.getInstance();
+        todayDate.set(year, month, day);
+        todayMillis = todayDate.getTimeInMillis();
+
         //set start day
-        beginDay = Calendar.getInstance();
-        beginDay.set(year, month, day);
-        startMillis = beginDay.getTimeInMillis();
+        beginDay = todayDate;
+        startMillis = todayDate.getTimeInMillis();
+
+
         //set end day
         endDay = Calendar.getInstance();
         endDay.setTime(futureDate(beginDay.getTime(), 1));
@@ -50,13 +62,20 @@ public class CalendarModel {
         cur = null;
     }
 
+
+    public List <String>  readEventsToday(ContentResolver cr){
+        return this.readEvents(cr, todayMillis, todayMillis);
+    }
+
     /**
      * Method which reads the events from a given start- and endinterval
      * @param cr
      * @param startInterval
      * @param endInterval
      */
-    public void readEvents(ContentResolver cr, Long startInterval, Long endInterval) {
+    public List <String> readEvents(ContentResolver cr, Long startInterval, Long endInterval) {
+        List <String> eventTitles = new ArrayList<String>();
+
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
         startInterval = checkStartInterval(startInterval);
@@ -64,12 +83,18 @@ public class CalendarModel {
         ContentUris.appendId(eventsUriBuilder, startInterval);
         ContentUris.appendId(eventsUriBuilder, endInterval);
         Uri eventsUri = eventsUriBuilder.build();
+
         cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+
+
 
         //Prints out all the events in the given interval
         while (cur.moveToNext()) {
-            Log.d("title: ", cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
+            eventTitles.add(cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
+
+            //Log.d("title: ", cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
         }
+        return eventTitles;
     }
 
     /**
@@ -98,7 +123,7 @@ public class CalendarModel {
      * @param accountEmail
      * @param accountType
      */
-    public void getCalendars(ContentResolver cr, String accountEmail, String accountType) {
+    public List<String> getCalendars(ContentResolver cr, String accountEmail, String accountType) {
         uri = CalendarContract.Calendars.CONTENT_URI;
         String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
                 + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
@@ -108,13 +133,34 @@ public class CalendarModel {
         // Submit the query and get a Cursor object back.
         cur = cr.query(uri, CalendarUtils.EVENT_PROJECTION, selection, selectionArgs, null);
 
+        List<String> calendars = new ArrayList<String>();
+
         int i = 0;
         while (cur.moveToNext()) {
+
+            calendars.add(cur.getColumnName(i));
 
             Log.d("title: ", cur.getColumnName(i));
             i++;
 
         }
+        return calendars;
+    }
+
+    public List<String> getRepAlt(ContentResolver cr, String accountEmail, String accountType) {
+        List<String> events = getCalendars(cr, accountEmail, accountType);
+        List<String> studySessions = filter(events, "Studiepass");
+        return studySessions;
+    }
+
+    public List<String> filter(List<String> events, String filterOn) {
+        List<String> filteredList = new ArrayList<String>();
+        for(String e :events) {
+            if(e == filterOn) {
+                filteredList.add(e);
+            }
+        }
+        return filteredList;
     }
 
     /**
@@ -146,13 +192,22 @@ public class CalendarModel {
         //Log.i("cal", CalendarContract.Calendars.CALENDAR_DISPLAY_NAME);
     }
 
-
     /**
-     * Calculates the future date depending on the number set in daysFromNow
-     * @param date
-     * @param daysFromNow
+     * Opens the calendar of the users phone where the user may choose which one
      * @return
      */
+    public Intent openCalendar() {
+        calIntent = new Intent(Intent.ACTION_VIEW);
+        calIntent.setData(Uri.parse("content://com.android.calendar/time"));
+        return calIntent;
+    }
+
+        /**
+         * Calculates the future date depending on the number set in daysFromNow
+         * @param date
+         * @param daysFromNow
+         * @return
+         */
     private Date futureDate(Date date, int daysFromNow) {
 
         if (month == 2) {
@@ -190,8 +245,8 @@ public class CalendarModel {
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, startMillis);
         values.put(CalendarContract.Events.DTEND, endMillis);
-        values.put(CalendarContract.Events.TITLE, "TEST");
-        values.put(CalendarContract.Events.DESCRIPTION, "TEST");
+        values.put(CalendarContract.Events.TITLE, "Studiepass");
+        values.put(CalendarContract.Events.DESCRIPTION, "Studiepass");
         values.put(CalendarContract.Events.CALENDAR_ID, calID);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, "Sweden");
         uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);

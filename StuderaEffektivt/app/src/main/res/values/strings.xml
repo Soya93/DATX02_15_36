@@ -14,10 +14,17 @@
     <string name="button_start_timer">Start Timer</string>
 
     <!-- Calendar -->
-    <string name="title_activity_calendar">Calendar</string>
+    <string name="title_activity_calendar">CalendarActivity</string>
+    <string name="title_activity_calendar_view">CalendarView</string>
+    <string name="title_activity_tips">Tips</string>
+    <string name="title_activity_tip_view">TipViewActivity</string>
 
     <!-- Statistics -->
     <string name="title_activity_statistics">Statistics</string>
 
+    <!-- Course -->
+    <string name="title_activity_course">CourseActivity</string>
+    <string name="title_activity_course_details">CourseDetails</string>
+    <string name="title_activity_home">home</string>
 
 </resources>
