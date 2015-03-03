@@ -89,9 +89,6 @@ public class LoginActivity extends Activity {
 
                // Log.i("getEmail", email);
                // Log.i("getPassword", password);
-
-                //Google written stuff
-                //attemptLogin();
             }
         });
 
