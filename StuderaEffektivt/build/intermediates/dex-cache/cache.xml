@@ -30,18 +30,18 @@
         <dex dex="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\pre-dexed\debug\classes-2f33455ca08d50c76a36f05630cd4889e37cba11.jar" />
     </item>
     <item
-        jar="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\exploded-aar\com.github.alamkanak\android-week-view\1.2.1\classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="246fd881b6edca03120d2b653662664b6c2b35da">
-        <dex dex="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\pre-dexed\debug\classes-bc09292668a7e88c958d09d6645bdf428cadf5ab.jar" />
-    </item>
-    <item
         jar="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
         <dex dex="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\pre-dexed\debug\classes-3c9540cfaad2706f1f56b009c0eb43b012e0c8eb.jar" />
+    </item>
+    <item
+        jar="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\exploded-aar\com.github.alamkanak\android-week-view\1.2.1\classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="246fd881b6edca03120d2b653662664b6c2b35da">
+        <dex dex="C:\Users\Patricia\Documents\SKOLA\DATX02-15-36\DATX02_15_36\DATX02_15_36\StuderaEffektivt\app\build\intermediates\pre-dexed\debug\classes-bc09292668a7e88c958d09d6645bdf428cadf5ab.jar" />
     </item>
 
 </items>
