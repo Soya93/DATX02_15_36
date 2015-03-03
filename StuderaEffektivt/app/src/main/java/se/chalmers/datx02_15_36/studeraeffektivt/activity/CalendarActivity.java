@@ -48,19 +48,41 @@ public class CalendarActivity extends Fragment {
         return calendarModel.addEventManually(0L, 0L, false, "Studiepass", null, null);
     }
 
+    public Intent openCalendar(){
+        return calendarModel.openCalendar();
+    }
 
+    public List<String> getTodaysEvents() {
+        return calendarModel.readEventsToday(cr);
+    }
+
+    public CalendarModel getCalendarModel(){
+        return this.calendarModel;
+    }
+
+    //Används inte men kommer vara användbart
+    public void readCalendar() {
+        calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
+
+        calendarModel.readEvents(cr, 0L, 0L);
+    }
+
+    public void addEventAuto(View view) {
+        calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
+        calendarModel.getCalendars(cr, "eewestman@gmail.com", "com.google");
+        Long eventID = this.calendarModel.addEventAuto(cr);;
+    }
+
+    /*  Whatever is below this line does not work and is not invoked */
     public void createBuilder(){
         builder.create().show();
     }
 
-
-    //TODO: fix this
     public void openDialog(){
        builder = new AlertDialog.Builder(getActivity());
 
        //the alternatives
        String [] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
-       //TODO hämta några random uppgifter
        String tasks = "";
 
        builder.setTitle("Välj ett pass att repetera")
@@ -91,30 +113,4 @@ public class CalendarActivity extends Fragment {
     public AlertDialog.Builder getBuilder(){
         return builder;
     }
-
-    public Intent openCalendar(){
-        return calendarModel.openCalendar();
-    }
-
-    public List<String> getTodaysEvents() {
-        return calendarModel.readEventsToday(cr);
-    }
-
-    //Används inte men kommer vara användbart
-    public void readCalendar() {
-        calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
-
-        calendarModel.readEvents(cr, 0L, 0L);
-    }
-
-    public void addEventAuto(View view) {
-        calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
-        calendarModel.getCalendars(cr, "eewestman@gmail.com", "com.google");
-        Long eventID = this.calendarModel.addEventAuto(cr);;
-    }
-
-    public CalendarModel getCalendarModel(){
-        return this.calendarModel;
-    }
-
 }

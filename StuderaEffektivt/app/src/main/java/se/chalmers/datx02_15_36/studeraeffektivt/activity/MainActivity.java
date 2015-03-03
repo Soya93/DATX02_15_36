@@ -70,9 +70,8 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
-                if(viewPager.getCurrentItem() ==  1){
-                    //calendarActivity.readCalendar();
-                    homeActivity.setCalendarInfo();
+                if(viewPager.getCurrentItem() ==  1 && !homeActivity.hasReadToday()) {
+                        homeActivity.setCalendarInfo();
                 }
             }
 
@@ -154,7 +153,7 @@ public class MainActivity extends ActionBarActivity {
     public void openCalendar(View view){
         startActivity(calendarActivity.openCalendar());
     }
-    //WORKS!
+
     public void openDialog(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(calendarActivity.getActivity());
 
