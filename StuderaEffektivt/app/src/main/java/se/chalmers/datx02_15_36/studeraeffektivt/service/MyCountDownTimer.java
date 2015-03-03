@@ -1,4 +1,4 @@
-package se.chalmers.datx02_15_36.studeraeffektivt;
+package se.chalmers.datx02_15_36.studeraeffektivt.service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -26,35 +26,35 @@ public class MyCountDownTimer extends Service {
 
     public class MCDTBinder extends Binder {
         MyCountDownTimer getService(){
-          return  MyCountDownTimer.this;
+            return  MyCountDownTimer.this;
         }
     }
 
-      public IBinder onBind(Intent intent) {
-          return iBinder;
-      }
+    public IBinder onBind(Intent intent) {
+        return iBinder;
+    }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-       studyTime = intent.getLongExtra("STUDY_TIME",100);
+        studyTime = intent.getLongExtra("STUDY_TIME",100);
         broadCastIntent = new Intent();
         intent.setAction("TIME_LEFT_SERVICE_ACTION");
 
         startCountDown();
 
-    return START_STICKY;}
+        return START_STICKY;}
 
-    public long returnRemainingTime() {
+    public long returnStudyTime() {
         return this.studyTime;
     }
 
     public void onDestroy () {
 
-
-
         super.onDestroy();
         if(timer != null)
-                    timer.cancel();
+            timer.cancel();
+         stopSelf();
+
 
 
 
@@ -65,18 +65,15 @@ public class MyCountDownTimer extends Service {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-            studyTime--;
-                  sendData();
+                studyTime--;
+
+                if(studyTime <=0){
+                    onDestroy();
+                }
 
 
             }
         },0,update_Time);    }
-
-     private void sendData () {
-                  broadCastIntent.putExtra("TIME_LEFT",studyTime);
-                  sendBroadcast(broadCastIntent);
-                  Log.d("SENDING SERVICE", Long.toString(studyTime));
-    }
 
 
 }
