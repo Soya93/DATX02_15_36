@@ -16,6 +16,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.app.Activity;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.zip.Inflater;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -28,6 +31,15 @@ public class TipActivity extends Fragment {
     private Button tipButton1;
     private Button tipButton2;
     private Button tipButton3;
+    private Button tipButton4;
+    private Button tipButton5;
+    private Button tipButton6;
+    private Button tipButton7;
+    private Button tipButton8;
+    private Button tipButton9;
+    private Button tipButton10;
+
+    private List<Button> buttonList;
 
     private TipDetailedInfoActivity tipDetails;
 
@@ -46,21 +58,50 @@ public class TipActivity extends Fragment {
         initComponentsList(view);
         return rootView;
 
+
     }
 
     private void initComponentsList(View view){
 
-        tipButton1 = (Button) view.findViewById(R.id.tip1);
-        tipButton2 = (Button) view.findViewById(R.id.tip2);
-        tipButton3 = (Button) view.findViewById(R.id.tip3);
-        tipButton1.setOnClickListener(myOnlyhandler);
-        tipButton2.setOnClickListener(myOnlyhandler);
-        tipButton3.setOnClickListener(myOnlyhandler);
+        buttonList = new ArrayList<Button>();
+        String s = "";
+
+        /*tipButton1 = (Button) view.findViewById(R.id.button1);
+        tipButton2 = (Button) view.findViewById(R.id.button2);
+        tipButton3 = (Button) view.findViewById(R.id.button3);
+        tipButton4 = (Button) view.findViewById(R.id.button4);
+        tipButton5 = (Button) view.findViewById(R.id.button5);
+        tipButton6 = (Button) view.findViewById(R.id.button6);
+        tipButton7 = (Button) view.findViewById(R.id.button7);
+        tipButton8 = (Button) view.findViewById(R.id.button8);
+        tipButton9 = (Button) view.findViewById(R.id.button9);
+        tipButton10 = (Button) view.findViewById(R.id.button10);*/
+
+
+        buttonList.add((Button) view.findViewById(R.id.button1));
+        buttonList.add((Button) view.findViewById(R.id.button2));
+        buttonList.add((Button) view.findViewById(R.id.button3));
+        buttonList.add((Button) view.findViewById(R.id.button4));
+        buttonList.add((Button) view.findViewById(R.id.button5));
+        buttonList.add((Button) view.findViewById(R.id.button6));
+        buttonList.add((Button) view.findViewById(R.id.button7));
+        buttonList.add((Button) view.findViewById(R.id.button8));
+        buttonList.add((Button) view.findViewById(R.id.button9));
+        buttonList.add((Button) view.findViewById(R.id.button10));
+
+        for(Button b : buttonList){
+            b.setOnClickListener(myOnlyhandler);
+        }
+
+
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
         public void onClick(View v) {
-            switch(v.getId()) {
+
+            goToTip((Button) v);
+
+            /*switch(v.getId()) {
                 case R.id.tip1:
                     // it was the first button
                     goToTip(tipButton1);
@@ -69,7 +110,7 @@ public class TipActivity extends Fragment {
                     // it was the second button
                     goToTip(tipButton2);
                     break;
-            }
+            }*/
         }
     };
 
