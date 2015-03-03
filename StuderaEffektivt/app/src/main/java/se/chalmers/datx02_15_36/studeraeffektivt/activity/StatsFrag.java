@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
-public class Statistics extends Fragment {
+public class StatsFrag extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

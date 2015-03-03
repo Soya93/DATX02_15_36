@@ -13,7 +13,7 @@ import android.widget.TimePicker;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 
-public class TimerActivity extends Fragment {
+public class TimerFrag extends Fragment {
     private String userName;
     private CountDownTimer cdt;
     private TimePicker t1;

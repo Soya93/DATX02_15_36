@@ -16,7 +16,7 @@ import java.util.List;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 
-public class HomeActivity extends Fragment {
+public class HomeFrag extends Fragment {
 
     private TextView todayTextView;
     private List <TextView> textViews;
@@ -25,7 +25,7 @@ public class HomeActivity extends Fragment {
     private boolean hasReadToday;
 
 
-    private CalendarActivity calendarActivity;
+    private CalendarFrag calendarFrag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,9 +47,9 @@ public class HomeActivity extends Fragment {
         Log.i("HomeActivity:", "InitComponents");
     }
 
-   public void setCalendarActivity(CalendarActivity calendarActivity){
+   public void setCalendarFrag(CalendarFrag calendarFrag){
        Log.i("HomeActivity:", "setCalendarActivity");
-       this.calendarActivity = calendarActivity;
+       this.calendarFrag = calendarFrag;
    }
 
     /**
@@ -59,11 +59,11 @@ public class HomeActivity extends Fragment {
     public List<String> setCalendarInfo() {
         Log.i("HomeActivity: setCalendarInfo", "view:" + view);
 
-        if (calendarActivity != null) {
+        if (calendarFrag != null) {
             Log.i("HomeActivity: setCalendarInfo", "CalendarActivity_NOT_NULL");
 
             //get calendarinfo of today from calendar
-            List<String> todaysEventsTitles = calendarActivity.getTodaysEvents();
+            List<String> todaysEventsTitles = calendarFrag.getTodaysEvents();
 
             if(todaysEventsTitles!=null) {
                 for (String str : todaysEventsTitles) {

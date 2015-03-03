@@ -6,18 +6,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.HomeActivity;
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.CalendarActivity;
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.LoginActivity;
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.Statistics;
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerActivity;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.CalendarFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.HomeFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.StatsFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerFrag;
 
 /**
  * Created by emmawestman on 15-02-27.
  */
 public class TabAdapter extends FragmentPagerAdapter {
-    HomeActivity homeActivity = new HomeActivity();
-    CalendarActivity calendarActivity = new CalendarActivity();
+    HomeFrag homeFrag = new HomeFrag();
+    CalendarFrag calendarFrag = new CalendarFrag();
 
     public TabAdapter(FragmentManager fm) {
         super(fm);
@@ -29,16 +28,16 @@ public class TabAdapter extends FragmentPagerAdapter {
         switch (index) {
             case 0:
                 // Home fragment activity
-                return homeActivity;
+                return homeFrag;
             case 1:
                 // Calendar fragment activity
-                return calendarActivity;
+                return calendarFrag;
             case 2:
                 // Timer fragment activity
-                return new TimerActivity();
+                return new TimerFrag();
             case 3:
                 //Statistics fragment activity
-                return new Statistics();
+                return new StatsFrag();
         }
 
         return null;
