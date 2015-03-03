@@ -80,12 +80,12 @@ public class TipActivity extends Fragment {
         Fragment fragment = new TipDetailedInfoActivity();
 
         Bundle bundle = new Bundle();
-        bundle.putString("key", b.getText().toString());
+        bundle.putString("key", (String)b.getText());
+
         fragment.setArguments(bundle);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Log.d("Tipactivity goToTip: ", "" + this.toString());
         fragmentTransaction.replace(((ViewGroup)container.getParent()).getId(), fragment);
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);

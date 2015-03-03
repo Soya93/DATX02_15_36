@@ -1,20 +1,13 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
-import android.content.res.AssetManager;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.app.Activity;
 
-import java.io.InputStream;
-
+import se.chalmers.datx02_15_36.studeraeffektivt.IO.TipHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 /**
@@ -27,6 +20,7 @@ public class TipDetailedInfoActivity extends Fragment {
     private View view;
     private  Bundle bundleFromPreviousFragment;
     private String tipName;
+    private TipHandler tipHandler;
 
     /**
      * Instansiates the view with the name of the tip as a header and
@@ -45,9 +39,11 @@ public class TipDetailedInfoActivity extends Fragment {
         bundleFromPreviousFragment = this.getArguments();
         tipName = bundleFromPreviousFragment.getString("key", "");
 
-        tipViewInfoText.setText(tipName);
+        tipHandler = new TipHandler(this.getActivity().getApplicationContext());
 
-        getTipInfoText(tipName);
+        tipViewInfoText.setText(getTipInfoText(tipName));
+
+
 
         return rootView;
     }
@@ -67,9 +63,9 @@ public class TipDetailedInfoActivity extends Fragment {
 
         //TODO: Read strings from a file/database? depending on the tipName
 
-        
+        return tipHandler.readFromFile(tipName);
 
-        return tipName + ": Lorem ipsum dolor sit amet, consectetuer adipiscing elit, " +
+        /*return tipName + ": Lorem ipsum dolor sit amet, consectetuer adipiscing elit, " +
                 "sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat " +
                 "volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper " +
                 "suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum " +
@@ -83,6 +79,6 @@ public class TipDetailedInfoActivity extends Fragment {
                 "qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, " +
                 "quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula " +
                 "quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, " +
-                "fiant sollemnes in futurum.";
+                "fiant sollemnes in futurum.";*/
     }
 }
