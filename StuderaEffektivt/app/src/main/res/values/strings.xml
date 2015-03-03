@@ -27,4 +27,12 @@
     <string name="title_activity_course_details">CourseDetails</string>
     <string name="title_activity_home">home</string>
 
+    <!-- Colours -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="pink">#CA1F5B</color>
+    <color name="purple">#5E229B</color>
+    <color name="green">#78CF20</color>
+    <color name="yellow">#E6DA23</color>
+
 </resources>
