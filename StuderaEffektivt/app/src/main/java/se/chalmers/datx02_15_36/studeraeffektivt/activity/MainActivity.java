@@ -80,7 +80,7 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onPageSelected(int position) {
-                // on changing the page
+                // on changing the page§    §
                 // make respected tab selected
                 actionBar.setSelectedNavigationItem(position);
             }
