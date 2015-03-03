@@ -13,6 +13,9 @@
     <string name="title_activity_timer">TimerActivity</string>
     <string name="button_start_timer">Start Timer</string>
 
+    <!-- Calendar -->
+    <string name="title_activity_calendar">Calendar</string>
+
     <!-- Statistics -->
     <string name="title_activity_statistics">Statistics</string>
 
