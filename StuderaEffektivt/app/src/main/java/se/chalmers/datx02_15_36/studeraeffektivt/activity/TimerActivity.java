@@ -36,12 +36,12 @@ public class TimerActivity extends Fragment {
 
     private long secondsUntilFinished;
 
-    private int timePassed = 0;
-    private int default_TotalTime =(120*60*1000);
+    protected long timePassed = 0;
+    protected long default_TotalTime =(2*60*1000);
     private int calculatedStudyTime ;
-    private int default_PauseTime = (30*60*1000);
+    private int default_PauseTime = (1*60*1000);
     private int default_NumberOfPauses = 2;
-    private int default_StudyTime = (30*60*1000);
+    private int default_StudyTime = (1*60*1000);
 
     private int studyTime=0;
 
@@ -92,12 +92,12 @@ public class TimerActivity extends Fragment {
         t1.setCurrentHour(hour);
         t1.setCurrentMinute(minute);
     }
-
+        /*
     private void calculateStudySession() {
         this.calculatedStudyTime = default_TotalTime - ((default_NumberOfPauses*default_PauseTime)/default_NumberOfPauses);
 
     }
-
+  */
     public CountDownTimer studyTimerFunction(long millisInFuture, long countDownInterval) {
 
         studyTimer = new CountDownTimer(millisInFuture, countDownInterval) {
@@ -105,11 +105,11 @@ public class TimerActivity extends Fragment {
             public void onTick(long millisUntilFinished) {
                 studyTimerIsRunning=true;
 
-                textView.setText("seconds remaining: " + millisUntilFinished / 1000);
+                textView.setText("study seconds remaining: " + millisUntilFinished / 1000);
                 setTimePicker(millisUntilFinished);
 
                 secondsUntilFinished = millisUntilFinished;
-                timePassed += 100;
+                timePassed += 1000;
             }
 
             @Override
@@ -131,11 +131,11 @@ public class TimerActivity extends Fragment {
             public void onTick(long millisUntilFinished) {
                 studyTimerIsRunning=false;
 
-                textView.setText("seconds remaining: " + millisUntilFinished / 1000);
+                textView.setText("pause seconds remaining: " + millisUntilFinished / 1000);
                 setTimePicker(millisUntilFinished);
 
                 secondsUntilFinished = millisUntilFinished;
-                timePassed += 100;
+                timePassed += 1000;
             }
 
             @Override
@@ -169,6 +169,47 @@ public class TimerActivity extends Fragment {
 
     }
 
+    protected void cancelOneOfTimers() {
+        if(studyTimerIsRunning){
+            studyTimer.cancel();
+        }
+        else{
+            pauseTimer.cancel();
+        }
+    }
+
+    protected void handleTimeFromService(long timeFromService){
+        long temp = 0;
+        this.timePassed=timeFromService;
+        Log.d("timeFromService", "value" + timeFromService);
+        boolean isItStudy = true;
+                while (temp<timeFromService){
+                    if(isItStudy){
+                        temp+=default_StudyTime;
+                        isItStudy=false;
+                    }
+                    else{
+                        temp+=default_PauseTime;
+                        isItStudy=true;
+                    }
+                }
+
+        Log.d("isItStudy", "value" + isItStudy);
+
+        temp=temp-timeFromService;
+        Log.d("temp", "value" + temp);
+
+        if(isItStudy){
+            pauseTimerFunction(temp,update_Time);
+            pauseTimer.start();
+        }
+        else{
+            studyTimerFunction(temp,update_Time);
+            studyTimer.start();
+        }
+
+
+    }
 
 
 

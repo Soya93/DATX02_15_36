@@ -52,10 +52,8 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             serviceMCDT = ((MyCountDownTimer.MCDTBinder) service).getService();
-            long timeFromService = serviceMCDT.returnStudyTime();
-            timerActivity.studyTimerFunction(timeFromService*1000,1000);
-            timerActivity.studyTimer.start();
-
+            long timeFromService = serviceMCDT.returnTimePassed();
+            timerActivity.handleTimeFromService(timeFromService*1000);
 
         }
 
@@ -222,11 +220,14 @@ public class MainActivity extends ActionBarActivity {
     public void onStop() {
         super.onStop();
 
-       long timePassedToService = timerActivity.getSecondsUntilFinished();
-        timerActivity.studyTimer.cancel();
+       long timePassedToService = timerActivity.timePassed;
+        long totalTime = timerActivity.default_TotalTime;
+
+        timerActivity.cancelOneOfTimers();
 
         Intent i = new Intent(this, MyCountDownTimer.class);
-        i.putExtra("STUDY_TIME", timePassedToService / 1000);
+        i.putExtra("TIME_PASSED", timePassedToService/1000);
+        i.putExtra("TOTAL_TIME",totalTime/1000);
         startService(i);
 
 

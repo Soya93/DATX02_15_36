@@ -19,7 +19,8 @@ import java.util.TimerTask;
 public class MyCountDownTimer extends Service {
     private Timer  timer = new Timer ();
     private final int update_Time = 1000;
-    private long studyTime;
+    private long timePassed;
+    private long totalTime;
     private final IBinder iBinder = new MCDTBinder();
 
     public class MCDTBinder extends Binder {
@@ -34,13 +35,14 @@ public class MyCountDownTimer extends Service {
 
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        studyTime = intent.getLongExtra("STUDY_TIME",100);
+        timePassed = intent.getLongExtra("TIME_PASSED",100);
+        totalTime = intent.getLongExtra("TOTAL_TIME",100);
         startCountDown();
 
         return START_NOT_STICKY;}
 
-    public long returnStudyTime() {
-        return this.studyTime;
+    public long returnTimePassed() {
+        return this.timePassed;
     }
 
     public void onDestroy () {
@@ -60,11 +62,11 @@ public class MyCountDownTimer extends Service {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                studyTime--;
-                Log.d("timer service", "counting" + studyTime);
-                if(studyTime <=0){
+
+                timePassed++;
+                Log.d("timer service", "counting" + timePassed);
+                if(timePassed >= totalTime)
                     onDestroy();
-                }
 
 
             }
