@@ -51,6 +51,8 @@ public class TipDetailedInfoActivity extends Fragment {
     private void initComponents(){
         tipViewInfoText = (TextView) view.findViewById(R.id.tipViewInfoText);
         tipViewHeader = (TextView) view.findViewById(R.id.tipHeader);
+
+        //tipViewHeader.setText(tipName);
     }
 
 
@@ -63,7 +65,7 @@ public class TipDetailedInfoActivity extends Fragment {
 
         //TODO: Read strings from a file/database? depending on the tipName
 
-        return tipHandler.readFromFile(tipName);
+        return tipHandler.readFromFile(tipName.replaceAll("ö","o_").replaceAll("Ö","O_").replaceAll("å","a_").replaceAll("Å","A_").replaceAll("ä","_a").replaceAll("Ä","_A"));
 
         /*return tipName + ": Lorem ipsum dolor sit amet, consectetuer adipiscing elit, " +
                 "sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat " +
