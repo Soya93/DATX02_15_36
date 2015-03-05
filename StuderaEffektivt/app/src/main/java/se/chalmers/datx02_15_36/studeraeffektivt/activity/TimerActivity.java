@@ -39,8 +39,6 @@ public class TimerActivity extends Fragment {
     protected CountDownTimer studyTimer;
     protected CountDownTimer pauseTimer;
 
-    private final int update_Time = 1000;
-
     private Button startButton;
     private Button resetButton;
 
@@ -409,5 +407,5 @@ public class TimerActivity extends Fragment {
     */
 
 
-}
+
 

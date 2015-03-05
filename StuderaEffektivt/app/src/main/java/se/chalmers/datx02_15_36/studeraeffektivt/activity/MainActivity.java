@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
     private String[] tabs = {"Home", "Calendar", "Timer", "Statistics"};
 
     private MyCountDownTimer serviceMCDT;
-
+/*
     private ServiceConnection sc = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -58,6 +58,7 @@ public class MainActivity extends ActionBarActivity {
 
         }
 
+
     @Override
     public void onServiceDisconnected(ComponentName name) {
         serviceMCDT=null;
@@ -65,6 +66,7 @@ public class MainActivity extends ActionBarActivity {
 
 
 };
+*/
 
 
 
@@ -153,6 +155,7 @@ public class MainActivity extends ActionBarActivity {
 
     protected void onResume () {
         super.onResume();
+        /*
 
         if (isMyServiceRunning(MyCountDownTimer.class)) {
             Intent i = new Intent(getBaseContext(), MyCountDownTimer.class);
@@ -169,6 +172,7 @@ public class MainActivity extends ActionBarActivity {
             }, 2000);
 
         }
+        */
 
     }
 
@@ -224,16 +228,19 @@ public class MainActivity extends ActionBarActivity {
 
     public void onStop() {
         super.onStop();
+        /*
 
        long timePassedToService = timerActivity.timePassed;
         long totalTime = timerActivity.default_TotalTime;
 
         timerActivity.cancelOneOfTimers();
 
+
         Intent i = new Intent(this, MyCountDownTimer.class);
         i.putExtra("TIME_PASSED", timePassedToService/1000);
         i.putExtra("TOTAL_TIME",totalTime/1000);
         startService(i);
+        */
 
 
 
