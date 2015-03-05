@@ -41,7 +41,7 @@ public class TabAdapter extends FragmentPagerAdapter {
                 //Statistics fragment activity
                 return new Statistics();
             case 4:
-                //Tips fragment activity
+                //Fifth fragment activity
                 return new TipActivity();
         }
 
