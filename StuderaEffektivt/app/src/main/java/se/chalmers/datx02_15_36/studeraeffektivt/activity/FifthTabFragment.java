@@ -30,8 +30,10 @@ public class FifthTabFragment extends Fragment {
     private Button settingsButton;
     private Button courseButton;
 
-    private ViewGroup container;
+    public ViewGroup container;
     private View view;
+
+    public ViewGroup
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -152,12 +154,17 @@ public class FifthTabFragment extends Fragment {
             case "Studietips och studiestilar":
                 fragment = new TipActivity();
                 fragment.setArguments(bundle);
-                fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment);
+                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 break;
         }
-        fragmentTransaction.detach(this);
+        fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    public ViewGroup getContainer(){
+        return container;
     }
 
 }
