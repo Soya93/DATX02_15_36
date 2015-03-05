@@ -22,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -33,10 +32,14 @@ import se.chalmers.datx02_15_36.studeraeffektivt.service.MyCountDownTimer;
 
 
 public class TimerActivity extends Fragment {
-    private CountDownTimer studyTimer;
-    private CountDownTimer pauseTimer;
+  
 
     private TimePicker t1;
+
+    protected CountDownTimer studyTimer;
+    protected CountDownTimer pauseTimer;
+
+    private final int update_Time = 1000;
 
     private Button startButton;
     private Button resetButton;
@@ -112,15 +115,13 @@ public class TimerActivity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.activity_timer,container,false);
+       rootView= inflater.inflate(R.layout.activity_timer,container,false);
+
 
         instantiate();
 
 
-
-
-        return rootView;
-    }
+   return rootView; }
 
 
 
@@ -151,6 +152,9 @@ public class TimerActivity extends Fragment {
         t1.setCurrentHour(hour);
         t1.setCurrentMinute(minute);
     }
+        /*
+    private void calculateStudySession() {
+        this.calculatedStudyTime = default_TotalTime - ((default_NumberOfPauses*default_PauseTime)/default_NumberOfPauses);
 
     /**
      * Set the timer.
@@ -171,8 +175,10 @@ public class TimerActivity extends Fragment {
 
             @Override
             public void onFinish() {
-                pauseTimerFunction(default_PauseTime,update_Time);
-                pauseTimer.start();
+                if(timePassed<default_TotalTime) {
+                    pauseTimerFunction(default_PauseTime, update_Time);
+                    pauseTimer.start();
+                }
 
             }
         };
@@ -195,19 +201,23 @@ public class TimerActivity extends Fragment {
 
             @Override
             public void onFinish() {
-                studyTimerFunction(default_StudyTime,update_Time);
+                if(timePassed<default_TotalTime) {
+                    studyTimerFunction(default_StudyTime, update_Time);
+                    studyTimer.start();
+                }
 
             }
         };
-        return studyTimer;
+        return pauseTimer;
 
     }
 
 
-    /**
-     * Start the timer.
-     * Called when the user clicks the Start Timer button.
-     */
+
+    public long getSecondsUntilFinished() {
+        return this.secondsUntilFinished;
+    }
+
     public void startTimer() {
         studyTimerFunction(default_StudyTime, 100);
         studyTimer.start();
@@ -215,14 +225,49 @@ public class TimerActivity extends Fragment {
         if(startButton.getText().equals("Start")) {
 
 
-            startButton.setText("Pause");
-        }
-        else if (startButton.getText().equals("Pause")){
+
+
+    public void resetTimer() {
+
+    }
+
+    protected void cancelOneOfTimers() {
+        if(studyTimerIsRunning){
             studyTimer.cancel();
             startButton.setText("Resume");
         }
-        else if (startButton.getText().equals("Resume")){
-            studyTimerFunction(secondsUntilFinished, 100);
+        else{
+            pauseTimer.cancel();
+        }
+    }
+
+    protected void handleTimeFromService(long timeFromService){
+        long temp = 0;
+        this.timePassed=timeFromService;
+        Log.d("timeFromService", "value" + timeFromService);
+        boolean isItStudy = true;
+                while (temp<timeFromService){
+                    if(isItStudy){
+                        temp+=default_StudyTime;
+                        isItStudy=false;
+                    }
+                    else{
+                        temp+=default_PauseTime;
+                        isItStudy=true;
+                    }
+                }
+
+        Log.d("isItStudy", "value" + isItStudy);
+
+        temp=temp-timeFromService;
+        Log.d("temp", "value" + temp);
+
+        if(isItStudy){
+            pauseTimerFunction(temp,update_Time);
+            pauseTimer.start();
+        }
+        else{
+            studyTimerFunction(temp,update_Time);
             studyTimer.start();
             startButton.setText("Pause");
         }
@@ -364,5 +409,5 @@ public class TimerActivity extends Fragment {
     */
 
 
-
+}
 

@@ -1,10 +1,16 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -19,6 +25,7 @@ import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.TabAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.MyCountDownTimer;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 
@@ -40,7 +47,28 @@ public class MainActivity extends ActionBarActivity {
     // Tab titles
     private String[] tabs = {"Home", "Calendar", "Timer", "Statistics"};
 
+    private MyCountDownTimer serviceMCDT;
+
+    private ServiceConnection sc = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            serviceMCDT = ((MyCountDownTimer.MCDTBinder) service).getService();
+            long timeFromService = serviceMCDT.returnTimePassed();
+            timerActivity.handleTimeFromService(timeFromService*1000);
+
+        }
+
     @Override
+    public void onServiceDisconnected(ComponentName name) {
+        serviceMCDT=null;
+    }
+
+
+};
+
+
+
+@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -123,6 +151,27 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
+    protected void onResume () {
+        super.onResume();
+
+        if (isMyServiceRunning(MyCountDownTimer.class)) {
+            Intent i = new Intent(getBaseContext(), MyCountDownTimer.class);
+            bindService(i, sc, Context.BIND_AUTO_CREATE);
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    Intent i = new Intent(getBaseContext(), MyCountDownTimer.class);
+                    stopService(i);
+                    unbindService(sc);
+
+                }
+            }, 2000);
+
+        }
+
+    }
+
     public void startTimer(View view){
        timerActivity.startTimer();
     }
@@ -171,6 +220,33 @@ public class MainActivity extends ActionBarActivity {
 
     public void settingsTimer(View view) {
         timerActivity.settingsTimer();
+    }
+
+    public void onStop() {
+        super.onStop();
+
+       long timePassedToService = timerActivity.timePassed;
+        long totalTime = timerActivity.default_TotalTime;
+
+        timerActivity.cancelOneOfTimers();
+
+        Intent i = new Intent(this, MyCountDownTimer.class);
+        i.putExtra("TIME_PASSED", timePassedToService/1000);
+        i.putExtra("TOTAL_TIME",totalTime/1000);
+        startService(i);
+
+
+
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
