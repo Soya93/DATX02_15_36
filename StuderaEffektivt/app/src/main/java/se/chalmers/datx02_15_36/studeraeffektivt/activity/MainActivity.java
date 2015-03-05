@@ -4,9 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -14,21 +12,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-
-import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.TabAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    private HomeActivity homeActivity;
-    private CalendarActivity calendarActivity;
-    private TimerActivity timerActivity;
-    private Statistics statistics;
+    private HomeFrag homeFrag;
+    private CalendarFrag calendarFrag;
+    private TimerFrag timerFrag;
+    private StatsFrag statsFrag;
 
     private String userName = "user_Name";
     /**
@@ -41,7 +35,9 @@ public class MainActivity extends ActionBarActivity {
     private View view;
 
     // Tab titles
+
     private String[] tabs = {"Home", "Calendar", "Timer", "Statistics", "Tips"};
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,30 +49,35 @@ public class MainActivity extends ActionBarActivity {
         Log.i("Main", viewPager.toString());
 
         actionBar = getSupportActionBar();
+
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setHomeButtonEnabled(false);
+
+
         mAdapter = new TabAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mAdapter);
 
-        calendarActivity = (CalendarActivity) mAdapter.getItem(1);
-        calendarActivity.setContentResolver(this.getContentResolver());
+        calendarFrag = (CalendarFrag) mAdapter.getItem(1);
+        calendarFrag.setContentResolver(this.getContentResolver());
 
-        homeActivity = (HomeActivity) mAdapter.getItem(0);
-        homeActivity.setCalendarActivity(calendarActivity);
-        homeActivity.setContext(this.getApplicationContext());
 
-        timerActivity = (TimerActivity) mAdapter.getItem(2);
-        statistics = (Statistics) mAdapter.getItem(3);
+
+        homeFrag = (HomeFrag) mAdapter.getItem(0);
+        homeFrag.setCalendarFrag(calendarFrag);
+        homeFrag.setContext(this.getApplicationContext());
+
+
+        timerFrag = (TimerFrag) mAdapter.getItem(2);
+        statsFrag = (StatsFrag) mAdapter.getItem(3);
 
         /** Defining tab listener */
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
-               /* if(viewPager.getCurrentItem() ==  1 && !homeActivity.hasReadToday()) {
-                    homeActivity.setCalendarInfo();
-                }*/
+
             }
 
             @Override
@@ -121,7 +122,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu);
         return true;
     }
@@ -147,19 +148,19 @@ public class MainActivity extends ActionBarActivity {
 
     //Calendar buttons redirections
     public void addStudySession(View view) {
-        startActivity(calendarActivity.addStudySession());
+        startActivity(calendarFrag.addStudySession());
     }
 
     public void readCalendar(View view) {
-        calendarActivity.readCalendar();
+        calendarFrag.readCalendar();
     }
 
     public void openCalendar(View view){
-        startActivity(calendarActivity.openCalendar());
+        startActivity(calendarFrag.openCalendar());
     }
 
     public void openDialog(View view){
-        AlertDialog.Builder builder = new AlertDialog.Builder(calendarActivity.getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(calendarFrag.getActivity());
 
         //the alternatives
         String [] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
@@ -170,7 +171,7 @@ public class MainActivity extends ActionBarActivity {
                         //TODO hämta några random uppgifter
                         String tasks = "";
                         int studyWeek = which+1;
-                        startActivity(calendarActivity.getCalendarModel().addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " +  tasks));
+                        startActivity(calendarFrag.getCalendarModel().addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " +  tasks));
 
                         // The 'which' argument contains the index position
                         // of the selected item
@@ -183,14 +184,14 @@ public class MainActivity extends ActionBarActivity {
 
        //Does not work properly, but looks more beautiful...
     public void openDialog2(View view) {
-        calendarActivity.openDialog();
+        calendarFrag.openDialog();
 
-        Log.i("week",calendarActivity.getWeek() + "" );
+        Log.i("week", calendarFrag.getWeek() + "" );
 
-        if (calendarActivity.getWeek() != -1) {
-            startActivity(calendarActivity.addRepetition());
+        if (calendarFrag.getWeek() != -1) {
+            startActivity(calendarFrag.addRepetition());
         }
-        calendarActivity.createBuilder();
+        calendarFrag.createBuilder();
     }
 
 }

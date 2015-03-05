@@ -23,7 +23,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 /**
  * A class representing the controller of a calendar object
  */
-public class CalendarActivity extends Fragment {
+public class CalendarFrag extends Fragment {
 
     CalendarModel calendarModel = new CalendarModel();
     ContentResolver cr;
