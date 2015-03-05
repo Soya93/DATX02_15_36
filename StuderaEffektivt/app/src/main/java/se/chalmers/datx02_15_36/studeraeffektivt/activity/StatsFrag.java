@@ -23,8 +23,12 @@ public class StatsFrag extends Fragment {
 
         View rootView = inflater.inflate(R.layout.activity_stats, container, false);
 
-        /*pc_hours = (PieChart) getView().findViewById(R.id.piechart_hours);
-        pc_ass = (PieChart) getView().findViewById(R.id.piechart_ass);
+        //Pie chart showing how many ours studied.
+        pc_hours = (PieChart) rootView.findViewById(R.id.piechart_hours);
+        pc_hours.setNoDataTextDescription("TIMMAR DU LAGT");
+
+
+        /*pc_ass = (PieChart) getView().findViewById(R.id.piechart_ass);
         lineChart = (LineChart) getView().findViewById(R.id.linechart);*/
 
 
