@@ -10,8 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="TipName"
         android:id="@+id/tipHeader"
+        android:text="hej"
         android:layout_centerHorizontal="true" />
 
     <ScrollView

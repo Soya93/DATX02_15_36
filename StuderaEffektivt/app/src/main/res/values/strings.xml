@@ -38,7 +38,18 @@
     <string name="tip_button_8">Lev ett nyttigt och balanserat liv</string>
     <string name="tip_button_9">Reflektera över studierna</string>
     <string name="tip_button_10">Motivation</string>
-    <string name="header">Studietips och studiestular</string>
+    <string name="tip_button_11">Elaborate Interrogation</string>
+    <string name="tip_button_12">Self-explanation</string>
+    <string name="tip_button_13">Summarization</string>
+    <string name="tip_button_14">Imagery</string>
+    <string name="tip_button_15">Rereading</string>
+    <string name="tip_button_16">Practice testing</string>
+    <string name="tip_button_17">Distributed practice</string>
+    <string name="tip_button_18">Interleaved practice</string>
+
+    <string name="header">Studietips och studiestilar</string>
+
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

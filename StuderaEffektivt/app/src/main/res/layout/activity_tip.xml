@@ -33,6 +33,11 @@
             android:layout_centerHorizontal="true"
             android:layout_alignTop="@+id/scrollView">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:text="Studietips"/>
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
@@ -92,6 +97,59 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_10"
                 android:id="@+id/button10" />
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="25dp"
+               android:text="Studiestilar"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="@string/tip_button_11"
+                android:id="@+id/button11" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="@string/tip_button_12"
+                android:id="@+id/button12" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="@string/tip_button_13"
+                android:id="@+id/button13" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="@string/tip_button_14"
+                android:id="@+id/button14" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="@string/tip_button_15"
+                android:id="@+id/button15" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="@string/tip_button_16"
+                android:id="@+id/button16" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="@string/tip_button_17"
+                android:id="@+id/button17" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:text="@string/tip_button_18"
+                android:id="@+id/button18" />
         </LinearLayout>
     </ScrollView>
 
