@@ -34,6 +34,7 @@ public class MainActivity extends ActionBarActivity {
     // Tab titles
     private String[] tabs = {"Home", "Calendar", "Timer", "Stats"};
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +45,7 @@ public class MainActivity extends ActionBarActivity {
         Log.i("Main", viewPager.toString());
 
         actionBar = getSupportActionBar();
+
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -57,11 +59,19 @@ public class MainActivity extends ActionBarActivity {
         calendarFrag = (CalendarFrag) mAdapter.getItem(1);
         calendarFrag.setContentResolver(this.getContentResolver());
 
+
         homeFrag = (HomeFrag) mAdapter.getItem(0);
         homeFrag.setCalendarFrag(calendarFrag);
 
         timerFrag = (TimerFrag) mAdapter.getItem(2);
         statsFrag = (StatsFrag) mAdapter.getItem(3);
+
+        final int[] ICONS = new int[] {
+            R.drawable.ic_home1,
+               R.drawable.ic_cal2,
+                R.drawable.ic_timer,
+                R.drawable.chart_line
+        };
 
         /** Defining tab listener */
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
@@ -106,9 +116,9 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        // Adding Tabs
-        for (String tab_name : tabs) {
-            actionBar.addTab(actionBar.newTab().setText(tab_name)
+        // Adding Tabs with the icons
+        for (int tabIcon : ICONS) {
+            actionBar.addTab(actionBar.newTab().setIcon(this.getResources().getDrawable(tabIcon))
                     .setTabListener(tabListener));
         }
     }
