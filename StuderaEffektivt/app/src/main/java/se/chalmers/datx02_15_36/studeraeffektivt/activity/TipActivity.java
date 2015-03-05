@@ -33,6 +33,9 @@ public class TipActivity extends Fragment {
     private View view;
     private ViewGroup container;
 
+    private Bundle bundleFromPreviousFragment;
+    private int containerId;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,6 +44,8 @@ public class TipActivity extends Fragment {
         this.view = rootView;
         this.container = container;
         initComponentsList(view);
+        bundleFromPreviousFragment = this.getArguments();
+        containerId = bundleFromPreviousFragment.getInt("containerId");
         return rootView;
 
 
@@ -91,12 +96,15 @@ public class TipActivity extends Fragment {
 
         fragment.setArguments(bundle);
 
+
         FragmentManager fragmentManager = this.getFragmentManager();
         //FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(((ViewGroup)container.getParent()).getId(), fragment);
+        fragmentTransaction.add(containerId, fragment);
+        //fragmentTransaction.add(((ViewGroup)container.getParent()).getId(), fragment);
+        //fragmentTransaction.replace(((ViewGroup)container.getParent()).getId(), fragment);
         fragmentTransaction.hide(this);
-        fragmentTransaction.show(fragment);
+        //fragmentTransaction.show(fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

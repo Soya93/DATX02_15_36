@@ -19,6 +19,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.activity.TipActivity;
 public class TabAdapter extends FragmentPagerAdapter {
     HomeActivity homeActivity = new HomeActivity();
     CalendarActivity calendarActivity = new CalendarActivity();
+    FifthTabFragment fifthTabFragment = new FifthTabFragment();
 
     public TabAdapter(FragmentManager fm) {
         super(fm);
@@ -42,7 +43,8 @@ public class TabAdapter extends FragmentPagerAdapter {
                 return new Statistics();
             case 4:
                 //FifthTab fragment activity
-                return new TipActivity();
+                return new FifthTabFragment();
+
         }
 
         return null;

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,10 @@ public class FifthTabFragment extends Fragment {
 
     private ViewGroup container;
     private View view;
+
+
+
+    private Fragment currentlyShown = this;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -78,7 +83,10 @@ public class FifthTabFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_fifth_tap, container, false);
         this.view = rootView;
         this.container = container;
+        //currentlyShown = this;
+        Log.d("FifthTabFragment ","currentlyshown = fifthtabfragment");
         initComponents();
+
         return rootView;
     }
 
@@ -142,7 +150,8 @@ public class FifthTabFragment extends Fragment {
         Fragment fragment;
 
         Bundle bundle = new Bundle();
-        bundle.putString("key", (String)b.getText());
+        //bundle.putString("key", (String)b.getText());
+        bundle.putInt("containerId",((ViewGroup) container.getParent()).getId());
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -150,14 +159,25 @@ public class FifthTabFragment extends Fragment {
         switch(buttonText) {
 
             case "Studietips och studiestilar":
+
                 fragment = new TipActivity();
                 fragment.setArguments(bundle);
-                fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment);
+                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
+                Log.d("FifthTabFragment ","currentlyshown = tipfragment");
+                currentlyShown = fragment;
                 break;
         }
-        fragmentTransaction.detach(this);
+        fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    public FifthTabFragment getCurrentlyShown(){
+        return (FifthTabFragment) currentlyShown;
+    }
+    public void setCurrentlyShown(){
+
     }
 
 }
