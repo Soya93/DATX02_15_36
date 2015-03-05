@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -37,6 +38,8 @@ public class MainActivity extends ActionBarActivity {
     private ViewPager viewPager;
     private TabAdapter mAdapter;
     private android.support.v7.app.ActionBar actionBar;
+    private View view;
+
     // Tab titles
     private String[] tabs = {"Home", "Calendar", "Timer", "Statistics", "Tips"};
 
@@ -61,6 +64,7 @@ public class MainActivity extends ActionBarActivity {
 
         homeActivity = (HomeActivity) mAdapter.getItem(0);
         homeActivity.setCalendarActivity(calendarActivity);
+        homeActivity.setContext(this.getApplicationContext());
 
         timerActivity = (TimerActivity) mAdapter.getItem(2);
         statistics = (Statistics) mAdapter.getItem(3);
@@ -70,9 +74,9 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
-                if(viewPager.getCurrentItem() ==  1 && !homeActivity.hasReadToday()) {
-                        homeActivity.setCalendarInfo();
-                }
+               /* if(viewPager.getCurrentItem() ==  1 && !homeActivity.hasReadToday()) {
+                    homeActivity.setCalendarInfo();
+                }*/
             }
 
             @Override
