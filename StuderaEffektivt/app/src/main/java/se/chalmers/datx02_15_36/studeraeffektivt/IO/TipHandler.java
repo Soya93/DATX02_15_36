@@ -21,23 +21,30 @@ public class TipHandler {
         this.context = context;
     }
 
-    private void readFromFile(String fileName) {
+    public String readFromFile(String fileName) {
         AssetManager am = context.getAssets();
+        String receiveString = "";
+
         try {
-            InputStream inputStream = context.openFileInput(fileName +".txt");
+            InputStream inputStream = am.open(fileName +".txt");
 
             if ( inputStream != null ) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
+                String currentString = "";
                 StringBuilder stringBuilder = new StringBuilder();
 
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                    //TODO do something
-                    //  Log.i("password in readFromFile", password);
+                while ( (currentString = bufferedReader.readLine()) != null ) {
+                    if(currentString.isEmpty()){
+                        stringBuilder.append("\n\n");
+                    }
+                    else {
+                        stringBuilder.append(currentString);
+                    }
                 }
+
                 inputStream.close();
+                receiveString = stringBuilder.toString();
             }
         }
         catch (FileNotFoundException e) {
@@ -45,5 +52,8 @@ public class TipHandler {
         } catch (IOException e) {
             Log.e("tip handler", "Can not read file: " + e.toString());
         }
+
+        return receiveString;
+
     }
 }

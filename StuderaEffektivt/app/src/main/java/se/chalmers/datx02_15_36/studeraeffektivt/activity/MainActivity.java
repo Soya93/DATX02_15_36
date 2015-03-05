@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,8 +32,12 @@ public class MainActivity extends ActionBarActivity {
     private ViewPager viewPager;
     private TabAdapter mAdapter;
     private android.support.v7.app.ActionBar actionBar;
+    private View view;
+
     // Tab titles
-    private String[] tabs = {"Home", "Calendar", "Timer", "Stats"};
+
+    private String[] tabs = {"Home", "Calendar", "Timer", "Statistics", "Tips"};
+
 
 
     @Override
@@ -58,10 +63,11 @@ public class MainActivity extends ActionBarActivity {
 
         calendarFrag = (CalendarFrag) mAdapter.getItem(1);
         calendarFrag.setContentResolver(this.getContentResolver());
-
-
+        
         homeFrag = (HomeFrag) mAdapter.getItem(0);
         homeFrag.setCalendarFrag(calendarFrag);
+        homeFrag.setContext(this.getApplicationContext());
+
 
         timerFrag = (TimerFrag) mAdapter.getItem(2);
         statsFrag = (StatsFrag) mAdapter.getItem(3);
@@ -78,9 +84,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
-                if(viewPager.getCurrentItem() ==  1 && !homeFrag.hasReadToday()) {
-                        homeFrag.setCalendarInfo();
-                }
+
             }
 
             @Override
@@ -134,13 +138,13 @@ public class MainActivity extends ActionBarActivity {
      * Go to TipActivity.
      * Called when the user clicks the Tip button.
      */
-    public void goToTip(View view) {
+    /*public void goToTip(View view) {
         Button b = (Button) view;
         String buttonText = b.getText().toString();
         Intent intent = new Intent(this, TipActivity.class);
         intent.putExtra("studyType", buttonText);
         startActivity(intent);
-    }
+    }*/
 
     public void goToCourses(View view) {
         //Tillfällig kod för testning
