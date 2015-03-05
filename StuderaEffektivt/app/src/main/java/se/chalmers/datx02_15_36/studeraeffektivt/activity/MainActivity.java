@@ -44,9 +44,13 @@ public class MainActivity extends ActionBarActivity {
         Log.i("Main", viewPager.toString());
 
         actionBar = getSupportActionBar();
+
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setHomeButtonEnabled(false);
+
+
         mAdapter = new TabAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mAdapter);
 
@@ -111,7 +115,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu);
         return true;
     }
