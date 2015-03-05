@@ -44,7 +44,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.IO.LogInHandler;
  * and follow the steps in "Step 1" to create an OAuth 2.0 client for your package.
  */
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements OnClickListener{
         LogInHandler logInHandler;
 
     /**
@@ -71,6 +71,9 @@ public class LoginActivity extends Activity {
 
         logInHandler = new LogInHandler(this.getApplicationContext());
 
+        mPlusSignInButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
+        mPlusSignInButton.setOnClickListener(this);
+
         /*mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mEmailLoginFormView = findViewById(R.id.email_login_form);
@@ -92,6 +95,12 @@ public class LoginActivity extends Activity {
 
         //TODO: Actually verify and log in to the account specified.
 
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

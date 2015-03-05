@@ -7,14 +7,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.LoginActivity">
 
-    <!-- Login progress -->
+    <!-- Login progress >
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign in"
         android:id="@+id/email_sign_in_button"
-        android:layout_gravity="center_horizontal"
-        android:onClick="goToMain"/>
+        android:layout_gravity="center_horizontal"/-->
 
     <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
