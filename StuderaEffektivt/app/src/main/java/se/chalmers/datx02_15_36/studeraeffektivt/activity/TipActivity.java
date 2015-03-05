@@ -104,7 +104,7 @@ public class TipActivity extends Fragment {
         //fragmentTransaction.add(((ViewGroup)container.getParent()).getId(), fragment);
         //fragmentTransaction.replace(((ViewGroup)container.getParent()).getId(), fragment);
         fragmentTransaction.hide(this);
-        fragmentTransaction.show(fragment);
+        //fragmentTransaction.show(fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
