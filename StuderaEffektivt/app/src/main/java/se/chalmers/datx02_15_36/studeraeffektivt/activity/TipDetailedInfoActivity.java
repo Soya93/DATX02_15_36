@@ -22,8 +22,6 @@ public class TipDetailedInfoActivity extends Fragment {
     private String tipName;
     private TipHandler tipHandler;
 
-    public ViewGroup container;
-
     public boolean isActive;
 
     /**
@@ -39,7 +37,7 @@ public class TipDetailedInfoActivity extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_tip_view, container, false);
         this.view = rootView;
 
-        this.container = container;
+
         bundleFromPreviousFragment = this.getArguments();
         tipName = bundleFromPreviousFragment.getString("key", "");
         initComponents();
