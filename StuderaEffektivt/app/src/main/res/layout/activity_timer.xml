@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Time left"
+        android:text="35:00 "
         android:id="@+id/text_timer"
         android:layout_weight="0.10" />
 
@@ -33,11 +33,6 @@
         android:onClick="resetTimer"
         android:layout_weight="0.10" />
 
-
-    <TimePicker
-        android:layout_width="174dp"
-        android:layout_height="80dp"
-        android:id="@+id/timePicker" />
 
     <Button
         style="?android:attr/buttonStyleSmall"

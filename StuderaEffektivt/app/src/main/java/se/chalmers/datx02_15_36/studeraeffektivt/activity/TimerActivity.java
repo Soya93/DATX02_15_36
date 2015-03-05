@@ -47,7 +47,7 @@ public class TimerActivity extends Fragment {
 
     private long timePassed;
     private final long default_TotalTime =(60*60*1000);
-    private final long default_StudyTime = (35*60*1000);
+    private long default_StudyTime = (35*60*1000);
     private final long default_PauseTime = (25*60*1000);
 
     private final long update_Time=1000;
@@ -124,10 +124,6 @@ public class TimerActivity extends Fragment {
 
 
     private void instantiate() {
-        t1 = (TimePicker) rootView.findViewById(R.id.timePicker);
-        t1.setIs24HourView(true);
-        t1.setEnabled(false);
-        setTimePicker(default_StudyTime-60000);
         resetButton = (Button) rootView.findViewById(R.id.button_reset);
         startButton = (Button) rootView.findViewById(R.id.button_start_timer);
         textView = (TextView) rootView.findViewById(R.id.text_timer);
@@ -144,12 +140,7 @@ public class TimerActivity extends Fragment {
     }
 
 
-    private void setTimePicker(long millisUntilFinished) {
-        int hour = secondsToHour(millisUntilFinished);
-        int minute = secondsToMin(millisUntilFinished);
-        t1.setCurrentHour(hour);
-        t1.setCurrentMinute(minute);
-    }
+
         /*
     private void calculateStudySession() {
         this.calculatedStudyTime = default_TotalTime - ((default_NumberOfPauses*default_PauseTime)/default_NumberOfPauses);
@@ -164,8 +155,8 @@ public class TimerActivity extends Fragment {
             public void onTick(long millisUntilFinished) {
                 studyTimerIsRunning=true;
 
-                textView.setText("study seconds remaining: " + millisUntilFinished / 1000);
-                setTimePicker(millisUntilFinished);
+                textView.setText((millisUntilFinished / 1000)/60 + ":" + (millisUntilFinished / 1000)%60);
+
 
                 secondsUntilFinished = millisUntilFinished;
                 timePassed += 100;
@@ -191,7 +182,6 @@ public class TimerActivity extends Fragment {
                 studyTimerIsRunning=false;
 
                 textView.setText("pause seconds remaining: " + millisUntilFinished / 1000);
-                setTimePicker(millisUntilFinished);
 
                 secondsUntilFinished = millisUntilFinished;
                 timePassed += 100;
@@ -217,6 +207,9 @@ public class TimerActivity extends Fragment {
     }
 
     public void startTimer() {
+        if(inputTime != null) {
+            default_StudyTime = Long.valueOf(inputTime).longValue() * 60 * 1000;
+        }
         studyTimerFunction(default_StudyTime, 100);
         studyTimer.start();
         /*
@@ -278,7 +271,7 @@ public class TimerActivity extends Fragment {
 
     public void resetTimer() {
         studyTimer.cancel();
-        setTimePicker(default_StudyTime - 60000);
+
     }
 
     public void settingsTimer() {
@@ -350,6 +343,7 @@ public class TimerActivity extends Fragment {
 
                 pausLengthInput = (TextView) dialogView.findViewById(R.id.pausLengthInt);
                 pausLength = pausLengthInput.getText().toString();
+                textView.setText(inputTime + ":00");
 
             }
         });
