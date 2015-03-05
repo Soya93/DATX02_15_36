@@ -74,35 +74,34 @@ public class LoginActivity extends Activity implements OnClickListener{
         mPlusSignInButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
         mPlusSignInButton.setOnClickListener(this);
 
-        /*mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-        mEmailLoginFormView = findViewById(R.id.email_login_form);
-        mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);*/
-    }
-
-    public void goToMain(View view){
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
 
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
-
-        logInHandler.writeToFile(email, password);
-
-        email = logInHandler.getEmail();
-        password = logInHandler.getPassword();
-
-        //TODO: Actually verify and log in to the account specified.
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        /*mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
+        mEmailLoginFormView = findViewById(R.id.email_login_form);
+        mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);;*/
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+
+        switch(v.getId()) {
+            case R.id.plus_sign_in_button:
+
+                String email = mEmailView.getText().toString();
+                String password = mPasswordView.getText().toString();
+
+                logInHandler.writeToFile(email, password);
+
+                email = logInHandler.getEmail();
+                password = logInHandler.getPassword();
+
+                //TODO: Actually verify and log in to the account specified.
+
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+        }
     }
 }
 
