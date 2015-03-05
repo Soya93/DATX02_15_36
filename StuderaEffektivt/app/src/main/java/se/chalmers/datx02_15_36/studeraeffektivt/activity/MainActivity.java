@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -166,6 +167,10 @@ public class MainActivity extends ActionBarActivity {
 
     public void openCalendar(View view){
         startActivity(calendarActivity.openCalendar());
+    }
+
+    public void settingsTimer(View view) {
+        timerActivity.settingsTimer();
     }
 
 }

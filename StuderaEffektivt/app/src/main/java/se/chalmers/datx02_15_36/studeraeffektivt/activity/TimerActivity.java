@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -61,6 +62,14 @@ public class TimerActivity extends Fragment {
     private SharedPreferences prefs;
     private String prefName = "WhichTimerIsRunning";
     private View rootView;
+    private TextView inputText;
+    private TextView pausLengthInput;
+    private TextView nbrOfPausesInput;
+
+    private String inputTime;
+    private String nbrOfPauses;
+    private String pausLength;
+
 
 /*
 
@@ -103,13 +112,15 @@ public class TimerActivity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
-       rootView= inflater.inflate(R.layout.activity_timer,container,false);
-
+        rootView = inflater.inflate(R.layout.activity_timer,container,false);
 
         instantiate();
 
 
-   return rootView; }
+
+
+        return rootView;
+    }
 
 
 
@@ -226,6 +237,96 @@ public class TimerActivity extends Fragment {
         studyTimer.cancel();
         setTimePicker(default_StudyTime - 60000);
     }
+
+    public void settingsTimer() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.time_picker_dialog, null);
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("Nästa", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+
+
+                inputText = (TextView) dialogView.findViewById(R.id.inputTime);
+                inputTime = inputText.getText().toString();
+                nextDialog();
+
+            }
+        });
+
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // Do nothing
+            }
+        });
+
+/*
+
+        //inputText.setText("0h 00m 00s");
+*/
+        /*
+        //the alternatives
+        String [] alternatives = {"0", "1"}; // "2" //, "3", "4", "5", "6", "7", "8", "9"};
+
+        builder.setTitle("Ställ in tid")
+                .setItems(alternatives, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                inputText.setText("delete");
+                                break;
+                            case 1:
+                                inputText.setText("next");
+                                break;
+                        }
+
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                    }
+                });
+                */
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void nextDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.time_picker_dialog2, null);
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                nbrOfPausesInput = (TextView) dialogView.findViewById(R.id.nbrOfPausesInt);
+                nbrOfPauses = nbrOfPausesInput.getText().toString();
+
+                pausLengthInput = (TextView) dialogView.findViewById(R.id.pausLengthInt);
+                pausLength = pausLengthInput.getText().toString();
+
+            }
+        });
+
+        builder.setNegativeButton("Avbryt",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // Cancel
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
+
+
+
+    }
         /*
     public void settingsTimer (View view){
         showDialog(0);
@@ -263,5 +364,5 @@ public class TimerActivity extends Fragment {
     */
 
 
-}
+
 
