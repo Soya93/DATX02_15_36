@@ -7,8 +7,8 @@
     tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.CalendarFrag">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
         android:text="Add study session"
         android:id="@+id/button_add_study_session"
         android:onClick="addStudySession"
@@ -16,8 +16,8 @@
         android:layout_marginTop="41dp" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
         android:text="Add repetition session"
         android:id="@+id/button_add_repetition_session"
         android:onClick="openDialog"
@@ -27,8 +27,8 @@
 
     <Button
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
         android:text="Open Calendar"
         android:id="@+id/button_open_calendar"
         android:onClick="openCalendar"

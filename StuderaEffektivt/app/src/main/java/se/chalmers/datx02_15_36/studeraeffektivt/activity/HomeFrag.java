@@ -46,10 +46,10 @@ public class HomeFrag extends Fragment {
         todayTextView.setTextColor(Color.BLACK);
         events = new ArrayList<String>();
         layout = (LinearLayout) view.findViewById(R.id.linearLayout1);
-        layout.addView(todayTextView);
         Button button = new Button(context);
         button.setText("Sync");
         layout.addView(button);
+        layout.addView(todayTextView);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 setCalendarInfo();
