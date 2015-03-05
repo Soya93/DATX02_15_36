@@ -35,7 +35,12 @@ public class TipHandler {
                 StringBuilder stringBuilder = new StringBuilder();
 
                 while ( (currentString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(currentString);
+                    if(currentString.isEmpty()){
+                        stringBuilder.append("\n\n");
+                    }
+                    else {
+                        stringBuilder.append(currentString);
+                    }
                 }
 
                 inputStream.close();
