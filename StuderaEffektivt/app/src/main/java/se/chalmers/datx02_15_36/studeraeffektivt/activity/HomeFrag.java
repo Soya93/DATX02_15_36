@@ -54,7 +54,7 @@ public class HomeFrag extends Fragment {
             }
         });*/
         hasInit = true;
-        this.setCalendarInfoSunday();
+        this.setCalendarInfoToday();
     }
 
 
