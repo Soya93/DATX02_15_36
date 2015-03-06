@@ -15,7 +15,7 @@
             android:id="@+id/piechart_hours"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/pink" />
+            android:background="@color/grey" />
 
         <!--com.github.mikephil.charting.charts.PieChart
             android:id="@+id/piechart_ass"

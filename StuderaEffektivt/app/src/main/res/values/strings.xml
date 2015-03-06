@@ -54,6 +54,7 @@
     <!-- Colours -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="grey">#e4e4e4</color>
     <color name="pink">#CA1F5B</color>
     <color name="purple">#5E229B</color>
     <color name="green">#78CF20</color>
