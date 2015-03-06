@@ -8,13 +8,13 @@
 
     <TextView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="username"
+        android:text="användarnamn"
         android:id="@+id/google_username"
         android:layout_centerHorizontal="true" />
 
     <TextView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="password"
+        android:text="lösenord"
         android:id="@+id/google_password"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/google_username"/>
@@ -22,7 +22,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log in"
+        android:text="Logga in"
         android:id="@+id/button_login_google"
         android:layout_centerHorizontal="true"
         android:onClick="logIn"

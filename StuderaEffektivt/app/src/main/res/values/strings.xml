@@ -20,12 +20,12 @@
     <string name="title_activity_tip_view">TipViewActivity</string>
 
     <!-- Statistics -->
-    <string name="title_activity_statistics">Statistics</string>
+    <string name="title_activity_statistics">Statistik</string>
 
     <!-- Course -->
     <string name="title_activity_course">CourseActivity</string>
     <string name="title_activity_course_details">CourseDetails</string>
-    <string name="title_activity_home">home</string>
+    <string name="title_activity_home">Hem</string>
 
     <!-- Tip -->
     <string name="tip_button_1">Var skall man studera</string>
