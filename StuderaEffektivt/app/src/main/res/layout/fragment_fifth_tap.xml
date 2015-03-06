@@ -1,0 +1,27 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.FifthTabFragment">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="145dp"
+        android:text="Studietips och studiestilar"
+        android:id="@+id/button1"
+        android:layout_gravity="center_horizontal|top" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="145dp"
+        android:text="Kurser"
+        android:id="@+id/button11"
+        android:layout_gravity="left|center_vertical" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="145dp"
+        android:text="Inställningar"
+        android:id="@+id/button12"
+        android:layout_gravity="left|bottom" />
+
+</FrameLayout>
