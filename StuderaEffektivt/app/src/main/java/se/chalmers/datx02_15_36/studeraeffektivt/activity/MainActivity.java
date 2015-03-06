@@ -75,11 +75,11 @@ public class MainActivity extends ActionBarActivity {
         statsFrag = (StatsFrag) mAdapter.getItem(3);
 
         final int[] ICONS = new int[] {
-            R.drawable.ic_home1,
-               R.drawable.ic_cal2,
-                R.drawable.ic_timer,
-                R.drawable.ic_pilegraph,
-                R.drawable.ic_action_overflow
+            R.drawable.ic_home1_uns,
+               R.drawable.ic_cal2_uns,
+                R.drawable.ic_timer_uns,
+                R.drawable.ic_pilegraph_uns,
+                R.drawable.ic_action_overflow_uns
         };
 
         /** Defining tab listener */
@@ -88,7 +88,48 @@ public class MainActivity extends ActionBarActivity {
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
                 tabResetIcon = tab.getIcon();
-                tab.setIcon(R.drawable.ic_home1_y);
+
+                Drawable homeIcon = getResources().getDrawable(R.drawable.ic_home1_uns);
+                Drawable calIcon = getResources().getDrawable(R.drawable.ic_cal2_uns);
+                Drawable timerIcon = getResources().getDrawable(R.drawable.ic_timer_uns);
+                Drawable graphIcon = getResources().getDrawable(R.drawable.ic_pilegraph_uns);
+                Drawable menuIcon = getResources().getDrawable(R.drawable.ic_action_overflow_uns);
+
+                //For some reason they are always false.
+                if(tabResetIcon.equals(homeIcon)){
+                    tab.setIcon(R.drawable.ic_home1);
+                }else if(tabResetIcon.equals(calIcon)){
+                    tab.setIcon(R.drawable.ic_cal2);
+                }else if(tabResetIcon.equals(timerIcon)){
+                    tab.setIcon(R.drawable.ic_timer);
+                }else if(tabResetIcon.equals(graphIcon)){
+                    tab.setIcon(R.drawable.ic_pilegraph);
+                }else if (tabResetIcon.equals(menuIcon)){
+                    tab.setIcon(R.drawable.ic_action_overflow);
+                }else{
+                    tab.setIcon(R.drawable.ic_home1);
+                }
+
+                /*switch(tabResetIcon){
+                    case R.drawable.ic_home1_uns:
+                        tab.setIcon(R.drawable.ic_home1);
+                        break;
+                    case R.drawable.ic_cal2_uns:
+                        tab.setIcon(R.drawable.ic_cal2);
+                        break;
+                    case R.drawable.ic_timer_uns:
+                        tab.setIcon(R.drawable.ic_timer);
+                        break;
+                    case R.drawable.ic_pilegraph_uns:
+                        tab.setIcon(R.drawable.ic_pilegraph);
+                        break;
+                    case R.drawable.ic_action_overflow_uns:
+                        tab.setIcon(R.drawable.ic_action_overflow);
+                        break;
+                    default:
+                        break;
+                }*/
+
 
             }
 
