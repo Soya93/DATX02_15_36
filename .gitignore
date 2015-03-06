@@ -3,14 +3,8 @@
 /.idea/libraries
 .DS_Store
 
-*.jar
-
 *.bin
-*/taskArtifacts/*
-*/taskArtifacts/cache.properties.lock								
-*/taskArtifacts/fileHashes.bin
-*/taskArtifacts/fileSnapshots.bin
-*/taskArtifacts/outputFileStates.bin
-*/taskArtifacts/taskArtifacts.bin
-*/dex-cache/cache.xml
-*/model_data.bin
+taskArtifacts/
+dex-cache/
+intermediates/
+
