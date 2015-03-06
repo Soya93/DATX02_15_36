@@ -1,40 +1,30 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 
-import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.TimePicker;
-
-import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.service.MyCountDownTimer;
 
 
 public class TimerActivity extends Fragment {
 
 
-    private TimePicker t1;
 
     protected CountDownTimer studyTimer;
     protected CountDownTimer pauseTimer;
@@ -47,16 +37,16 @@ public class TimerActivity extends Fragment {
 
     protected long timePassed;
     protected long default_TotalTime =(60*60*1000);
-    protected long default_StudyTime = (35*60*1000);
+    protected long default_StudyTime = (1*60*1000);
     protected long default_PauseTime = (25*60*1000);
     protected long default_NumberOfPauses = 1;
-    protected long calculatedStudyTime;
+
 
     private final long update_Time=1000;
     private TextView textView;
 
-    private boolean studyTimerIsRunning = false;
-    private boolean pauseTimerIsRunning = false;
+    protected boolean studyTimerIsRunning = false;
+    protected boolean pauseTimerIsRunning = false;
 
     private View rootView;
     private TextView inputText;
@@ -72,13 +62,8 @@ public class TimerActivity extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-
         rootView= inflater.inflate(R.layout.activity_timer,container,false);
-
-
         instantiate();
-
-
         return rootView; }
 
 
@@ -87,7 +72,6 @@ public class TimerActivity extends Fragment {
         resetButton = (Button) rootView.findViewById(R.id.button_reset);
         startButton = (Button) rootView.findViewById(R.id.button_start_timer);
         textView = (TextView) rootView.findViewById(R.id.text_timer);
-
 
     }
 
@@ -107,7 +91,6 @@ public class TimerActivity extends Fragment {
 
 
 private void calculateStudySession() {
-
     long temp = (default_TotalTime - (default_NumberOfPauses * default_PauseTime));
     this.default_StudyTime = temp / (default_NumberOfPauses + 1);
 }
@@ -131,6 +114,9 @@ private void calculateStudySession() {
             @Override
             public void onFinish() {
                 studyTimerIsRunning = false;
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                Ringtone r = RingtoneManager.getRingtone(getActivity().getApplicationContext(), notification);
+                r.play();
                 if(timePassed<default_TotalTime) {
                     pauseTimerFunction(default_PauseTime, update_Time);
                     pauseTimer.start();
@@ -175,7 +161,7 @@ private void calculateStudySession() {
         if(inputTime != null) {
             default_StudyTime = Long.valueOf(inputTime).longValue() * 60 * 1000;
         }*/
-        if(!studyTimerIsRunning) {
+        if(!studyTimerIsRunning && !pauseTimerIsRunning) {
             studyTimerFunction(default_StudyTime, 100);
             studyTimer.start();
             startButton.setText("Pause");
