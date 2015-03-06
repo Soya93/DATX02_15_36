@@ -44,7 +44,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.IO.LogInHandler;
  * and follow the steps in "Step 1" to create an OAuth 2.0 client for your package.
  */
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements OnClickListener{
         LogInHandler logInHandler;
 
     /**
@@ -71,31 +71,36 @@ public class LoginActivity extends Activity {
 
         logInHandler = new LogInHandler(this.getApplicationContext());
 
-        /*mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-        mEmailLoginFormView = findViewById(R.id.email_login_form);
-        mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);*/
-    }
+        mPlusSignInButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
+        mPlusSignInButton.setOnClickListener(this);
 
-    public void goToMain(View view){
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
 
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        /*mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
+        mEmailLoginFormView = findViewById(R.id.email_login_form);
+        mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);;*/
+    }
 
-        logInHandler.writeToFile(email, password);
+    @Override
+    public void onClick(View v) {
 
-        email = logInHandler.getEmail();
-        password = logInHandler.getPassword();
+        switch(v.getId()) {
+            case R.id.plus_sign_in_button:
 
-        //TODO: Actually verify and log in to the account specified.
+                String email = mEmailView.getText().toString();
+                String password = mPasswordView.getText().toString();
 
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+                logInHandler.writeToFile(email, password);
+
+                email = logInHandler.getEmail();
+                password = logInHandler.getPassword();
+
+                //TODO: Actually verify and log in to the account specified.
+
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+        }
     }
 }
-
-
-
