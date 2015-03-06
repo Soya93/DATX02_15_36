@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -30,6 +31,8 @@ public class MainActivity extends ActionBarActivity {
     private StatsFrag statsFrag;
 
     private String userName = "user_Name";
+    private Drawable tabResetIcon;
+
     /**
      * Called when the activity is first created.
      */
@@ -98,7 +101,7 @@ public class MainActivity extends ActionBarActivity {
             R.drawable.ic_home1,
                R.drawable.ic_cal2,
                 R.drawable.ic_timer,
-                R.drawable.chart_line,
+                R.drawable.ic_pilegraph,
                 R.drawable.ic_action_overflow
         };
 
@@ -107,12 +110,14 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
+                tabResetIcon = tab.getIcon();
+                tab.setIcon(R.drawable.ic_home1_y);
 
             }
 
             @Override
             public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
-
+                tab.setIcon(tabResetIcon);
             }
 
             @Override
@@ -168,7 +173,6 @@ public class MainActivity extends ActionBarActivity {
         intent.putExtra("studyType", buttonText);
         startActivity(intent);
     }*/
-
 
     public void goToCourses(View view) {
         //Tillfällig kod för testning
