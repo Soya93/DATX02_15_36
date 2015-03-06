@@ -67,6 +67,12 @@ public class CalendarModel {
         return this.readEvents(cr, todayMillis, todayMillis);
     }
 
+    public List <String>  readEventsSunday(ContentResolver cr){
+         Calendar sunday = Calendar.getInstance();
+        sunday.setTime(futureDate(sunday.getTime(), 2));
+        return this.readEvents(cr, sunday.getTimeInMillis(), sunday.getTimeInMillis());
+    }
+
     /**
      * Method which reads the events from a given start- and endinterval
      * @param cr

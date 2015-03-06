@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -51,11 +50,11 @@ public class HomeFrag extends Fragment {
         layout.addView(todayTextView);
         /*button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-                setCalendarInfo();
+                setCalendarInfoToday();
             }
         });*/
         hasInit = true;
-        this.setCalendarInfo();
+        this.setCalendarInfoSunday();
     }
 
 
@@ -69,8 +68,8 @@ public class HomeFrag extends Fragment {
      *
      * @return
      */
-    public List<String> setCalendarInfo() {
-            Log.i("HomeActivity: setCalendarInfo", "view:" + getView());
+    public void setCalendarInfoToday() {
+            Log.i("HomeActivity: setCalendarInfoToday", "view:" + getView());
 
         if (calendarFrag != null && hasInit) {
                 //get calendarinfo of today from calendar
@@ -88,9 +87,8 @@ public class HomeFrag extends Fragment {
                             layout.addView(tmp2);
                             layout.addView(tmp);
                         }
-                        Log.i("setCalendarInfo", str);
+                        Log.i("setCalendarInfoToday", str);
                     }
-                    return todaysEventsTitles;
                 } else {
                     TextView tmp2 = new TextView(context);
                     tmp2.setText("");
@@ -102,8 +100,39 @@ public class HomeFrag extends Fragment {
                 }
             hasInit = false;
             }
-        return null;
     }
+
+    public void setCalendarInfoSunday() {
+        if (calendarFrag != null && hasInit) {
+            List<String> sundayEventsTitles = calendarFrag.getSundaysEvents();
+
+            if (sundayEventsTitles != null) {
+                for (String str : sundayEventsTitles) {
+                    TextView tmp = new TextView(context);
+                    tmp.setText(str);
+                    tmp.setTextColor(Color.BLACK);
+                    TextView tmp2 = new TextView(context);
+                    tmp2.setText("");
+                    if (!events.contains(str) && !str.contains("Simon")){
+                        events.add(str);
+                        layout.addView(tmp2);
+                        layout.addView(tmp);
+                    }
+                }
+            } else {
+                TextView tmp2 = new TextView(context);
+                tmp2.setText("");
+                TextView tmp = new TextView(context);
+                tmp.setText("Det finns inga planerade händelser idag");
+                tmp.setTextColor(Color.BLACK);
+                layout.addView(tmp2);
+                layout.addView(tmp);
+            }
+            hasInit = false;
+        }
+
+    }
+
 
     public void setContext(Context context) {
         this.context = context;
