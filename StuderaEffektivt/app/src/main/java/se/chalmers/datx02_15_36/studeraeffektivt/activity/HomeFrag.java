@@ -45,17 +45,17 @@ public class HomeFrag extends Fragment {
         todayTextView.setTextColor(Color.BLACK);
         events = new ArrayList<String>();
         layout = (LinearLayout) view.findViewById(R.id.linearLayout1);
-        Button button = new Button(context);
-        button.setText("Synka");
-        layout.addView(button);
+       // Button button = new Button(context);
+        //button.setText("Synka");
+        //layout.addView(button);
         layout.addView(todayTextView);
-        button.setOnClickListener(new View.OnClickListener() {
+        /*button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 setCalendarInfo();
             }
-        });
-        this.setCalendarInfo();
+        });*/
         hasInit = true;
+        this.setCalendarInfo();
     }
 
 
