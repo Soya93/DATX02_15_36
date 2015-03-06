@@ -49,10 +49,18 @@ public class StatsFrag extends Fragment {
         pieLabels.add("Klara");
         pieLabels.add("Kvar");
 
-        //Show piedata
         PieData pieData = new PieData(pieLabels,pieDataSet);
         pc_hours.setData(pieData);
+
+        //Style pie chart data
+        pc_hours.setDescription("");
+        pc_hours.setDrawHoleEnabled(true);
+        pc_hours.setUsePercentValues(true);
+
+        //Show pie chart data
         pc_hours.invalidate();
+
+
 
 
         /*pc_ass = (PieChart) getView().findViewById(R.id.piechart_ass);
