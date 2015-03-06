@@ -1,32 +1,23 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
-import android.app.Activity;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 /**
  * A class displaying the available tip of studytechniques or studytips depending on what is chosen.
  */
-public class TipActivity extends Fragment {
+public class TipFrag extends Fragment {
 
     private List<Button> buttonList;
 
@@ -47,11 +38,9 @@ public class TipActivity extends Fragment {
         bundleFromPreviousFragment = this.getArguments();
         containerId = bundleFromPreviousFragment.getInt("containerId");
         return rootView;
-
-
     }
 
-    private void initComponentsList(View view){
+    private void initComponentsList(View view) {
 
         buttonList = new ArrayList<Button>();
 
@@ -74,7 +63,7 @@ public class TipActivity extends Fragment {
         buttonList.add((Button) view.findViewById(R.id.button17));
         buttonList.add((Button) view.findViewById(R.id.button18));
 
-        for(Button b : buttonList){
+        for (Button b : buttonList) {
             b.setOnClickListener(myOnlyhandler);
         }
     }
@@ -85,26 +74,20 @@ public class TipActivity extends Fragment {
         }
     };
 
-    /** Switches to the screen where the information of the selected tip is shown.
-     * Called when the user clicks the on a tip-button. */
+    /**
+     * Switches to the screen where the information of the selected tip is shown.
+     * Called when the user clicks the on a tip-button.
+     */
     public void goToTip(Button b) {
 
-        Fragment fragment = new TipDetailedInfoActivity();
-
+        Fragment fragment = new TipDetailedInfoFrag();
         Bundle bundle = new Bundle();
-        bundle.putString("key", (String)b.getText());
-
+        bundle.putString("key", (String) b.getText());
         fragment.setArguments(bundle);
-
-
         FragmentManager fragmentManager = this.getFragmentManager();
-        //FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(containerId, fragment);
-        //fragmentTransaction.add(((ViewGroup)container.getParent()).getId(), fragment);
-        //fragmentTransaction.replace(((ViewGroup)container.getParent()).getId(), fragment);
         fragmentTransaction.hide(this);
-        //fragmentTransaction.show(fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

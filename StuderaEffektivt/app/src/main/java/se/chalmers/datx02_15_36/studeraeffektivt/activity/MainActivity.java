@@ -184,24 +184,6 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    /**
-     * Go to TipActivity.
-     * Called when the user clicks the Tip button.
-     */
-    /*public void goToTip(View view) {
-        Button b = (Button) view;
-        String buttonText = b.getText().toString();
-        Intent intent = new Intent(this, TipActivity.class);
-        intent.putExtra("studyType", buttonText);
-        startActivity(intent);
-    }*/
-    public void goToCourses(View view) {
-        //Tillfällig kod för testning
-        Intent intent = new Intent(this, CourseActivity.class);
-        startActivity(intent);
-        //Slut på tillfällig kod för testning
-    }
-
     //Calendar buttons redirections
     public void addStudySession(View view) {
         startActivity(calendarFrag.addStudySession());
@@ -312,6 +294,5 @@ public class MainActivity extends ActionBarActivity {
 
 
 }
-
 
 

@@ -2,8 +2,8 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +25,8 @@ public class HomeFrag extends Fragment {
     private LinearLayout layout;
     private View view;
     private Context context;
-
-
     private CalendarFrag calendarFrag;
+    private boolean hasInit = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,14 +45,17 @@ public class HomeFrag extends Fragment {
         todayTextView.setTextColor(Color.BLACK);
         events = new ArrayList<String>();
         layout = (LinearLayout) view.findViewById(R.id.linearLayout1);
-        Button button = new Button(context);
-        button.setText("Synka");
-        layout.addView(button);
+       // Button button = new Button(context);
+        //button.setText("Synka");
+        //layout.addView(button);
         layout.addView(todayTextView);
-        button.setOnClickListener(new View.OnClickListener() {
+        /*button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 setCalendarInfo();
-            }});
+            }
+        });*/
+        hasInit = true;
+        this.setCalendarInfo();
     }
 
 
@@ -70,7 +72,7 @@ public class HomeFrag extends Fragment {
     public List<String> setCalendarInfo() {
             Log.i("HomeActivity: setCalendarInfo", "view:" + getView());
 
-            if (calendarFrag != null) {
+        if (calendarFrag != null && hasInit) {
                 //get calendarinfo of today from calendar
                 List<String> todaysEventsTitles = calendarFrag.getTodaysEvents();
 
@@ -98,6 +100,7 @@ public class HomeFrag extends Fragment {
                     layout.addView(tmp2);
                     layout.addView(tmp);
                 }
+            hasInit = false;
             }
         return null;
     }

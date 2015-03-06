@@ -16,24 +16,23 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FifthTabFragment.OnFragmentInteractionListener} interface
+ * {@link FifthTabFrag.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FifthTabFragment#newInstance} factory method to
+ * Use the {@link FifthTabFrag#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FifthTabFragment extends Fragment {
+public class FifthTabFrag extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private Button tipButton;
-    private Button settingsButton;
     private Button courseButton;
+    private Button settingsButton;
 
     private ViewGroup container;
     private View view;
-
 
 
     private Fragment currentlyShown = this;
@@ -53,8 +52,8 @@ public class FifthTabFragment extends Fragment {
      * @return A new instance of fragment fifthTapFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FifthTabFragment newInstance(String param1, String param2) {
-        FifthTabFragment fragment = new FifthTabFragment();
+    public static FifthTabFrag newInstance(String param1, String param2) {
+        FifthTabFrag fragment = new FifthTabFrag();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -63,7 +62,7 @@ public class FifthTabFragment extends Fragment {
         return fragment;
     }
 
-    public FifthTabFragment() {
+    public FifthTabFrag() {
         // Required empty public constructor
     }
 
@@ -80,11 +79,11 @@ public class FifthTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_fifth_tap, container, false);
+        View rootView = inflater.inflate(R.layout.activity_fifth_tab, container, false);
         this.view = rootView;
         this.container = container;
         //currentlyShown = this;
-        Log.d("FifthTabFragment ","currentlyshown = fifthtabfragment");
+        Log.d("FifthTabFrag ", "currentlyshown = fifthtabfragment");
         initComponents();
 
         return rootView;
@@ -129,10 +128,12 @@ public class FifthTabFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
-    private void initComponents(){
+    private void initComponents() {
         tipButton = (Button) view.findViewById(R.id.button1);
-
         tipButton.setOnClickListener(myOnlyhandler);
+        courseButton = (Button) view.findViewById(R.id.button11);
+        courseButton.setOnClickListener(myOnlyhandler);
+
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
@@ -143,7 +144,7 @@ public class FifthTabFragment extends Fragment {
         }
     };
 
-    private void goToButtonView(Button b){
+    private void goToButtonView(Button b) {
 
         String buttonText = b.getText().toString();
 
@@ -151,32 +152,39 @@ public class FifthTabFragment extends Fragment {
 
         Bundle bundle = new Bundle();
         //bundle.putString("key", (String)b.getText());
-        bundle.putInt("containerId",((ViewGroup) container.getParent()).getId());
+        bundle.putInt("containerId", ((ViewGroup) container.getParent()).getId());
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        switch(buttonText) {
-
+        switch (buttonText) {
             case "Studietips och studiestilar":
 
-                fragment = new TipActivity();
+                fragment = new TipFrag();
                 fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment);
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
-                Log.d("FifthTabFragment ","currentlyshown = tipfragment");
+                currentlyShown = fragment;
+                break;
+            case "Kurser":
+                fragment = new CourseFrag();
+                fragment.setArguments(bundle);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment);
+                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 currentlyShown = fragment;
                 break;
         }
+        Log.d("FifthTabFrag ", "currentlyshown = " + currentlyShown);
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
-    public FifthTabFragment getCurrentlyShown(){
-        return (FifthTabFragment) currentlyShown;
+    public FifthTabFrag getCurrentlyShown() {
+        return (FifthTabFrag) currentlyShown;
     }
-    public void setCurrentlyShown(){
+
+    public void setCurrentlyShown() {
 
     }
 
