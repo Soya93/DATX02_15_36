@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Main Activity -->
-    <string name="app_name">StuderaEffektivt</string>
-    <string name="title_home">Studera Effektivt</string>
+    <string name="app_name">PluggApp</string>
+    <string name="title_home">PluggApp</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
