@@ -52,9 +52,10 @@ public class MainActivity extends ActionBarActivity {
             timerFrag.handleTimeFromService(timeFromService * 1000);
 
         }
+
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            serviceMCDT=null;
+            serviceMCDT = null;
         }
 
 
@@ -62,7 +63,6 @@ public class MainActivity extends ActionBarActivity {
 
     // Tab titles
     private String[] tabs = {"Hem", "Kalender", "Timer", "Statistik", "Tips"};
-
 
 
     @Override
@@ -88,7 +88,7 @@ public class MainActivity extends ActionBarActivity {
 
         calendarFrag = (CalendarFrag) mAdapter.getItem(1);
         calendarFrag.setContentResolver(this.getContentResolver());
-        
+
         homeFrag = (HomeFrag) mAdapter.getItem(0);
         homeFrag.setCalendarFrag(calendarFrag);
         homeFrag.setContext(this.getApplicationContext());
@@ -97,9 +97,9 @@ public class MainActivity extends ActionBarActivity {
         timerFrag = (TimerFrag) mAdapter.getItem(2);
         statsFrag = (StatsFrag) mAdapter.getItem(3);
 
-        final int[] ICONS = new int[] {
-            R.drawable.ic_home1_uns,
-               R.drawable.ic_cal2_uns,
+        final int[] ICONS = new int[]{
+                R.drawable.ic_home1_uns,
+                R.drawable.ic_cal2_uns,
                 R.drawable.ic_timer_uns,
                 R.drawable.ic_pilegraph_uns,
                 R.drawable.ic_action_overflow_uns
@@ -110,48 +110,29 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
+
                 tabResetIcon = tab.getIcon();
+                int position = tab.getPosition();
 
-                Drawable homeIcon = getResources().getDrawable(R.drawable.ic_home1_uns);
-                Drawable calIcon = getResources().getDrawable(R.drawable.ic_cal2_uns);
-                Drawable timerIcon = getResources().getDrawable(R.drawable.ic_timer_uns);
-                Drawable graphIcon = getResources().getDrawable(R.drawable.ic_pilegraph_uns);
-                Drawable menuIcon = getResources().getDrawable(R.drawable.ic_action_overflow_uns);
-
-                //For some reason they are always false.
-                if(tabResetIcon.equals(homeIcon)){
-                    tab.setIcon(R.drawable.ic_home1);
-                }else if(tabResetIcon.equals(calIcon)){
-                    tab.setIcon(R.drawable.ic_cal2);
-                }else if(tabResetIcon.equals(timerIcon)){
-                    tab.setIcon(R.drawable.ic_timer);
-                }else if(tabResetIcon.equals(graphIcon)){
-                    tab.setIcon(R.drawable.ic_pilegraph);
-                }else if (tabResetIcon.equals(menuIcon)){
-                    tab.setIcon(R.drawable.ic_action_overflow);
-                }else{
-                    tab.setIcon(R.drawable.ic_home1);
-                }
-
-                /*switch(tabResetIcon){
-                    case R.drawable.ic_home1_uns:
+                switch(position){
+                    case 0:
                         tab.setIcon(R.drawable.ic_home1);
                         break;
-                    case R.drawable.ic_cal2_uns:
+                    case 1:
                         tab.setIcon(R.drawable.ic_cal2);
                         break;
-                    case R.drawable.ic_timer_uns:
+                    case 2:
                         tab.setIcon(R.drawable.ic_timer);
                         break;
-                    case R.drawable.ic_pilegraph_uns:
+                    case 3:
                         tab.setIcon(R.drawable.ic_pilegraph);
                         break;
-                    case R.drawable.ic_action_overflow_uns:
+                    case 4:
                         tab.setIcon(R.drawable.ic_action_overflow);
                         break;
                     default:
                         break;
-                }*/
+                }
 
 
             }
@@ -214,7 +195,6 @@ public class MainActivity extends ActionBarActivity {
         intent.putExtra("studyType", buttonText);
         startActivity(intent);
     }*/
-
     public void goToCourses(View view) {
         //Tillfällig kod för testning
         Intent intent = new Intent(this, CourseActivity.class);
@@ -231,23 +211,23 @@ public class MainActivity extends ActionBarActivity {
         calendarFrag.readCalendar();
     }
 
-    public void openCalendar(View view){
+    public void openCalendar(View view) {
         startActivity(calendarFrag.openCalendar());
     }
 
-    public void openDialog(View view){
+    public void openDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(calendarFrag.getActivity());
 
         //the alternatives
-        String [] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
+        String[] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
 
         builder.setTitle("Välj ett pass att repetera")
                 .setItems(alternatives, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //TODO hämta några random uppgifter
                         String tasks = "";
-                        int studyWeek = which+1;
-                        startActivity(calendarFrag.getCalendarModel().addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " +  tasks));
+                        int studyWeek = which + 1;
+                        startActivity(calendarFrag.getCalendarModel().addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " + tasks));
 
                         // The 'which' argument contains the index position
                         // of the selected item
@@ -258,23 +238,24 @@ public class MainActivity extends ActionBarActivity {
         alertDialog.show();
     }
 
-    public void startTimer(View view){
+    public void startTimer(View view) {
         timerFrag.startTimer();
     }
 
-    public void resetTimer(View view){
-        timerFrag.resetTimer();}
+    public void resetTimer(View view) {
+        timerFrag.resetTimer();
+    }
 
-    public void settingsTimer(View view){
+    public void settingsTimer(View view) {
         timerFrag.settingsTimer();
     }
 
 
-        //Does not work properly, but looks more beautiful...
+    //Does not work properly, but looks more beautiful...
     public void openDialog2(View view) {
         calendarFrag.openDialog();
 
-        Log.i("week", calendarFrag.getWeek() + "" );
+        Log.i("week", calendarFrag.getWeek() + "");
 
         if (calendarFrag.getWeek() != -1) {
             startActivity(calendarFrag.addRepetition());
@@ -282,7 +263,7 @@ public class MainActivity extends ActionBarActivity {
         calendarFrag.createBuilder();
     }
 
-    protected void onResume () {
+    protected void onResume() {
         super.onResume();
 
         if (isMyServiceRunning(MyCountDownTimer.class)) {
@@ -302,19 +283,19 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-        private boolean isMyServiceRunning(Class<?> serviceClass) {
-            ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-                if (serviceClass.getName().equals(service.service.getClassName())) {
-                    return true;
-                }
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
             }
-            return false;
         }
+        return false;
+    }
 
-    protected void onStop () {
+    protected void onStop() {
         super.onStop();
-        if(timerFrag.pauseTimerIsRunning || timerFrag.studyTimerIsRunning) {
+        if (timerFrag.pauseTimerIsRunning || timerFrag.studyTimerIsRunning) {
             long timePassedToService = timerFrag.timePassed;
             long totalTime = timerFrag.default_TotalTime;
 
@@ -329,7 +310,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-    }
+
+}
 
 
 
