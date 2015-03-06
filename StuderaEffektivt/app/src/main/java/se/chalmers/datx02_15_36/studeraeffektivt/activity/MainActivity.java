@@ -1,17 +1,14 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.TabAdapter;
@@ -132,25 +129,6 @@ public class MainActivity extends ActionBarActivity {
         //getMenuInflater().inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu);
         return true;
-    }
-
-    /**
-     * Go to TipActivity.
-     * Called when the user clicks the Tip button.
-     */
-    /*public void goToTip(View view) {
-        Button b = (Button) view;
-        String buttonText = b.getText().toString();
-        Intent intent = new Intent(this, TipActivity.class);
-        intent.putExtra("studyType", buttonText);
-        startActivity(intent);
-    }*/
-
-    public void goToCourses(View view) {
-        //Tillfällig kod för testning
-        Intent intent = new Intent(this, CourseActivity.class);
-        startActivity(intent);
-        //Slut på tillfällig kod för testning
     }
 
     //Calendar buttons redirections

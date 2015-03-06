@@ -1,20 +1,11 @@
 <resources>
-<<<<<<< HEAD
     <string name="title_activity_login">Logga in</string>
-=======
-    <string name="title_activity_login">Sign in</string>
->>>>>>> develop
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-<<<<<<< HEAD
     <string name="action_sign_in">Logga in</string>
     <string name="action_sign_in_short">Logga in</string>
-=======
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_sign_in_short">Sign in</string>
->>>>>>> develop
     <string name="plus_sign_out">Switch Google+ account</string>
     <string name="plus_disconnect">Disconnect from Google+</string>
     <string name="error_invalid_email">This email address is invalid</string>

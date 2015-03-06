@@ -1,10 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.TipActivity">
+    tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.TipFrag">
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,7 +37,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
-                android:text="Studietips"/>
+                android:text="Studietips" />
 
             <Button
                 android:layout_width="match_parent"
@@ -97,10 +99,10 @@
                 android:text="@string/tip_button_10"
                 android:id="@+id/button10" />
 
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="25dp"
-               android:text="Studiestilar"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:text="Studiestilar" />
 
             <Button
                 android:layout_width="match_parent"

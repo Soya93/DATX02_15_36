@@ -1,14 +1,12 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.model;
 
 
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 
-
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.FifthTabFragment;
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.TipActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.CalendarFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.FifthTabFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.HomeFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.StatsFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerFrag;
@@ -17,7 +15,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerFrag;
  * Created by emmawestman on 15-02-27.
  */
 public class TabAdapter extends FragmentPagerAdapter {
-    FifthTabFragment fifthTabFragment = new FifthTabFragment();
+    FifthTabFrag fifthTabFrag = new FifthTabFrag();
     HomeFrag homeFrag = new HomeFrag();
     CalendarFrag calendarFrag = new CalendarFrag();
 
@@ -43,7 +41,7 @@ public class TabAdapter extends FragmentPagerAdapter {
                 return new StatsFrag();
             case 4:
                 //FifthTab fragment activity
-                return new FifthTabFragment();
+                return new FifthTabFrag();
         }
 
         return null;

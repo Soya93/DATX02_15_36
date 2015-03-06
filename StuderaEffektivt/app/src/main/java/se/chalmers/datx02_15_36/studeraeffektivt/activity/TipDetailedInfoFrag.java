@@ -1,7 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +13,12 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 /**
  * A class displaying the text of an studytechnique tip.
  */
-public class TipDetailedInfoActivity extends Fragment {
+public class TipDetailedInfoFrag extends Fragment {
 
     private TextView tipViewInfoText;
-    private  TextView tipViewHeader;
+    private TextView tipViewHeader;
     private View view;
-    private  Bundle bundleFromPreviousFragment;
+    private Bundle bundleFromPreviousFragment;
     private String tipName;
     private TipHandler tipHandler;
 
@@ -32,12 +32,10 @@ public class TipDetailedInfoActivity extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                Bundle savedInstanceState)         {
+                             Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.activity_tip_view, container, false);
         this.view = rootView;
-
-
         bundleFromPreviousFragment = this.getArguments();
         tipName = bundleFromPreviousFragment.getString("key", "");
         initComponents();
@@ -50,7 +48,7 @@ public class TipDetailedInfoActivity extends Fragment {
         return rootView;
     }
 
-    private void initComponents(){
+    private void initComponents() {
         tipViewInfoText = (TextView) view.findViewById(R.id.tipViewInfoText);
         tipViewHeader = (TextView) view.findViewById(R.id.tipHeader);
 
@@ -60,14 +58,15 @@ public class TipDetailedInfoActivity extends Fragment {
 
     /**
      * A method getting the text describing a certain tip.
+     *
      * @param tipName
      * @return
      */
-    public String getTipInfoText(String tipName){
-        return tipHandler.readFromFile(tipName.replaceAll("ö","o_").replaceAll("Ö","O_").replaceAll("å","a_").replaceAll("Å","A_").replaceAll("ä","_a").replaceAll("Ä","_A"));
+    public String getTipInfoText(String tipName) {
+        return tipHandler.readFromFile(tipName.replaceAll("ö", "o_").replaceAll("Ö", "O_").replaceAll("å", "a_").replaceAll("Å", "A_").replaceAll("ä", "_a").replaceAll("Ä", "_A"));
     }
 
-    public void destroy(){
+    public void destroy() {
         this.onDestroyView();
     }
 }
