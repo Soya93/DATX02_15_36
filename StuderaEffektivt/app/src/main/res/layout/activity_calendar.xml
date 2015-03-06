@@ -9,7 +9,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:text="Add study session"
+        android:text="Lägg till studiepass"
         android:id="@+id/button_add_study_session"
         android:onClick="addStudySession"
         android:layout_centerHorizontal="true"
@@ -18,7 +18,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:text="Add repetition session"
+        android:text="Lägg till repetitionspass"
         android:id="@+id/button_add_repetition_session"
         android:onClick="openDialog"
         android:layout_below="@+id/button_add_study_session"
@@ -29,7 +29,7 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:text="Open Calendar"
+        android:text="Öppna kalendern"
         android:id="@+id/button_open_calendar"
         android:onClick="openCalendar"
         android:layout_marginTop="43dp"

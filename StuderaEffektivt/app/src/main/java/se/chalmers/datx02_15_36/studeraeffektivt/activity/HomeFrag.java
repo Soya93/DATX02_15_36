@@ -41,13 +41,13 @@ public class HomeFrag extends Fragment {
 
     private void initComponents(View view) {
         todayTextView = new TextView(context);
-        todayTextView.setText("Today");
+        todayTextView.setText("Idag");
         todayTextView.setTextSize(20);
         todayTextView.setTextColor(Color.BLACK);
         events = new ArrayList<String>();
         layout = (LinearLayout) view.findViewById(R.id.linearLayout1);
         Button button = new Button(context);
-        button.setText("Sync");
+        button.setText("Synka");
         layout.addView(button);
         layout.addView(todayTextView);
         button.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +93,7 @@ public class HomeFrag extends Fragment {
                     TextView tmp2 = new TextView(context);
                     tmp2.setText("");
                     TextView tmp = new TextView(context);
-                    tmp.setText("There are no planned events today");
+                    tmp.setText("Det finns inga planerade händelser idag");
                     tmp.setTextColor(Color.BLACK);
                     layout.addView(tmp2);
                     layout.addView(tmp);

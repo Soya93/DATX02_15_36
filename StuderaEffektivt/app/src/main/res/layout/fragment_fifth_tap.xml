@@ -13,14 +13,14 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="145dp"
-        android:text="Inställningar"
+        android:text="Kurser"
         android:id="@+id/button11"
         android:layout_gravity="left|center_vertical" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="145dp"
-        android:text="Kurser"
+        android:text="Inställningar"
         android:id="@+id/button12"
         android:layout_gravity="left|bottom" />
 
