@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -25,6 +26,8 @@ public class MainActivity extends ActionBarActivity {
     private StatsFrag statsFrag;
 
     private String userName = "user_Name";
+    private Drawable tabResetIcon;
+
     /**
      * Called when the activity is first created.
      */
@@ -84,12 +87,14 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
+                tabResetIcon = tab.getIcon();
+                tab.setIcon(R.drawable.ic_home1_y);
 
             }
 
             @Override
             public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
-
+                tab.setIcon(tabResetIcon);
             }
 
             @Override
