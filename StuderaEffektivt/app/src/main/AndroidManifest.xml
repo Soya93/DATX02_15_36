@@ -70,6 +70,8 @@
             android:name=".HomeActivity"
             android:label="Home" >
         </fragment>
+        <service android:name="se.chalmers.datx02_15_36.studeraeffektivt.activity.MyCountDownTimer" >
+        </service>
     </application>
 
 </manifest>

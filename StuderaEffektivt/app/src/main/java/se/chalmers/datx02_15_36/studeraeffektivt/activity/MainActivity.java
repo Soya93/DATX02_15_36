@@ -1,11 +1,16 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -36,6 +41,24 @@ public class MainActivity extends ActionBarActivity {
     private TabAdapter mAdapter;
     private android.support.v7.app.ActionBar actionBar;
     private View view;
+
+    private MyCountDownTimer serviceMCDT;
+
+    private ServiceConnection sc = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            serviceMCDT = ((MyCountDownTimer.MCDTBinder) service).getService();
+            long timeFromService = serviceMCDT.returnTimePassed();
+            timerFrag.handleTimeFromService(timeFromService * 1000);
+
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceMCDT=null;
+        }
+
+
+    };
 
     // Tab titles
     private String[] tabs = {"Hem", "Kalender", "Timer", "Statistik", "Tips"};
@@ -235,7 +258,19 @@ public class MainActivity extends ActionBarActivity {
         alertDialog.show();
     }
 
-       //Does not work properly, but looks more beautiful...
+    public void startTimer(View view){
+        timerFrag.startTimer();
+    }
+
+    public void resetTimer(View view){
+        timerFrag.resetTimer();}
+
+    public void settingsTimer(View view){
+        timerFrag.settingsTimer();
+    }
+
+
+        //Does not work properly, but looks more beautiful...
     public void openDialog2(View view) {
         calendarFrag.openDialog();
 
@@ -247,5 +282,54 @@ public class MainActivity extends ActionBarActivity {
         calendarFrag.createBuilder();
     }
 
-}
+    protected void onResume () {
+        super.onResume();
+
+        if (isMyServiceRunning(MyCountDownTimer.class)) {
+            Intent i = new Intent(getBaseContext(), MyCountDownTimer.class);
+            bindService(i, sc, Context.BIND_AUTO_CREATE);
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    Intent i = new Intent(getBaseContext(), MyCountDownTimer.class);
+                    stopService(i);
+                    unbindService(sc);
+
+                }
+            }, 2000);
+
+        }
+    }
+
+        private boolean isMyServiceRunning(Class<?> serviceClass) {
+            ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    protected void onStop () {
+        super.onStop();
+        if(timerFrag.pauseTimerIsRunning || timerFrag.studyTimerIsRunning) {
+            long timePassedToService = timerFrag.timePassed;
+            long totalTime = timerFrag.default_TotalTime;
+
+            timerFrag.cancelOneOfTimers();
+
+            Intent i = new Intent(this, MyCountDownTimer.class);
+            i.putExtra("TIME_PASSED", timePassedToService / 1000);
+            i.putExtra("TOTAL_TIME", totalTime / 1000);
+            startService(i);
+        }
+
+    }
+
+
+    }
+
+
 
