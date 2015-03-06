@@ -3,10 +3,6 @@
     android:layout_height="match_parent"
     tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.FifthTabFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="145dp"

@@ -10,11 +10,13 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 */
 
+import com.github.mikephil.charting.charts.PieChart;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 public class StatsFrag extends Fragment {
 
-    //PieChart pc_hours;
+    PieChart pc_hours;
     //PieChart pc_ass;
     //LineChart lineChart;
 
@@ -22,11 +24,14 @@ public class StatsFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.activity_home2, container, false);
-       // View rootView = inflater.inflate(R.layout.activity_stats, container, false);
+       View rootView = inflater.inflate(R.layout.activity_stats, container, false);
 
-        /*pc_hours = (PieChart) getView().findViewById(R.id.piechart_hours);
-        pc_ass = (PieChart) getView().findViewById(R.id.piechart_ass);
+        //Pie chart showing how many ours studied.
+        pc_hours = (PieChart) rootView.findViewById(R.id.piechart_hours);
+        pc_hours.setNoDataTextDescription("TIMMAR DU LAGT");
+
+
+        /*pc_ass = (PieChart) getView().findViewById(R.id.piechart_ass);
         lineChart = (LineChart) getView().findViewById(R.id.linechart);*/
 
 

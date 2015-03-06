@@ -35,8 +35,7 @@ public class MainActivity extends ActionBarActivity {
     private View view;
 
     // Tab titles
-
-    private String[] tabs = {"Home", "Calendar", "Timer", "Statistics", "Tips"};
+    private String[] tabs = {"Hem", "Kalender", "Timer", "Statistik", "Tips"};
 
 
 
