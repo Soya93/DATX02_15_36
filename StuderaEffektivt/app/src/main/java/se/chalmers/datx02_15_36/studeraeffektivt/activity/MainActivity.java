@@ -75,7 +75,7 @@ public class MainActivity extends ActionBarActivity {
             R.drawable.ic_home1,
                R.drawable.ic_cal2,
                 R.drawable.ic_timer,
-                R.drawable.chart_line,
+                R.drawable.ic_pilegraph,
                 R.drawable.ic_action_overflow
         };
 
