@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBHelper;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,7 +26,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.DBHelper;
 public class FifthTabFrag extends Fragment {
 
     //The access point of the database.
-    private DBHelper dbHelper;
+    private DBAdapter dbAdapter;
     private SQLiteDatabase db;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -83,8 +83,7 @@ public class FifthTabFrag extends Fragment {
 
         //Create the database access point but check if the context is null first.
         if(getActivity() != null){
-            dbHelper = new DBHelper(getActivity());
-            db = dbHelper.getWritableDatabase();
+            dbAdapter = new DBAdapter(getActivity());
         }
 
     }
