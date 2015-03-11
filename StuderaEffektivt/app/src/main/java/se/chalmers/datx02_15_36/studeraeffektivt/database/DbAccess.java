@@ -10,7 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import android.util.Log;
 
-
+/*
+This class is not used as far as I know? Check out DBAdapter instead. Mvh Patte
+ */
 public class DbAccess{
     public static final String KEY_studentName = "studentName";
     public static final String KEY_time = "timeSpent";
