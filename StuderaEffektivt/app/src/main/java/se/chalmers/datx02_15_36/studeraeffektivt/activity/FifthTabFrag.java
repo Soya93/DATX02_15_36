@@ -1,5 +1,6 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.DBHelper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +24,11 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
  * create an instance of this fragment.
  */
 public class FifthTabFrag extends Fragment {
+
+    //The access point of the database.
+    private DBHelper dbHelper;
+    private SQLiteDatabase db;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -73,6 +80,13 @@ public class FifthTabFrag extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        //Create the database access point but check if the context is null first.
+        if(getActivity() != null){
+            dbHelper = new DBHelper(getActivity());
+            db = dbHelper.getWritableDatabase();
+        }
+
     }
 
     @Override
