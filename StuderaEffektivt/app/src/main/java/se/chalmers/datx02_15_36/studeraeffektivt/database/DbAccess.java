@@ -1,4 +1,4 @@
-package se.chalmers.datx02_15_36.studeraeffektivt.model;
+package se.chalmers.datx02_15_36.studeraeffektivt.database;
 
 
 import android.content.ContentValues;
