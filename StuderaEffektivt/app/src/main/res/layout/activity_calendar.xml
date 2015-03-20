@@ -11,7 +11,6 @@
         android:layout_height="80dp"
         android:text="Lägg till studiepass"
         android:id="@+id/button_add_study_session"
-        android:onClick="addStudySession"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="41dp" />
 
@@ -20,7 +19,6 @@
         android:layout_height="80dp"
         android:text="Lägg till repetitionspass"
         android:id="@+id/button_add_repetition_session"
-        android:onClick="openDialog"
         android:layout_below="@+id/button_add_study_session"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="47dp" />
@@ -31,7 +29,6 @@
         android:layout_height="80dp"
         android:text="Öppna kalendern"
         android:id="@+id/button_open_calendar"
-        android:onClick="openCalendar"
         android:layout_marginTop="43dp"
         android:layout_below="@+id/button_add_repetition_session"
         android:layout_centerHorizontal="true" />
