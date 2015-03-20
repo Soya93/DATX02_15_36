@@ -33,6 +33,7 @@ public class FifthTabFrag extends Fragment {
 
     private ViewGroup container;
     private View view;
+    private boolean hasInit = false;
 
 
     private Fragment currentlyShown = this;
@@ -82,10 +83,9 @@ public class FifthTabFrag extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_fifth_tab, container, false);
         this.view = rootView;
         this.container = container;
-        //currentlyShown = this;
+        currentlyShown = this;
         Log.d("FifthTabFrag ", "currentlyshown = fifthtabfragment");
         initComponents();
-
         return rootView;
     }
 
@@ -133,7 +133,8 @@ public class FifthTabFrag extends Fragment {
         tipButton.setOnClickListener(myOnlyhandler);
         courseButton = (Button) view.findViewById(R.id.button11);
         courseButton.setOnClickListener(myOnlyhandler);
-
+        hasInit = true;
+        Log.i("init", hasInit + "");
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
@@ -180,12 +181,12 @@ public class FifthTabFrag extends Fragment {
         fragmentTransaction.commit();
     }
 
-    public FifthTabFrag getCurrentlyShown() {
-        return (FifthTabFrag) currentlyShown;
+    public Fragment getCurrentlyShown() {
+        return currentlyShown;
     }
 
-    public void setCurrentlyShown() {
-
+    public boolean hasInit(){
+        return hasInit;
     }
 
 }

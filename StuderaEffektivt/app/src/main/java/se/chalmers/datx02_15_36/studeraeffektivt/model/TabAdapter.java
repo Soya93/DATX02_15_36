@@ -19,6 +19,7 @@ public class TabAdapter extends FragmentPagerAdapter {
     HomeFrag homeFrag = new HomeFrag();
     CalendarFrag calendarFrag = new CalendarFrag();
     TimerFrag timerFrag = new TimerFrag();
+    StatsFrag statsFrag = new StatsFrag();
 
     public TabAdapter(FragmentManager fm) {
         super(fm);
@@ -39,10 +40,10 @@ public class TabAdapter extends FragmentPagerAdapter {
                 return timerFrag;
             case 3:
                 //Statistics fragment activity
-                return new StatsFrag();
+                return statsFrag;
             case 4:
                 //FifthTab fragment activity
-                return new FifthTabFrag();
+                return fifthTabFrag;
         }
 
         return null;

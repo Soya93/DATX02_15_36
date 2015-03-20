@@ -37,29 +37,25 @@
             android:screenOrientation="portrait"></activity>
 
         <fragment
-            android:name=".activity.TimerActivity"
-            android:label="TimerActivity"></fragment>
+            android:name=".activity.TimerFrag"
+            android:label="TimerFrag"></fragment>
         <fragment
-            android:name=".activity.CalendarActivity"
-            android:label="@string/title_activity_calendar"></fragment>
-
-        <activity
-            android:name=".view.CalendarView"
-            android:label="@string/title_activity_calendar_view"></activity>
+            android:name=".activity.CalendarFrag"
+            android:label="CalendarFrag"></fragment>
 
         <fragment
-            android:name=".activity.TipActivity"
-            android:label="@string/title_activity_tips"></fragment>
+            android:name=".activity.TipFrag"
+            android:label="TipFrag"></fragment>
         <fragment
-            android:name=".activity.TipDetailedInfoActivity"
-            android:label="@string/title_activity_tip_view"></fragment>
+            android:name=".activity.TipDetailedInfoFrag"
+            android:label="TipDetailedInfoFrag"></fragment>
 
         <fragment
             android:name=".activity.Statistics"
-            android:label="@string/title_activity_statistics"></fragment>
+            android:label="StatsFrag"></fragment>
         <fragment
-            android:name=".HomeActivity"
-            android:label="Home">
+            android:name="activity.HomeFrag"
+            android:label="HomeFrag">
         </fragment>
         <service android:name="se.chalmers.datx02_15_36.studeraeffektivt.activity.MyCountDownTimer" >
         </service>
