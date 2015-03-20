@@ -56,6 +56,11 @@ public class CalendarFrag extends Fragment {
         return calendarModel.readEventsToday(cr);
     }
 
+    public List<String> getSundaysEvents() {
+        return calendarModel.readEventsSunday(cr);
+    }
+
+
     public CalendarModel getCalendarModel(){
         return this.calendarModel;
     }

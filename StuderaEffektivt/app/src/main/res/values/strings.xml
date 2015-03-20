@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Main Activity -->
-    <string name="app_name">StuderaEffektivt</string>
-    <string name="title_home">Studera Effektivt</string>
+    <string name="app_name">PluggApp</string>
+    <string name="title_home">PluggApp</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
@@ -20,12 +20,12 @@
     <string name="title_activity_tip_view">TipViewActivity</string>
 
     <!-- Statistics -->
-    <string name="title_activity_statistics">Statistics</string>
+    <string name="title_activity_statistics">Statistik</string>
 
     <!-- Course -->
     <string name="title_activity_course">CourseActivity</string>
     <string name="title_activity_course_details">CourseDetails</string>
-    <string name="title_activity_home">home</string>
+    <string name="title_activity_home">Hem</string>
 
     <!-- Tip -->
     <string name="tip_button_1">Var skall man studera</string>
@@ -54,6 +54,7 @@
     <!-- Colours -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="grey">#e4e4e4</color>
     <color name="pink">#CA1F5B</color>
     <color name="purple">#5E229B</color>
     <color name="green">#78CF20</color>

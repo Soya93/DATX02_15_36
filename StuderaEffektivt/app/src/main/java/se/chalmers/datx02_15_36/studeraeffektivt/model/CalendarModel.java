@@ -63,18 +63,25 @@ public class CalendarModel {
     }
 
 
-    public List <String>  readEventsToday(ContentResolver cr){
+    public List<String> readEventsToday(ContentResolver cr) {
         return this.readEvents(cr, todayMillis, todayMillis);
+    }
+
+    public List<String> readEventsSunday(ContentResolver cr) {
+        Calendar sunday = Calendar.getInstance();
+        sunday.setTime(futureDate(sunday.getTime(), 2));
+        return this.readEvents(cr, sunday.getTimeInMillis(), sunday.getTimeInMillis());
     }
 
     /**
      * Method which reads the events from a given start- and endinterval
+     *
      * @param cr
      * @param startInterval
      * @param endInterval
      */
-    public List <String> readEvents(ContentResolver cr, Long startInterval, Long endInterval) {
-        List <String> eventTitles = new ArrayList<String>();
+    public List<String> readEvents(ContentResolver cr, Long startInterval, Long endInterval) {
+        List<String> eventTitles = new ArrayList<String>();
 
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
@@ -85,7 +92,6 @@ public class CalendarModel {
         Uri eventsUri = eventsUriBuilder.build();
 
         cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
-
 
 
         //Prints out all the events in the given interval
@@ -99,26 +105,29 @@ public class CalendarModel {
 
     /**
      * Checks if the startdate is zero, if so it is set to a good default
+     *
      * @param startDate
      * @return
      */
-    private Long checkStartInterval(Long startDate){
-        return startDate == 0L? startMillis: startDate;
+    private Long checkStartInterval(Long startDate) {
+        return startDate == 0L ? startMillis : startDate;
 
     }
 
     /**
      * Checks if the endDate is zero, if so it is set to a good default
+     *
      * @param endDate
      * @return
      */
-    private Long checkEndInterval(Long endDate){
-        return endDate == 0L? endMillis: endDate;
+    private Long checkEndInterval(Long endDate) {
+        return endDate == 0L ? endMillis : endDate;
 
     }
 
     /**
      * Returns the calendar of a user specified by its google email.
+     *
      * @param cr
      * @param accountEmail
      * @param accountType
@@ -155,8 +164,8 @@ public class CalendarModel {
 
     public List<String> filter(List<String> events, String filterOn) {
         List<String> filteredList = new ArrayList<String>();
-        for(String e :events) {
-            if(e == filterOn) {
+        for (String e : events) {
+            if (e == filterOn) {
                 filteredList.add(e);
             }
         }
@@ -165,6 +174,7 @@ public class CalendarModel {
 
     /**
      * Adds a manual event to the calendar with the given parameters as information
+     *
      * @param startTime
      * @param endTime
      * @param allDay
@@ -182,11 +192,9 @@ public class CalendarModel {
         calIntent.putExtra(CalendarContract.Events.DESCRIPTION, description);
         calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, allDay);
         startTime = checkStartInterval(startTime);
-        endTime = checkStartInterval(endTime);
+        //endTime = checkStartInterval(endTime);
+        endTime = startTime + 1000 * 60 * 60 * 3;
         calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
-        if (endTime.equals(0L)) {
-            startTime = this.startMillis;
-        }
         calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
         return calIntent;
         //Log.i("cal", CalendarContract.Calendars.CALENDAR_DISPLAY_NAME);
@@ -194,6 +202,7 @@ public class CalendarModel {
 
     /**
      * Opens the calendar of the users phone where the user may choose which one
+     *
      * @return
      */
     public Intent openCalendar() {
@@ -202,12 +211,13 @@ public class CalendarModel {
         return calIntent;
     }
 
-        /**
-         * Calculates the future date depending on the number set in daysFromNow
-         * @param date
-         * @param daysFromNow
-         * @return
-         */
+    /**
+     * Calculates the future date depending on the number set in daysFromNow
+     *
+     * @param date
+     * @param daysFromNow
+     * @return
+     */
     private Date futureDate(Date date, int daysFromNow) {
 
         if (month == 2) {
