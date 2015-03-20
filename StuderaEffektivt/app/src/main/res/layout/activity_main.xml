@@ -1,7 +1,6 @@
-
 <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+    android:theme="@style/Theme.Pluggapp">
 </android.support.v4.view.ViewPager>
