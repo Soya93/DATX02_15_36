@@ -30,6 +30,20 @@ public class CourseDetailedInfoFrag extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.activity_course_details, container, false);
+        this.view = rootView;
+        this.container = container;
+
+        bundleFromPreviousFragment = this.getArguments();
+        containerId = bundleFromPreviousFragment.getInt("containerId");
+        selectedCourse = bundleFromPreviousFragment.getInt("kurs");
+        Course course = (Course) CourseFrag.courseList.get(selectedCourse).get("Courses");
+        kursDetaljer = (TextView) view.findViewById(R.id.kursDetaljer);
+        initComponents();
+        fillActivity(course);
+
+        return rootView;
+        /*
         view = inflater.inflate(R.layout.activity_course_details, container, false);
         bundleFromPreviousFragment = this.getArguments();
         containerId = bundleFromPreviousFragment.getInt("containerId");
@@ -39,7 +53,7 @@ public class CourseDetailedInfoFrag extends Fragment {
         initComponents();
         fillActivity(course);
         this.container = container;
-        return view;
+        return view;*/
     }
 
     public void fillActivity(Course course) {
@@ -61,23 +75,17 @@ public class CourseDetailedInfoFrag extends Fragment {
 
     public void goToTasks(Button button){
 
+        Fragment fragment = new StudyTaskFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("kurs", selectedCourse);
+        bundle.putString("key", (String) button.getText());
 
-        Fragment fragment;
-
-        //Bundle bundle = new Bundle();
-        //bundle.putString("key", (String)b.getText());
-        //bundle.putInt("containerId", ((ViewGroup) container.getParent()).getId());
-
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragment.setArguments(bundle);
+        FragmentManager fragmentManager = this.getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragment = new StudyTaskFragment();
-        //fragment.setArguments(bundle);
-        fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment);
-        //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
-        //currentlyShown = fragment;
-
-       // fragmentTransaction.hide(this);
+        fragmentTransaction.add(containerId, fragment);
+        fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

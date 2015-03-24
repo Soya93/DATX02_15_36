@@ -43,8 +43,9 @@ public class CourseFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_course, container, false);
+        View rootView = inflater.inflate(R.layout.activity_course, container, false);
         this.container = container;
+        this.view = rootView;
         initComponents();
         initList();
         bundleFromPreviousFragment = this.getArguments();
@@ -52,7 +53,7 @@ public class CourseFrag extends Fragment {
         bundleToNextFragment = new Bundle();
         simpleAdpt = new SimpleAdapter(this.getActivity(), courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
         listOfCourses.setAdapter(simpleAdpt);
-        return view;
+        return rootView;
     }
 
     public void initList() {
@@ -120,9 +121,11 @@ public class CourseFrag extends Fragment {
 
     public void goToDetails(Bundle bundle) {
         Fragment fragment = new CourseDetailedInfoFrag();
+
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = this.getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
         fragmentTransaction.add(containerId, fragment);
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
