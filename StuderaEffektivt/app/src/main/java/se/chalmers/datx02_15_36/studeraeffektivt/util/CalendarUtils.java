@@ -7,8 +7,9 @@ import android.provider.CalendarContract;
  */
 public class CalendarUtils {
 
+
     /*Projection array for events in the calendar
-Creating indices for this array instead of doing dynamic lookups improves performance.*/
+    Creating indices for this array instead of doing dynamic lookups improves performance.*/
     public static final String[] INSTANCE_PROJECTION = new String[] {
             CalendarContract.Instances.EVENT_ID,      // 0
             CalendarContract.Instances.BEGIN,         // 1
@@ -37,4 +38,25 @@ Creating indices for this array instead of doing dynamic lookups improves perfor
     public static final int PROJECTION_DISPLAY_NAME_INDEX = 2;
     public static final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
 
+
+    /*Projection array for calendar of an account. //TODO:change to Events instead of Instances?
+    Creating indices for this array instead of doing dynamic lookups improves performance.*/
+    public static final String[] EVENT_INFO_PROJECTION = new String[] {
+            CalendarContract.Instances.EVENT_ID,      // 0
+            CalendarContract.Instances.BEGIN,         // 1
+            CalendarContract.Instances.TITLE,         // 2
+            CalendarContract.Instances.END,           // 3
+            CalendarContract.Instances.EVENT_LOCATION, // 4
+            CalendarContract.Instances.DESCRIPTION,     // 5
+            CalendarContract.Instances.CALENDAR_DISPLAY_NAME //6
+    };
+
+    // The indices for the projection array above for the events in the calendar
+    public static final int EVENT_INFO_ID = 0;
+    public static final int EVENT_INFO_BEGIN = 1;
+    public static final int EVENT_INFO_TITLE = 2;
+    public static final int EVENT_INFO_END = 3;
+    public static final int EVENT_INFO_LOCATION = 4;
+    public static final int EVENT_INFO_DESCRIPTION = 5;
+    public static final int EVENT_INFO_CALENDAR = 6;
 }

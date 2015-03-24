@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -103,7 +104,7 @@ public class CalendarModel {
         return eventTitles;
     }
 
-    public Cursor getEvents(ContentResolver cr, Long startInterval, Long endInterval) {
+    public Cursor getEventsCursor(ContentResolver cr, Long startInterval, Long endInterval) {
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
         startInterval = checkStartInterval(startInterval);
@@ -112,6 +113,26 @@ public class CalendarModel {
         ContentUris.appendId(eventsUriBuilder, endInterval);
         Uri eventsUri = eventsUriBuilder.build();
         return cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+    }
+
+
+    public Cursor getEventInfo(ContentResolver cr, Long eventID){
+        Uri.Builder builder = Uri.parse(uri + "/instances/when").buildUpon();
+        long now = new Date().getTime();
+        ContentUris.appendId(builder, now - DateUtils.DAY_IN_MILLIS*10000);
+        ContentUris.appendId(builder, now + DateUtils.DAY_IN_MILLIS * 10000);
+
+        Cursor eventCursor = cr.query(builder.build(),
+                new String[] { "event_id"}, "Calendars._id=" + eventID,
+                null, "startDay ASC, startMinute ASC");
+        // For a full list of available columns see http://tinyurl.com/yfbg76w
+        while (eventCursor.moveToNext()) {
+            String uid2 = eventCursor.getString(0);
+            Log.v("eventID : ", uid2);
+
+        }
+
+        return eventCursor;
     }
 
     /**

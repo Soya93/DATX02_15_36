@@ -6,10 +6,8 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,17 +19,17 @@ import android.widget.TextView;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
-
-import static se.chalmers.datx02_15_36.studeraeffektivt.R.id.weekView;
 
 /**
  * A class representing the controller of a calendar object
@@ -158,6 +156,28 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
+
+        //Get the ID of the selected event
+       if(this.eventMap.containsValue(weekViewEvent) && weekViewEvent!= null) {
+          /*long id = this.eventMap.get(weekViewEvent).getId();
+
+          // String name = this.eventMap.get(weekViewEvent).getName();
+
+
+           //Get a cursor for the detailed information of the event
+           Cursor cur = calendarModel.getEventInfo(cr, id);
+
+           //Set the title of the event in the pop-up dialog
+           TextView textView = (TextView) rootView.findViewById(R.id.event_name_label);
+           // textView.setText(name);
+             textView.setText(cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
+
+
+         //  cur.getLong(CalendarUtils.PROJECTION_BEGIN_INDEX);
+
+          // cur.getLong(CalendarUtils.PROJECTION_END_INDEX);*/
+
+       }
         builder.setView(dialogView);
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -183,6 +203,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     }
 
+
+
+
    @Override
     public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
        if(!hasOnMonthChange){
@@ -190,19 +213,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
            readEvents();
            return new ArrayList<WeekViewEvent>(eventMap.values());
        }
-
-
-
-
     Log.i("","onMonthChange");
        List<WeekViewEvent> events = new ArrayList<>();
-
-
-
-
-
-
-
 /*
        Calendar startTime = Calendar.getInstance();
        startTime.set(Calendar.HOUR_OF_DAY, 3);
@@ -301,9 +313,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
        event = new WeekViewEvent(5, getEventTitle(startTime), startTime, endTime);
        event.setColor(getResources().getColor(R.color.material_blue_grey_800));
        events.add(event);*/
-
-
-        return events;
+       return events;
     }
 
     private String getEventTitle(Calendar time) {
@@ -316,7 +326,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         Log.i("hej", "hejdå");
 
 
-        Cursor cur = calendarModel.getEvents(cr, 0L, 0L);
+        Cursor cur = calendarModel.getEventsCursor(cr, 0L, 0L);
 
         while (cur.moveToNext()) {
             long id = cur.getLong(CalendarUtils.PROJECTION_ID_INDEX);
@@ -335,6 +345,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
                 WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
                 event.setColor(getResources().getColor(R.color.pink));
+
+                Log.i("weekevent IDt", event.getId() + "");
 
                 eventMap.put(id, event);
 
