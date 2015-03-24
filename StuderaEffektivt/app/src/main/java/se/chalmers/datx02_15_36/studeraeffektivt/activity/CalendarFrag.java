@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 import com.alamkanak.weekview.WeekView;
@@ -52,17 +53,17 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
 
         // Set an action when any event is clicked.
-        //mWeekView.setOnEventClickListener(mEventClickListener);
         mWeekView.setOnEventClickListener(this);
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
         // month every time the month changes on the week view.
-        //mWeekView.setMonthChangeListener(mMonthChangeListener);
         mWeekView.setMonthChangeListener(this);
 
         // Set long press listener for events.
-        //mWeekView.setEventLongPressListener(mEventLongPressListener);
         mWeekView.setEventLongPressListener(this);
+
+        // Set number of visible days in the calendar view
+        mWeekView.setNumberOfVisibleDays(5);
         return rootView;
     }
 
@@ -98,10 +99,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         calendarModel.readEvents(cr, 0L, 0L);
     }
 
-    public void addEventAuto(View view) {
-        calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
-        calendarModel.getCalendars(cr, "eewestman@gmail.com", "com.google");
-        Long eventID = this.calendarModel.addEventAuto(cr);;
+    public void addEventAuto() {
+        calendarModel.addEventAuto(cr);
     }
 
     /*  Whatever is below this line does not work and is not invoked */
@@ -148,6 +147,29 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     // Calendar view stuff
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+
+
+            }
+        });
+
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // Do nothing
+            }
+        });
+
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
 
     }
 
@@ -160,6 +182,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
        // Populate the week view with some events.
        List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
+
+
 
        Calendar startTime = Calendar.getInstance();
        startTime.set(Calendar.HOUR_OF_DAY, 3);
@@ -258,6 +282,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
        event = new WeekViewEvent(5, getEventTitle(startTime), startTime, endTime);
        event.setColor(getResources().getColor(R.color.material_blue_grey_800));
        events.add(event);
+
 
        return events;
     }

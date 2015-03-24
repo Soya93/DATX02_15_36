@@ -186,7 +186,12 @@ public class MainActivity extends ActionBarActivity {
 
     //Calendar buttons redirections
     public void addStudySession(View view) {
-        startActivity(calendarFrag.addStudySession());
+        //startActivity(calendarFrag.addStudySession());
+        calendarFrag.addEventAuto();
+    }
+
+    public void addEventAuto(View view) {
+        calendarFrag.addEventAuto();
     }
 
     public void readCalendar(View view) {

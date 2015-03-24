@@ -26,34 +26,38 @@
         app:todayBackgroundColor="#1848adff"
         app:headerColumnBackground="#ffffffff"/>
 
+
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:text="Lägg till studiepass"
         android:id="@+id/button_add_study_session"
         android:onClick="addStudySession"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="41dp" />
+        android:layout_alignBottom="@+id/weekView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+    <!--
+      <Button
+          android:layout_width="match_parent"
+          android:layout_height="80dp"
+          android:text="Lägg till repetitionspass"
+          android:id="@+id/button_add_repetition_session"
+          android:onClick="openDialog"
+          android:layout_below="@+id/button_add_study_session"
+          android:layout_centerHorizontal="true"
+          android:layout_marginTop="47dp" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:text="Lägg till repetitionspass"
-        android:id="@+id/button_add_repetition_session"
-        android:onClick="openDialog"
-        android:layout_below="@+id/button_add_study_session"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="47dp" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:text="Öppna kalendern"
-        android:id="@+id/button_open_calendar"
-        android:onClick="openCalendar"
-        android:layout_marginTop="43dp"
-        android:layout_below="@+id/button_add_repetition_session"
-        android:layout_centerHorizontal="true" />
+      <Button
+          style="?android:attr/buttonStyleSmall"
+          android:layout_width="match_parent"
+          android:layout_height="80dp"
+          android:text="Öppna kalendern"
+          android:id="@+id/button_open_calendar"
+          android:onClick="openCalendar"
+          android:layout_marginTop="43dp"
+          android:layout_below="@+id/button_add_repetition_session"
+          android:layout_centerHorizontal="true" />
+          -->
 
 </RelativeLayout>

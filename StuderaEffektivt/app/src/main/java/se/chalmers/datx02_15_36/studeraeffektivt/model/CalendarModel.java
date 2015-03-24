@@ -252,18 +252,31 @@ public class CalendarModel {
      */
     public Long addEventAuto(ContentResolver cr) {
         long calID = 3;
+        long startMillis = 0;
+        long endMillis = 0;
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.set(year, month, day);
+        startMillis = beginTime.getTimeInMillis();
+        Calendar endTime = Calendar.getInstance();
+        endTime.set(year, month, day+1);
+        endMillis = endTime.getTimeInMillis();
+
+
+        //cr = getContentResolver();
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, startMillis);
         values.put(CalendarContract.Events.DTEND, endMillis);
-        values.put(CalendarContract.Events.TITLE, "Studiepass");
-        values.put(CalendarContract.Events.DESCRIPTION, "Studiepass");
+        values.put(CalendarContract.Events.TITLE, "Jazzercise");
+        values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
         values.put(CalendarContract.Events.CALENDAR_ID, calID);
-        values.put(CalendarContract.Events.EVENT_TIMEZONE, "Sweden");
-        uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, "America/Los_Angeles");
+        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
         // get the event ID that is the last element in the Uri
-        return Long.parseLong(uri.getLastPathSegment());
-        //TODO: fixa så att det sparar
+        long eventID = Long.parseLong(uri.getLastPathSegment());
+        //
+        // ... do something with event ID
+        return eventID;
     }
 
 

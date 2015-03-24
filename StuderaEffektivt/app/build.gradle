@@ -31,5 +31,4 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.0.7'
     compile 'com.github.alamkanak:android-week-view:1.2.1'
-
 }
