@@ -35,4 +35,8 @@ public class CourseDetailedInfoFrag extends Fragment {
     public void fillActivity(Course course) {
         kursDetaljer.setText(course.toString());
     }
+
+    public void goToTasks(){
+
+    }
 }
