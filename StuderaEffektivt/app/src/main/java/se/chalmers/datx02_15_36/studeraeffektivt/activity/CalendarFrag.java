@@ -71,8 +71,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         // Set number of visible days in the calendar view
         mWeekView.setNumberOfVisibleDays(5);
-
-        readEvents();
+        hasOnMonthChange = false;
         return rootView;
     }
 
@@ -188,6 +187,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
        if(!hasOnMonthChange){
            hasOnMonthChange = true;
+           readEvents();
            return new ArrayList<WeekViewEvent>(eventMap.values());
        }
 
