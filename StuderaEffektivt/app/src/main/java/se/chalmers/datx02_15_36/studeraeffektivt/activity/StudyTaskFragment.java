@@ -3,10 +3,15 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
@@ -27,6 +32,12 @@ public class StudyTaskFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private EditText taskInput;
+    private TextView taskOutput;
+    private Button addButton;
+
+    private View view;
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,7 +76,11 @@ public class StudyTaskFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_study_task, container, false);
+        View rootView =  inflater.inflate(R.layout.fragment_study_task, container, false);
+        this.view = rootView;
+        initComponents();
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -75,7 +90,15 @@ public class StudyTaskFragment extends Fragment {
         }
     }
 
-    @Override
+    public void initComponents(){
+        addButton = (Button) view.findViewById(R.id.addButton);
+        taskInput = (EditText) view.findViewById(R.id.taskInput);
+        taskOutput = (TextView) view.findViewById(R.id.taskOutput);
+
+
+    }
+
+   /* @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
@@ -90,7 +113,7 @@ public class StudyTaskFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
+    }*/
 
     /**
      * This interface must be implemented by activities that contain this

@@ -6,7 +6,7 @@
 
     <TextView
         android:layout_width="395dp"
-        android:layout_height="307dp"
+        android:layout_height="205dp"
         android:text="New Text"
         android:id="@+id/taskOutput"
         android:layout_gravity="left|bottom" />
@@ -16,4 +16,11 @@
         android:layout_height="139dp"
         android:id="@+id/taskInput"
         android:layout_gravity="center_horizontal|top" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="118dp"
+        android:text="New Button"
+        android:id="@+id/addButton"
+        android:layout_gravity="left|center_vertical" />
 </FrameLayout>
