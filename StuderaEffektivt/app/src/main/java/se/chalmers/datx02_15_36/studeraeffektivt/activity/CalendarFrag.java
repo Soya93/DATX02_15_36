@@ -23,7 +23,9 @@ import com.alamkanak.weekview.WeekViewEvent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
@@ -42,7 +44,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     View rootView;
     int week = -1;
     AlertDialog.Builder builder;
-    private WeekView mWeekView;
+    WeekView mWeekView;
+    Map <Long, WeekViewEvent> eventMap;
+    boolean hasOnMonthChange;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +71,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         // Set number of visible days in the calendar view
         mWeekView.setNumberOfVisibleDays(5);
+
+        readEvents();
         return rootView;
     }
 
@@ -180,30 +186,24 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
    @Override
     public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
-       // Populate the week view with some events.
-       List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
-
-       Cursor cur = calendarModel.getEvents(cr, 0L, 0L);
-
-       while (cur.moveToNext()) {
-           long id = cur.getLong(CalendarUtils.PROJECTION_ID_INDEX);
-           String eventName = cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX);
-
-           Calendar startTime = Calendar.getInstance();
-           startTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_BEGIN_INDEX));
-
-           Calendar endTime = Calendar.getInstance();
-           endTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_END_INDEX));
-
-           WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
-           event.setColor(getResources().getColor(R.color.pink));
-           events.add(event);
+       if(!hasOnMonthChange){
+           hasOnMonthChange = true;
+           return new ArrayList<WeekViewEvent>(eventMap.values());
        }
 
 
 
 
-        /*
+    Log.i("","onMonthChange");
+       List<WeekViewEvent> events = new ArrayList<>();
+
+
+
+
+
+
+
+/*
        Calendar startTime = Calendar.getInstance();
        startTime.set(Calendar.HOUR_OF_DAY, 3);
        startTime.set(Calendar.MINUTE, 0);
@@ -300,17 +300,49 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
        endTime.add(Calendar.HOUR_OF_DAY, 3);
        event = new WeekViewEvent(5, getEventTitle(startTime), startTime, endTime);
        event.setColor(getResources().getColor(R.color.material_blue_grey_800));
-       events.add(event);
-       */
+       events.add(event);*/
 
 
-       return events;
+        return events;
     }
 
     private String getEventTitle(Calendar time) {
         return String.format("Event of %02d:%02d %s/%d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.MONTH)+1, time.get(Calendar.DAY_OF_MONTH));
     }
 
+    private void readEvents() {
+       eventMap = new HashMap<>();
+
+        Log.i("hej", "hejdå");
+
+
+        Cursor cur = calendarModel.getEvents(cr, 0L, 0L);
+
+        while (cur.moveToNext()) {
+            long id = cur.getLong(CalendarUtils.PROJECTION_ID_INDEX);
+
+
+            if(!eventMap.containsKey(id)) {
+                String eventName = cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX);
+                Log.i("Event namn + id: ", eventName + " " + id);
+
+
+                Calendar startTime = Calendar.getInstance();
+                startTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_BEGIN_INDEX));
+
+                Calendar endTime = Calendar.getInstance();
+                endTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_END_INDEX));
+
+                WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
+                event.setColor(getResources().getColor(R.color.pink));
+
+                eventMap.put(id, event);
+
+            }
+        }
+        cur.close();
+
+    }
 
 
 
