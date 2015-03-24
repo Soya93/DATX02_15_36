@@ -103,6 +103,17 @@ public class CalendarModel {
         return eventTitles;
     }
 
+    public Cursor getEvents(ContentResolver cr, Long startInterval, Long endInterval) {
+        Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
+                .buildUpon();
+        startInterval = checkStartInterval(startInterval);
+        endInterval = checkEndInterval(endInterval);
+        ContentUris.appendId(eventsUriBuilder, startInterval);
+        ContentUris.appendId(eventsUriBuilder, endInterval);
+        Uri eventsUri = eventsUriBuilder.build();
+        return cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+    }
+
     /**
      * Checks if the startdate is zero, if so it is set to a good default
      *

@@ -5,9 +5,11 @@ import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 import static se.chalmers.datx02_15_36.studeraeffektivt.R.id.weekView;
 
@@ -155,8 +158,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-
-
             }
         });
 
@@ -166,7 +167,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 // Do nothing
             }
         });
-
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
@@ -183,8 +183,27 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
        // Populate the week view with some events.
        List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
 
+       Cursor cur = calendarModel.getEvents(cr, 0L, 0L);
+
+       while (cur.moveToNext()) {
+           long id = cur.getLong(CalendarUtils.PROJECTION_ID_INDEX);
+           String eventName = cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX);
+
+           Calendar startTime = Calendar.getInstance();
+           startTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_BEGIN_INDEX));
+
+           Calendar endTime = Calendar.getInstance();
+           endTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_END_INDEX));
+
+           WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
+           event.setColor(getResources().getColor(R.color.pink));
+           events.add(event);
+       }
 
 
+
+
+        /*
        Calendar startTime = Calendar.getInstance();
        startTime.set(Calendar.HOUR_OF_DAY, 3);
        startTime.set(Calendar.MINUTE, 0);
@@ -282,6 +301,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
        event = new WeekViewEvent(5, getEventTitle(startTime), startTime, endTime);
        event.setColor(getResources().getColor(R.color.material_blue_grey_800));
        events.add(event);
+       */
 
 
        return events;
@@ -290,6 +310,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private String getEventTitle(Calendar time) {
         return String.format("Event of %02d:%02d %s/%d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.MONTH)+1, time.get(Calendar.DAY_OF_MONTH));
     }
+
+
 
 
 }

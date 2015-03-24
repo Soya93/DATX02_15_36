@@ -12,13 +12,15 @@ Creating indices for this array instead of doing dynamic lookups improves perfor
     public static final String[] INSTANCE_PROJECTION = new String[] {
             CalendarContract.Instances.EVENT_ID,      // 0
             CalendarContract.Instances.BEGIN,         // 1
-            CalendarContract.Instances.TITLE          // 2
+            CalendarContract.Instances.TITLE,         // 2
+            CalendarContract.Instances.END            // 3
     };
 
     // The indices for the projection array above for the events in the calendar
     public static final int PROJECTION_EVENT_ID_INDEX = 0;
     public static final int PROJECTION_BEGIN_INDEX = 1;
     public static final int PROJECTION_TITLE_INDEX = 2;
+    public static final int PROJECTION_END_INDEX = 3;
 
     /*Projection array for calendar of an account.
     Creating indices for this array instead of doing dynamic lookups improves performance.*/
