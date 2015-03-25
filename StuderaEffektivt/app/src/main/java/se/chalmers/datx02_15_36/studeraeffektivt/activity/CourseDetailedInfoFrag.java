@@ -30,16 +30,19 @@ public class CourseDetailedInfoFrag extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.activity_course_details, container, false);
         this.view = rootView;
         this.container = container;
+
+        initComponents();
 
         bundleFromPreviousFragment = this.getArguments();
         containerId = bundleFromPreviousFragment.getInt("containerId");
         selectedCourse = bundleFromPreviousFragment.getInt("kurs");
         Course course = (Course) CourseFrag.courseList.get(selectedCourse).get("Courses");
-        kursDetaljer = (TextView) view.findViewById(R.id.kursDetaljer);
-        initComponents();
+
+
         fillActivity(course);
 
         return rootView;
@@ -63,6 +66,8 @@ public class CourseDetailedInfoFrag extends Fragment {
     public void initComponents(){
         taskButton = (Button) view.findViewById(R.id.taskButton);
         taskButton.setOnClickListener(myOnlyhandler);
+
+        kursDetaljer = (TextView) view.findViewById(R.id.kursDetaljer);
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
@@ -76,6 +81,7 @@ public class CourseDetailedInfoFrag extends Fragment {
     public void goToTasks(Button button){
 
         Fragment fragment = new StudyTaskFragment();
+
         Bundle bundle = new Bundle();
         bundle.putInt("kurs", selectedCourse);
         bundle.putString("key", (String) button.getText());

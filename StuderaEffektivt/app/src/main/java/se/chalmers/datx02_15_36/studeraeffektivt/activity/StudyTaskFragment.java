@@ -12,9 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,8 +42,15 @@ public class StudyTaskFragment extends Fragment {
     private EditText taskInput;
     private TextView taskOutput;
     private Button addButton;
+    private EditText chapterEditText;
+    private EditText taskParts;
+
+    public String inputString;
 
     private Bundle bundleFromPreviousFragment;
+
+    private HashMap<Integer, ArrayList<String>> taskMap = new HashMap<>();
+    ArrayList<String> studyTaskList;
 
     private View view;
 
@@ -81,8 +93,11 @@ public class StudyTaskFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_study_task, container, false);
         this.view = rootView;
-        bundleFromPreviousFragment = this.getArguments();
+
         initComponents();
+
+        bundleFromPreviousFragment = this.getArguments();
+
 
         Log.d("StudyTaskFragment: ", "Nu skapades ett studytaskfragment");
 
@@ -100,10 +115,98 @@ public class StudyTaskFragment extends Fragment {
         addButton = (Button) view.findViewById(R.id.addButton);
         taskInput = (EditText) view.findViewById(R.id.taskInput);
         taskOutput = (TextView) view.findViewById(R.id.taskOutput);
+        chapterEditText = (EditText) view.findViewById(R.id.chapterEditText);
+        taskParts = (EditText) view.findViewById(R.id.taskParts);
+
+        addButton.setOnClickListener(myOnlyhandler);
 
         taskOutput.setText("Hej");
+    }
+
+    View.OnClickListener myOnlyhandler = new View.OnClickListener() {
+        public void onClick(View v) {
+
+            addTask(Integer.parseInt(chapterEditText.getText().toString()), taskInput.getText().toString(), taskParts.getText().toString());
+
+        }
+    };
+
+    public void addTask(int chapter, String taskString, String taskParts){
+        //StudyTask studytask = new StudyTask(taskInput.getText().toString());
+        //ArrayList<String> studyTaskList = studytask.getlist();
+
+        ArrayList<String> stringlist = new ArrayList();
+        String[] seperateLine;
+        String[] seperateComma;
+
+        String[] seperateTaskParts;
+        seperateTaskParts = taskParts.split("");
+
+        taskString.replaceAll("\\s+","");
+
+        int start;
+        int end;
+
+        if(taskMap.containsKey(chapter)){
+            studyTaskList = taskMap.get(chapter);
+        }
+        else{
+            studyTaskList = new ArrayList<>();
+        }
+
+        if (taskString.contains(",")) {
+
+            seperateComma = taskString.split(",");
+        } else {
+            seperateComma = new String[1];
+            seperateComma[0] = taskString;
+        }
 
 
+        for (int a = 0; a < seperateComma.length; a++) {
+            if (seperateComma[a].contains("-")) {
+
+                seperateLine = seperateComma[a].split("-");
+                start = Integer.parseInt(seperateLine[0]);
+                end = Integer.parseInt(seperateLine[seperateLine.length - 1]);
+
+                for (int i = start; i <= end; i++) {
+                        stringlist.add("" + i);
+                }
+            } else {
+                    stringlist.add(seperateComma[a]);
+            }
+        }
+
+        if(taskParts!=""){
+            for(String s : seperateTaskParts){
+               for(String s2 : stringlist){
+                    s2 = s2 + s;
+                   if(!studyTaskList.contains(s2)){
+                       studyTaskList.add(s2);
+                   }
+                }
+            }
+        }
+
+        taskMap.put(chapter, studyTaskList);
+
+        String taskMapString = taskMap.toString();
+
+        Log.d("String för taskMap: ",taskMapString);
+
+        String uppgifter = "";
+
+        for(String s: studyTaskList){
+            uppgifter += s + " ";
+        }
+
+        taskOutput.setText(uppgifter);
+
+    }
+
+    public void deleteTask(String taskString){
+        //if()
     }
 
    /* @Override

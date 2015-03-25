@@ -175,14 +175,14 @@ public class FifthTabFrag extends Fragment {
 
                 fragment = new TipFrag();
                 fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 currentlyShown = fragment;
                 break;
             case "Kurser":
                 fragment = new CourseFrag();
                 fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "coursefragment");
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 currentlyShown = fragment;
                 break;
