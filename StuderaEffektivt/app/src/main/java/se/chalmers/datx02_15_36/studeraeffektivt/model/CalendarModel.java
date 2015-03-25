@@ -1,5 +1,6 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.model;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -117,7 +118,6 @@ public class CalendarModel {
         Uri eventsUri = eventsUriBuilder.build();
         return cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
     }
-
 
     public Cursor getEventInfo(ContentResolver cr, Long eventID, long startMillis, long endMillis) {
         Uri.Builder builder = Uri.parse(uri + "/instances/when").buildUpon();

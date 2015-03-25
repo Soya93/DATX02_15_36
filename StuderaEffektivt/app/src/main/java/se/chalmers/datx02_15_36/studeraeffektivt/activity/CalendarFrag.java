@@ -19,13 +19,11 @@ import android.widget.TextView;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
@@ -37,24 +35,24 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 public class CalendarFrag extends Fragment implements WeekView.MonthChangeListener,
         WeekView.EventClickListener, WeekView.EventLongPressListener {
 
-    CalendarModel calendarModel = new CalendarModel();
-    ContentResolver cr;
-    View rootView;
-    int week = -1;
-    AlertDialog.Builder builder;
-    WeekView mWeekView;
-    Map <Long, WeekViewEvent> eventMap;
+    private CalendarModel calendarModel = new CalendarModel();
+     ContentResolver cr;
+    private View view;
+    private int week = -1;
+    private AlertDialog.Builder builder;
+    private WeekView mWeekView;
+    private Map <Long, WeekViewEvent> eventMap;
     boolean hasOnMonthChange;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-       rootView = inflater.inflate(R.layout.activity_calendar, container, false);
-       calendarModel = new CalendarModel();
+      this.view = inflater.inflate(R.layout.activity_calendar, container, false);
+      calendarModel = new CalendarModel();
 
         // Get a reference for the week view in the layout.
-        mWeekView = (WeekView) rootView.findViewById(R.id.weekView);
+        mWeekView = (WeekView) view.findViewById(R.id.weekView);
 
 
         // Set an action when any event is clicked.
@@ -70,7 +68,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         // Set number of visible days in the calendar view
         mWeekView.setNumberOfVisibleDays(5);
         hasOnMonthChange = false;
-        return rootView;
+        return view;
     }
 
     public void setContentResolver(ContentResolver cr){
@@ -159,6 +157,29 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         //Get the ID of the selected event
        if(this.eventMap.containsValue(weekViewEvent) && weekViewEvent!= null) {
+        long id = weekViewEvent.getId();
+         Log.i("id", id + "");
+
+          CharSequence name = weekViewEvent.getName();
+          Log.i("name", name + "");
+
+          TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
+           if(eventNameLabel!= null){
+               eventNameLabel.setText(name);
+           }
+
+
+           Calendar startTime = weekViewEvent.getStartTime();
+
+           //Get a cursor for the detailed information of the event
+           Cursor cur = calendarModel.getEventInfo(cr, id, getActivity());
+
+
+           /*for(Long id: eventMap.keySet()){
+               Cursor cur = calendarModel.getEventInfo(cr, id, this.getActivity());
+               Log.i("title", cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
+           }
+
           /*long id = this.eventMap.get(weekViewEvent).getId();
 
           // String name = this.eventMap.get(weekViewEvent).getName();
@@ -168,7 +189,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
            Cursor cur = calendarModel.getEventInfo(cr, id);
 
            //Set the title of the event in the pop-up dialog
-           TextView textView = (TextView) rootView.findViewById(R.id.event_name_label);
+           TextView textView = (TextView) view.findViewById(R.id.event_name_label);
            // textView.setText(name);
              textView.setText(cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
 
