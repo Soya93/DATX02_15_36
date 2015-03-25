@@ -156,57 +156,52 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
 
-        //Get the ID of the selected event
        if(this.eventMap.containsValue(weekViewEvent) && weekViewEvent!= null) {
-        long id = weekViewEvent.getId();
-         Log.i("id", id + "");
+           //Fetching the information about the event from its object
+           long id = weekViewEvent.getId();
 
-          CharSequence name = weekViewEvent.getName();
-          Log.i("name", name + "");
+           long startTime = weekViewEvent.getStartTime().getTimeInMillis();
+           long endTime = weekViewEvent.getEndTime().getTimeInMillis();
+           CharSequence name = weekViewEvent.getName();
 
-          TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
+           //Get a cursor for the detailed information of the event
+
+           Cursor cur = calendarModel.getEventDetailedInfo(cr, startTime, endTime, id);
+
+
+          //Fetch information from the cursor
+           String location = cur.getString(CalendarUtils.EVENT_INFO_LOCATION);
+           String description = cur.getString(CalendarUtils.EVENT_INFO_DESCRIPTION);
+           String calendar = cur.getString(CalendarUtils.EVENT_INFO_CALENDAR);
+
+           //Set the fetched informaton from the calendar on the textfields
+           TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
            if(eventNameLabel!= null){
                eventNameLabel.setText(name);
            }
 
-
-           Calendar startTime = weekViewEvent.getStartTime();
-           startTime.getTimeInMillis();
-
-           Calendar endTime = weekViewEvent.getEndTime();
-           endTime.getTimeInMillis();
-
-
-           //Get a cursor for the detailed information of the event
-           Cursor cur = calendarModel.getEventDetailedInfo(cr, id, startTime.getTimeInMillis(), endTime.getTimeInMillis());
-
-
-           /*for(Long id: eventMap.keySet()){
-               Cursor cur = calendarModel.getEventInfo(cr, id, this.getActivity());
-               Log.i("title", cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
+           TextView eventTimeLabel = (TextView) dialogView.findViewById(R.id.event_time_label);
+           if(eventTimeLabel!= null){
+               eventTimeLabel.setText("Tid: " +startTime + " - " + endTime);
            }
 
-          /*long id = this.eventMap.get(weekViewEvent).getId();
+           TextView eventLocationLabel = (TextView) dialogView.findViewById(R.id.event_location_label);
+           if(eventLocationLabel!= null){
+               eventLocationLabel.setText("Plats: " + location);
+           }
 
-          // String name = this.eventMap.get(weekViewEvent).getName();
+           TextView eventDescriptionLabel = (TextView) dialogView.findViewById(R.id.event_description_label);
+           if(eventDescriptionLabel!= null){
+               eventDescriptionLabel.setText("Beskrivning: " + description);
+           }
 
-
-           //Get a cursor for the detailed information of the event
-           Cursor cur = calendarModel.getEventInfo(cr, id);
-
-           //Set the title of the event in the pop-up dialog
-           TextView textView = (TextView) view.findViewById(R.id.event_name_label);
-           // textView.setText(name);
-             textView.setText(cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
-
-
-         //  cur.getLong(CalendarUtils.PROJECTION_BEGIN_INDEX);
-
-          // cur.getLong(CalendarUtils.PROJECTION_END_INDEX);*/
-
+           TextView eventCalendarLabel = (TextView) dialogView.findViewById(R.id.event_calendar_label);
+           if(eventCalendarLabel!= null){
+               eventCalendarLabel.setText("Kalender: " + calendar);
+           }
+           cur.close();
        }
         builder.setView(dialogView);
-
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
@@ -264,8 +259,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     public void onEventLongPress(WeekViewEvent weekViewEvent, RectF rectF) {
 
     }
-
-
 
 
    @Override

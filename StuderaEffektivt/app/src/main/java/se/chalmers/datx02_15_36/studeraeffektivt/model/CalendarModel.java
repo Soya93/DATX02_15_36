@@ -98,16 +98,14 @@ public class CalendarModel {
 
         cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
 
-
         //Prints out all the events in the given interval
         while (cur.moveToNext()) {
             eventTitles.add(cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
-
-            //Log.d("title: ", cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
         }
         return eventTitles;
     }
 
+    //Gets all the events in a certain timeframe (used in calendar for the view)
     public Cursor getEventsCursor(ContentResolver cr, Long startInterval, Long endInterval) {
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
@@ -119,36 +117,16 @@ public class CalendarModel {
         return cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
     }
 
-    /*public Cursor getEventInfo(ContentResolver cr, Long eventID, long startMillis, long endMillis) {
-        Uri.Builder builder = CalendarContract.Instances.CONTENT_URI
-                .buildUpon();
-        long now = new Date().getTime();
-        ContentUris.appendId(builder, startMillis);
-        ContentUris.appendId(builder, endMillis);
 
-        Cursor eventCursor = cr.query(builder.build(),
-                new String[]{"event_id"}, "Calendars._id=" + eventID,
-                null, "startDay ASC, startMinute ASC");
-        // For a full list of available columns see http://tinyurl.com/yfbg76w
-        while (eventCursor.moveToNext()) {
-            String uid2 = eventCursor.getString(0);
-            Log.v("eventID : ", uid2);
-
-        }
-        return eventCursor;
-    }*/
-
-
+    //Gets the detailed information regarding a specific event from its ID (used when pressed a specific event in the calendar view)
     public Cursor getEventDetailedInfo(ContentResolver cr, Long startInterval, Long endInterval,  Long eventID){
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
-        startInterval = checkStartInterval(startInterval);
-        endInterval = checkEndInterval(endInterval);
         ContentUris.appendId(eventsUriBuilder, startInterval);
         ContentUris.appendId(eventsUriBuilder, endInterval);
         Uri eventsUri = eventsUriBuilder.build();
 
-        cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+        cur = cr.query(eventsUri, CalendarUtils.EVENT_INFO_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
 
 
         //Prints out all the events in the given interval
