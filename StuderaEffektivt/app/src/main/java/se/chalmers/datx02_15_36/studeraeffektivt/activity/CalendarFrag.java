@@ -170,9 +170,14 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
 
            Calendar startTime = weekViewEvent.getStartTime();
+           startTime.getTimeInMillis();
+
+           Calendar endTime = weekViewEvent.getEndTime();
+           endTime.getTimeInMillis();
+
 
            //Get a cursor for the detailed information of the event
-           Cursor cur = calendarModel.getEventInfo(cr, id, getActivity());
+           Cursor cur = calendarModel.getEventInfo(cr, id, startTime.getTimeInMillis(),endTime.getTimeInMillis() );
 
 
            /*for(Long id: eventMap.keySet()){

@@ -120,7 +120,8 @@ public class CalendarModel {
     }
 
     public Cursor getEventInfo(ContentResolver cr, Long eventID, long startMillis, long endMillis) {
-        Uri.Builder builder = Uri.parse(uri + "/instances/when").buildUpon();
+        Uri.Builder builder = CalendarContract.Instances.CONTENT_URI
+                .buildUpon();
         long now = new Date().getTime();
         ContentUris.appendId(builder, startMillis);
         ContentUris.appendId(builder, endMillis);
@@ -134,7 +135,6 @@ public class CalendarModel {
             Log.v("eventID : ", uid2);
 
         }
-
         return eventCursor;
     }
 
