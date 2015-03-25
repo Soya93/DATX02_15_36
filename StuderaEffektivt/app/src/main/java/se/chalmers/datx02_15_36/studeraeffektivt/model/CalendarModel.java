@@ -10,10 +10,13 @@ import android.provider.CalendarContract;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import com.alamkanak.weekview.WeekViewEvent;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
@@ -116,14 +119,14 @@ public class CalendarModel {
     }
 
 
-    public Cursor getEventInfo(ContentResolver cr, Long eventID){
+    public Cursor getEventInfo(ContentResolver cr, Long eventID, long startMillis, long endMillis) {
         Uri.Builder builder = Uri.parse(uri + "/instances/when").buildUpon();
         long now = new Date().getTime();
-        ContentUris.appendId(builder, now - DateUtils.DAY_IN_MILLIS*10000);
-        ContentUris.appendId(builder, now + DateUtils.DAY_IN_MILLIS * 10000);
+        ContentUris.appendId(builder, startMillis);
+        ContentUris.appendId(builder, endMillis);
 
         Cursor eventCursor = cr.query(builder.build(),
-                new String[] { "event_id"}, "Calendars._id=" + eventID,
+                new String[]{"event_id"}, "Calendars._id=" + eventID,
                 null, "startDay ASC, startMinute ASC");
         // For a full list of available columns see http://tinyurl.com/yfbg76w
         while (eventCursor.moveToNext()) {
@@ -291,7 +294,7 @@ public class CalendarModel {
         beginTime.set(year, month, day);
         startMillis = beginTime.getTimeInMillis();
         Calendar endTime = Calendar.getInstance();
-        endTime.set(year, month, day+1);
+        endTime.set(year, month, day + 1);
         endMillis = endTime.getTimeInMillis();
 
 
@@ -320,4 +323,58 @@ public class CalendarModel {
                 .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account)
                 .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, accountType).build();
     }
+
+    //deleting an event from a calendar
+    public void deleteEvent(ContentResolver cr, long eventID) {
+        ContentValues values = new ContentValues(); // remove this line???
+        Uri deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
+        cr.delete(deleteUri, null, null);
+    }
+
+
+    // methods for modifying an event
+    public void editTitle(ContentResolver cr, long eventID, String newTitle) {
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.TITLE, newTitle);
+        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
+        cr.update(updateUri, values, null, null);
+    }
+
+    public void editStartTime(ContentResolver cr, long eventID, long startMillis, long endMillis) {
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.DTSTART, startMillis);
+        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
+        cr.update(updateUri, values, null, null);
+    }
+
+    public void editEndTime(ContentResolver cr, long eventID, long startMillis, long endMillis) {
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.DTEND, endMillis);
+        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
+        cr.update(updateUri, values, null, null);
+    }
+
+    public void editDescription(ContentResolver cr, long eventID, String description) {
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.DESCRIPTION, description);
+        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
+        cr.update(updateUri, values, null, null);
+    }
+
+    public void editLocation(ContentResolver cr, long eventID, String newLocation) {
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.EVENT_LOCATION, newLocation);
+        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
+        cr.update(updateUri, values, null, null);
+    }
+
+    public void editEventColor(ContentResolver cr, long eventID, int color) {
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.EVENT_COLOR, color);
+        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
+        cr.update(updateUri, values, null, null);
+    }
+
+
+
 }
