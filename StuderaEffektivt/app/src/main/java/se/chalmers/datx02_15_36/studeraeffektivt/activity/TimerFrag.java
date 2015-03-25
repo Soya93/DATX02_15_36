@@ -1,7 +1,9 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -50,8 +51,9 @@ public class TimerFrag extends Fragment {
     private String inputTime;
     private String nbrOfPauses;
     private String pausLength;
-    private SharedPreferences prefs;
-    private String storeButtonText = "My_prefs";
+    private String buttonText="";
+
+    private Bundle b;
 
 
     @Override
@@ -60,6 +62,18 @@ public class TimerFrag extends Fragment {
         instantiate();
         return rootView;
     }
+
+
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (b!= null) {
+            textView = (TextView) rootView.findViewById(R.id.text_timer);
+            String text = b.getString("buttonText");
+            Log.d("onActivityCreated",text);
+            startButton.setText(text);
+        }
+    }
+
 
 
     private void instantiate() {
@@ -88,11 +102,7 @@ public class TimerFrag extends Fragment {
 
             public void onTick(long millisUntilFinished) {
                 studyTimerIsRunning = true;
-
-                textView.setText("Study " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
                 textView.setText("Plugga " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
-
-
                 secondsUntilFinished = millisUntilFinished;
                 timePassed += 100;
             }
@@ -117,7 +127,6 @@ public class TimerFrag extends Fragment {
 
             public void onTick(long millisUntilFinished) {
                 pauseTimerIsRunning = true;
-
                 textView.setText("Paus " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
                 secondsUntilFinished = millisUntilFinished;
                 timePassed += 100;
@@ -143,13 +152,16 @@ public class TimerFrag extends Fragment {
             calculateStudySession();
             studyTimerFunction(default_StudyTime, 100);
             studyTimer.start();
+            buttonText = "Paus";
             startButton.setText("Paus");
         } else if (startButton.getText().equals("Paus")) {
             cancelOneOfTimers();
             startButton.setText("Återuppta");
+            buttonText="Återuppta";
         } else if (startButton.getText().equals("Återuppta")) {
             handleTimeFromService(timePassed);
             startButton.setText("Paus");
+            buttonText="Paus";
         }
     }
 
@@ -168,8 +180,6 @@ public class TimerFrag extends Fragment {
                 lastWasStudy=true;
             }
         }
-        Log.d("CountOut", " values" + countOut);
-        Log.d("TimeFromService", "values" + timeFromService);
         countOut=countOut-timeFromService;
         if(lastWasStudy){
             pauseTimerFunction(countOut,update_Time);
@@ -283,6 +293,12 @@ public class TimerFrag extends Fragment {
 
 
     }
+
+       public void onDestroyView () {
+           super.onDestroyView();
+           b= new Bundle();
+           b.putString("buttonText",buttonText);
+       }
 
 
 }
