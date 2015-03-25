@@ -14,7 +14,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 
 /**
  * A database adapter that is used to read and write to/from the database.
- * The database currently has one table for Courses with coursecode and coursename.
+ * Three tables: Courses, Sessions, Assignments.
  * Created by Patricia on 2015-03-11.
  */
 public class DBAdapter  {
@@ -33,11 +33,12 @@ public class DBAdapter  {
      * @return
      */
     public long insertCourse(String courseCode, String courseName){
-
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
+
         cv.put(dbHelper.COURSES__ccode, courseCode);
         cv.put(dbHelper.COURSES_cname, courseName);
+
         return db.insert(dbHelper.TABLE_COURSES, null, cv);
     }
 
@@ -48,13 +49,36 @@ public class DBAdapter  {
      * @return
      */
     public long insertSession(String courseCode, int minutes){
-
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
+
         cv.put(dbHelper.COURSES__ccode, courseCode);
         cv.put(dbHelper.SESSIONS_minutes, minutes);
         cv.put(dbHelper.SESSIONS__startTimestamp, "CURRENT_TIMESTAMP");
+
         return db.insert(dbHelper.TABLE_SESSIONS, null, cv);
+    }
+
+    public long insertAssignment(String courseCode, int chapter, String assNr, int startPage, int stopPage){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(dbHelper.ASSIGNMENTS_ccode, courseCode);
+        cv.put(dbHelper.ASSIGNMENTS_chapter, chapter);
+        cv.put(dbHelper.ASSIGNMENTS__assNr, assNr);
+        cv.put(dbHelper.ASSIGNMENTS__startPage, startPage);
+        cv.put(dbHelper.ASSIGNMENTS__stopPage, stopPage);
+
+        return db.insert(dbHelper.TABLE_ASSIGNMENTS, null, cv);
+    }
+
+    /**
+     * Get all Assignments.
+     * @return
+     */
+    public Cursor getAssignments(){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        return db.query(dbHelper.TABLE_ASSIGNMENTS, null, null, null, null, null, null);
     }
 
     /**
