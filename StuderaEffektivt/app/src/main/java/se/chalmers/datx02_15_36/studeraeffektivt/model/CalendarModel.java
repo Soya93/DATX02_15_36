@@ -283,7 +283,8 @@ public class CalendarModel {
      * @return the event ID
      */
     public Long addEventAuto(ContentResolver cr) {
-        long calID = 3;
+        // calID 1 is the users primary calendar
+        long calID = 1;
         long startMillis = 0;
         long endMillis = 0;
         Calendar beginTime = Calendar.getInstance();
@@ -298,8 +299,8 @@ public class CalendarModel {
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, startMillis);
         values.put(CalendarContract.Events.DTEND, endMillis);
-        values.put(CalendarContract.Events.TITLE, "Jazzercise");
-        values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
+        values.put(CalendarContract.Events.TITLE, "TEST AUTO ADDING OF EVENT");
+        values.put(CalendarContract.Events.DESCRIPTION, "Good Job");
         values.put(CalendarContract.Events.CALENDAR_ID, calID);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, "America/Los_Angeles");
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
