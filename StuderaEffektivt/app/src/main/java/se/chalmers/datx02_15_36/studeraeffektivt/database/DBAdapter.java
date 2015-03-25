@@ -53,7 +53,7 @@ public class DBAdapter  {
         ContentValues cv = new ContentValues();
         cv.put(dbHelper.COURSES__ccode, courseCode);
         cv.put(dbHelper.SESSIONS_minutes, minutes);
-        cv.put(dbHelper.SESSIONS_startTimestamp, "CURRENT_TIMESTAMP");
+        cv.put(dbHelper.SESSIONS__startTimestamp, "CURRENT_TIMESTAMP");
         return db.insert(dbHelper.TABLE_SESSIONS, null, cv);
     }
 
@@ -86,11 +86,18 @@ public class DBAdapter  {
 
         //Variables for the Sessions table.
         private static final String TABLE_SESSIONS = "SESSIONS";
-        private static final String SESSIONS_startTimestamp = "startTimestamp";
+        private static final String SESSIONS__ccode = COURSES__ccode;
+        private static final String SESSIONS__startTimestamp = "startTimestamp";
         private static final String SESSIONS_minutes = "minutes";
 
         //Variables for the Assignments table.
         private static final String TABLE_ASSIGNMENTS = "ASSIGNMENTS";
+        private static final String ASSIGNMENTS__id = "id";
+        private static final String ASSIGNMENTS_ccode = COURSES__ccode;
+        private static final String ASSIGNMENTS_chapter = "chapter";
+        private static final String ASSIGNMENTS__assNr = "assNr";
+        private static final String ASSIGNMENTS__startPage = "startPage";
+        private static final String ASSIGNMENTS__stopPage = "stopPage";
 
         /*Constructor.*/
         public DBHelper(Context context){
@@ -103,9 +110,13 @@ public class DBAdapter  {
             //Creation of schemas and initial insert of data.
             db.execSQL("CREATE TABLE "+TABLE_COURSES+" ("+COURSES__ccode+" VARCHAR(50) PRIMARY KEY, "+COURSES_cname+" VARCHAR(50))");
 
-            db.execSQL("CREATE TABLE "+TABLE_SESSIONS+" ("+SESSIONS_startTimestamp+" DATETIME DEFAULT CURRENT_TIMESTAMP, "+
-                    SESSIONS_minutes+" INT, "+COURSES__ccode+" VARCHAR(50), FOREIGN KEY("+COURSES__ccode+") REFERENCES "+
-                    TABLE_COURSES+"("+COURSES__ccode+"), PRIMARY KEY("+COURSES__ccode+", "+SESSIONS_startTimestamp+"))");
+            db.execSQL("CREATE TABLE "+TABLE_SESSIONS+" ("+SESSIONS__startTimestamp+" DATETIME DEFAULT CURRENT_TIMESTAMP, "+
+                    SESSIONS_minutes+" INT, "+COURSES__ccode+" VARCHAR(50), FOREIGN KEY("+SESSIONS__ccode+") REFERENCES "+
+                    TABLE_COURSES+"("+COURSES__ccode+"), PRIMARY KEY("+SESSIONS__ccode+", "+SESSIONS__startTimestamp+"))");
+
+            db.execSQL("CREATE TABLE "+TABLE_ASSIGNMENTS+" ("+ASSIGNMENTS__id+" PRIMARY KEY, "
+                    +ASSIGNMENTS_ccode+" VARCHAR(50), " +ASSIGNMENTS_chapter+" INT, "+ASSIGNMENTS__assNr+
+                    " VARCHAR(50), "+ASSIGNMENTS__startPage+" INT, "+ASSIGNMENTS__stopPage+" INT)");
         }
 
         @Override
