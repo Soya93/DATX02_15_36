@@ -36,8 +36,8 @@ public class DBAdapter  {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put("_coursecode", courseCode);
-        cv.put("name", courseName);
+        cv.put(dbHelper.COURSES__ccode, courseCode);
+        cv.put(dbHelper.COURSES_cname, courseName);
         return db.insert(dbHelper.TABLE_COURSES, null, cv);
     }
 
@@ -54,9 +54,20 @@ public class DBAdapter  {
         private static final String DATABASE_NAME = "pluggapp.db";
         private static final int DATABASE_VERSION = 1; //Has to be incremented to update.
 
+        //Variables for the Courses table.
         private static final String TABLE_COURSES = "COURSES";
+        private static final String COURSES__ccode = "_ccode";
+        private static final String COURSES_cname = "cname";
 
+        //Variables for the Sessions table.
+        private static final String TABLE_SESSIONS = "SESSIONS";
+        private static final String SESSIONS_startTimestamp = "startTimestamp";
+        private static final String SESSIONS_minutes = "minutes";
 
+        //Variables for the Assignments table.
+        private static final String TABLE_ASSIGNMENTS = "ASSIGNMENTS";
+
+        /*Constructor.*/
         public DBHelper(Context context){
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
@@ -65,8 +76,11 @@ public class DBAdapter  {
         public void onCreate(SQLiteDatabase db) {
             //Called when database is created.
             //Creation of schemas and initial insert of data.
-            db.execSQL("CREATE TABLE COURSES (_coursecode VARCHAR(50) PRIMARY KEY, name VARCHAR(50))");
+            db.execSQL("CREATE TABLE "+TABLE_COURSES+" ("+COURSES__ccode+" VARCHAR(50) PRIMARY KEY, "+COURSES_cname+" VARCHAR(50))");
 
+            db.execSQL("CREATE TABLE "+TABLE_SESSIONS+" ("+SESSIONS_startTimestamp+" DATETIME DEFAULT CURRENT_TIMESTAMP, "+
+                    SESSIONS_minutes+" INT, "+COURSES__ccode+" VARCHAR(50), FOREIGN KEY("+COURSES__ccode+") REFERENCES "+
+                    TABLE_COURSES+"("+COURSES__ccode+"), PRIMARY KEY("+COURSES__ccode+", "+SESSIONS_startTimestamp+"))");
         }
 
         @Override

@@ -75,9 +75,8 @@ public class CourseFrag extends Fragment {
         courseList.clear();
 
         Cursor cursor = dbAdapter.getCourses();
-        if (cursor.getCount() < 0) {
-            courseList.add(createCourse("Courses", new Course("Inga kurser.", "")));
-        } else {
+        Log.d("DB", "cursor.getCount() är "+cursor.getCount());
+        if (cursor.getCount() > 0){
             //cursor.moveToNext();
             String ccode = "";
             String cname = "";
@@ -86,6 +85,9 @@ public class CourseFrag extends Fragment {
                 cname = cursor.getString(1);
                 courseList.add(createCourse("Courses", new Course(cname, ccode)));
             }
+        }else{
+            courseList.add(createCourse("Courses", new Course("Inga kurser.", "")));
+
         }
     }
 
