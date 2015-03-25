@@ -280,7 +280,35 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
     @Override
-    public void onEventLongPress(WeekViewEvent weekViewEvent, RectF rectF) {
+    public void onEventLongPress(final WeekViewEvent weekViewEvent, RectF rectF) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
+
+        TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
+        if(eventNameLabel!= null){
+            eventNameLabel.setText("Remove " + weekViewEvent.getName() + "?");
+        }
+
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                //TODO: Create a remove method
+            }
+        });
+
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // Cancel
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
 
     }
 
