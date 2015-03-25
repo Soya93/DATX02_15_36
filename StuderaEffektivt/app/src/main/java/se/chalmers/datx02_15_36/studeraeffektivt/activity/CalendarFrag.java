@@ -68,6 +68,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         // Set number of visible days in the calendar view
         mWeekView.setNumberOfVisibleDays(5);
         hasOnMonthChange = false;
+        mWeekView.goToHour(8.0);
         return view;
     }
 
@@ -96,7 +97,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         return this.calendarModel;
     }
 
-    //Används inte men kommer vara användbart
+
     public void readCalendar() {
         calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
 
@@ -177,7 +178,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
 
            //Get a cursor for the detailed information of the event
-           Cursor cur = calendarModel.getEventDetailedInfo(cr, id, startTime.getTimeInMillis(),endTime.getTimeInMillis() );
+           Cursor cur = calendarModel.getEventDetailedInfo(cr, id, startTime.getTimeInMillis(), endTime.getTimeInMillis());
 
 
            /*for(Long id: eventMap.keySet()){
@@ -215,13 +216,48 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                // Do nothing
+                //openEditDialog();
             }
         });
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
+    }
+
+    public void openAddEventDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.edit_event_dialog, null);
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                long calID = 1;
+
+                //long statTime =;
+               // long endTime = ;
+
+                String title = ((TextView) dialogView.findViewById(R.id.title_input)).getText().toString();
+                String location = ((TextView) dialogView.findViewById(R.id.location_input)).getText().toString();
+                String description = ((TextView) dialogView.findViewById(R.id.description_input)).getText().toString();
+
+
+
+                calendarModel.addEventAuto(cr, title, 0L, 0L, location, description, calID);
+            }
+        });
+
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // Cancel
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     @Override
@@ -381,6 +417,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         cur.close();
 
     }
+
+    public void setHasOnMonthChange(boolean b) {
+        hasOnMonthChange = b;
+    }
+
 
 
 

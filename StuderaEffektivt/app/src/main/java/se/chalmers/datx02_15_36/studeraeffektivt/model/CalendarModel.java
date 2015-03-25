@@ -338,6 +338,36 @@ public class CalendarModel {
         return eventID;
     }
 
+    public Long addEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID) {
+
+        startMillis = checkStartInterval(startMillis);
+        endMillis = checkEndInterval(endMillis);
+
+
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.setTimeInMillis(startMillis);
+
+        Calendar endTime = Calendar.getInstance();
+        endTime.setTimeInMillis(endMillis);
+
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.DTSTART, startMillis);
+        values.put(CalendarContract.Events.DTEND, endMillis);
+        values.put(CalendarContract.Events.TITLE, title);
+        values.put(CalendarContract.Events.DESCRIPTION, description);
+        values.put(CalendarContract.Events.CALENDAR_ID, calID);
+        values.put(CalendarContract.Events.EVENT_LOCATION, location);
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, "America/Los_Angeles");
+
+        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+
+        // get the event ID that is the last element in the Uri
+        long eventID = Long.parseLong(uri.getLastPathSegment());
+        //
+        // ... do something with event ID
+        return eventID;
+    }
+
 
     //Builds a static Uri used for synchronizing
     static Uri asSyncAdapter(Uri uri, String account, String accountType) {
