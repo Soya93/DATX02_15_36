@@ -4,11 +4,7 @@
 .DS_Store
 
 *.bin
-*/taskArtifacts/*
-*/taskArtifacts/cache.properties.lock								
-*/taskArtifacts/fileHashes.bin
-*/taskArtifacts/fileSnapshots.bin
-*/taskArtifacts/outputFileStates.bin
-*/taskArtifacts/taskArtifacts.bin
-*/dex-cache/cache.xml
-*/model_data.bin
+taskArtifacts/
+taskArtifacts/
+dex-cache/
+intermediates/
