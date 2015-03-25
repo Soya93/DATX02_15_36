@@ -4,17 +4,16 @@ import android.app.AlertDialog;
 
 import android.content.ContentResolver;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Button;
 
 
 import com.alamkanak.weekview.WeekView;
@@ -39,11 +38,12 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private CalendarModel calendarModel = new CalendarModel();
      ContentResolver cr;
     private View view;
-    private int week = -1;
     private AlertDialog.Builder builder;
     private WeekView mWeekView;
     private Map <Long, WeekViewEvent> eventMap;
     boolean hasOnMonthChange;
+    private Button studySession;
+    private Button repetition;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,16 +73,52 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         return view;
     }
 
-    public void setContentResolver(ContentResolver cr){
-        this.cr = cr;
+    private void initComponents() {
+        View.OnClickListener myOnlyhandler = new View.OnClickListener() {
+            public void onClick(View v) {
+
+                goToButtonView((Button) v);
+
+            }
+        };
+        studySession = (Button) view.findViewById(R.id.button_add_study_session);
+        studySession.setOnClickListener(myOnlyhandler);
+       /* repetition = (Button) view.findViewById(R.id.button_add_repetition_session);
+        repetition.setOnClickListener(myOnlyhandler);*/
     }
 
-    public Intent addStudySession(){
-        return calendarModel.addEventManually(0L, 0L, false, "Studiepass", null, null);
+    private void goToButtonView(Button b) {
+
+        String buttonText = b.getText().toString();
+        switch (buttonText) {
+            case "Lägg till studiepass":
+                this.openAddEventDialog();
+                break;
+            /*case "Lägg till repetitionspass":
+                this.addRepetitionSession();
+                break;*/
+        }
     }
 
-    public Intent openCalendar(){
-        return calendarModel.openCalendar();
+    private void addRepetitionSession() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        //the alternatives
+        String[] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
+        builder.setTitle("Välj ett pass att repetera")
+                .setItems(alternatives, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO hämta några random uppgifter
+                        String tasks = "";
+                        int studyWeek = which + 1;
+                        startActivity(calendarModel.addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " + tasks));
+
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     public List<String> getTodaysEvents() {
@@ -93,61 +129,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         return calendarModel.readEventsSunday(cr);
     }
 
-
-    public CalendarModel getCalendarModel(){
-        return this.calendarModel;
-    }
-
-
-    public void readCalendar() {
-        calendarModel.getCalendars(cr, "sayo.panda.sn@gmail.com", "com.google");
-
-        calendarModel.readEvents(cr, 0L, 0L);
-    }
-
-    public void addEventAuto() {
-        calendarModel.addEventAuto(cr);
-    }
-
-    /*  Whatever is below this line does not work and is not invoked */
-    public void createBuilder(){
-        builder.create().show();
-    }
-
-    public void openDialog(){
-       builder = new AlertDialog.Builder(getActivity());
-
-       //the alternatives
-       String [] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
-       String tasks = "";
-
-       builder.setTitle("Välj ett pass att repetera")
-               .setItems(alternatives, new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int which) {
-                       int studyWeek = which+1;
-                       setWeek(studyWeek);
-                      Log.i("weekInOpen", week + "");
-                       // The 'which' argument contains the index position
-                       // of the selected item
-                   }
-               });
-        //builder.create().show();
-   }
-
-    public Intent addRepetition() {
-        return calendarModel.addEventManually(0L, 0L, true, "Repititonspass för LV" + week, null, "Repetera " +  "");
-    }
-
-    private void setWeek(int week){
-        this.week = week;
-    }
-
-    public int getWeek(){
-        return this.week;
-    }
-
-    public AlertDialog.Builder getBuilder(){
-        return builder;
+    public void setContentResolver(ContentResolver cr){
+        this.cr = cr;
     }
 
     // Calendar view stuff
@@ -159,49 +142,21 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final long eventID = weekViewEvent.getId();
 
        if(this.eventMap.containsValue(weekViewEvent) && weekViewEvent!= null) {
-           //Fetching the information about the event from its object
-      
+            //Fetching the information about the event from its object
+            long startTime = weekViewEvent.getStartTime().getTimeInMillis();
+            long endTime = weekViewEvent.getEndTime().getTimeInMillis();
+            CharSequence name = weekViewEvent.getName();
 
-           long startTime = weekViewEvent.getStartTime().getTimeInMillis();
-           long endTime = weekViewEvent.getEndTime().getTimeInMillis();
-           CharSequence name = weekViewEvent.getName();
+            //Get a cursor for the detailed information of the event
+            Cursor cur = calendarModel.getEventDetailedInfo(cr, startTime, endTime, eventID);
 
-           //Get a cursor for the detailed information of the event
+            //Fetch information from the cursor
+            String location = cur.getString(CalendarUtils.EVENT_INFO_LOCATION);
+            String description = cur.getString(CalendarUtils.EVENT_INFO_DESCRIPTION);
+            String calendar = cur.getString(CalendarUtils.EVENT_INFO_CALENDAR);
+            cur.close();
 
-           Cursor cur = calendarModel.getEventDetailedInfo(cr, startTime, endTime, eventID);
-
-
-          //Fetch information from the cursor
-           String location = cur.getString(CalendarUtils.EVENT_INFO_LOCATION);
-           String description = cur.getString(CalendarUtils.EVENT_INFO_DESCRIPTION);
-           String calendar = cur.getString(CalendarUtils.EVENT_INFO_CALENDAR);
-
-           //Set the fetched informaton from the calendar on the textfields
-           TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
-           if(eventNameLabel!= null){
-               eventNameLabel.setText(name);
-           }
-
-           TextView eventTimeLabel = (TextView) dialogView.findViewById(R.id.event_time_label);
-           if(eventTimeLabel!= null){
-               eventTimeLabel.setText("Tid: " +startTime + " - " + endTime);
-           }
-
-           TextView eventLocationLabel = (TextView) dialogView.findViewById(R.id.event_location_label);
-           if(eventLocationLabel!= null){
-               eventLocationLabel.setText("Plats: " + location);
-           }
-
-           TextView eventDescriptionLabel = (TextView) dialogView.findViewById(R.id.event_description_label);
-           if(eventDescriptionLabel!= null){
-               eventDescriptionLabel.setText("Beskrivning: " + description);
-           }
-
-           TextView eventCalendarLabel = (TextView) dialogView.findViewById(R.id.event_calendar_label);
-           if(eventCalendarLabel!= null){
-               eventCalendarLabel.setText("Kalender: " + calendar);
-           }
-           cur.close();
+           this.updateEventInfoView(dialogView, name, startTime, endTime, location, description, calendar);
        }
         builder.setView(dialogView);
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -220,6 +175,33 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
+    }
+
+    private void updateEventInfoView(View dialogView, CharSequence name, long startTime, long endTime, String location, String description, String calendar){
+        TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
+        if(eventNameLabel!= null){
+            eventNameLabel.setText(name);
+        }
+
+        TextView eventTimeLabel = (TextView) dialogView.findViewById(R.id.event_time_label);
+        if(eventTimeLabel!= null){
+            eventTimeLabel.setText("Tid: " +startTime + " - " + endTime);
+        }
+
+        TextView eventLocationLabel = (TextView) dialogView.findViewById(R.id.event_location_label);
+        if(eventLocationLabel!= null){
+            eventLocationLabel.setText("Plats: " + location);
+        }
+
+        TextView eventDescriptionLabel = (TextView) dialogView.findViewById(R.id.event_description_label);
+        if(eventDescriptionLabel!= null){
+            eventDescriptionLabel.setText("Beskrivning: " + description);
+        }
+
+        TextView eventCalendarLabel = (TextView) dialogView.findViewById(R.id.event_calendar_label);
+        if(eventCalendarLabel!= null){
+            eventCalendarLabel.setText("Kalender: " + calendar);
+        }
     }
 
     public void openEditEventDialog(final long eventID) {
@@ -310,7 +292,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
            readEvents();
            return new ArrayList<WeekViewEvent>(eventMap.values());
        }
-    Log.i("","onMonthChange");
+
        List<WeekViewEvent> events = new ArrayList<>();
 /*
        Calendar startTime = Calendar.getInstance();
@@ -420,9 +402,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private void readEvents() {
        eventMap = new HashMap<>();
 
-        Log.i("hej", "hejdå");
-
-
         Cursor cur = calendarModel.getEventsCursor(cr, 0L, 0L);
 
         while (cur.moveToNext()) {
@@ -431,8 +410,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
             if(!eventMap.containsKey(id)) {
                 String eventName = cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX);
-                Log.i("Event namn + id: ", eventName + " " + id);
-
 
                 Calendar startTime = Calendar.getInstance();
                 startTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_BEGIN_INDEX));
@@ -442,8 +419,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
                 WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
                 event.setColor(getResources().getColor(R.color.pink));
-
-                Log.i("weekevent IDt", event.getId() + "");
 
                 eventMap.put(id, event);
 

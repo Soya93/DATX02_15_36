@@ -133,8 +133,6 @@ public class MainActivity extends ActionBarActivity {
                     default:
                         break;
                 }
-
-
             }
 
             @Override
@@ -184,44 +182,6 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    //Calendar buttons redirections
-    public void addStudySession(View view) {
-        //startActivity(calendarFrag.addStudySession());
-        calendarFrag.openAddEventDialog();
-
-    }
-
-    public void readCalendar(View view) {
-        calendarFrag.readCalendar();
-    }
-
-    public void openCalendar(View view) {
-        startActivity(calendarFrag.openCalendar());
-    }
-
-    public void openDialog(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(calendarFrag.getActivity());
-
-        //the alternatives
-        String[] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
-
-        builder.setTitle("Välj ett pass att repetera")
-                .setItems(alternatives, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //TODO hämta några random uppgifter
-                        String tasks = "";
-                        int studyWeek = which + 1;
-                        startActivity(calendarFrag.getCalendarModel().addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " + tasks));
-
-                        // The 'which' argument contains the index position
-                        // of the selected item
-                    }
-                });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
     public void startTimer(View view) {
         timerFrag.startTimer();
     }
@@ -232,19 +192,6 @@ public class MainActivity extends ActionBarActivity {
 
     public void settingsTimer(View view) {
         timerFrag.settingsTimer();
-    }
-
-
-    //Does not work properly, but looks more beautiful...
-    public void openDialog2(View view) {
-        calendarFrag.openDialog();
-
-        Log.i("week", calendarFrag.getWeek() + "");
-
-        if (calendarFrag.getWeek() != -1) {
-            startActivity(calendarFrag.addRepetition());
-        }
-        calendarFrag.createBuilder();
     }
 
     protected void onResume() {
