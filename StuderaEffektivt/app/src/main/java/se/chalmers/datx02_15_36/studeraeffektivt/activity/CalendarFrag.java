@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 
@@ -234,18 +235,18 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
                 //long statTime =;
                 // long endTime = ;
-
                 String title = ((TextView) dialogView.findViewById(R.id.title_input)).getText().toString();
                 String location = ((TextView) dialogView.findViewById(R.id.location_input)).getText().toString();
                 String description = ((TextView) dialogView.findViewById(R.id.description_input)).getText().toString();
-
+                String notification = ((EditText) dialogView.findViewById(R.id.notification_input)).getText().toString();
+                int minutes = -1;
+                if(notification!=null) {
+                   minutes = Integer.parseInt(notification);
+                }
                 calendarModel.editTitle(cr, eventID, title);
                 calendarModel.editLocation(cr, eventID, location);
                 calendarModel.editDescription(cr, eventID, description);
-
-
-
-
+                calendarModel.addNotification(cr, eventID,minutes);
             }
         });
 

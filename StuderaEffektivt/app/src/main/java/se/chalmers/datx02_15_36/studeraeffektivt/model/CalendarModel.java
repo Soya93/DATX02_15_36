@@ -406,6 +406,20 @@ public class CalendarModel {
         cr.update(updateUri, values, null, null);
     }
 
+    public void addNotification(ContentResolver cr, long eventID, int min){
+        ContentValues values = new ContentValues();
+        min = min == -1? CalendarContract.Reminders.MINUTES_DEFAULT: min;
+        values.put(CalendarContract.Reminders.MINUTES, min);
+        values.put(CalendarContract.Reminders.EVENT_ID, eventID);
+        values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+        Uri uri = cr.insert(CalendarContract.Reminders.CONTENT_URI, values);
+    }
 
-
+    public void removeNotification(ContentResolver cr, long eventID) {
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Reminders.MINUTES, CalendarContract.Reminders.MINUTES_DEFAULT);
+        values.put(CalendarContract.Reminders.EVENT_ID, eventID);
+        values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+        Uri uri = cr.insert(CalendarContract.Reminders.CONTENT_URI, values);
+    }
 }
