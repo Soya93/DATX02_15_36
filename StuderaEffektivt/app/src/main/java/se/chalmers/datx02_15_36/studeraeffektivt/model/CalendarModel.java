@@ -119,7 +119,7 @@ public class CalendarModel {
         return cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
     }
 
-    public Cursor getEventInfo(ContentResolver cr, Long eventID, long startMillis, long endMillis) {
+    /*public Cursor getEventInfo(ContentResolver cr, Long eventID, long startMillis, long endMillis) {
         Uri.Builder builder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
         long now = new Date().getTime();
@@ -136,6 +136,29 @@ public class CalendarModel {
 
         }
         return eventCursor;
+    }*/
+
+
+    public Cursor getEventDetailedInfo(ContentResolver cr, Long startInterval, Long endInterval,  Long eventID){
+        Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
+                .buildUpon();
+        startInterval = checkStartInterval(startInterval);
+        endInterval = checkEndInterval(endInterval);
+        ContentUris.appendId(eventsUriBuilder, startInterval);
+        ContentUris.appendId(eventsUriBuilder, endInterval);
+        Uri eventsUri = eventsUriBuilder.build();
+
+        cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+
+
+        //Prints out all the events in the given interval
+        while (cur.moveToNext()) {
+            if(cur.getLong(CalendarUtils.EVENT_INFO_ID) == eventID) {
+                return cur;
+            }
+        }
+        //TODO: Exception
+        return null;
     }
 
     /**

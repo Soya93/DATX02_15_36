@@ -177,7 +177,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
 
            //Get a cursor for the detailed information of the event
-           Cursor cur = calendarModel.getEventInfo(cr, id, startTime.getTimeInMillis(),endTime.getTimeInMillis() );
+           Cursor cur = calendarModel.getEventDetailedInfo(cr, id, startTime.getTimeInMillis(),endTime.getTimeInMillis() );
 
 
            /*for(Long id: eventMap.keySet()){
@@ -212,7 +212,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             }
         });
 
-        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 // Do nothing
