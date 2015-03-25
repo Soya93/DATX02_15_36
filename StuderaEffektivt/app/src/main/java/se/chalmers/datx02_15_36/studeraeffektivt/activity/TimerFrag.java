@@ -11,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 
 
 public class TimerFrag extends Fragment {
@@ -49,11 +51,18 @@ public class TimerFrag extends Fragment {
     private String nbrOfPauses;
     private String pausLength;
 
+    private DBAdapter dbAdapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_timer, container, false);
         instantiate();
+
+        if (getActivity() != null) {
+            dbAdapter = new DBAdapter(getActivity());
+        }
+
         return rootView;
     }
 
@@ -95,6 +104,17 @@ public class TimerFrag extends Fragment {
             @Override
             public void onFinish() {
                 studyTimerIsRunning = false;
+                //Log session into database.
+                long inserted = dbAdapter.insertSession("DDD111", 50);
+                if(inserted > 0 && getActivity() != null){
+                    Toast toast = Toast.makeText(getActivity(), "Session: 50 minutes added to DDD111", Toast.LENGTH_SHORT);
+                    toast.show();
+                }else if(getActivity() != null){
+                    Toast toast = Toast.makeText(getActivity(), "Failed to add a Session", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
+                //Start pausetimer if time left.
                 if (timePassed < default_TotalTime) {
                     pauseTimerFunction(default_PauseTime, update_Time);
                     pauseTimer.start();
@@ -174,7 +194,6 @@ public class TimerFrag extends Fragment {
             studyTimer.start();
 
         }
-
 
     }
 

@@ -77,7 +77,7 @@ public class CourseFrag extends Fragment {
         Cursor cursor = dbAdapter.getCourses();
         Log.d("DB", "cursor.getCount() är "+cursor.getCount());
         if (cursor.getCount() > 0){
-            //cursor.moveToNext();
+            courseList.add(createCourse("Courses", new Course("Default Course", "DDD111"))); //Tas bort sedan.
             String ccode = "";
             String cname = "";
             while (cursor.moveToNext()) {
@@ -86,22 +86,16 @@ public class CourseFrag extends Fragment {
                 courseList.add(createCourse("Courses", new Course(cname, ccode)));
             }
         }else{
-            courseList.add(createCourse("Courses", new Course("Inga kurser.", "")));
+            courseList.add(createCourse("Courses", new Course("Default Course", "DDD111")));  //Ändra namn.
 
         }
     }
-
 
     private HashMap<String, Course> createCourse(String key, Course course) {
         HashMap<String, Course> newCourse = new HashMap<String, Course>();
         newCourse.put(key, course);
 
         return newCourse;
-    }
-
-    public void updateList(String group, Course course) {
-        HashMap<String, Course> a = createCourse(group, course);
-        courseList.add(a);
     }
 
     public void setAddButton() {
@@ -139,8 +133,6 @@ public class CourseFrag extends Fragment {
                     toast.show();
                 }
 
-                //updateList("Courses", new Course(nameEditText.getText().toString(), codeEditText.getText().toString()));
-                //adapter();
             }
 
         });
@@ -170,12 +162,6 @@ public class CourseFrag extends Fragment {
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-    }
-
-
-    public void adapter() {
-        simpleAdpt = new SimpleAdapter(this.getActivity(), courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
-        listOfCourses.setAdapter(simpleAdpt);
     }
 
     public void initComponents() {

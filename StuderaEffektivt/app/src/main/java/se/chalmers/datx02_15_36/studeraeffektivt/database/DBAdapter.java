@@ -42,6 +42,31 @@ public class DBAdapter  {
     }
 
     /**
+     * Insert a Session of studytime into the database.
+     * @param courseCode
+     * @param minutes
+     * @return
+     */
+    public long insertSession(String courseCode, int minutes){
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(dbHelper.COURSES__ccode, courseCode);
+        cv.put(dbHelper.SESSIONS_minutes, minutes);
+        cv.put(dbHelper.SESSIONS_startTimestamp, "CURRENT_TIMESTAMP");
+        return db.insert(dbHelper.TABLE_SESSIONS, null, cv);
+    }
+
+    /**
+     * Get all Sessions.
+     * @return
+     */
+    public Cursor getSessions(){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        return db.query(dbHelper.TABLE_SESSIONS, null, null, null, null, null, null);
+    }
+
+    /**
      * Get all courses.
      */
     public Cursor getCourses(){
