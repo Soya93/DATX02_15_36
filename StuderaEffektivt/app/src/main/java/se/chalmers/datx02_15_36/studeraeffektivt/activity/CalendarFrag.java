@@ -155,10 +155,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
+        final long eventID = weekViewEvent.getId();
 
        if(this.eventMap.containsValue(weekViewEvent) && weekViewEvent!= null) {
            //Fetching the information about the event from its object
-           long id = weekViewEvent.getId();
+      
 
            long startTime = weekViewEvent.getStartTime().getTimeInMillis();
            long endTime = weekViewEvent.getEndTime().getTimeInMillis();
@@ -166,7 +167,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
            //Get a cursor for the detailed information of the event
 
-           Cursor cur = calendarModel.getEventDetailedInfo(cr, startTime, endTime, id);
+           Cursor cur = calendarModel.getEventDetailedInfo(cr, startTime, endTime, eventID);
 
 
           //Fetch information from the cursor
@@ -211,7 +212,47 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                //openEditDialog();
+                openEditEventDialog(eventID);
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
+
+    public void openEditEventDialog(final long eventID) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.edit_event_dialog, null);
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                long calID = 1;
+
+                //long statTime =;
+                // long endTime = ;
+
+                String title = ((TextView) dialogView.findViewById(R.id.title_input)).getText().toString();
+                String location = ((TextView) dialogView.findViewById(R.id.location_input)).getText().toString();
+                String description = ((TextView) dialogView.findViewById(R.id.description_input)).getText().toString();
+
+                calendarModel.editTitle(cr, eventID, title);
+                calendarModel.editLocation(cr, eventID, location);
+                calendarModel.editDescription(cr, eventID, description);
+
+
+
+
+            }
+        });
+
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // Cancel
             }
         });
 
