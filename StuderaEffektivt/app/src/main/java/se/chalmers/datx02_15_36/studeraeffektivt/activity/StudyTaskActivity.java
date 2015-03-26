@@ -8,8 +8,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,6 +34,9 @@ public class StudyTaskActivity extends ActionBarActivity {
     private Button deleteButton;
     private EditText chapterEditText;
     private EditText taskParts;
+    private ScrollView scrollViewOfTasks;
+    private LinearLayout layoutWithinScrollViewOfTasks;
+    private Spinner chapterSpinner;
 
     private Intent intentFromPreviousFragment;
 
@@ -93,9 +101,22 @@ public class StudyTaskActivity extends ActionBarActivity {
         addButton = (Button) findViewById(R.id.addButton);
         deleteButton = (Button) findViewById(R.id.deleteButton);
         taskInput = (EditText) findViewById(R.id.taskInput);
-        taskOutput = (TextView) findViewById(R.id.taskOutput);
+        //taskOutput = (TextView) findViewById(R.id.taskOutput);
         chapterEditText = (EditText) findViewById(R.id.chapterEditText);
         taskParts = (EditText) findViewById(R.id.taskParts);
+        scrollViewOfTasks = (ScrollView) findViewById(R.id.scrollViewOfTasks);
+        layoutWithinScrollViewOfTasks = (LinearLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
+        chapterSpinner = (Spinner) findViewById(R.id.chapterSpinner);
+
+        Integer[] items = new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50};
+        ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this,android.R.layout.simple_spinner_item, items);
+        chapterSpinner.setAdapter(adapter);
+
+        Cursor cursor = dbAdapter.getAssignments();
+
+        while(cursor.moveToNext()){
+            layoutWithinScrollViewOfTasks.addView(new StudyTask(this,cursor.getString(cursor.getColumnIndex("ASSIGNMENTS_ccode")),cursor.getInt(cursor.getColumnIndex("ASSIGNMENTS_chapter")),cursor.getString(cursor.getColumnIndex("ASSIGNMENTS__assNr"))));
+        }
 
         addButton.setOnClickListener(myOnlyhandler);
         deleteButton.setOnClickListener(myOnlyhandler);
@@ -108,12 +129,12 @@ public class StudyTaskActivity extends ActionBarActivity {
         public void onClick(View v) {
 
             if(((Button) v)==addButton) {
-                int chapter;
-                if (chapterEditText.getText().equals("")) {
+                int chapter = Integer.parseInt(chapterSpinner.getSelectedItem().toString());
+                /*if (chapterEditText.getText().equals("")) {
                     chapter = 999;
                 } else {
                     chapter = Integer.parseInt(chapterEditText.getText().toString());
-                }
+                }*/
                 addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString());
             }
             else if(((Button) v)==deleteButton){
@@ -144,11 +165,11 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         //Kolla om kapitlet man vill lägga till i redan finns bland uppgifterna, om inte: skapa en nyckel för detta kapitel
 
-        if (taskMap.containsKey(chapter)) {
+        /*if (taskMap.containsKey(chapter)) {
             studyTaskList = taskMap.get(chapter);
         } else {
             studyTaskList = new ArrayList<>();
-        }
+        }*/
 
         //Kollar om det finns kommatecken i input för uppgifter och separerar i så fall stringen så att alla element hamnar separat
         if (taskString.contains(",")) {
@@ -187,6 +208,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                                 chapter,
                                 elementToAdd));             //Lägger till dessa i listan för det aktuella kapitlet och elementet inte finns.*/
                         addToDatabase(chapter, elementToAdd);
+                    scrollViewOfTasks.addView(new StudyTask(this, courseCode, chapter, elementToAdd));
                    // }
                 }
             }
@@ -219,5 +241,6 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     public void addToDatabase(int chapter, String elementToAdd){
         dbAdapter.insertAssignment(courseCode, chapter, elementToAdd, 0, 1);
+        layoutWithinScrollViewOfTasks.addView(new StudyTask(this, courseCode, chapter, elementToAdd));
     }
 }

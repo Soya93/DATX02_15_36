@@ -3,74 +3,120 @@
     android:layout_height="match_parent"
     tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskFragment">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/firstLayout"
+        android:layout_alignParentTop="true">
 
-    <Button
-        android:layout_width="192dp"
-        android:layout_height="118dp"
-        android:text="New Button"
-        android:id="@+id/addButton"
-        android:layout_gravity="center_vertical"
-        android:layout_below="@+id/taskInput"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
-    <EditText
-        android:layout_width="373dp"
-        android:layout_height="84dp"
-        android:id="@+id/taskInput" />
+        <Spinner
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/chapterSpinner" />
 
-    <TextView
-        android:layout_width="395dp"
-        android:layout_height="103dp"
-        android:text="New Text"
-        android:id="@+id/taskOutput"
-        android:layout_gravity="bottom"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
 
-    <Button
-        android:layout_width="186dp"
-        android:layout_height="118dp"
-        android:text="New Button"
-        android:id="@+id/deleteButton"
-        android:layout_gravity="right|center_vertical"
-        android:layout_below="@+id/taskInput"
-        android:layout_toRightOf="@+id/addButton"
-        android:layout_toEndOf="@+id/addButton" />
+            android:id="@+id/taskInput" />
 
-    <EditText
-        android:layout_width="176dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/chapterEditText"
-        android:layout_gravity="left|bottom"
-        android:layout_below="@+id/addButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/deleteButton"
-        android:layout_toStartOf="@+id/deleteButton" />
+    </LinearLayout>
 
-    <EditText
-        android:layout_width="176dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/taskParts"
-        android:layout_gravity="left|bottom"
-        android:layout_below="@+id/addButton"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:id="@+id/secondLayout"
+        android:layout_below="@+id/firstLayout">
+
+        <Button
+            android:layout_width="192dp"
+            android:layout_height="118dp"
+            android:text="New Button"
+            android:id="@+id/addButton"
+            android:layout_gravity="center_vertical"
+            android:layout_below="@+id/taskInput"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="186dp"
+            android:layout_height="118dp"
+            android:text="New Button"
+            android:id="@+id/deleteButton"
+            android:layout_gravity="right|center_vertical"
+            android:layout_below="@+id/taskInput"
+            android:layout_toRightOf="@+id/addButton"
+            android:layout_toEndOf="@+id/addButton" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:id="@+id/thirdLayout"
+        android:layout_below="@+id/secondLayout">
+
+        <EditText
+            android:layout_width="176dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/chapterEditText"
+            android:layout_gravity="left|bottom"
+            android:layout_below="@+id/addButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/deleteButton"
+            android:layout_toStartOf="@+id/deleteButton" />
+
+        <EditText
+            android:layout_width="176dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/taskParts"
+            android:layout_gravity="left|bottom"
+            android:layout_below="@+id/addButton"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/fourthLayout"
+        android:layout_below="@+id/thirdLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="43dp">
+
+        <ToggleButton
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:text="New ToggleButton"
+             android:id="@+id/toggleButton"
+             android:textOff="Läsanvisningar"
+             android:textOn="Uppgifter"
+             android:layout_centerVertical="true"
+             android:layout_toLeftOf="@+id/taskParts"
+             android:layout_toStartOf="@+id/taskParts" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/scrollViewOfTasks"
+        android:layout_below="@+id/fourthLayout"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true" >
 
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New ToggleButton"
-        android:id="@+id/toggleButton"
-        android:textOff="Läsanvisningar"
-        android:textOn="Uppgifter"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/taskParts"
-        android:layout_toStartOf="@+id/taskParts" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            android:id="@+id/layoutWithinScrollViewOfTasks"></LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

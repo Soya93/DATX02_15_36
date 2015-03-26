@@ -21,13 +21,9 @@ public class StudyTask extends CheckBox{
         this.courseCode = courseCode;
         this.chapter = chapter;
         this.taskString = taskString;
-    }
 
-    /*public StudyTask(){
-        this.id = id;
-        this.chapter = chapter;
-        this.taskString = inputString;
-    }*/
+        super.setText(taskString);
+    }
 
 
 
