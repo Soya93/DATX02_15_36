@@ -26,11 +26,6 @@ public class CalendarModel {
     private Calendar todayDate;
     private Calendar beginDay;
     private Calendar endDay;
-    private int year;
-    private int month;
-    private int day;
-    private int hour;
-    private int minute;
     private long startMillis;
     private long endMillis;
     private long todayMillis;
@@ -40,22 +35,14 @@ public class CalendarModel {
         uri = CalendarContract.Calendars.CONTENT_URI;
         cal = Calendar.getInstance();
 
-        //get todays date
-        year = cal.get(Calendar.YEAR);
-        month = cal.get(Calendar.MONTH);
-        day = cal.get(Calendar.DATE);
-        hour = cal.get(Calendar.HOUR_OF_DAY);
-        minute = cal.get(Calendar.MINUTE);
-
         //set todays date
         todayDate = Calendar.getInstance();
-        todayDate.set(year, month, day);
+        todayDate.set(CalendarUtils.YEAR, CalendarUtils.MONTH, CalendarUtils.DAY);
         todayMillis = todayDate.getTimeInMillis();
 
         //set start DAY
         beginDay = todayDate;
         startMillis = todayDate.getTimeInMillis();
-
 
         //set end DAY
         endDay = Calendar.getInstance();
@@ -64,29 +51,6 @@ public class CalendarModel {
 
         cur = null;
     }
-
-
-    public int getYear() {
-        return year;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public int getDay() {
-        return day;
-    }
-
-    public int getMinute() {
-        return minute;
-    }
-
-    public int getHour() {
-        return hour;
-    }
-
-
 
     public List<String> readEventsToday(ContentResolver cr) {
         return this.readEvents(cr, todayMillis, todayMillis);
@@ -279,26 +243,25 @@ public class CalendarModel {
      */
     private Date futureDate(Date date, int daysFromNow) {
 
-        if (month == 2) {
-            int newYear = year + (month + (day + daysFromNow) / 28) / 12;
-            int newMonth = (month + (day + daysFromNow) / 28) % 28;
-            int newDay = (day + daysFromNow) % 28;
+        if (CalendarUtils.MONTH == 2) {
+            int newYear = CalendarUtils.YEAR + (CalendarUtils.MONTH + (CalendarUtils.DAY + daysFromNow) / 28) / 12;
+            int newMonth = (CalendarUtils.MONTH + (CalendarUtils.DAY + daysFromNow) / 28) % 28;
+            int newDay = (CalendarUtils.DAY + daysFromNow) % 28;
             cal.set(newYear, newMonth, newDay);
 
-        } else if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
-            int newYear = year + (month + (day + daysFromNow) / 31) / 12;
-            int newMonth = (month + (day + daysFromNow) / 31) % 31;
-            int newDay = (day + daysFromNow) % 31;
+        } else if (CalendarUtils.MONTH == 1 || CalendarUtils.MONTH == 3 || CalendarUtils.MONTH == 5 || CalendarUtils.MONTH == 7 || CalendarUtils.MONTH == 8 || CalendarUtils.MONTH == 10 || CalendarUtils.MONTH == 12) {
+            int newYear = CalendarUtils.YEAR + (CalendarUtils.MONTH + (CalendarUtils.DAY + daysFromNow) / 31) / 12;
+            int newMonth = (CalendarUtils.MONTH + (CalendarUtils.DAY + daysFromNow) / 31) % 31;
+            int newDay = (CalendarUtils.DAY + daysFromNow) % 31;
             cal.set(newYear, newMonth, newDay);
 
         } else {
-            int newYear = year + (month + (day + daysFromNow) / 30) / 12;
-            int newMonth = (month + (day + daysFromNow) / 30) % 30;
-            int newDay = (day + daysFromNow) % 30;
+            int newYear = CalendarUtils.YEAR + (CalendarUtils.MONTH + (CalendarUtils.DAY + daysFromNow) / 30) / 12;
+            int newMonth = (CalendarUtils.MONTH + (CalendarUtils.DAY + daysFromNow) / 30) % 30;
+            int newDay = (CalendarUtils.DAY + daysFromNow) % 30;
             cal.set(newYear, newMonth, newDay);
         }
         return cal.getTime();
-
         //TODO fixa så det funkar för skottår också
         //TODO testa
     }
@@ -315,14 +278,12 @@ public class CalendarModel {
         long startMillis = 0;
         long endMillis = 0;
         Calendar beginTime = Calendar.getInstance();
-        beginTime.set(year, month, day);
+        beginTime.set(CalendarUtils.YEAR, CalendarUtils.MONTH, CalendarUtils.DAY);
         startMillis = beginTime.getTimeInMillis();
         Calendar endTime = Calendar.getInstance();
-        endTime.set(year, month, day + 1);
+        endTime.set(CalendarUtils.YEAR, CalendarUtils.MONTH, CalendarUtils.DAY + 1);
         endMillis = endTime.getTimeInMillis();
 
-
-        //cr = getContentResolver();
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, startMillis);
         values.put(CalendarContract.Events.DTEND, endMillis);
@@ -343,7 +304,6 @@ public class CalendarModel {
 
         startMillis = checkStartInterval(startMillis);
         endMillis = checkEndInterval(endMillis);
-
 
         Calendar beginTime = Calendar.getInstance();
         beginTime.setTimeInMillis(startMillis);

@@ -52,9 +52,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         this.view = inflater.inflate(R.layout.activity_calendar, container, false);
         calendarModel = new CalendarModel();
         this.initComponents();
-
-        Log.i("hasddedd", hasOnMonthChange + "");
-
         return view;
     }
 
@@ -67,7 +64,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         // Get a reference for the week view in the layout.
         mWeekView = (WeekView) view.findViewById(R.id.weekView);
-
 
         // Set an action when any event is clicked.
         mWeekView.setOnEventClickListener(this);

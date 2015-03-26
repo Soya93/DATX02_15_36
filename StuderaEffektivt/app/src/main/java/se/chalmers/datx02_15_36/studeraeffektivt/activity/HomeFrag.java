@@ -44,19 +44,10 @@ public class HomeFrag extends Fragment {
         todayTextView.setTextColor(Color.BLACK);
         events = new ArrayList<String>();
         layout = (LinearLayout) view.findViewById(R.id.linearLayout1);
-       // Button button = new Button(context);
-        //button.setText("Synka");
-        //layout.addView(button);
         layout.addView(todayTextView);
-        /*button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View arg0) {
-                setCalendarInfoToday();
-            }
-        });*/
         hasInit = true;
         this.setCalendarInfoToday();
     }
-
 
    public void setCalendarFrag(CalendarFrag calendarFrag){
        Log.i("HomeActivity:", "setCalendarActivity");
@@ -75,7 +66,7 @@ public class HomeFrag extends Fragment {
                 //get calendarinfo of today from calendar
                 List<String> todaysEventsTitles = calendarFrag.getTodaysEvents();
 
-                if (todaysEventsTitles != null) {
+                if (todaysEventsTitles != null || !todaysEventsTitles.isEmpty()) {
                     for (String str : todaysEventsTitles) {
                         TextView tmp = new TextView(context);
                         tmp.setText(str);
@@ -101,39 +92,6 @@ public class HomeFrag extends Fragment {
             hasInit = false;
             }
     }
-
-    public void setCalendarInfoSunday() {
-        if (calendarFrag != null && hasInit) {
-            List<String> sundayEventsTitles = calendarFrag.getSundaysEvents();
-
-            if (sundayEventsTitles != null) {
-                for (String str : sundayEventsTitles) {
-                    TextView tmp = new TextView(context);
-                    tmp.setText(str);
-                    tmp.setTextColor(Color.BLACK);
-                    TextView tmp2 = new TextView(context);
-                    tmp2.setText("");
-                    if (!events.contains(str) && !str.contains("Simon")){
-                        events.add(str);
-                        layout.addView(tmp2);
-                        layout.addView(tmp);
-                    }
-                }
-            } else {
-                TextView tmp2 = new TextView(context);
-                tmp2.setText("");
-                TextView tmp = new TextView(context);
-                tmp.setText("Det finns inga planerade händelser idag");
-                tmp.setTextColor(Color.BLACK);
-                layout.addView(tmp2);
-                layout.addView(tmp);
-            }
-            hasInit = false;
-        }
-
-    }
-
-
     public void setContext(Context context) {
         this.context = context;
     }

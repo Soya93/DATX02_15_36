@@ -237,7 +237,6 @@ public class MainActivity extends ActionBarActivity {
             i.putExtra("TOTAL_TIME", totalTime / 1000);
             startService(i);
         }
-
     }
 }
 
