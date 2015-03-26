@@ -38,14 +38,14 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Timmar lagda:"
         android:id="@+id/hours_spent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="252dp"
-        android:layout_marginEnd="252dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="117dp"
         android:autoText="false"
-        android:phoneNumber="true" />
+        android:phoneNumber="true"
+        android:layout_marginLeft="96dp"
+        android:layout_marginStart="96dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -74,8 +74,7 @@
         android:text="0h"
         android:id="@+id/hours_spent_show"
         android:layout_alignTop="@+id/hours_spent"
-        android:layout_toRightOf="@+id/hours_left"
-        android:layout_toEndOf="@+id/hours_left" />
+        android:layout_toRightOf="@+id/hours_left" />
 
     <TextView
         android:layout_width="wrap_content"

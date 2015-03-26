@@ -83,7 +83,18 @@ public class DBAdapter  {
         Cursor cursor = db.query(dbHelper.TABLE_SESSIONS, columns, selection, null, dbHelper.SESSIONS_ccode, null, null);
 
         cursor.moveToNext();
-        Log.d("DB", "spentTime: "+cursor.getInt(0));
+        return cursor.getInt(0);
+    }
+
+    public int getTimeOnCourse(String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String[] columns = {dbHelper.TIMEONCOURSE_time};
+        String selection = dbHelper.TIMEONCOURSE__ccode +" = '"+ccode+"'";
+        Cursor cursor = db.query(dbHelper.TABLE_TIMEONCOURSE, columns, selection, null, null, null, null);
+
+        cursor.moveToNext();
+        Log.i("DB", "timeOnCourse: "+cursor.getInt(0));
         return cursor.getInt(0);
     }
 
