@@ -2,21 +2,18 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -32,11 +29,13 @@ public class EventActivity extends ActionBarActivity {
     private int notification;
     private Calendar calStart;
     private Calendar calEnd;
+    private CalendarFrag calendarFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+        calendarFrag = new CalendarFrag();
         initComponents();
     }
 
@@ -201,7 +200,9 @@ public class EventActivity extends ActionBarActivity {
         }
         */
 
-        this.finish();
+        calendarFrag.setHaveToAddEvent(true);
+        onBackPressed();
+
 
     }
 

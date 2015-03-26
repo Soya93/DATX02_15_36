@@ -35,6 +35,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
     private CalendarModel calendarModel = new CalendarModel();
+    private EventActivity eventActivity;
     ContentResolver cr;
     private View view;
     private AlertDialog.Builder builder;
@@ -43,6 +44,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private List<WeekViewEvent> eventList;
     boolean hasOnMonthChange;
     private Button studySession;
+    private boolean haveToAddEvent;
 
 
     @Override
@@ -71,8 +73,16 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         hasOnMonthChange = false;
         mWeekView.goToHour(8.0);
         this.initComponents();
+        if (haveToAddEvent) {
+            addEvent();
+        }
+
+
         return view;
     }
+
+
+
 
     private void initComponents() {
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
@@ -145,9 +155,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
     public void openAddEventDialog() {
-        EventActivity eventActivity = new EventActivity();
+        eventActivity = new EventActivity();
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         startActivity(intent);
+
+
+
+
 
         //hämta data från eventActivity
 
@@ -191,6 +205,28 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
         */
+    }
+
+    private void addEvent() {
+        long calID = 1;
+        String title = eventActivity.getEventTitle();
+        String location = eventActivity.getLocation();
+        String description = eventActivity.getDescription();
+        long startMillis = eventActivity.getStartMillis();
+        long endMillis = eventActivity.getEndMillis();
+
+
+        calendarModel.addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
+        //TODO: Ta hänsyn till notifications
+
+        hasOnMonthChange = false;
+        mWeekView.notifyDatasetChanged();
+
+        Context context = getActivity().getApplicationContext();
+        CharSequence text = "Händelsen " + title + " har skapats";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 
     private void addRepetitionSession() {
@@ -472,6 +508,10 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     public void setHasOnMonthChange(boolean b) {
         hasOnMonthChange = b;
+    }
+
+    public void setHaveToAddEvent(boolean haveToAddEvent) {
+        this.haveToAddEvent = haveToAddEvent;
     }
 
 }
