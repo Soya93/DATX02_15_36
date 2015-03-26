@@ -21,12 +21,6 @@ public class DBAdapter  {
         Log.i("DB", "DBAdapter created.");
     }
 
-    /**
-     * Insert a Course to the database.
-     * @param courseCode
-     * @param courseName
-     * @return
-     */
     public long insertCourse(String courseCode, String courseName){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -37,33 +31,16 @@ public class DBAdapter  {
         return db.insert(dbHelper.TABLE_COURSES, null, cv);
     }
 
-    /**
-     * Insert a Session of studytime into the database.
-     * @param courseCode
-     * @param minutes
-     * @return
-     */
     public long insertSession(String courseCode, int minutes){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put(dbHelper.COURSES__ccode, courseCode);
         cv.put(dbHelper.SESSIONS_minutes, minutes);
-        cv.put(dbHelper.SESSIONS__startTimestamp, "CURRENT_TIMESTAMP");
 
         return db.insert(dbHelper.TABLE_SESSIONS, null, cv);
     }
 
-    /**
-     * Insert an Assignment to the database.
-     * @param courseCode
-     * @param chapter
-     * @param assNr
-     * @param startPage
-     * @param stopPage
-     * @param type
-     * @return
-     */
     public long insertAssignment(String courseCode, int chapter, String assNr, int startPage, int stopPage, String type){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -88,22 +65,26 @@ public class DBAdapter  {
         return db.insert(dbHelper.TABLE_TIMEONCOURSE, null, cv);
     }
 
-    /**
-     * Get all Assignments.
-     * @return
-     */
     public Cursor getAssignments(){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         return db.query(dbHelper.TABLE_ASSIGNMENTS, null, null, null, null, null, null);
     }
 
-    /**
-     * Get all Sessions.
-     * @return
-     */
     public Cursor getSessions(){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         return db.query(dbHelper.TABLE_SESSIONS, null, null, null, null, null, null);
+    }
+
+    public int getSpentTime(String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String[] columns = {"SUM("+dbHelper.SESSIONS_minutes+")"};
+        String selection = dbHelper.SESSIONS_ccode +" = '"+ccode+"'";
+        Cursor cursor = db.query(dbHelper.TABLE_SESSIONS, columns, selection, null, dbHelper.SESSIONS_ccode, null, null);
+
+        cursor.moveToNext();
+        Log.d("DB", "spentTime: "+cursor.getInt(0));
+        return cursor.getInt(0);
     }
 
     /**
@@ -126,13 +107,13 @@ public class DBAdapter  {
 
         //Variables for the Sessions table.
         private static final String TABLE_SESSIONS = "SESSIONS";
-        private static final String SESSIONS__ccode = COURSES__ccode;
-        private static final String SESSIONS__startTimestamp = "startTimestamp";
+        private static final String SESSIONS_ccode = "_ccode";
+        private static final String SESSIONS__startTimestamp = "_startTimestamp";
         private static final String SESSIONS_minutes = "minutes";
 
         //Variables for the Assignments table.
         private static final String TABLE_ASSIGNMENTS = "ASSIGNMENTS";
-        private static final String ASSIGNMENTS__id = "id";
+        private static final String ASSIGNMENTS__id = "_id";
         private static final String ASSIGNMENTS_ccode = COURSES__ccode;
         private static final String ASSIGNMENTS_chapter = "chapter";
         private static final String ASSIGNMENTS__assNr = "assNr";
@@ -157,9 +138,8 @@ public class DBAdapter  {
             //Creation of schemas and initial insert of data.
             db.execSQL("CREATE TABLE "+TABLE_COURSES+" ("+COURSES__ccode+" VARCHAR(50) PRIMARY KEY, "+COURSES_cname+" VARCHAR(50))");
 
-            db.execSQL("CREATE TABLE "+TABLE_SESSIONS+" ("+SESSIONS__startTimestamp+" DATETIME DEFAULT CURRENT_TIMESTAMP, "+
-                    SESSIONS_minutes+" INT, "+COURSES__ccode+" VARCHAR(50), FOREIGN KEY("+SESSIONS__ccode+") REFERENCES "+
-                    TABLE_COURSES+"("+COURSES__ccode+"), PRIMARY KEY("+SESSIONS__ccode+", "+SESSIONS__startTimestamp+"))");
+            db.execSQL("CREATE TABLE "+TABLE_SESSIONS+" ("+SESSIONS__startTimestamp+" INTEGER PRIMARY KEY, "+
+                    SESSIONS_minutes+" INT, "+ SESSIONS_ccode +" VARCHAR(50))");
 
             db.execSQL("CREATE TABLE "+TABLE_ASSIGNMENTS+" ("+ASSIGNMENTS__id+" PRIMARY KEY, "
                     +ASSIGNMENTS_ccode+" VARCHAR(50), " +ASSIGNMENTS_chapter+" INT, "+ASSIGNMENTS__assNr+

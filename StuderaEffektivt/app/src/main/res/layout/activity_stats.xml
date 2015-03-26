@@ -11,13 +11,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"-->
 
-        <com.github.mikephil.charting.charts.PieChart
+        <!-- !com.github.mikephil.charting.charts.PieChart
             android:id="@+id/piechart_hours"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/grey" />
 
-        <!--com.github.mikephil.charting.charts.PieChart
+        <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/piechart_ass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,4 +32,68 @@
         android:background="@color/yellow"
         android:layout_below="@id/GridLayout1"/-->
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Timmar lagda:"
+        android:id="@+id/hours_spent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="252dp"
+        android:layout_marginEnd="252dp"
+        android:layout_marginTop="120dp"
+        android:autoText="false"
+        android:phoneNumber="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Timmar kvar:"
+        android:id="@+id/hours_left"
+        android:layout_below="@+id/hours_spent"
+        android:layout_alignRight="@+id/hours_spent"
+        android:layout_alignEnd="@+id/hours_spent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Timmar totalt:"
+        android:id="@+id/hours_total"
+        android:layout_below="@+id/hours_left"
+        android:layout_alignRight="@+id/hours_left"
+        android:layout_alignEnd="@+id/hours_left" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0h"
+        android:id="@+id/hours_spent_show"
+        android:layout_alignTop="@+id/hours_spent"
+        android:layout_toRightOf="@+id/hours_left"
+        android:layout_toEndOf="@+id/hours_left" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0h"
+        android:id="@+id/hours_left_show"
+        android:layout_above="@+id/hours_total"
+        android:layout_toRightOf="@+id/hours_total"
+        android:layout_toEndOf="@+id/hours_total" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0h"
+        android:id="@+id/hours_total_show"
+        android:layout_below="@+id/hours_left"
+        android:layout_toRightOf="@+id/hours_total"
+        android:layout_toEndOf="@+id/hours_total" />
 </RelativeLayout>
