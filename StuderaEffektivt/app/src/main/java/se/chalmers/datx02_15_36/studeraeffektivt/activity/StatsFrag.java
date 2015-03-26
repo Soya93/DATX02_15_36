@@ -65,25 +65,23 @@ public class StatsFrag extends Fragment {
     }
 
     private void insertTestDataToDB(){
-        //Insert Course.
         long idCourse = dbAdapter.insertCourse("DDD111", "Default Course");
-        if(idCourse > 0){
+        /*if(idCourse > 0){
             Toast.makeText(getActivity(),"DDD111 created",Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(getActivity(),"Failed to create course in Stats.",Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
-        //Insert Sessions for this course.
         long idS1 = dbAdapter.insertSession("DDD111", 60);
         long idS2 = dbAdapter.insertSession("DDD111", 120);
         long idS3 = dbAdapter.insertSession("DDD111", 300);
         long idS4 = dbAdapter.insertSession("DDD111", 30);
         long idS5 = dbAdapter.insertSession("DDD111", 60);
         long idS6 = dbAdapter.insertSession("DDD111", 60);
-        if(idS1>0 && idS2>0 && idS3>0 && idS4>0 && idS5>0 && idS6>0){
+       /* if(idS1>0 && idS2>0 && idS3>0 && idS4>0 && idS5>0 && idS6>0){
             Toast.makeText(getActivity(),"Added six sessions to DDD111",Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(getActivity(),"Failed to add Sessions in Stats",Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 }
