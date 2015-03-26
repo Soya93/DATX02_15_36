@@ -5,6 +5,7 @@
     android:weightSum="1">
 
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,9 +13,10 @@
         android:text="Tid kvar"
         android:id="@+id/text_timer"
         android:layout_weight="0.10"
-        android:layout_above="@+id/button_start_timer"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="162dp" />
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/button_settings"
+        android:layout_alignStart="@+id/button_settings"
+        android:layout_marginTop="104dp" />
 
 
     <Button
@@ -25,9 +27,9 @@
         android:onClick="startTimer"
         android:layout_weight="0.10"
         android:layout_above="@+id/button_settings"
-        android:layout_toStartOf="@+id/button_reset"
-        android:layout_marginBottom="153dp"
-        android:layout_toLeftOf="@+id/button_reset" />
+        android:layout_toRightOf="@+id/text_timer"
+        android:layout_toEndOf="@+id/text_timer"
+        android:layout_marginBottom="66dp" />
 
     <Button
         android:layout_height="wrap_content"
@@ -37,8 +39,11 @@
         android:layout_gravity="right"
         android:onClick="resetTimer"
         android:layout_weight="0.10"
-        android:layout_alignTop="@+id/button_start_timer"
-        android:layout_toEndOf="@+id/text_timer" />
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/button_settings"
+        android:layout_alignStart="@+id/button_settings"
+        android:layout_marginLeft="41dp"
+        android:layout_marginStart="41dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -61,5 +66,13 @@
         android:onClick="settingsTimer"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/text_timer"
+        android:layout_toStartOf="@+id/text_timer" />
 
 </RelativeLayout>
