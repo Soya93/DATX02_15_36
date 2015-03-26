@@ -5,6 +5,22 @@
     android:weightSum="1">
 
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/progressbarbg"
+        android:layout_below="@+id/textView"
+        android:layout_alignRight="@+id/button_settings"
+        android:layout_alignEnd="@+id/button_settings"
+        android:layout_above="@+id/button_start_timer"
+        android:layout_toRightOf="@+id/textView"
+        android:layout_toEndOf="@+id/textView" />
+
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -16,6 +32,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/button_settings"
         android:layout_alignStart="@+id/button_settings"
+        android:layout_marginLeft="41dp"
         android:layout_marginTop="104dp" />
 
 
@@ -39,11 +56,11 @@
         android:layout_gravity="right"
         android:onClick="resetTimer"
         android:layout_weight="0.10"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/button_settings"
-        android:layout_alignStart="@+id/button_settings"
-        android:layout_marginLeft="41dp"
-        android:layout_marginStart="41dp" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/button_settings"
+        android:layout_alignLeft="@+id/button_start_timer"
+        android:layout_alignStart="@+id/button_start_timer" />
 
     <TextView
         android:layout_width="wrap_content"
