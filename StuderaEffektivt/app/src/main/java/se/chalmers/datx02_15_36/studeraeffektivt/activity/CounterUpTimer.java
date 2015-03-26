@@ -46,7 +46,7 @@ public class CounterUpTimer extends Activity {
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int min = cal.get(Calendar.MINUTE);
-      setText.setText("hour  " + hour + "min " + min);
+      setText.setText("HOUR  " + hour + "min " + min);
     }
 
 

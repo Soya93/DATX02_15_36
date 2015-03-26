@@ -1,6 +1,5 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.model;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -8,16 +7,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
-import android.text.format.DateUtils;
 import android.util.Log;
-
-import com.alamkanak.weekview.WeekViewEvent;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
@@ -58,12 +52,12 @@ public class CalendarModel {
         todayDate.set(year, month, day);
         todayMillis = todayDate.getTimeInMillis();
 
-        //set start day
+        //set start DAY
         beginDay = todayDate;
         startMillis = todayDate.getTimeInMillis();
 
 
-        //set end day
+        //set end DAY
         endDay = Calendar.getInstance();
         endDay.setTime(futureDate(beginDay.getTime(), 1));
         endMillis = endDay.getTimeInMillis();
@@ -365,7 +359,6 @@ public class CalendarModel {
         values.put(CalendarContract.Events.CALENDAR_ID, calID);
         values.put(CalendarContract.Events.EVENT_LOCATION, location);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, "America/Los_Angeles");
-
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
         // get the event ID that is the last element in the Uri

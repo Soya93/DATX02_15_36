@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,16 +37,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     private CalendarModel calendarModel = new CalendarModel();
     private EventActivity eventActivity;
-    ContentResolver cr;
+    public ContentResolver cr;
     private View view;
-    private AlertDialog.Builder builder;
     private WeekView mWeekView;
 
     private List<WeekViewEvent> eventList;
     boolean hasOnMonthChange;
     private Button studySession;
-    private boolean haveToAddEvent;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +51,19 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         this.view = inflater.inflate(R.layout.activity_calendar, container, false);
         calendarModel = new CalendarModel();
+        this.initComponents();
+
+        Log.i("hasddedd", hasOnMonthChange + "");
+
+        return view;
+    }
+
+    private void initComponents() {
+        View.OnClickListener myButtonHandler = new View.OnClickListener() {
+            public void onClick(View v) {
+                goToButtonView((Button) v);
+            }
+        };
 
         // Get a reference for the week view in the layout.
         mWeekView = (WeekView) view.findViewById(R.id.weekView);
@@ -62,7 +73,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.setOnEventClickListener(this);
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
-        // month every time the month changes on the week view.
+        // MONTH every time the MONTH changes on the week view.
         mWeekView.setMonthChangeListener(this);
 
         // Set long press listener for events.
@@ -72,29 +83,15 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.setNumberOfVisibleDays(5);
         hasOnMonthChange = false;
         mWeekView.goToHour(8.0);
-        this.initComponents();
-        if (haveToAddEvent) {
-            addEvent();
-        }
-
-
-        return view;
-    }
-
-
-
-
-    private void initComponents() {
-        View.OnClickListener myButtonHandler = new View.OnClickListener() {
-            public void onClick(View v) {
-                goToButtonView((Button) v);
-            }
-        };
-
         studySession = (Button) view.findViewById(R.id.button_add_study_session);
         studySession.setOnClickListener(myButtonHandler);
-       /* repetition = (Button) view.findViewById(R.id.button_add_repetition_session);
-        repetition.setOnClickListener(myOnlyhandler);*/
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        hasOnMonthChange = false;
+        mWeekView.notifyDatasetChanged();
     }
 
     private void goToButtonView(Button b) {
@@ -104,16 +101,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             case "Lägg till studiepass":
                 this.openAddEventDialog();
                 break;
-            /*case "Lägg till repetitionspass":
-                this.addRepetitionSession();
-                break;*/
         }
     }
 
-    public void openEditEventDialog(final long eventID) {
+  /*  public void openEditEventDialog(final long eventID) {
 
-
-        /*
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
@@ -150,75 +142,23 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-        */
-
-    }
+    }*/
 
     public void openAddEventDialog() {
         eventActivity = new EventActivity();
+        eventActivity.setCalendarFrag(this);
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         startActivity(intent);
-
-
-
-
-
-        //hämta data från eventActivity
-
-        /*
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.edit_event_dialog, null);
-        builder.setView(dialogView);
-
-        Log.i("open", "yes");
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                long calID = 1;
-
-                //long startTime =;
-                // long endTime = ;
-
-                String title = ((TextView) dialogView.findViewById(R.id.title_input)).getText().toString();
-                String location = ((TextView) dialogView.findViewById(R.id.location_input)).getText().toString();
-                String description = ((TextView) dialogView.findViewById(R.id.description_input)).getText().toString();
-                String notification = ((EditText) dialogView.findViewById(R.id.notification_input)).getText().toString();
-                int minutes = -1;
-                if (notification != null && !notification.isEmpty()) {
-                    minutes = Integer.parseInt(notification);
-                }
-
-                calendarModel.addEventAuto(cr, title, 0L, 0L, location, description, calID);
-                //TODO: Ta hänsyn till notifications
-            }
-        });
-
-        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // Cancel
-            }
-        });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-        */
     }
 
-    private void addEvent() {
+    public void addEvent(String title, String location, String description, long startMillis, long endMillis, ContentResolver cr) {
         long calID = 1;
-        String title = eventActivity.getEventTitle();
-        String location = eventActivity.getLocation();
-        String description = eventActivity.getDescription();
-        long startMillis = eventActivity.getStartMillis();
-        long endMillis = eventActivity.getEndMillis();
-
-
         calendarModel.addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
         //TODO: Ta hänsyn till notifications
+    }
 
+    //används inte atm men behövs egentligen....
+    public void updateViewForAddEvent(String title){
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
 
@@ -299,7 +239,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                openEditEventDialog(eventID);
+                //openEditEventDialog(eventID);
             }
         });
 
@@ -360,54 +300,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 calendarModel.editLocation(cr, eventID, location);
                 calendarModel.editDescription(cr, eventID, description);
                 calendarModel.addNotification(cr, eventID, minutes);
-            }
-        });
-
-        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // Cancel
-            }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-    */
-
-    /*
-    public void openAddEventDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.edit_event_dialog, null);
-        builder.setView(dialogView);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                long calID = 1;
-
-                //long statTime =;
-                // long endTime = ;
-
-                String title = ((TextView) dialogView.findViewById(R.id.title_input)).getText().toString();
-                String location = ((TextView) dialogView.findViewById(R.id.location_input)).getText().toString();
-                String description = ((TextView) dialogView.findViewById(R.id.description_input)).getText().toString();
-                String notification = ((EditText) dialogView.findViewById(R.id.notification_input)).getText().toString();
-                int minutes = -1;
-                if (notification != null && !notification.isEmpty()) {
-                    minutes = Integer.parseInt(notification);
-                }
-                calendarModel.addEventAuto(cr, title, 0L, 0L, location, description, calID);
-                //TODO: Ta hänsyn till notifications
-
-                hasOnMonthChange = false;
-                mWeekView.notifyDatasetChanged();
-
-                Context context = getActivity().getApplicationContext();
-                CharSequence text = "Händelsen " + title + " har skapats";
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
             }
         });
 
@@ -505,13 +397,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         }
         cur.close();
     }
-
     public void setHasOnMonthChange(boolean b) {
         hasOnMonthChange = b;
-    }
-
-    public void setHaveToAddEvent(boolean haveToAddEvent) {
-        this.haveToAddEvent = haveToAddEvent;
     }
 
 }

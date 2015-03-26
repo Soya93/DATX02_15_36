@@ -39,7 +39,7 @@ public class CalendarView extends ActionBarActivity implements WeekView.MonthCha
         mWeekView.setOnEventClickListener(this);
 
         // The week view has infinite scrolling horizontally. We have to provide the events of a
-        // month every time the month changes on the week view.
+        // MONTH every time the MONTH changes on the week view.
         mWeekView.setMonthChangeListener(this);
 
         // Set long press listener for events.

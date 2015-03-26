@@ -68,11 +68,11 @@ public class CalendarUtils {
     public static final Calendar cal = Calendar.getInstance();
 
     //get todays date
-    public static final int year = cal.get(Calendar.YEAR);
-    public static final int month = cal.get(Calendar.MONTH);
-    public static final int day = cal.get(Calendar.DATE);
-    public static final int hour = cal.get(Calendar.HOUR_OF_DAY);
-    public static final int  minute = cal.get(Calendar.MINUTE);
+    public static final int YEAR = cal.get(Calendar.YEAR);
+    public static final int MONTH = cal.get(Calendar.MONTH);
+    public static final int DAY = cal.get(Calendar.DATE);
+    public static final int HOUR = cal.get(Calendar.HOUR_OF_DAY);
+    public static final int MINUTE = cal.get(Calendar.MINUTE);
 
 
 

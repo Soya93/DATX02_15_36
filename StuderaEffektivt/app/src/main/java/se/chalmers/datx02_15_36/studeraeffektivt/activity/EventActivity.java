@@ -12,7 +12,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
+import android.widget.Toast;
 import java.util.Calendar;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -84,16 +84,16 @@ public class EventActivity extends ActionBarActivity {
         endTime = (TextView) findViewById(R.id.end_time_input);
         endTime.setOnClickListener(myTextViewHandler);
 
-        startDate.setText(CalendarUtils.day + "/" + CalendarUtils.month + "/"
-                + CalendarUtils.year);
-        endDate.setText(CalendarUtils.day + "/" + CalendarUtils.month + "/"
-                + CalendarUtils.year);
-        startTime.setText(CalendarUtils.hour + ":" + CalendarUtils.minute);
-        endTime.setText(CalendarUtils.hour+1 + ":" + CalendarUtils.minute);
+        startDate.setText(CalendarUtils.DAY + "/" + CalendarUtils.MONTH + "/"
+                + CalendarUtils.YEAR);
+        endDate.setText(CalendarUtils.DAY + "/" + CalendarUtils.MONTH + "/"
+                + CalendarUtils.YEAR);
+        startTime.setText(CalendarUtils.HOUR + ":" + CalendarUtils.MINUTE);
+        endTime.setText(CalendarUtils.HOUR +1 + ":" + CalendarUtils.MINUTE);
 
         calStart = Calendar.getInstance();
         calEnd = Calendar.getInstance();
-        calEnd.add(Calendar.HOUR_OF_DAY, CalendarUtils.hour+1);
+        calEnd.add(Calendar.HOUR_OF_DAY, CalendarUtils.HOUR +1);
     }
 
 
@@ -137,7 +137,6 @@ public class EventActivity extends ActionBarActivity {
                 String day1 = String.valueOf(selectedDay);
 
                 if (isStart) {
-
                     calStart.set(Integer.parseInt(year1), Integer.parseInt(month1), Integer.parseInt(day1));
                     startDate.setText(day1 + "/" + month1 + "/" + year1);
                 } else {
@@ -147,16 +146,12 @@ public class EventActivity extends ActionBarActivity {
             }
         };
 
-        DatePickerDialog datePickerDialog  = new DatePickerDialog(EventActivity.this, datePickerListener, CalendarUtils.year,
-                CalendarUtils.month, CalendarUtils.day);
-
+        DatePickerDialog datePickerDialog  = new DatePickerDialog(EventActivity.this, datePickerListener, CalendarUtils.YEAR,
+                CalendarUtils.MONTH, CalendarUtils.DAY);
         datePickerDialog.show();
         datePickerDialog.setCancelable(false);
         datePickerDialog.setTitle("Select the time");
-
     }
-
-
 
     public void openTimePickerDialog(final boolean isStart) {
         TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
@@ -180,8 +175,8 @@ public class EventActivity extends ActionBarActivity {
         };
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(EventActivity.this,
-                R.style.Theme_IAPTheme, timePickerListener, CalendarUtils.hour,
-                CalendarUtils.minute, true);
+                R.style.Theme_IAPTheme, timePickerListener, CalendarUtils.HOUR,
+                CalendarUtils.MINUTE, true);
 
         timePickerDialog.show();
         timePickerDialog.setCancelable(false);
@@ -193,48 +188,25 @@ public class EventActivity extends ActionBarActivity {
         location = ((EditText) findViewById(R.id.location_input)).getText().toString();
         description = ((EditText) findViewById(R.id.description_input)).getText().toString();
 
-/*        String notificationString = ((EditText) dialogView.findViewById(R.id.notification_input)).getText().toString();
+        //TODO: Fix with notifications
+/*      String notificationString = ((EditText) dialogView.findViewById(R.id.notification_input)).getText().toString();
         notification = -1;
         if (notificationString != null && !notificationString.isEmpty()) {
             notification = Integer.parseInt(notificationString);
         }
         */
+        calendarFrag.addEvent(title, location, description, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), getContentResolver());
 
-        calendarFrag.setHaveToAddEvent(true);
         onBackPressed();
 
-
+        CharSequence text = "Händelsen " + title + " har skapats";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+        toast.show();
     }
-
     public void onCancelButtonClicked(View v) {
-        this.finish();
+        onBackPressed();
     }
-
-    public String getEventTitle() {
-        return title;
-    }
-
-    public long getEndMillis() {
-        return calEnd.getTimeInMillis();
-    }
-
-
-    public String getLocation() {
-        return location;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getNotification() {
-        return notification;
-    }
-
-    public long getStartMillis() {
-        return calStart.getTimeInMillis();
-    }
-
-
-
+    public void setCalendarFrag(CalendarFrag calendarFrag){ this.calendarFrag = calendarFrag; }
 }
+
