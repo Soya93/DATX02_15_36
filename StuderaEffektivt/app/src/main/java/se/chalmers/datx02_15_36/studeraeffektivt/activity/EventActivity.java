@@ -93,7 +93,7 @@ public class EventActivity extends ActionBarActivity {
 
         calStart = Calendar.getInstance();
         calEnd = Calendar.getInstance();
-        calEnd.add(Calendar.HOUR_OF_DAY, CalendarUtils.HOUR +1);
+        calEnd.set(Calendar.HOUR_OF_DAY, CalendarUtils.HOUR + 1);
     }
 
 
@@ -123,6 +123,10 @@ public class EventActivity extends ActionBarActivity {
                 openTimePickerDialog(false);
                 break;
         }
+        Log.i("start h ", "" + calStart.get(Calendar.HOUR_OF_DAY) + ":" + calStart.get(Calendar.MINUTE));
+        Log.i("end h ", "" + calEnd.get(Calendar.HOUR_OF_DAY) + ":" + calEnd.get(Calendar.MINUTE));
+
+
     }
 
     public void openDatePickerDialog(final boolean isStart) {
@@ -133,7 +137,7 @@ public class EventActivity extends ActionBarActivity {
             public void onDateSet(DatePicker view, int selectedYear,
                                   int selectedMonth, int selectedDay) {
                 String year1 = String.valueOf(selectedYear);
-                String month1 = String.valueOf(selectedMonth + 1);
+                String month1 = String.valueOf(selectedMonth -1);
                 String day1 = String.valueOf(selectedDay);
 
                 if (isStart) {
@@ -161,14 +165,17 @@ public class EventActivity extends ActionBarActivity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 String hour1 = String.valueOf(hourOfDay);
                 String minute1 = String.valueOf(minute);
+                Log.i("min", minute1);
+                Log.i("hour", hour1);
+
 
                 if (isStart) {
-                    calStart.add(Calendar.HOUR_OF_DAY, Integer.parseInt(hour1));
-                    calStart.add(Calendar.MINUTE, Integer.parseInt(minute1));
+                    calStart.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour1));
+                    calStart.set(Calendar.MINUTE, Integer.parseInt(minute1));
                     startTime.setText(hour1 + ":" + minute1);
                 } else {
-                    calEnd.add(Calendar.HOUR_OF_DAY, Integer.parseInt(hour1));
-                    calEnd.add(Calendar.MINUTE, Integer.parseInt(minute1));
+                    calEnd.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour1));
+                    calEnd.set(Calendar.MINUTE, Integer.parseInt(minute1));
                     endTime.setText(hour1 + ":" + minute1);
                 }
             }

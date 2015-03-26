@@ -129,22 +129,18 @@ public class CalendarModel {
      * Checks if the startdate is zero, if so it is set to a good default
      *
      * @param startDate
-     * @return
      */
     private Long checkStartInterval(Long startDate) {
         return startDate == 0L ? startMillis : startDate;
-
     }
 
     /**
      * Checks if the endDate is zero, if so it is set to a good default
      *
      * @param endDate
-     * @return
      */
     private Long checkEndInterval(Long endDate) {
-        return endDate == 0L ? endMillis : endDate;
-
+         return endDate == 0L ? endMillis : endDate;
     }
 
     /**
@@ -215,7 +211,6 @@ public class CalendarModel {
         calIntent.putExtra(CalendarContract.Events.DESCRIPTION, description);
         calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, allDay);
         startTime = checkStartInterval(startTime);
-        //endTime = checkStartInterval(endTime);
         endTime = startTime + 1000 * 60 * 60 * 3;
         calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
         calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
