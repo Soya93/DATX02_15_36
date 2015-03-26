@@ -119,8 +119,6 @@ public class StudyTaskFragment extends Fragment {
         taskParts = (EditText) view.findViewById(R.id.taskParts);
 
         addButton.setOnClickListener(myOnlyhandler);
-
-        taskOutput.setText("Hej");
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
@@ -131,6 +129,8 @@ public class StudyTaskFragment extends Fragment {
         }
     };
 
+    //Meod för att lägga till en uppgift
+
     public void addTask(int chapter, String taskString, String taskParts){
         //StudyTask studytask = new StudyTask(taskInput.getText().toString());
         //ArrayList<String> studyTaskList = studytask.getlist();
@@ -140,12 +140,15 @@ public class StudyTaskFragment extends Fragment {
         String[] seperateComma;
 
         String[] seperateTaskParts;
+
         seperateTaskParts = taskParts.split("");
 
         taskString.replaceAll("\\s+","");
 
         int start;
         int end;
+
+        //Kolla om kapitlet man vill lägga till i redan finns bland uppgifterna, om inte: skapa en nyckel för detta kapitel
 
         if(taskMap.containsKey(chapter)){
             studyTaskList = taskMap.get(chapter);
@@ -154,20 +157,21 @@ public class StudyTaskFragment extends Fragment {
             studyTaskList = new ArrayList<>();
         }
 
+        //Kollar om det finns kommatecken i input för uppgifter och separerar i så fall stringen så att alla element hamnar separat
         if (taskString.contains(",")) {
 
-            seperateComma = taskString.split(",");
+            seperateComma = taskString.split(",");  //Delar upp stringen till en array med elementen mellan kommatecknerna
         } else {
             seperateComma = new String[1];
             seperateComma[0] = taskString;
         }
 
-
+        //Kollar elementen var för sig och ser om de är ett spann av uppgifter att lägga till 1-3 gör så att 1, 2 och 3 läggs till
         for (int a = 0; a < seperateComma.length; a++) {
             if (seperateComma[a].contains("-")) {
 
-                seperateLine = seperateComma[a].split("-");
-                start = Integer.parseInt(seperateLine[0]);
+                seperateLine = seperateComma[a].split("-");   //Delar upp stringen till en array med elementen mellan bindesstrecken
+                start = Integer.parseInt(seperateLine[0]);    //Start och end är intervallet för de element som skall läggas till
                 end = Integer.parseInt(seperateLine[seperateLine.length - 1]);
 
                 for (int i = start; i <= end; i++) {
@@ -178,18 +182,27 @@ public class StudyTaskFragment extends Fragment {
             }
         }
 
-        if(taskParts!=""){
-            for(String s : seperateTaskParts){
-               for(String s2 : stringlist){
-                    s2 = s2 + s;
-                   if(!studyTaskList.contains(s2)){
-                       studyTaskList.add(s2);
+        //Lägger till deluppgifter om input för detta finns, tex a, b c.
+       if(seperateTaskParts.length > 1){
+            String elementToAdd;
+            for(int i = 1; i< seperateTaskParts.length; i++){       //För varje deluppgift
+               for(String s2 : stringlist){                         //För varje vihuv uppgift
+                    elementToAdd = s2 + seperateTaskParts[i];       //Sätt ihop dessa Huvuduppgift 1 och deluppgift a blir 1a
+                   if(!studyTaskList.contains(elementToAdd)){
+                       studyTaskList.add(elementToAdd);             //Lägger till dessa i listan för det aktuella kapitlet och elementet inte finns.
                    }
                 }
             }
+       }
+       //lägger till huvuduppgifterna då deluppgifter inte finns
+        else{
+            for(String s : stringlist){         //För varje huvuduppgift
+                if(!studyTaskList.contains(s))  //Lägg till om den inte redan finns
+                studyTaskList.add(s);
+            }
         }
 
-        taskMap.put(chapter, studyTaskList);
+        taskMap.put(chapter, studyTaskList);        //Uppdatera Hashmappen för nyckeln för kapitlet
 
         String taskMapString = taskMap.toString();
 
