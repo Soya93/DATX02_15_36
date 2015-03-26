@@ -30,4 +30,5 @@ dependencies {
     compile 'com.github.alamkanak:android-week-view:1.2.1'
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.github.PhilJay:MPAndroidChart:v2.0.7'
+    compile 'com.jayway.android.robotium:robotium-solo:5.2.1'
 }
