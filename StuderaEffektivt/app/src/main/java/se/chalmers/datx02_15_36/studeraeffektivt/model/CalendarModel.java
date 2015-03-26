@@ -35,6 +35,8 @@ public class CalendarModel {
     private int year;
     private int month;
     private int day;
+    private int hour;
+    private int minute;
     private long startMillis;
     private long endMillis;
     private long todayMillis;
@@ -48,6 +50,8 @@ public class CalendarModel {
         year = cal.get(Calendar.YEAR);
         month = cal.get(Calendar.MONTH);
         day = cal.get(Calendar.DATE);
+        hour = cal.get(Calendar.HOUR_OF_DAY);
+        minute = cal.get(Calendar.MINUTE);
 
         //set todays date
         todayDate = Calendar.getInstance();
@@ -66,6 +70,28 @@ public class CalendarModel {
 
         cur = null;
     }
+
+
+    public int getYear() {
+        return year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public int getMinute() {
+        return minute;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+
 
 
     public List<String> readEventsToday(ContentResolver cr) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="se.chalmers.datx02_15_36.studeraeffektivt">
+    package="se.chalmers.datx02_15_36.studeraeffektivt" >
 
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
@@ -18,59 +18,65 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <supports-screens android:smallScreens="true"
-        android:normalScreens="true"
+    <supports-screens
+        android:anyDensity="true"
         android:largeScreens="true"
-        android:xlargeScreens="true"
-        android:anyDensity="true" />
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
 
-    <!---http://developer.android.com/training/multiscreen/screensizes.html -->
-
+    <!-- -http://developer.android.com/training/multiscreen/screensizes.html -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Pluggapp">
+        android:theme="@style/Theme.Pluggapp" >
         <activity
             android:name=".activity.LoginActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <fragment
             android:name=".activity.TimerActivity"
-            android:label="TimerActivity"></fragment>
+            android:label="TimerActivity" />
         <fragment
             android:name=".activity.CalendarActivity"
-            android:label="@string/title_activity_calendar"></fragment>
+            android:label="@string/title_activity_calendar" />
 
         <activity
             android:name=".view.CalendarView"
-            android:label="@string/title_activity_calendar_view"></activity>
+            android:label="@string/title_activity_calendar_view" />
 
         <fragment
             android:name=".activity.TipActivity"
-            android:label="@string/title_activity_tips"></fragment>
+            android:label="@string/title_activity_tips" />
         <fragment
             android:name=".activity.TipDetailedInfoActivity"
-            android:label="@string/title_activity_tip_view"></fragment>
-
+            android:label="@string/title_activity_tip_view" />
         <fragment
             android:name=".activity.Statistics"
-            android:label="@string/title_activity_statistics"></fragment>
+            android:label="@string/title_activity_statistics" />
         <fragment
             android:name=".HomeActivity"
-            android:label="Home">
+            android:label="Home" >
         </fragment>
-        <service android:name="se.chalmers.datx02_15_36.studeraeffektivt.activity.MyCountDownTimer" >
+
+        <service android:name=".activity.MyCountDownTimer" >
         </service>
+
+        <activity
+            android:name=".activity.EventActivity"
+            android:label="@string/title_activity_event" >
+        </activity>
     </application>
 
 </manifest>
