@@ -78,7 +78,6 @@ public class TimerFrag extends Fragment {
         if (b!= null) {
             textView = (TextView) rootView.findViewById(R.id.text_timer);
             String text = b.getString("buttonText");
-            Log.d("onActivityCreated",text);
             startButton.setText(text);
         }
     }
@@ -188,7 +187,7 @@ public class TimerFrag extends Fragment {
 
     protected void handleTimeFromService(long timeFromService) {
         this.timePassed=timeFromService;
-      long countOut = 0;
+        long countOut = 0;
         boolean lastWasStudy = true;
         while(countOut<=timeFromService){
             if(lastWasStudy){
@@ -315,12 +314,11 @@ public class TimerFrag extends Fragment {
 
     }
 
-       public void onDestroyView () {
-           super.onDestroyView();
-           b= new Bundle();
-           b.putString("buttonText",buttonText);
-       }
+    public void onDestroyView () {
+        super.onDestroyView();
+        b= new Bundle();
+        b.putString("buttonText",buttonText);
+    }
 
 
 }
-

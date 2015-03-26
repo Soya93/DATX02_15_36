@@ -5,6 +5,16 @@
     android:weightSum="1">
 
 
+
+    <ProgressBar
+        android:id="@+id/ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleLarge"
+        android:indeterminateDrawable="@drawable/progressbarbg"
+        android:progress="50"
+        />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,9 +22,9 @@
         android:text="Tid kvar"
         android:id="@+id/text_timer"
         android:layout_weight="0.10"
-        android:layout_above="@+id/button_start_timer"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="162dp" />
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/button_settings"
+        android:layout_alignStart="@+id/button_settings" />
 
 
     <Button
@@ -25,9 +35,9 @@
         android:onClick="startTimer"
         android:layout_weight="0.10"
         android:layout_above="@+id/button_settings"
-        android:layout_toStartOf="@+id/button_reset"
-        android:layout_marginBottom="153dp"
-        android:layout_toLeftOf="@+id/button_reset" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="94dp" />
 
     <Button
         android:layout_height="wrap_content"
@@ -37,7 +47,8 @@
         android:layout_gravity="right"
         android:onClick="resetTimer"
         android:layout_weight="0.10"
-        android:layout_alignTop="@+id/button_start_timer"
+        android:layout_below="@+id/text_timer"
+        android:layout_toRightOf="@+id/text_timer"
         android:layout_toEndOf="@+id/text_timer" />
 
     <TextView
