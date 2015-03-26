@@ -102,6 +102,7 @@ public class CalendarModel {
         while (cur.moveToNext()) {
             eventTitles.add(cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
         }
+        cur.close();
         return eventTitles;
     }
 
@@ -135,6 +136,7 @@ public class CalendarModel {
                 return cur;
             }
         }
+        cur.close();
         //TODO: Exception
         return null;
     }
@@ -189,6 +191,7 @@ public class CalendarModel {
             i++;
 
         }
+        cur.close();
         return calendars;
     }
 

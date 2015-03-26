@@ -3,6 +3,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.AlertDialog;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.RectF;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import com.alamkanak.weekview.WeekView;
@@ -238,10 +240,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 // Cancel
             }
         });
-
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-
     }
 
     public void openAddEventDialog() {
@@ -250,27 +250,33 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final View dialogView = inflater.inflate(R.layout.edit_event_dialog, null);
         builder.setView(dialogView);
 
-        Log.i("open", "yes");
-
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 long calID = 1;
 
                 //long statTime =;
-               // long endTime = ;
+                // long endTime = ;
 
                 String title = ((TextView) dialogView.findViewById(R.id.title_input)).getText().toString();
                 String location = ((TextView) dialogView.findViewById(R.id.location_input)).getText().toString();
                 String description = ((TextView) dialogView.findViewById(R.id.description_input)).getText().toString();
                 String notification = ((EditText) dialogView.findViewById(R.id.notification_input)).getText().toString();
                 int minutes = -1;
-                if(notification!=null && !notification.isEmpty()) {
+                if (notification != null && !notification.isEmpty()) {
                     minutes = Integer.parseInt(notification);
                 }
-
                 calendarModel.addEventAuto(cr, title, 0L, 0L, location, description, calID);
                 //TODO: Ta hänsyn till notifications
+
+                hasOnMonthChange = false;
+                mWeekView.notifyDatasetChanged();
+
+                Context context = getActivity().getApplicationContext();
+                CharSequence text = "Händelsen " + title + " har skapats";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
             }
         });
 
@@ -280,7 +286,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 // Cancel
             }
         });
-
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
@@ -292,8 +297,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
 
         TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
+        final CharSequence eventName = weekViewEvent.getName();
         if(eventNameLabel!= null){
-            eventNameLabel.setText("Vill du verkligen ta bort " + weekViewEvent.getName() + "?");
+            eventNameLabel.setText("Vill du verkligen ta bort " + eventName + "?");
         }
 
         builder.setView(dialogView);
@@ -303,7 +309,14 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             public void onClick(DialogInterface dialog, int id) {
                 calendarModel.deleteEvent(cr, weekViewEvent.getId());
 
-                //TODO: Create a remove method
+                hasOnMonthChange = false;
+                mWeekView.notifyDatasetChanged();
+
+                Context context = getActivity().getApplicationContext();
+                CharSequence text = "Händelsen " + eventName + " har tagits bort";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
             }
         });
 
@@ -313,22 +326,19 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 // Cancel
             }
         });
-
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-
-
     }
 
 
    @Override
     public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
+       Log.i("inmonthchange", "hasonmonthchange " + hasOnMonthChange);
        if(!hasOnMonthChange){
            hasOnMonthChange = true;
            readEvents();
            return new ArrayList<WeekViewEvent>(eventMap.values());
        }
-
        List<WeekViewEvent> events = new ArrayList<>();
 /*
        Calendar startTime = Calendar.getInstance();
@@ -453,11 +463,14 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 Calendar endTime = Calendar.getInstance();
                 endTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_END_INDEX));
 
-                WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
-                event.setColor(getResources().getColor(R.color.pink));
+                int color = cur.getInt(CalendarUtils.PROJECTION_COLOR_INDEX);
 
+                WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
+                //event.setColor(getResources().getColor(R.color.pink));
+                event.setColor(color);
                 eventMap.put(id, event);
 
+                Log.i("eventname", eventName);
             }
         }
         cur.close();
