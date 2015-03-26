@@ -39,11 +39,12 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         WeekView.EventClickListener, WeekView.EventLongPressListener {
 
     private CalendarModel calendarModel = new CalendarModel();
-     ContentResolver cr;
+    ContentResolver cr;
     private View view;
     private AlertDialog.Builder builder;
     private WeekView mWeekView;
-    private Map <Long, WeekViewEvent> eventMap;
+    private List<WeekViewEvent> eventList;
+    private Map<Long, WeekViewEvent> eventMap;
     boolean hasOnMonthChange;
     private Button studySession;
     private Button repetition;
@@ -52,8 +53,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-      this.view = inflater.inflate(R.layout.activity_calendar, container, false);
-      calendarModel = new CalendarModel();
+        this.view = inflater.inflate(R.layout.activity_calendar, container, false);
+        calendarModel = new CalendarModel();
 
         // Get a reference for the week view in the layout.
         mWeekView = (WeekView) view.findViewById(R.id.weekView);
@@ -131,7 +132,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         return calendarModel.readEventsSunday(cr);
     }
 
-    public void setContentResolver(ContentResolver cr){
+    public void setContentResolver(ContentResolver cr) {
         this.cr = cr;
     }
 
@@ -143,24 +144,23 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
         final long eventID = weekViewEvent.getId();
 
-       if(this.eventMap.containsValue(weekViewEvent) && weekViewEvent!= null) {
-            //Fetching the information about the event from its object
-            long startTime = weekViewEvent.getStartTime().getTimeInMillis();
-            long endTime = weekViewEvent.getEndTime().getTimeInMillis();
-            CharSequence name = weekViewEvent.getName();
+        //Fetching the information about the event from its object
+        long startTime = weekViewEvent.getStartTime().getTimeInMillis();
+        long endTime = weekViewEvent.getEndTime().getTimeInMillis();
+        CharSequence name = weekViewEvent.getName();
 
-            //Get a cursor for the detailed information of the event
-            Cursor cur = calendarModel.getEventDetailedInfo(cr, startTime, endTime, eventID);
+        //Get a cursor for the detailed information of the event
+        Cursor cur = calendarModel.getEventDetailedInfo(cr, startTime, endTime, eventID);
 
-            //Fetch information from the cursor
-            String location = cur.getString(CalendarUtils.EVENT_INFO_LOCATION);
-            String description = cur.getString(CalendarUtils.EVENT_INFO_DESCRIPTION);
-            String calendar = cur.getString(CalendarUtils.EVENT_INFO_CALENDAR);
-            cur.close();
+        //Fetch information from the cursor
+        String location = cur.getString(CalendarUtils.EVENT_INFO_LOCATION);
+        String description = cur.getString(CalendarUtils.EVENT_INFO_DESCRIPTION);
+        String calendar = cur.getString(CalendarUtils.EVENT_INFO_CALENDAR);
+        cur.close();
 
-           this.updateEventInfoView(dialogView, name, startTime, endTime, location, description, calendar);
-       }
+        this.updateEventInfoView(dialogView, name, startTime, endTime, location, description, calendar);
         builder.setView(dialogView);
+
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
@@ -179,29 +179,29 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     }
 
-    private void updateEventInfoView(View dialogView, CharSequence name, long startTime, long endTime, String location, String description, String calendar){
+    private void updateEventInfoView(View dialogView, CharSequence name, long startTime, long endTime, String location, String description, String calendar) {
         TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
-        if(eventNameLabel!= null){
+        if (eventNameLabel != null) {
             eventNameLabel.setText(name);
         }
 
         TextView eventTimeLabel = (TextView) dialogView.findViewById(R.id.event_time_label);
-        if(eventTimeLabel!= null){
-            eventTimeLabel.setText("Tid: " +startTime + " - " + endTime);
+        if (eventTimeLabel != null) {
+            eventTimeLabel.setText("Tid: " + startTime + " - " + endTime);
         }
 
         TextView eventLocationLabel = (TextView) dialogView.findViewById(R.id.event_location_label);
-        if(eventLocationLabel!= null){
+        if (eventLocationLabel != null) {
             eventLocationLabel.setText("Plats: " + location);
         }
 
         TextView eventDescriptionLabel = (TextView) dialogView.findViewById(R.id.event_description_label);
-        if(eventDescriptionLabel!= null){
+        if (eventDescriptionLabel != null) {
             eventDescriptionLabel.setText("Beskrivning: " + description);
         }
 
         TextView eventCalendarLabel = (TextView) dialogView.findViewById(R.id.event_calendar_label);
-        if(eventCalendarLabel!= null){
+        if (eventCalendarLabel != null) {
             eventCalendarLabel.setText("Kalender: " + calendar);
         }
     }
@@ -224,13 +224,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 String description = ((TextView) dialogView.findViewById(R.id.description_input)).getText().toString();
                 String notification = ((EditText) dialogView.findViewById(R.id.notification_input)).getText().toString();
                 int minutes = -1;
-                if(notification!=null && !notification.isEmpty()) {
-                   minutes = Integer.parseInt(notification);
+                if (notification != null && !notification.isEmpty()) {
+                    minutes = Integer.parseInt(notification);
                 }
                 calendarModel.editTitle(cr, eventID, title);
                 calendarModel.editLocation(cr, eventID, location);
                 calendarModel.editDescription(cr, eventID, description);
-                calendarModel.addNotification(cr, eventID,minutes);
+                calendarModel.addNotification(cr, eventID, minutes);
             }
         });
 
@@ -298,7 +298,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
         final CharSequence eventName = weekViewEvent.getName();
-        if(eventNameLabel!= null){
+        if (eventNameLabel != null) {
             eventNameLabel.setText("Vill du verkligen ta bort " + eventName + "?");
         }
 
@@ -331,157 +331,48 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
 
-   @Override
+    @Override
     public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
-       Log.i("inmonthchange", "hasonmonthchange " + hasOnMonthChange);
-       if(!hasOnMonthChange){
-           hasOnMonthChange = true;
-           readEvents();
-           return new ArrayList<WeekViewEvent>(eventMap.values());
-       }
-       List<WeekViewEvent> events = new ArrayList<>();
-/*
-       Calendar startTime = Calendar.getInstance();
-       startTime.set(Calendar.HOUR_OF_DAY, 3);
-       startTime.set(Calendar.MINUTE, 0);
-       startTime.set(Calendar.MONTH, newMonth-1);
-       startTime.set(Calendar.YEAR, newYear);
-       Calendar endTime = (Calendar) startTime.clone();
-       endTime.add(Calendar.HOUR, 1);
-       endTime.set(Calendar.MONTH, newMonth-1);
-       WeekViewEvent event = new WeekViewEvent(1, getEventTitle(startTime), startTime, endTime);
-       event.setColor(getResources().getColor(R.color.pink));
-       events.add(event);
-
-       startTime = Calendar.getInstance();
-       startTime.set(Calendar.HOUR_OF_DAY, 3);
-       startTime.set(Calendar.MINUTE, 30);
-       startTime.set(Calendar.MONTH, newMonth-1);
-       startTime.set(Calendar.YEAR, newYear);
-       endTime = (Calendar) startTime.clone();
-       endTime.set(Calendar.HOUR_OF_DAY, 4);
-       endTime.set(Calendar.MINUTE, 30);
-       endTime.set(Calendar.MONTH, newMonth-1);
-       event = new WeekViewEvent(10, getEventTitle(startTime), startTime, endTime);
-       event.setColor(getResources().getColor(R.color.material_blue_grey_800));
-       events.add(event);
-
-       startTime = Calendar.getInstance();
-       startTime.set(Calendar.HOUR_OF_DAY, 4);
-       startTime.set(Calendar.MINUTE, 20);
-       startTime.set(Calendar.MONTH, newMonth-1);
-       startTime.set(Calendar.YEAR, newYear);
-       endTime = (Calendar) startTime.clone();
-       endTime.set(Calendar.HOUR_OF_DAY, 5);
-       endTime.set(Calendar.MINUTE, 0);
-       event = new WeekViewEvent(10, getEventTitle(startTime), startTime, endTime);
-       event.setColor(getResources().getColor(R.color.green));
-       events.add(event);
-
-       startTime = Calendar.getInstance();
-       startTime.set(Calendar.HOUR_OF_DAY, 5);
-       startTime.set(Calendar.MINUTE, 30);
-       startTime.set(Calendar.MONTH, newMonth-1);
-       startTime.set(Calendar.YEAR, newYear);
-       endTime = (Calendar) startTime.clone();
-       endTime.add(Calendar.HOUR_OF_DAY, 2);
-       endTime.set(Calendar.MONTH, newMonth-1);
-       event = new WeekViewEvent(2, getEventTitle(startTime), startTime, endTime);
-       event.setColor(getResources().getColor(R.color.material_blue_grey_800));
-       events.add(event);
-
-       startTime = Calendar.getInstance();
-       startTime.set(Calendar.HOUR_OF_DAY, 5);
-       startTime.set(Calendar.MINUTE, 0);
-       startTime.set(Calendar.MONTH, newMonth-1);
-       startTime.set(Calendar.YEAR, newYear);
-       startTime.add(Calendar.DATE, 1);
-       endTime = (Calendar) startTime.clone();
-       endTime.add(Calendar.HOUR_OF_DAY, 3);
-       endTime.set(Calendar.MONTH, newMonth - 1);
-       event = new WeekViewEvent(3, getEventTitle(startTime), startTime, endTime);
-       event.setColor(getResources().getColor(R.color.green));
-       events.add(event);
-
-       startTime = Calendar.getInstance();
-       startTime.set(Calendar.DAY_OF_MONTH, 15);
-       startTime.set(Calendar.HOUR_OF_DAY, 3);
-       startTime.set(Calendar.MINUTE, 0);
-       startTime.set(Calendar.MONTH, newMonth-1);
-       startTime.set(Calendar.YEAR, newYear);
-       endTime = (Calendar) startTime.clone();
-       endTime.add(Calendar.HOUR_OF_DAY, 3);
-       event = new WeekViewEvent(4, getEventTitle(startTime), startTime, endTime);
-       event.setColor(getResources().getColor(R.color.yellow));
-       events.add(event);
-
-       startTime = Calendar.getInstance();
-       startTime.set(Calendar.DAY_OF_MONTH, 1);
-       startTime.set(Calendar.HOUR_OF_DAY, 3);
-       startTime.set(Calendar.MINUTE, 0);
-       startTime.set(Calendar.MONTH, newMonth-1);
-       startTime.set(Calendar.YEAR, newYear);
-       endTime = (Calendar) startTime.clone();
-       endTime.add(Calendar.HOUR_OF_DAY, 3);
-       event = new WeekViewEvent(5, getEventTitle(startTime), startTime, endTime);
-       event.setColor(getResources().getColor(R.color.pink));
-       events.add(event);
-
-       startTime = Calendar.getInstance();
-       startTime.set(Calendar.DAY_OF_MONTH, startTime.getActualMaximum(Calendar.DAY_OF_MONTH));
-       startTime.set(Calendar.HOUR_OF_DAY, 15);
-       startTime.set(Calendar.MINUTE, 0);
-       startTime.set(Calendar.MONTH, newMonth-1);
-       startTime.set(Calendar.YEAR, newYear);
-       endTime = (Calendar) startTime.clone();
-       endTime.add(Calendar.HOUR_OF_DAY, 3);
-       event = new WeekViewEvent(5, getEventTitle(startTime), startTime, endTime);
-       event.setColor(getResources().getColor(R.color.material_blue_grey_800));
-       events.add(event);*/
-       return events;
+        eventList = new ArrayList<>();
+        if (!hasOnMonthChange) {
+            hasOnMonthChange = true;
+            readEvents();
+        }
+        return eventList;
     }
 
     private String getEventTitle(Calendar time) {
-        return String.format("Event of %02d:%02d %s/%d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.MONTH)+1, time.get(Calendar.DAY_OF_MONTH));
+        return String.format("Event of %02d:%02d %s/%d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.MONTH) + 1, time.get(Calendar.DAY_OF_MONTH));
     }
 
     private void readEvents() {
-       eventMap = new HashMap<>();
-
         Cursor cur = calendarModel.getEventsCursor(cr, 0L, 0L);
 
         while (cur.moveToNext()) {
             long id = cur.getLong(CalendarUtils.PROJECTION_ID_INDEX);
 
+            String eventName = cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX);
 
-            if(!eventMap.containsKey(id)) {
-                String eventName = cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX);
+            Calendar startTime = Calendar.getInstance();
+            startTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_BEGIN_INDEX));
 
-                Calendar startTime = Calendar.getInstance();
-                startTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_BEGIN_INDEX));
+            Calendar endTime = Calendar.getInstance();
+            endTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_END_INDEX));
 
-                Calendar endTime = Calendar.getInstance();
-                endTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_END_INDEX));
+            int color = cur.getInt(CalendarUtils.PROJECTION_COLOR_INDEX);
 
-                int color = cur.getInt(CalendarUtils.PROJECTION_COLOR_INDEX);
+            WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
+            event.setColor(color);
 
-                WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
-                //event.setColor(getResources().getColor(R.color.pink));
-                event.setColor(color);
-                eventMap.put(id, event);
-
-                Log.i("eventname", eventName);
+            if (!eventList.contains(event)) {
+                eventList.add(event);
             }
         }
         cur.close();
-
     }
 
     public void setHasOnMonthChange(boolean b) {
         hasOnMonthChange = b;
     }
-
-
-
 
 }
