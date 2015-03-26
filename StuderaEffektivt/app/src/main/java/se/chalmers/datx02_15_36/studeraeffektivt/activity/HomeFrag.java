@@ -33,7 +33,6 @@ public class HomeFrag extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_home, container, false);
         this.view = rootView;
         initComponents(view);
-        Log.i("onCreateHome", "home");
         return rootView;
     }
 
@@ -50,7 +49,6 @@ public class HomeFrag extends Fragment {
     }
 
    public void setCalendarFrag(CalendarFrag calendarFrag){
-       Log.i("HomeActivity:", "setCalendarActivity");
        this.calendarFrag = calendarFrag;
    }
 
@@ -60,8 +58,6 @@ public class HomeFrag extends Fragment {
      * @return
      */
     public void setCalendarInfoToday() {
-            Log.i("HomeActivity: setCalendarInfoToday", "view:" + getView());
-
         if (calendarFrag != null && hasInit) {
                 //get calendarinfo of today from calendar
                 List<String> todaysEventsTitles = calendarFrag.getTodaysEvents();
@@ -78,7 +74,6 @@ public class HomeFrag extends Fragment {
                             layout.addView(tmp2);
                             layout.addView(tmp);
                         }
-                        Log.i("setCalendarInfoToday", str);
                     }
                 } else {
                     TextView tmp2 = new TextView(context);
