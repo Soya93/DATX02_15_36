@@ -7,11 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
-
 /**
  * A database adapter that is used to read and write to/from the database.
  * Three tables: Courses, Sessions, Assignments.
@@ -59,7 +54,17 @@ public class DBAdapter  {
         return db.insert(dbHelper.TABLE_SESSIONS, null, cv);
     }
 
-    public long insertAssignment(String courseCode, int chapter, String assNr, int startPage, int stopPage){
+    /**
+     * Insert an Assignment to the database.
+     * @param courseCode
+     * @param chapter
+     * @param assNr
+     * @param startPage
+     * @param stopPage
+     * @param type
+     * @return
+     */
+    public long insertAssignment(String courseCode, int chapter, String assNr, int startPage, int stopPage, String type){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -68,8 +73,19 @@ public class DBAdapter  {
         cv.put(dbHelper.ASSIGNMENTS__assNr, assNr);
         cv.put(dbHelper.ASSIGNMENTS__startPage, startPage);
         cv.put(dbHelper.ASSIGNMENTS__stopPage, stopPage);
+        cv.put(dbHelper.ASSIGNMENTS_type, type);
 
         return db.insert(dbHelper.TABLE_ASSIGNMENTS, null, cv);
+    }
+
+    public long insertTimeOnCourse(String ccode, int minutes){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(dbHelper.TIMEONCOURSE__ccode, ccode);
+        cv.put(dbHelper.TIMEONCOURSE__time, minutes);
+
+        return db.insert(dbHelper.TABLE_TIMEONCOURSE, null, cv);
     }
 
     /**
@@ -122,6 +138,12 @@ public class DBAdapter  {
         private static final String ASSIGNMENTS__assNr = "assNr";
         private static final String ASSIGNMENTS__startPage = "startPage";
         private static final String ASSIGNMENTS__stopPage = "stopPage";
+        private static final String ASSIGNMENTS_type = "type";
+
+        //Variables for the TimeOnCourse table.
+        private static final String TABLE_TIMEONCOURSE = "TIMEONCOURSE";
+        private static final String TIMEONCOURSE__ccode = COURSES__ccode;
+        private static final String TIMEONCOURSE__time = "time";
 
         /*Constructor.*/
         public DBHelper(Context context){
@@ -140,7 +162,11 @@ public class DBAdapter  {
 
             db.execSQL("CREATE TABLE "+TABLE_ASSIGNMENTS+" ("+ASSIGNMENTS__id+" PRIMARY KEY, "
                     +ASSIGNMENTS_ccode+" VARCHAR(50), " +ASSIGNMENTS_chapter+" INT, "+ASSIGNMENTS__assNr+
-                    " VARCHAR(50), "+ASSIGNMENTS__startPage+" INT, "+ASSIGNMENTS__stopPage+" INT)");
+                    " VARCHAR(50), "+ASSIGNMENTS__startPage+" INT, "+ASSIGNMENTS__stopPage+" INT, "
+                    +ASSIGNMENTS_type +" VARCHAR(50))");
+
+            db.execSQL("CREATE TABLE "+TABLE_TIMEONCOURSE+"("+TIMEONCOURSE__ccode+" VARCHAR(50) PRIMARY KEY, "+
+                    TIMEONCOURSE__time+" INT, FOREIGN KEY("+TIMEONCOURSE__ccode+") REFERENCES "+COURSES__ccode+")");
         }
 
         @Override
