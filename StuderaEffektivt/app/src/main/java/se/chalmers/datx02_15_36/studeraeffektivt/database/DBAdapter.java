@@ -83,7 +83,7 @@ public class DBAdapter  {
         ContentValues cv = new ContentValues();
 
         cv.put(dbHelper.TIMEONCOURSE__ccode, ccode);
-        cv.put(dbHelper.TIMEONCOURSE__time, minutes);
+        cv.put(dbHelper.TIMEONCOURSE_time, minutes);
 
         return db.insert(dbHelper.TABLE_TIMEONCOURSE, null, cv);
     }
@@ -139,11 +139,12 @@ public class DBAdapter  {
         private static final String ASSIGNMENTS__startPage = "startPage";
         private static final String ASSIGNMENTS__stopPage = "stopPage";
         private static final String ASSIGNMENTS_type = "type";
+        private static final String ASSIGNMENTS_status = "status";
 
         //Variables for the TimeOnCourse table.
         private static final String TABLE_TIMEONCOURSE = "TIMEONCOURSE";
         private static final String TIMEONCOURSE__ccode = COURSES__ccode;
-        private static final String TIMEONCOURSE__time = "time";
+        private static final String TIMEONCOURSE_time = "time";
 
         /*Constructor.*/
         public DBHelper(Context context){
@@ -163,10 +164,10 @@ public class DBAdapter  {
             db.execSQL("CREATE TABLE "+TABLE_ASSIGNMENTS+" ("+ASSIGNMENTS__id+" PRIMARY KEY, "
                     +ASSIGNMENTS_ccode+" VARCHAR(50), " +ASSIGNMENTS_chapter+" INT, "+ASSIGNMENTS__assNr+
                     " VARCHAR(50), "+ASSIGNMENTS__startPage+" INT, "+ASSIGNMENTS__stopPage+" INT, "
-                    +ASSIGNMENTS_type +" VARCHAR(50))");
+                    +ASSIGNMENTS_type +" VARCHAR(50), "+ASSIGNMENTS_status+" VARCHAR(50))");
 
             db.execSQL("CREATE TABLE "+TABLE_TIMEONCOURSE+"("+TIMEONCOURSE__ccode+" VARCHAR(50) PRIMARY KEY, "+
-                    TIMEONCOURSE__time+" INT, FOREIGN KEY("+TIMEONCOURSE__ccode+") REFERENCES "+COURSES__ccode+")");
+                    TIMEONCOURSE_time +" INT, FOREIGN KEY("+TIMEONCOURSE__ccode+") REFERENCES "+COURSES__ccode+")");
         }
 
         @Override
