@@ -48,7 +48,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Datum"
             android:id="@+id/start_date_input"
-            android:layout_column="2" />
+            android:layout_column="2"
+            android:onClick="goToTextView" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -57,7 +58,8 @@
             android:text="Tid"
             android:id="@+id/start_time_input"
             android:layout_column="3"
-            android:layout_gravity="right" />
+            android:layout_gravity="right"
+            android:onClick="goToTextView" />
 
     </TableRow>
 
@@ -78,7 +80,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Datum"
             android:id="@+id/end_date_input"
-            android:layout_column="2" />
+            android:layout_column="2"
+            android:onClick="goToTextView" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -170,6 +173,90 @@
             android:id="@+id/notification_input" />
     </TableRow>
 
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Avbryt"
+            android:id="@+id/cancel_button"
+            android:layout_column="0"
+            android:onClick="onCancelButtonClicked" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:id="@+id/ok_button"
+            android:layout_column="2"
+            android:onClick="onOKButtonClicked" />
+    </TableRow>
 
 
 </TableLayout>

@@ -2,6 +2,8 @@ package se.chalmers.datx02_15_36.studeraeffektivt.util;
 
 import android.provider.CalendarContract;
 
+import java.util.Calendar;
+
 /**
  * A class with constants for the Calendar model
  */
@@ -61,4 +63,17 @@ public class CalendarUtils {
     public static final int EVENT_INFO_LOCATION = 4;
     public static final int EVENT_INFO_DESCRIPTION = 5;
     public static final int EVENT_INFO_CALENDAR = 6;
+
+
+    public static final Calendar cal = Calendar.getInstance();
+
+    //get todays date
+    public static final int year = cal.get(Calendar.YEAR);
+    public static final int month = cal.get(Calendar.MONTH);
+    public static final int day = cal.get(Calendar.DATE);
+    public static final int hour = cal.get(Calendar.HOUR_OF_DAY);
+    public static final int  minute = cal.get(Calendar.MINUTE);
+
+
+
 }
