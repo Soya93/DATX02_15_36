@@ -3,7 +3,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.CountDownTimer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,9 +55,10 @@ public class TimerFrag extends Fragment {
     private String inputTime;
     private String nbrOfPauses;
     private String pausLength;
-    private String buttonText="";
+    private String buttonText = "";
 
     private Bundle b;
+    private Spinner spinner;
 
     private DBAdapter dbAdapter;
 
@@ -63,11 +66,12 @@ public class TimerFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_timer, container, false);
-        instantiate();
-
         if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
         }
+        instantiate();
+
+
 
         return rootView;
     }
@@ -75,7 +79,7 @@ public class TimerFrag extends Fragment {
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (b!= null) {
+        if (b != null) {
             textView = (TextView) rootView.findViewById(R.id.text_timer);
             String text = b.getString("buttonText");
             startButton.setText(text);
@@ -83,242 +87,258 @@ public class TimerFrag extends Fragment {
     }
 
 
-
     private void instantiate() {
         resetButton = (Button) rootView.findViewById(R.id.button_reset);
         startButton = (Button) rootView.findViewById(R.id.button_start_timer);
         textView = (TextView) rootView.findViewById(R.id.text_timer);
+        spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        setCourses();
 
     }
 
-    private long minToMilliSeconds(int parsedTime) {
-        return ((long) parsedTime * 60 * 1000);
-    }
+    private void setCourses() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        Cursor cursor = dbAdapter.getCourses();
+        int cnameColumn = cursor.getColumnIndex("cname");
+        int ccodeColumn = cursor.getColumnIndex("_ccode");
+        while (cursor.moveToNext()) {
+            String ccode=cursor.getString(ccodeColumn);
+            String cname = cursor.getString(cnameColumn);
+            adapter.add(ccode + "  " + cname );
+        }
 
 
-    private void calculateStudySession() {
-        long temp = (default_TotalTime - (default_NumberOfPauses * default_PauseTime));
-        this.default_StudyTime = temp / (default_NumberOfPauses + 1);
-    }
+        }
 
-    /**
-     * Set the timer.
-     */
-    public CountDownTimer studyTimerFunction(long millisInFuture, long countDownInterval) {
+        private long minToMilliSeconds ( int parsedTime){
+            return ((long) parsedTime * 60 * 1000);
+        }
 
-        studyTimer = new CountDownTimer(millisInFuture, countDownInterval) {
 
-            public void onTick(long millisUntilFinished) {
-                studyTimerIsRunning = true;
-                textView.setText("Plugga " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
-                secondsUntilFinished = millisUntilFinished;
-                timePassed += 100;
-            }
+        private void calculateStudySession () {
+            long temp = (default_TotalTime - (default_NumberOfPauses * default_PauseTime));
+            this.default_StudyTime = temp / (default_NumberOfPauses + 1);
+        }
 
-            @Override
-            public void onFinish() {
-                studyTimerIsRunning = false;
-                //Log session into database.
-                long inserted = dbAdapter.insertSession("DDD111", 50);
-                if(inserted > 0 && getActivity() != null){
-                    Toast toast = Toast.makeText(getActivity(), "Session: 50 minutes added to DDD111", Toast.LENGTH_SHORT);
-                    toast.show();
-                }else if(getActivity() != null){
-                    Toast toast = Toast.makeText(getActivity(), "Failed to add a Session", Toast.LENGTH_SHORT);
-                    toast.show();
+        /**
+         * Set the timer.
+         */
+        public CountDownTimer studyTimerFunction ( long millisInFuture, long countDownInterval){
+
+            studyTimer = new CountDownTimer(millisInFuture, countDownInterval) {
+
+                public void onTick(long millisUntilFinished) {
+                    studyTimerIsRunning = true;
+                    textView.setText("Plugga " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
+                    secondsUntilFinished = millisUntilFinished;
+                    timePassed += 100;
                 }
 
-                //Start pausetimer if time left.
-                if (timePassed < default_TotalTime) {
-                    pauseTimerFunction(default_PauseTime, update_Time);
-                    pauseTimer.start();
+                @Override
+                public void onFinish() {
+                    studyTimerIsRunning = false;
+                    //Log session into database.
+                    long inserted = dbAdapter.insertSession("DDD111", 50);
+                    if (inserted > 0 && getActivity() != null) {
+                        Toast toast = Toast.makeText(getActivity(), "Session: 50 minutes added to DDD111", Toast.LENGTH_SHORT);
+                        toast.show();
+                    } else if (getActivity() != null) {
+                        Toast toast = Toast.makeText(getActivity(), "Failed to add a Session", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+
+                    //Start pausetimer if time left.
+                    if (timePassed < default_TotalTime) {
+                        pauseTimerFunction(default_PauseTime, update_Time);
+                        pauseTimer.start();
+                    }
+
+                }
+            };
+            return studyTimer;
+
+        }
+
+        public CountDownTimer pauseTimerFunction ( long millisInFuture, long countDownInterval){
+
+            pauseTimer = new CountDownTimer(millisInFuture, countDownInterval) {
+
+                public void onTick(long millisUntilFinished) {
+                    pauseTimerIsRunning = true;
+                    textView.setText("Paus " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
+                    secondsUntilFinished = millisUntilFinished;
+                    timePassed += 100;
                 }
 
-            }
-        };
-        return studyTimer;
+                @Override
+                public void onFinish() {
+                    pauseTimerIsRunning = false;
+                    if (timePassed < default_TotalTime) {
+                        studyTimerFunction(default_StudyTime, update_Time);
+                        studyTimer.start();
+                    }
 
-    }
-
-    public CountDownTimer pauseTimerFunction(long millisInFuture, long countDownInterval) {
-
-        pauseTimer = new CountDownTimer(millisInFuture, countDownInterval) {
-
-            public void onTick(long millisUntilFinished) {
-                pauseTimerIsRunning = true;
-                textView.setText("Paus " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
-                secondsUntilFinished = millisUntilFinished;
-                timePassed += 100;
-            }
-
-            @Override
-            public void onFinish() {
-                pauseTimerIsRunning = false;
-                if (timePassed < default_TotalTime) {
-                    studyTimerFunction(default_StudyTime, update_Time);
-                    studyTimer.start();
                 }
+            };
+            return pauseTimer;
 
+        }
+
+
+        public void startTimer () {
+            if (startButton.getText().equals("Starta Timer")) {
+                calculateStudySession();
+                studyTimerFunction(default_StudyTime, 100);
+                studyTimer.start();
+                buttonText = "Paus";
+                startButton.setText("Paus");
+            } else if (startButton.getText().equals("Paus")) {
+                cancelOneOfTimers();
+                startButton.setText("Återuppta");
+                buttonText = "Återuppta";
+            } else if (startButton.getText().equals("Återuppta")) {
+                handleTimeFromService(timePassed);
+                startButton.setText("Paus");
+                buttonText = "Paus";
             }
-        };
-        return pauseTimer;
-
-    }
+        }
 
 
-    public void startTimer() {
-        if (startButton.getText().equals("Starta Timer")) {
-            calculateStudySession();
-            studyTimerFunction(default_StudyTime, 100);
-            studyTimer.start();
-            buttonText = "Paus";
-            startButton.setText("Paus");
-        } else if (startButton.getText().equals("Paus")) {
+        protected void handleTimeFromService ( long timeFromService){
+            this.timePassed = timeFromService;
+            long countOut = 0;
+            boolean lastWasStudy = true;
+            while (countOut <= timeFromService) {
+                if (lastWasStudy) {
+                    countOut += default_StudyTime;
+                    lastWasStudy = false;
+                } else {
+                    countOut += default_PauseTime;
+                    lastWasStudy = true;
+                }
+            }
+            countOut = countOut - timeFromService;
+            if (lastWasStudy) {
+                pauseTimerFunction(countOut, update_Time);
+                pauseTimer.start();
+            } else {
+                studyTimerFunction(countOut, update_Time);
+                studyTimer.start();
+            }
+
+        }
+
+
+        public void resetTimer () {
+            timePassed = 0;
             cancelOneOfTimers();
-            startButton.setText("Återuppta");
-            buttonText="Återuppta";
-        } else if (startButton.getText().equals("Återuppta")) {
-            handleTimeFromService(timePassed);
-            startButton.setText("Paus");
-            buttonText="Paus";
-        }
-    }
+            startButton.setText("Starta Timer");
+            textView.setText("Studera " + (default_StudyTime / 1000) / 60 + ":" + (default_StudyTime / 1000) % 60);
 
-
-    protected void handleTimeFromService(long timeFromService) {
-        this.timePassed=timeFromService;
-        long countOut = 0;
-        boolean lastWasStudy = true;
-        while(countOut<=timeFromService){
-            if(lastWasStudy){
-                countOut += default_StudyTime;
-                lastWasStudy = false;
-            }
-            else{
-                countOut+=default_PauseTime;
-                lastWasStudy=true;
-            }
-        }
-        countOut=countOut-timeFromService;
-        if(lastWasStudy){
-            pauseTimerFunction(countOut,update_Time);
-            pauseTimer.start();
-        }
-        else{
-            studyTimerFunction(countOut,update_Time);
-            studyTimer.start();
         }
 
-    }
-
-
-    public void resetTimer() {
-        timePassed=0;
-        cancelOneOfTimers();
-        startButton.setText("Starta Timer");
-        textView.setText("Studera " + (default_StudyTime / 1000) / 60 + ":" + (default_StudyTime / 1000) % 60);
-
-    }
-
-    protected void cancelOneOfTimers() {
-        if (studyTimerIsRunning) {
-            studyTimer.cancel();
-            studyTimerIsRunning = false;
-        } else if (pauseTimerIsRunning) {
-            pauseTimer.cancel();
-            pauseTimerIsRunning = true;
+        protected void cancelOneOfTimers () {
+            if (studyTimerIsRunning) {
+                studyTimer.cancel();
+                studyTimerIsRunning = false;
+            } else if (pauseTimerIsRunning) {
+                pauseTimer.cancel();
+                pauseTimerIsRunning = true;
+            }
         }
-    }
 
-    public void settingsTimer() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.time_picker_dialog, null);
-        builder.setView(dialogView);
+        public void settingsTimer () {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            final View dialogView = inflater.inflate(R.layout.time_picker_dialog, null);
+            builder.setView(dialogView);
 
-        builder.setPositiveButton("Nästa", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
+            builder.setPositiveButton("Nästa", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
 
 
-                inputText = (TextView) dialogView.findViewById(R.id.inputTime);
-                inputTime = inputText.getText().toString();
-                nextDialog();
+                    inputText = (TextView) dialogView.findViewById(R.id.inputTime);
+                    inputTime = inputText.getText().toString();
+                    nextDialog();
 
+                }
+            });
+
+            builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    // Do nothing
+                }
+            });
+
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
+
+        private void nextDialog () {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            final View dialogView = inflater.inflate(R.layout.time_picker_dialog2, null);
+            builder.setView(dialogView);
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    nbrOfPausesInput = (TextView) dialogView.findViewById(R.id.nbrOfPausesInt);
+                    nbrOfPauses = nbrOfPausesInput.getText().toString();
+
+                    Log.d("Number of pauses", nbrOfPauses);
+
+                    pausLengthInput = (TextView) dialogView.findViewById(R.id.pausLengthInt);
+                    pausLength = pausLengthInput.getText().toString();
+                    textView.setText(inputTime + ":00");
+                    Log.d("PauseLengt", pausLength);
+                    parseFromDialog();
+                    resetTimer();
+
+
+                }
+            });
+
+            builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    // Cancel
+                }
+            });
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
+
+
+        public void parseFromDialog () {
+            try {
+                int timeFromDialog = Integer.parseInt(inputTime);
+                default_TotalTime = minToMilliSeconds(timeFromDialog);
+                int pauseFromDialog = Integer.parseInt(pausLength);
+                default_PauseTime = minToMilliSeconds(pauseFromDialog);
+                int numberOfPauses = Integer.parseInt(nbrOfPauses);
+                default_NumberOfPauses = (long) numberOfPauses;
+                calculateStudySession();
+
+
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
-        });
-
-        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // Do nothing
-            }
-        });
 
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
+        }
 
-    private void nextDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.time_picker_dialog2, null);
-        builder.setView(dialogView);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                nbrOfPausesInput = (TextView) dialogView.findViewById(R.id.nbrOfPausesInt);
-                nbrOfPauses = nbrOfPausesInput.getText().toString();
-
-                Log.d("Number of pauses", nbrOfPauses);
-
-                pausLengthInput = (TextView) dialogView.findViewById(R.id.pausLengthInt);
-                pausLength = pausLengthInput.getText().toString();
-                textView.setText(inputTime + ":00");
-                Log.d("PauseLengt", pausLength);
-                parseFromDialog();
-                resetTimer();
-
-
-            }
-        });
-
-        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // Cancel
-            }
-        });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
-
-    public void parseFromDialog() {
-        try {
-            int timeFromDialog = Integer.parseInt(inputTime);
-            default_TotalTime = minToMilliSeconds(timeFromDialog);
-            int pauseFromDialog = Integer.parseInt(pausLength);
-            default_PauseTime = minToMilliSeconds(pauseFromDialog);
-            int numberOfPauses = Integer.parseInt(nbrOfPauses);
-            default_NumberOfPauses = (long) numberOfPauses;
-            calculateStudySession();
-
-        } catch (Throwable e) {
-            e.printStackTrace();
+        public void onDestroyView () {
+            super.onDestroyView();
+            b = new Bundle();
+            b.putString("buttonText", buttonText);
         }
 
 
     }
-
-    public void onDestroyView () {
-        super.onDestroyView();
-        b= new Bundle();
-        b.putString("buttonText",buttonText);
-    }
-
-
-}
