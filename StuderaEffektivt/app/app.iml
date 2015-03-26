@@ -88,8 +88,8 @@
     <orderEntry type="library" exported="" name="MPAndroidChart-v2.0.7" level="project" />
     <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
-    <orderEntry type="library" exported="" name="android-week-view-1.2.1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="android-week-view-1.2.1" level="project" />
   </component>
 </module>
 
