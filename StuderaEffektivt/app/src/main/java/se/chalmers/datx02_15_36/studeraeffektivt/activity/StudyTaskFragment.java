@@ -52,7 +52,7 @@ public class StudyTaskFragment extends Fragment {
     private Bundle bundleFromPreviousFragment;
     private Course course;
 
-    //HashMap with the cahpters as keys and a list of tasks as the elements.
+    //HashMap with the chapters as keys and a list of tasks as the elements.
     private HashMap<Integer, ArrayList<StudyTask>> taskMap = new HashMap<>();
     ArrayList<StudyTask> studyTaskList;
 

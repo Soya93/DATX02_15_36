@@ -1,5 +1,6 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,10 +23,11 @@ public class CourseDetailedInfoFrag extends Fragment {
     private int selectedCourse;
     private View view;
     private Bundle bundleFromPreviousFragment;
-    private int containerId;
-
     private Button taskButton;
 
+    private String courseCode;
+
+    private int containerId;
     private ViewGroup container;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,6 +42,7 @@ public class CourseDetailedInfoFrag extends Fragment {
         bundleFromPreviousFragment = this.getArguments();
         containerId = bundleFromPreviousFragment.getInt("containerId");
         selectedCourse = bundleFromPreviousFragment.getInt("kurs");
+        courseCode = bundleFromPreviousFragment.getString("CourseCode");
         Course course = (Course) CourseFrag.courseList.get(selectedCourse).get("Courses");
 
 
@@ -80,10 +83,14 @@ public class CourseDetailedInfoFrag extends Fragment {
 
     public void goToTasks(Button button){
 
-        Fragment fragment = new StudyTaskFragment();
+        Intent i = new Intent(getActivity(), StudyTaskActivity.class);
+        i.putExtra("CourseCode", courseCode);
+        startActivity(i);
+
+        /*Fragment fragment = new StudyTaskFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putInt("kurs", selectedCourse);
+        bundle.putInt("course", selectedCourse);
         bundle.putString("key", (String) button.getText());
 
         fragment.setArguments(bundle);
@@ -93,6 +100,6 @@ public class CourseDetailedInfoFrag extends Fragment {
         fragmentTransaction.add(containerId, fragment);
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();*/
     }
 }

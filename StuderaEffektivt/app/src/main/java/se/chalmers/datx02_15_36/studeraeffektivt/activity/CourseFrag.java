@@ -160,8 +160,8 @@ public class CourseFrag extends Fragment {
     }
 
     public void goToDetails(Bundle bundle) {
-        //Fragment fragment = new CourseDetailedInfoFrag();
-        Fragment fragment = new StudyTaskFragment();
+        Fragment fragment = new CourseDetailedInfoFrag();
+        //Fragment fragment = new StudyTaskFragment();
 
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = this.getFragmentManager();
