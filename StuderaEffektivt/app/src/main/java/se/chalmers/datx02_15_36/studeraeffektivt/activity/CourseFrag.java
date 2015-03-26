@@ -152,6 +152,7 @@ public class CourseFrag extends Fragment {
                 selected = (int) courseList.indexOf(courseMap);
                 bundleToNextFragment.putInt("containerId", ((ViewGroup) container.getParent()).getId());
                 bundleToNextFragment.putInt("kurs", courseList.indexOf(courseMap));
+                bundleToNextFragment.putString("CourseCode", course1.getCourseCode());
                 goToDetails(bundleToNextFragment);
             }
         });

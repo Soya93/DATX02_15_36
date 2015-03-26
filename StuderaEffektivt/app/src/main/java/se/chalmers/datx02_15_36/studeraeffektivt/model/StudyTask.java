@@ -14,17 +14,14 @@ public class StudyTask extends CheckBox{
     public int chapter;
     public String taskString;
     public boolean isCompleted;
-    public Course course;
+    public String courseCode;
 
-    public StudyTask(Context context,Course course,int chapter, String taskString) {
+    public StudyTask(Context context,String courseCode,int chapter, String taskString) {
         super(context);
-        this.course = course;
+        this.courseCode = courseCode;
         this.chapter = chapter;
         this.taskString = taskString;
     }
-
-
-
 
     /*public StudyTask(){
         this.id = id;

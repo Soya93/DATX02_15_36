@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 
 /**
@@ -39,20 +41,25 @@ public class StudyTaskFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    //Components in the view
     private EditText taskInput;
     private TextView taskOutput;
     private Button addButton;
     private EditText chapterEditText;
     private EditText taskParts;
 
-    public String inputString;
-
+    //The bundle given from the fragment before this
     private Bundle bundleFromPreviousFragment;
+    private Course course;
 
-    private HashMap<Integer, ArrayList<String>> taskMap = new HashMap<>();
-    ArrayList<String> studyTaskList;
+    //HashMap with the cahpters as keys and a list of tasks as the elements.
+    private HashMap<Integer, ArrayList<StudyTask>> taskMap = new HashMap<>();
+    ArrayList<StudyTask> studyTaskList;
 
     private View view;
+
+    //The access point of the database.
+    private DBAdapter dbAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -99,7 +106,12 @@ public class StudyTaskFragment extends Fragment {
         bundleFromPreviousFragment = this.getArguments();
 
 
-        Log.d("StudyTaskFragment: ", "Nu skapades ett studytaskfragment");
+
+        //Create the database access point but check if the context is null first.
+        if (getActivity() != null) {
+            dbAdapter = new DBAdapter(getActivity());
+        }
+
 
         return rootView;
     }
@@ -119,6 +131,8 @@ public class StudyTaskFragment extends Fragment {
         taskParts = (EditText) view.findViewById(R.id.taskParts);
 
         addButton.setOnClickListener(myOnlyhandler);
+
+
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
@@ -189,7 +203,10 @@ public class StudyTaskFragment extends Fragment {
                for(String s2 : stringlist){                         //För varje vihuv uppgift
                     elementToAdd = s2 + seperateTaskParts[i];       //Sätt ihop dessa Huvuduppgift 1 och deluppgift a blir 1a
                    if(!studyTaskList.contains(elementToAdd)){
-                       studyTaskList.add(elementToAdd);             //Lägger till dessa i listan för det aktuella kapitlet och elementet inte finns.
+                       studyTaskList.add(new StudyTask(getActivity(),
+                                             bundleFromPreviousFragment.getString("CourseCode"),
+                                             chapter,
+                                             elementToAdd));             //Lägger till dessa i listan för det aktuella kapitlet och elementet inte finns.
                    }
                 }
             }
@@ -198,7 +215,10 @@ public class StudyTaskFragment extends Fragment {
         else{
             for(String s : stringlist){         //För varje huvuduppgift
                 if(!studyTaskList.contains(s))  //Lägg till om den inte redan finns
-                studyTaskList.add(s);
+                studyTaskList.add(new StudyTask(getActivity(),
+                        bundleFromPreviousFragment.getString("CourseCode"),
+                        chapter,
+                        s));
             }
         }
 
@@ -208,18 +228,14 @@ public class StudyTaskFragment extends Fragment {
 
         Log.d("String för taskMap: ",taskMapString);
 
-        String uppgifter = "";
-
-        for(String s: studyTaskList){
-            uppgifter += s + " ";
         }
-
-        taskOutput.setText(uppgifter);
-
-    }
 
     public void deleteTask(String taskString){
         //if()
+    }
+
+    public void addToDatabase(){
+
     }
 
    /* @Override
