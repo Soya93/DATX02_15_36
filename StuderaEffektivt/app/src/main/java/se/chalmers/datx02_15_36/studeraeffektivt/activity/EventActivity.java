@@ -22,18 +22,14 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 public class EventActivity extends ActionBarActivity {
-    private View dialogView;
     private TextView startDate;
     private TextView startTime;
     private TextView endDate;
     private TextView endTime;
-    private CalendarFrag calendarFrag;
     private String title;
     private String location;
     private String description;
     private int notification;
-    private long startMillis;
-    private long endMillis;
     private Calendar calStart;
     private Calendar calEnd;
 
@@ -205,12 +201,6 @@ public class EventActivity extends ActionBarActivity {
         }
         */
 
-        //TODO fix stat and end date and time!
-
-
-
-
-
         this.finish();
 
     }
@@ -224,7 +214,7 @@ public class EventActivity extends ActionBarActivity {
     }
 
     public long getEndMillis() {
-        return endMillis;
+        return calEnd.getTimeInMillis();
     }
 
 
@@ -241,8 +231,9 @@ public class EventActivity extends ActionBarActivity {
     }
 
     public long getStartMillis() {
-        return startMillis;
+        return calStart.getTimeInMillis();
     }
+
 
 
 }
