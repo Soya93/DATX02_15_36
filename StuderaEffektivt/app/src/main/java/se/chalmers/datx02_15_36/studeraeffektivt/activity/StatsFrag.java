@@ -1,11 +1,15 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 /*
@@ -23,8 +27,11 @@ public class StatsFrag extends Fragment {
     private TextView hoursSpent;
     private TextView hoursLeft;
     private TextView hoursTotal;
+    private Spinner spinner;
 
     private DBAdapter dbAdapter;
+
+    private String currCourse;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +54,32 @@ public class StatsFrag extends Fragment {
         setHoursLeft();
         hoursTotal = (TextView) rootView.findViewById(R.id.hours_total_show);
         setHoursTotal();
+        spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
+        setCourses();
+    }
+
+    private void setCourses() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        Cursor cursor = dbAdapter.getCourses();
+        int cnameColumn = cursor.getColumnIndex("cname");
+        int ccodeColumn = cursor.getColumnIndex("_ccode");
+        while (cursor.moveToNext()) {
+            String ccode = cursor.getString(ccodeColumn);
+            String cname = cursor.getString(cnameColumn);
+            adapter.add(ccode + "-" + cname);
+        }
+
+    }
+
+    public void setSelectedCourse() {
+        String temp = spinner.getSelectedItem().toString();
+        String[] parts = temp.split("-");
+        this.currCourse = parts[0];
+        Log.d("selected course", currCourse);
+
     }
 
     private void setHoursSpent(){
@@ -63,6 +96,18 @@ public class StatsFrag extends Fragment {
         String timeTotal = " "+(dbAdapter.getTimeOnCourse("DDD111")/60)+" h";
         Log.i("DB", "time total: "+timeTotal);
         hoursTotal.setText(timeTotal);
+    }
+
+    public void onStart(){
+        super.onStart();
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setSelectedCourse();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
     }
 
     private void insertTestDataToDB() {

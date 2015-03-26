@@ -1,6 +1,5 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -113,7 +112,7 @@ public class TimerFrag extends Fragment {
         resetButton = (Button) rootView.findViewById(R.id.button_reset);
         startButton = (Button) rootView.findViewById(R.id.button_start_timer);
         textView = (TextView) rootView.findViewById(R.id.text_timer);
-        spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
         setCourses();
 
     }
