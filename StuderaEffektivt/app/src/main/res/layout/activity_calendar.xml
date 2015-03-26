@@ -33,7 +33,6 @@
         android:layout_height="80dp"
         android:text="Lägg till studiepass"
         android:id="@+id/button_add_study_session"
-        android:onClick="addStudySession"
         android:layout_alignBottom="@+id/weekView"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

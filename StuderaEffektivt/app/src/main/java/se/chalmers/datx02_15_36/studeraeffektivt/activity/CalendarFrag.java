@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,15 +71,14 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.setNumberOfVisibleDays(5);
         hasOnMonthChange = false;
         mWeekView.goToHour(8.0);
+        this.initComponents();
         return view;
     }
 
     private void initComponents() {
         View.OnClickListener myOnlyhandler = new View.OnClickListener() {
             public void onClick(View v) {
-
                 goToButtonView((Button) v);
-
             }
         };
         studySession = (Button) view.findViewById(R.id.button_add_study_session);
@@ -222,7 +222,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 String description = ((TextView) dialogView.findViewById(R.id.description_input)).getText().toString();
                 String notification = ((EditText) dialogView.findViewById(R.id.notification_input)).getText().toString();
                 int minutes = -1;
-                if(notification!=null) {
+                if(notification!=null && !notification.isEmpty()) {
                    minutes = Integer.parseInt(notification);
                 }
                 calendarModel.editTitle(cr, eventID, title);
@@ -250,6 +250,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final View dialogView = inflater.inflate(R.layout.edit_event_dialog, null);
         builder.setView(dialogView);
 
+        Log.i("open", "yes");
+
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
@@ -261,10 +263,14 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 String title = ((TextView) dialogView.findViewById(R.id.title_input)).getText().toString();
                 String location = ((TextView) dialogView.findViewById(R.id.location_input)).getText().toString();
                 String description = ((TextView) dialogView.findViewById(R.id.description_input)).getText().toString();
-
-
+                String notification = ((EditText) dialogView.findViewById(R.id.notification_input)).getText().toString();
+                int minutes = -1;
+                if(notification!=null && !notification.isEmpty()) {
+                    minutes = Integer.parseInt(notification);
+                }
 
                 calendarModel.addEventAuto(cr, title, 0L, 0L, location, description, calID);
+                //TODO: Ta hänsyn till notifications
             }
         });
 
@@ -287,7 +293,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
         if(eventNameLabel!= null){
-            eventNameLabel.setText("Remove " + weekViewEvent.getName() + "?");
+            eventNameLabel.setText("Vill du verkligen ta bort " + weekViewEvent.getName() + "?");
         }
 
         builder.setView(dialogView);
@@ -295,6 +301,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
+                calendarModel.deleteEvent(cr, weekViewEvent.getId());
+
                 //TODO: Create a remove method
             }
         });
