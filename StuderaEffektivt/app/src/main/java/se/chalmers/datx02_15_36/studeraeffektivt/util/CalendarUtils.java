@@ -14,7 +14,8 @@ public class CalendarUtils {
             CalendarContract.Instances.EVENT_ID,      // 0
             CalendarContract.Instances.BEGIN,         // 1
             CalendarContract.Instances.TITLE,         // 2
-            CalendarContract.Instances.END            // 3
+            CalendarContract.Instances.END,            // 3
+            CalendarContract.Instances.EVENT_COLOR     // 4
     };
 
     // The indices for the projection array above for the events in the calendar
@@ -22,6 +23,7 @@ public class CalendarUtils {
     public static final int PROJECTION_BEGIN_INDEX = 1;
     public static final int PROJECTION_TITLE_INDEX = 2;
     public static final int PROJECTION_END_INDEX = 3;
+    public static final int PROJECTION_COLOR_INDEX = 4;
 
     /*Projection array for calendar of an account.
     Creating indices for this array instead of doing dynamic lookups improves performance.*/
