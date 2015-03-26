@@ -5,6 +5,5 @@
 
 *.bin
 taskArtifacts/
-taskArtifacts/
 dex-cache/
 intermediates/
