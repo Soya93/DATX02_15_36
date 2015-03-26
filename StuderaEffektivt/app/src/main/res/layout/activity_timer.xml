@@ -23,7 +23,7 @@
         android:id="@+id/button_start_timer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Starta timer"
+        android:text="Starta Timer"
         android:onClick="startTimer"
         android:layout_weight="0.10"
         android:layout_above="@+id/button_settings"
