@@ -2,16 +2,21 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Bundle;
+import android.database.Cursor;
 import android.os.CountDownTimer;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
@@ -35,7 +40,7 @@ public class TimerFrag extends Fragment {
     protected long default_NumberOfPauses = 1;
 
 
-    private final long update_Time = 1000;
+    private final long update_Time = 100;
     private TextView textView;
 
     protected boolean studyTimerIsRunning = false;
@@ -50,6 +55,13 @@ public class TimerFrag extends Fragment {
     private String inputTime;
     private String nbrOfPauses;
     private String pausLength;
+    private String buttonText = "Starta Timer";
+    private String ccode;
+    private String textViewText;
+
+    private Bundle b;
+    private Spinner spinner;
+
 
     private DBAdapter dbAdapter;
 
@@ -57,20 +69,66 @@ public class TimerFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_timer, container, false);
-        instantiate();
-
         if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
         }
+        instantiate();
+
 
         return rootView;
     }
 
 
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (b != null) {
+            textView = (TextView) rootView.findViewById(R.id.text_timer);
+            String text = b.getString("buttonText");
+            startButton.setText(text);
+            String textV = b.getString("textViewText");
+            textView.setText(textV);
+
+        }
+    }
+
+
+    public void onStart() {
+        super.onStart();
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setSelectedCourse();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
     private void instantiate() {
         resetButton = (Button) rootView.findViewById(R.id.button_reset);
         startButton = (Button) rootView.findViewById(R.id.button_start_timer);
         textView = (TextView) rootView.findViewById(R.id.text_timer);
+        spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
+        setCourses();
+
+    }
+
+    private void setCourses() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        Cursor cursor = dbAdapter.getCourses();
+        int cnameColumn = cursor.getColumnIndex("cname");
+        int ccodeColumn = cursor.getColumnIndex("_ccode");
+        while (cursor.moveToNext()) {
+            String ccode = cursor.getString(ccodeColumn);
+            String cname = cursor.getString(cnameColumn);
+            adapter.add(ccode + "-" + cname);
+        }
 
     }
 
@@ -84,6 +142,19 @@ public class TimerFrag extends Fragment {
         this.default_StudyTime = temp / (default_NumberOfPauses + 1);
     }
 
+    public void setSelectedCourse() {
+        String temp = spinner.getSelectedItem().toString();
+        String[] parts = temp.split("-");
+        this.ccode = parts[0];
+        Log.d("selected course", ccode);
+
+    }
+
+    private int milliSecondsToMin(long milliSeconds) {
+        return ((int) milliSeconds / 1000 / 60);
+    }
+
+
     /**
      * Set the timer.
      */
@@ -93,10 +164,8 @@ public class TimerFrag extends Fragment {
 
             public void onTick(long millisUntilFinished) {
                 studyTimerIsRunning = true;
-
-                textView.setText("Plugga " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
-
-
+                textViewText = ("Plugga " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
+                textView.setText(textViewText);
                 secondsUntilFinished = millisUntilFinished;
                 timePassed += 100;
             }
@@ -105,11 +174,12 @@ public class TimerFrag extends Fragment {
             public void onFinish() {
                 studyTimerIsRunning = false;
                 //Log session into database.
-                long inserted = dbAdapter.insertSession("DDD111", 50);
-                if(inserted > 0 && getActivity() != null){
-                    Toast toast = Toast.makeText(getActivity(), "Session: 50 minutes added to DDD111", Toast.LENGTH_SHORT);
+                long inserted = dbAdapter.insertSession(ccode, milliSecondsToMin(default_StudyTime));
+                if (inserted > 0 && getActivity() != null) {
+                    Toast toast = Toast.makeText(getActivity(), "Session:" + milliSecondsToMin(default_StudyTime)
+                            + "minutes added to " + ccode, Toast.LENGTH_SHORT);
                     toast.show();
-                }else if(getActivity() != null){
+                } else if (getActivity() != null) {
                     Toast toast = Toast.makeText(getActivity(), "Failed to add a Session", Toast.LENGTH_SHORT);
                     toast.show();
                 }
@@ -119,8 +189,9 @@ public class TimerFrag extends Fragment {
                     pauseTimerFunction(default_PauseTime, update_Time);
                     pauseTimer.start();
                 }
-
             }
+
+
         };
         return studyTimer;
 
@@ -132,7 +203,6 @@ public class TimerFrag extends Fragment {
 
             public void onTick(long millisUntilFinished) {
                 pauseTimerIsRunning = true;
-
                 textView.setText("Paus " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
                 secondsUntilFinished = millisUntilFinished;
                 timePassed += 100;
@@ -158,51 +228,51 @@ public class TimerFrag extends Fragment {
             calculateStudySession();
             studyTimerFunction(default_StudyTime, 100);
             studyTimer.start();
+            buttonText = "Paus";
             startButton.setText("Paus");
         } else if (startButton.getText().equals("Paus")) {
             cancelOneOfTimers();
             startButton.setText("Återuppta");
+            buttonText = "Återuppta";
         } else if (startButton.getText().equals("Återuppta")) {
             handleTimeFromService(timePassed);
             startButton.setText("Paus");
+            buttonText = "Paus";
         }
     }
 
 
     protected void handleTimeFromService(long timeFromService) {
-        long temp = 0;
         this.timePassed = timeFromService;
-        Log.d("timeFromService", "value" + timeFromService);
-        boolean isItStudy = true;
-        while (temp < timeFromService) {
-            if (isItStudy) {
-                temp += default_StudyTime;
-                isItStudy = false;
+        long countOut = 0;
+        boolean lastWasStudy = true;
+        while (countOut <= timeFromService) {
+            if (lastWasStudy) {
+                countOut += default_StudyTime;
+                lastWasStudy = false;
             } else {
-                temp += default_PauseTime;
-                isItStudy = true;
+                countOut += default_PauseTime;
+                lastWasStudy = true;
             }
         }
-        Log.d("isItStudy", "value" + isItStudy);
-        temp = temp - timeFromService;
-        Log.d("temp", "value" + temp);
-        if (isItStudy) {
-            pauseTimerFunction(temp, update_Time);
+        countOut = countOut - timeFromService;
+        if (lastWasStudy) {
+            pauseTimerFunction(countOut, update_Time);
             pauseTimer.start();
         } else {
-            studyTimerFunction(temp, update_Time);
+            studyTimerFunction(countOut, update_Time);
             studyTimer.start();
-
         }
 
     }
 
-
     public void resetTimer() {
+        timePassed = 0;
         cancelOneOfTimers();
-        startButton.setText("Starta Timer");
-        textView.setText("Studera " + (default_StudyTime / 1000) / 60 + ":" + (default_StudyTime / 1000) % 60);
-
+        buttonText = "Starta Timer";
+        startButton.setText(buttonText);
+        textViewText = "Studera " + (default_StudyTime / 1000) / 60 + ":" + (default_StudyTime / 1000) % 60;
+        textView.setText(textViewText);
     }
 
     protected void cancelOneOfTimers() {
@@ -292,6 +362,7 @@ public class TimerFrag extends Fragment {
             default_NumberOfPauses = (long) numberOfPauses;
             calculateStudySession();
 
+
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -299,6 +370,12 @@ public class TimerFrag extends Fragment {
 
     }
 
+    public void onDestroyView() {
+        super.onDestroyView();
+        b = new Bundle();
+        b.putString("buttonText", buttonText);
+        b.putString("textViewText", textViewText);
+    }
+
 
 }
-
