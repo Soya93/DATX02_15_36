@@ -83,7 +83,7 @@
              android:layout_width="fill_parent"
              android:layout_height="wrap_content"
              android:text="New ToggleButton"
-             android:id="@+id/toggleButton"
+             android:id="@+id/readOrTaskAssignment"
              android:textOff="Läsanvisningar"
              android:textOn="Uppgifter"
              android:layout_centerVertical="true"

@@ -41,7 +41,7 @@ public class StatsFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
 
-        insertTestDataToDB();
+        //insertTestDataToDB();
         instantiateView();
 
         return rootView;

@@ -1,5 +1,14 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+/*
+Saker att fixa är:
+
+Verkar inte hämta från databasen? gjorde det innan men inte nu, detta gäller för både courseDetailedInfoFrag och StudyTaskActivity, den andra button säger att det inte finns något där
+Göra så att bockade hamnar sist och obockade först.
+Ställa in så att man inte kan skriva in vad som helst i inputrutorna
+Uppdatera då man kryssar av en ruta, någon sortering
+ */
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
@@ -18,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +36,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 public class StudyTaskActivity extends ActionBarActivity {
@@ -37,8 +49,10 @@ public class StudyTaskActivity extends ActionBarActivity {
     private Button deleteButton;
     private EditText taskParts;
     //private LinearLayout layoutWithinScrollViewOfTasks;
-    private FlowLayout layoutWithinScrollViewOfTasks;
+    private FlowLayout listOfTasks;
+    private FlowLayout listOfReadAssignments;
     private Spinner chapterSpinner;
+    private ToggleButton readOrTaskAssignment;
 
     private Intent intentFromPreviousFragment;
 
@@ -93,16 +107,18 @@ public class StudyTaskActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void initComponents(){
+    public void initComponents() {
         addButton = (Button) findViewById(R.id.addButton);
         deleteButton = (Button) findViewById(R.id.deleteButton);
         taskInput = (EditText) findViewById(R.id.taskInput);
         taskParts = (EditText) findViewById(R.id.taskParts);
-        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
+        listOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
+        listOfReadAssignments = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfReadingAssignments);
         chapterSpinner = (Spinner) findViewById(R.id.chapterSpinner);
+        readOrTaskAssignment = (ToggleButton) findViewById(R.id.readOrTaskAssignment);
 
-        Integer[] items = new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50};
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this,android.R.layout.simple_spinner_item, items);
+        Integer[] items = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50};
+        ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, items);
         chapterSpinner.setAdapter(adapter);
 
         addTasksFromDatabase();
@@ -111,17 +127,20 @@ public class StudyTaskActivity extends ActionBarActivity {
         deleteButton.setOnClickListener(myOnlyhandler);
 
 
-
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
         public void onClick(View v) {
 
-            if(((Button) v)==addButton) {
+            if (((Button) v) == addButton) {
                 int chapter = Integer.parseInt(chapterSpinner.getSelectedItem().toString());
-                addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString());
-            }
-            else if(((Button) v)==deleteButton){
+                if(readOrTaskAssignment.isChecked()) {
+                    addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString());
+                }
+                else{
+                    addReadAssignment(chapter, taskInput.getText().toString());
+                }
+            } else if (((Button) v) == deleteButton) {
                 deleteTask(taskInput.getText().toString());
             }
 
@@ -137,7 +156,6 @@ public class StudyTaskActivity extends ActionBarActivity {
         String[] separateComma;
         String[] separateTaskParts;
         separateTaskParts = taskParts.split("");
-
 
 
         taskString.replaceAll("\\s+", "");
@@ -177,19 +195,21 @@ public class StudyTaskActivity extends ActionBarActivity {
             for (int i = 1; i < separateTaskParts.length; i++) {       //För varje deluppgift
                 for (String s2 : stringlist) {                         //För varje vihuv uppgift
                     elementToAdd = s2 + separateTaskParts[i];       //Sätt ihop dessa Huvuduppgift 1 och deluppgift a blir 1a
-                    addToListOfTasks(chapter, elementToAdd);
-                    addToDatabase(chapter, elementToAdd);
+                    StudyTask studyTask = new StudyTask(this, courseCode, chapter, elementToAdd, dbAdapter, AssignmentType.OTHER, null);
+                    addToListOfTasks(studyTask);
+                    addToDatabase(studyTask);
 
-                   // }
+                    // }
                 }
             }
         }
         //lägger till huvuduppgifterna då deluppgifter inte finns
         else {
             for (String s : stringlist) {         //För varje huvuduppgift
-                addToListOfTasks(chapter, s);
-                addToDatabase(chapter, s);
-               // }
+                StudyTask studyTask = new StudyTask(this, courseCode, chapter, s, dbAdapter, AssignmentType.OTHER, null);
+                addToListOfTasks(studyTask);
+                addToDatabase(studyTask);
+                // }
             }
 
             taskMap.put(chapter, studyTaskList);        //Uppdatera Hashmappen för nyckeln för kapitlet
@@ -201,7 +221,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         }
     }
 
-    public void addReadAssignment(int chapter, String taskString){
+    public void addReadAssignment(int chapter, String taskString) {
 
         String[] separateLine;
 
@@ -214,55 +234,96 @@ public class StudyTaskActivity extends ActionBarActivity {
             start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
             end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
-            dbAdapter.insertAssignment(courseCode, chapter, null, start, end);
-            //TODO: lägga till i en separat scrollview för läsanvisningar
+            StudyTask studyTask = new StudyTask(this, courseCode, chapter, start, end, dbAdapter, AssignmentType.READ, null);
+
+            addToDatabase(studyTask);
+            addToListOfTasks(studyTask);
+            //dbAdapter.insertAssignment(courseCode, chapter, null, start, end, AssignmentType.READ, null);
+            //listOfReadAssignments.addView(studyTask);
 
         } else {
-            dbAdapter.insertAssignment(courseCode, chapter, null, Integer.parseInt(taskString), Integer.parseInt(taskString));
+
+            StudyTask studyTask = new StudyTask(this, courseCode, chapter, Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, null);
+
+            addToDatabase(studyTask);
+            addToListOfTasks(studyTask);
+            //dbAdapter.insertAssignment(courseCode, chapter, null, Integer.parseInt(taskString), Integer.parseInt(taskString), AssignmentType.READ, null);
+            //listOfReadAssignments.addView(new StudyTask(this, courseCode, chapter, Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, false));
         }
 
     }
 
-    public void deleteTask(String taskString){
+    public void deleteTask(String taskString) {
         //TODO: Kolla om den finns i databasen och ta bort den
         Cursor cursor = dbAdapter.getAssignments();
         Log.d("Data hämtat från databasen: ", "" + cursor.getCount());
     }
 
-    public void addToListOfTasks(int chapter, String elementToAdd){
-        StudyTask studyTask = new StudyTask(this, courseCode, chapter, elementToAdd, dbAdapter, true); //TODO: sätta in rätt bool från databasen
-        /*studyTask.setOnLongClickListener(
-                new AdapterView.OnItemLongClickListener() {
+    /*public void addToListOfTasks(int chapter, String elementToAdd) {
+        StudyTask studyTask = new StudyTask(this, courseCode, chapter, elementToAdd, dbAdapter, , false); //TODO: sätta in rätt bool från databasen
+        //studyTask.setLongClickable(true);
+        listOfTasks.addView(studyTask);
+    }*/
 
-                    public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                                   int pos, long id) {
-                        // TODO Auto-generated method stub
+    public void addToListOfTasks(StudyTask studyTask) {
 
-                        Log.v("long clicked", "pos: " + pos);
-
-                        return true;
-                    }
-                }
-        );*/
-        studyTask.setLongClickable(true);
-        layoutWithinScrollViewOfTasks.addView(studyTask);
+        if(studyTask.getType().equals(AssignmentType.READ)){
+            listOfReadAssignments.addView(studyTask);
+        }
+        else{
+            listOfTasks.addView(studyTask);
+        }
     }
 
-    public void addToDatabase(int chapter, String elementToAdd){
-        //TODO: Lägga till om det är läsanvisningar eller räkneuppgifter
-        dbAdapter.insertAssignment(courseCode, chapter, elementToAdd, 0, 1);
+    /*public void addToDatabase(int chapter, String elementToAdd, int startPage, int endPage) {
 
+        dbAdapter.insertAssignment(courseCode, chapter, elementToAdd, startPage, endPage, AssignmentType.OTHER, null);
+    }*/
+
+    public void addToDatabase(StudyTask studyTask) {
+
+        dbAdapter.insertAssignment(
+                studyTask.getCourseCode(),
+                studyTask.getChapter(),
+                studyTask.getTaskString(),
+                studyTask.getStartPage(),
+                studyTask.getEndPage(),
+                studyTask.getType(),
+                studyTask.getStatus());
     }
 
-    public void addTasksFromDatabase(){
+    public void addTasksFromDatabase() {
 
         Cursor cursor = dbAdapter.getAssignments();
 
         ArrayList<StudyTask> checkedArray = new ArrayList<>();
         ArrayList<StudyTask> uncheckedArray = new ArrayList<>();
 
-        if(cursor!=null) {
+        boolean done;
+
+        if (cursor != null) {
             while (cursor.moveToNext()) {
+
+
+                if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE))
+                    done = true;
+                else
+                    done = false;
+
+                AssignmentStatus assignmentStatus;
+                AssignmentType assignmentType;
+                if(cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())){
+                    assignmentStatus = AssignmentStatus.DONE;
+                }
+                else{
+                    assignmentStatus = null;
+                }
+                if(cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ)){
+                    assignmentType = AssignmentType.READ;
+                }
+                else{
+                    assignmentType = AssignmentType.OTHER;
+                }
 
                 StudyTask studyTask = new StudyTask(
                         this,
@@ -270,28 +331,22 @@ public class StudyTaskActivity extends ActionBarActivity {
                         cursor.getInt(cursor.getColumnIndex("chapter")),
                         cursor.getString(cursor.getColumnIndex("assNr")),
                         dbAdapter,
-                        true);                                                      //TODO: sätta in rätt bool från databasen
+                        assignmentType,
+                        assignmentStatus);
 
-                if(studyTask.isChecked()){
+                if (studyTask.isChecked()) {
                     checkedArray.add(studyTask);
-                }
-                else
+                } else
                     uncheckedArray.add(studyTask);
 
+                for (StudyTask s : checkedArray) {
+                    listOfTasks.addView(s);
+                }
+                for (StudyTask s : uncheckedArray) {
+                    listOfTasks.addView(s);
+                }
 
-
-                /*layoutWithinScrollViewOfTasks.addView(new StudyTask(this,
-                        cursor.getString(cursor.getColumnIndex("_ccode")),
-                        cursor.getInt(cursor.getColumnIndex("chapter")),
-                        cursor.getString(cursor.getColumnIndex("assNr")), dbAdapter));*/
             }
-            for(StudyTask s : checkedArray){
-                layoutWithinScrollViewOfTasks.addView(s);
-            }
-            for(StudyTask s : uncheckedArray){
-                layoutWithinScrollViewOfTasks.addView(s);
-            }
-
         }
     }
 }

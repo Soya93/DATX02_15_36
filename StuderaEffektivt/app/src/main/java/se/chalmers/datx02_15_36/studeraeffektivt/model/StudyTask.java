@@ -8,6 +8,8 @@ import android.widget.CheckBox;
 import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 
 /**
  * Created by jesper on 2015-03-23.
@@ -19,19 +21,46 @@ public class StudyTask extends CheckBox{
     public String taskString;
     public boolean isCompleted;
     public String courseCode;
-    private boolean bool;
+    private int startPage;
+    private int endPage;
+
+    AssignmentType type;
+    AssignmentStatus status;
 
 
-    public StudyTask(Context context,String courseCode,int chapter, String taskString, DBAdapter dbAdapter, boolean bool) {
+    public AssignmentStatus getStatus() {
+        return status;
+    }
+
+    public StudyTask(Context context,String courseCode,int chapter, String taskString, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
         super(context);
         this.courseCode = courseCode;
         this.chapter = chapter;
         this.taskString = taskString;
-        this.bool = bool;
+        this.status = status;
+        this.type = type;
 
-        this.setChecked(bool);
+        if(status==AssignmentStatus.DONE) {
+            this.setChecked(true);
+        }
 
         super.setText(taskString);
+    }
+
+    public StudyTask(Context context,String courseCode,int chapter, int startPage, int endPage, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
+        super(context);
+        this.courseCode = courseCode;
+        this.chapter = chapter;
+        this.startPage = startPage;
+        this.endPage = endPage;
+        this.status = status;
+        this.type = type;
+
+        if(status==AssignmentStatus.DONE) {
+            this.setChecked(true);
+        }
+
+        setText(startPage + "-" + endPage);
     }
 
 
@@ -60,5 +89,58 @@ public class StudyTask extends CheckBox{
         return true;
     }
 
+    public AssignmentType getType(){
+        return type;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(int chapter) {
+        this.chapter = chapter;
+    }
+
+    public String getTaskString() {
+        return taskString;
+    }
+
+    public void setTaskString(String taskString) {
+        this.taskString = taskString;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public int getStartPage() {
+        return startPage;
+    }
+
+    public void setStartPage(int startPage) {
+        this.startPage = startPage;
+    }
+
+    public int getEndPage() {
+        return endPage;
+    }
+
+    public void setEndPage(int endPage) {
+        this.endPage = endPage;
+    }
 
 }

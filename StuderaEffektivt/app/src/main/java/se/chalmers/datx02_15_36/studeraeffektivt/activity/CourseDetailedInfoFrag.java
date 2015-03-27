@@ -19,6 +19,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 /**
@@ -104,13 +106,29 @@ public class CourseDetailedInfoFrag extends Fragment {
 
         if(cursor!=null) {
             while (cursor.moveToNext()) {
+
+                AssignmentStatus assignmentStatus;
+                AssignmentType assignmentType;
+                if(cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())){
+                    assignmentStatus = AssignmentStatus.DONE;
+                }
+                else{
+                    assignmentStatus = null;
+                }
+                if(cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ)){
+                    assignmentType = AssignmentType.READ;
+                }
+                else{
+                    assignmentType = AssignmentType.OTHER;
+                }
                 //TODO: Skall göra så att denna lägger in i olika listor baserat på om uppgiften är gjort eller inte och läggas upp efter det. Vill på något sätt även sortera detta.     Fixa
                 layoutWithinScrollViewOfTasks.addView(new StudyTask(getActivity(),
                         cursor.getString(cursor.getColumnIndex("_ccode")),
                         cursor.getInt(cursor.getColumnIndex("chapter")),
                         cursor.getString(cursor.getColumnIndex("assNr")),
                         dbAdapter,
-                        true));                                             //TODO: sätta in rätt bool från databasen
+                        assignmentType,
+                        assignmentStatus));                                             //TODO: sätta in rätt bool från databasen
             }
         }
     }
