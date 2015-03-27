@@ -8,8 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.CountDownTimer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -46,7 +44,7 @@ public class TimerFrag extends Fragment {
     private long secondsUntilFinished;
 
     protected long timePassed;
-    protected long default_TotalTime = (30 * 60 * 1000);
+    protected long default_TotalTime = (55 * 60 * 1000);
     protected long default_StudyTime = (25*60*1000);
     protected long default_PauseTime = (5 * 60 * 1000);
     protected long default_NumberOfPauses = 1;
@@ -182,12 +180,7 @@ public class TimerFrag extends Fragment {
 
                 public void onTick(long millisUntilFinished) {
                     studyTimerIsRunning = true;
-                    String sec = String.format("%02d",(millisUntilFinished / 1000) % 60);
-                    String min = String.format("%02d",(millisUntilFinished / 1000) / 60);
-                    textViewText = (min + ":" + sec);
-                    textView.setText(textViewText);
-                    progressBar.setProgress((int)(millisUntilFinished*1000/default_StudyTime));
-                    secondsUntilFinished = millisUntilFinished;
+                    setTimerView(millisUntilFinished);
                     timePassed += 100;
                 }
 
@@ -195,21 +188,10 @@ public class TimerFrag extends Fragment {
                 public void onFinish() {
                     timePassed +=300;
 
-                    progressBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
                     studyTimerIsRunning = false;
-                    Log.d("Timepassed", String.valueOf(default_TotalTime-timePassed));
-                    //Log session into database.
-                    long inserted = dbAdapter.insertSession(ccode, milliSecondsToMin(default_StudyTime));
-                    if (inserted > 0 && getActivity() != null) {
-                        Toast toast = Toast.makeText(getActivity(), "Session:" + milliSecondsToMin(default_StudyTime)
-                                + "minutes added to " + ccode, Toast.LENGTH_SHORT);
-                        toast.show();
-                    } else if (getActivity() != null) {
-                        Toast toast = Toast.makeText(getActivity(), "Failed to add a Session", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                    progressBar.setProgress(0);
+                    insertIntoDataBase();
 
+                    setProgressColor(Color.GREEN);
                     //Start pausetimer if time left.
                     if (timePassed < default_TotalTime) {
 
@@ -223,17 +205,31 @@ public class TimerFrag extends Fragment {
 
         }
 
+    private void insertIntoDataBase() {
+        long inserted = dbAdapter.insertSession(ccode, milliSecondsToMin(default_StudyTime));
+        if (inserted > 0 && getActivity() != null) {
+            Toast toast = Toast.makeText(getActivity(), "Session:" + milliSecondsToMin(default_StudyTime)
+                    + "minutes added to " + ccode, Toast.LENGTH_SHORT);
+            toast.show();
+        } else if (getActivity() != null) {
+            Toast toast = Toast.makeText(getActivity(), "Failed to add a Session", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
+    }
+
+    private void setProgressColor (int c) {
+        progressBar.getProgressDrawable().setColorFilter(c, PorterDuff.Mode.SRC_IN);
+        progressBar.setProgress(0);
+    }
+
         public CountDownTimer pauseTimerFunction ( long millisInFuture, long countDownInterval){
 
             pauseTimer = new CountDownTimer(millisInFuture, countDownInterval) {
 
                 public void onTick(long millisUntilFinished) {
                     pauseTimerIsRunning = true;
-                    String sec = String.format("%02d",(millisUntilFinished / 1000) % 60);
-                    String min = String.format("%02d",(millisUntilFinished / 1000) / 60);
-                    textViewText = (min + ":" + sec);
-                    textView.setText(textViewText);
-                    progressBar.setProgress((int)(millisUntilFinished*1000/default_PauseTime));
+                       setTimerView(millisUntilFinished);
                     timePassed += 100;
                 }
 
@@ -303,11 +299,18 @@ public class TimerFrag extends Fragment {
 
         }
 
+     public void setTimerView(long millisUntilFinished ) {
+         String sec = String.format("%02d", (millisUntilFinished / 1000) % 60);
+         String min = String.format("%02d", (millisUntilFinished / 1000) / 60);
+         textViewText = (min + ":" + sec);
+         textView.setText(textViewText);
+         progressBar.setProgress((int) (millisUntilFinished * 1000 / default_StudyTime));
+     }
 
         public void resetTimer () {
             timePassed = 0;
             cancelOneOfTimers();
-            textViewText = "Ställ in en tid";
+            setTimerView(default_StudyTime);
             textView.setText(textViewText);
             startButton.setImageResource(R.drawable.ic_start);
 
@@ -417,10 +420,12 @@ public class TimerFrag extends Fragment {
 
         public void onDestroyView () {
             super.onDestroyView();
+            saveFragmentState();
+        }
+
+        private void saveFragmentState() {
             b = new Bundle();
             b.putInt("buttonImage", buttonId);
             b.putString("textViewText" ,textViewText);
         }
-
-
     }
