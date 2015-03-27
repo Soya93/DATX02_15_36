@@ -103,18 +103,22 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
 
+        final String title = weekViewEvent.getName();
+
         //Get a cursor for the detailed information of the event
-        long startTime = weekViewEvent.getStartTime().getTimeInMillis();
-        long endTime = weekViewEvent.getEndTime().getTimeInMillis();
+        final long startTime = weekViewEvent.getStartTime().getTimeInMillis();
+        final long endTime = weekViewEvent.getEndTime().getTimeInMillis();
         Cursor cur = calendarModel.getEventDetailedInfo(cr, startTime, endTime, weekViewEvent.getId());
 
+
+
         //Fetch information from the cursor
-        String location = cur.getString(CalendarUtils.EVENT_INFO_LOCATION);
-        String description = cur.getString(CalendarUtils.EVENT_INFO_DESCRIPTION);
+        final String location = cur.getString(CalendarUtils.EVENT_INFO_LOCATION);
+        final String description = cur.getString(CalendarUtils.EVENT_INFO_DESCRIPTION);
         String calendar = cur.getString(CalendarUtils.EVENT_INFO_CALENDAR);
         cur.close();
 
-        calendarView.updateEventInfoView(dialogView, weekViewEvent.getName(), startTime, endTime, location, description, calendar);
+        calendarView.updateEventInfoView(dialogView, title, startTime, endTime, location, description, calendar);
         builder.setView(dialogView);
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -126,7 +130,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                openEditEvent(weekViewEvent.getId());
+                openEditEvent(weekViewEvent.getId(), startTime, endTime, title, location, description);
             }
         });
 
@@ -138,25 +142,27 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private void openAddEvent() {
         eventActivity = new EventActivity();
         eventActivity.setCalendarFrag(this);
-       // eventActivity.setInAddMode(true);
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         intent.putExtra("isInAddMode", true);
         startActivity(intent);
     }
 
     //Opens an dialog when pressing the buttom for adding a new event
-    private void openEditEvent(long eventID) {
+    private void openEditEvent(long eventID, long statTime, long endTime, String title, String location, String description) {
         //Get all neccesary information about the event
 
         //send it further to the event activity
 
         eventActivity = new EventActivity();
         eventActivity.setCalendarFrag(this);
-        //eventActivity.setInAddMode(false);
-       // eventActivity.setCurEventID(eventID);
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         intent.putExtra("isInAddMode", false);
         intent.putExtra("eventID", eventID);
+        intent.putExtra("startTime" , statTime);
+        intent.putExtra("endTime", endTime);
+        intent.putExtra("title", title);
+        intent.putExtra("location", location);
+        intent.putExtra("description", description);
         startActivity(intent);
     }
 
@@ -172,45 +178,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         calendarModel.addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
         //TODO: Ta hänsyn till notifications
     }
-/*
-    public void openEditEventDialog(final long eventID) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.edit_event_dialog, null);
-        builder.setView(dialogView);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                long calID = 1;
-
-                //long statTime =;
-                // long endTime = ;
-                String title = ((TextView) dialogView.findViewById(R.id.title_input)).getText().toString();
-                String location = ((TextView) dialogView.findViewById(R.id.location_input)).getText().toString();
-                String description = ((TextView) dialogView.findViewById(R.id.description_input)).getText().toString();
-                String notification = ((EditText) dialogView.findViewById(R.id.notification_input)).getText().toString();
-                int minutes = -1;
-                if (notification != null && !notification.isEmpty()) {
-                    minutes = Integer.parseInt(notification);
-                }
-                calendarModel.editTitle(cr, eventID, title);
-                calendarModel.editLocation(cr, eventID, location);
-                calendarModel.editDescription(cr, eventID, description);
-                calendarModel.addNotification(cr, eventID, minutes);
-            }
-        });
-
-        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // Cancel
-            }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-    */
 
 
     @Override

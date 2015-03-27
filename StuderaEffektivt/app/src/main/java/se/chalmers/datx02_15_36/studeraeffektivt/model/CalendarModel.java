@@ -332,6 +332,7 @@ public class CalendarModel {
             minutes = Integer.parseInt(notification);
         }
         */
+
         editStartTime(cr, eventID, startMillis);
         editEndTime(cr, eventID, endMillis);
         editTitle(cr, eventID, title);
@@ -339,10 +340,7 @@ public class CalendarModel {
         editDescription(cr, eventID, description);
         //addNotification(cr, eventID, minutes);
 
-        // get the event ID that is the last element in the Uri
-        //long id = Long.parseLong(uri.getLastPathSegment());
-        //
-        // ... do something with event ID
+
         return eventID;
 
     }

@@ -23,12 +23,17 @@ public class EventActivity extends ActionBarActivity {
     private TextView startTime;
     private TextView endDate;
     private TextView endTime;
+    private TextView titleView;
+    private TextView locationView;
+    private TextView descriptionView;
     private String title;
     private String location;
     private String description;
     private int notification;
     private Calendar calStart;
     private Calendar calEnd;
+    private long startTimeM;
+    private long endTimeM;
     private CalendarFrag calendarFrag;
     private long curEventID;
 
@@ -41,10 +46,13 @@ public class EventActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         calendarFrag = new CalendarFrag();
-        //isInAddMode = savedInstanceState.getBoolean("isInAddMode");
-        //curEventID = savedInstanceState.getLong("eventID");
         isInAddMode = getIntent().getBooleanExtra("isInAddMode", true);
         curEventID = getIntent().getLongExtra("eventID", 0L);
+        startTimeM = getIntent().getLongExtra("statTime", 0L);
+        endTimeM = getIntent().getLongExtra("endTime", 0L);
+        title = getIntent().getStringExtra("title");
+        location = getIntent().getStringExtra("location");
+        description = getIntent().getStringExtra("description");
         initComponents();
     }
 
@@ -81,6 +89,15 @@ public class EventActivity extends ActionBarActivity {
             }
         };
 
+        titleView = (TextView) findViewById(R.id.title_input);
+        titleView.setText(title);
+
+        locationView = (TextView) findViewById(R.id.location_input);
+        locationView.setText(location);
+
+        descriptionView = (TextView) findViewById(R.id.description_input);
+        descriptionView.setText(description);
+
         startDate = (TextView) findViewById(R.id.start_date_input);
         startDate.setOnClickListener(myTextViewHandler);
 
@@ -93,12 +110,21 @@ public class EventActivity extends ActionBarActivity {
         endTime = (TextView) findViewById(R.id.end_time_input);
         endTime.setOnClickListener(myTextViewHandler);
 
-        startDate.setText(CalendarUtils.DAY + "/" + CalendarUtils.MONTH + "/"
-                + CalendarUtils.YEAR);
-        endDate.setText(CalendarUtils.DAY + "/" + CalendarUtils.MONTH + "/"
-                + CalendarUtils.YEAR);
-        startTime.setText(CalendarUtils.HOUR + ":" + CalendarUtils.MINUTE);
-        endTime.setText(CalendarUtils.HOUR +1 + ":" + CalendarUtils.MINUTE);
+
+        if (isInAddMode) {
+            startDate.setText(CalendarUtils.DAY + "/" + CalendarUtils.MONTH + "/"
+                    + CalendarUtils.YEAR);
+            endDate.setText(CalendarUtils.DAY + "/" + CalendarUtils.MONTH + "/"
+                    + CalendarUtils.YEAR);
+            startTime.setText(CalendarUtils.HOUR + ":" + CalendarUtils.MINUTE);
+            endTime.setText(CalendarUtils.HOUR +1 + ":" + CalendarUtils.MINUTE);
+        } else {
+            startDate.setText(startTimeM +"");
+            endDate.setText(endTimeM +"");
+
+        }
+
+
 
         calStart = Calendar.getInstance();
         calEnd = Calendar.getInstance();
