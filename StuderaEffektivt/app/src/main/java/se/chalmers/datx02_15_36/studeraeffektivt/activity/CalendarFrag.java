@@ -116,6 +116,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final String location = cur.getString(CalendarUtils.EVENT_INFO_LOCATION);
         final String description = cur.getString(CalendarUtils.EVENT_INFO_DESCRIPTION);
         String calendar = cur.getString(CalendarUtils.EVENT_INFO_CALENDAR);
+        final int calID = cur.getInt(CalendarUtils.CALENDAR_ID);
         cur.close();
 
         calendarView.updateEventInfoView(dialogView, title, startTime, endTime, location, description, calendar);
@@ -130,7 +131,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                openEditEvent(weekViewEvent.getId(), startTime, endTime, title, location, description);
+                openEditEvent(weekViewEvent.getId(), startTime, endTime, title, location, description, calID);
             }
         });
 
@@ -148,7 +149,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
     //Opens an dialog when pressing the buttom for adding a new event
-    private void openEditEvent(long eventID, long statTime, long endTime, String title, String location, String description) {
+    private void openEditEvent(long eventID, long statTime, long endTime, String title, String location, String description, int calID) {
         //Get all neccesary information about the event
 
         //send it further to the event activity
@@ -163,18 +164,16 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         intent.putExtra("title", title);
         intent.putExtra("location", location);
         intent.putExtra("description", description);
+        intent.putExtra("calID", calID);
         startActivity(intent);
     }
 
-    public void editEvent(ContentResolver cr, String title, long startMillis, long endMillis, String location, String description, long eventID) {
-        long calID = 1;
-
+    public void editEvent(ContentResolver cr, String title, long startMillis, long endMillis, String location, String description, long eventID, long calID) {
         calendarModel.editEventAuto(cr, title, startMillis, endMillis, location, description, calID, eventID);
     }
 
     //Adds an event to the calendar with the specified inputs
-    public void addEvent(String title, String location, String description, long startMillis, long endMillis, ContentResolver cr) {
-        long calID = 1;
+    public void addEvent(String title, String location, String description, long startMillis, long endMillis, ContentResolver cr, long calID) {
         calendarModel.addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
         //TODO: Ta hänsyn till notifications
     }

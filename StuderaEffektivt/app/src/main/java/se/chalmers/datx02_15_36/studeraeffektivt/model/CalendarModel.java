@@ -148,36 +148,41 @@ public class CalendarModel {
      * Returns the calendar of a user specified by its google email.
      *
      * @param cr
-     * @param accountEmail
-     * @param accountType
      */
-    public List<String> getCalendars(ContentResolver cr, String accountEmail, String accountType) {
-        uri = CalendarContract.Calendars.CONTENT_URI;
-        String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
-                + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
-                + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))";
-        String[] selectionArgs = new String[]{accountEmail, accountType,
-                accountEmail};
-        // Submit the query and get a Cursor object back.
-        cur = cr.query(uri, CalendarUtils.EVENT_PROJECTION, selection, selectionArgs, null);
+    public List<String> getCalendars(ContentResolver cr) {
 
         List<String> calendars = new ArrayList<String>();
 
-        int i = 0;
-        while (cur.moveToNext()) {
-
-            calendars.add(cur.getColumnName(i));
-
-            Log.d("title: ", cur.getColumnName(i));
-            i++;
+        String[] projection = {CalendarContract.Calendars._ID,
+                CalendarContract.Calendars.NAME,
+                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+                CalendarContract.Calendars.CALENDAR_TIME_ZONE,
+                CalendarContract.Calendars.CALENDAR_COLOR,
+                CalendarContract.Calendars.IS_PRIMARY,
+                CalendarContract.Calendars.VISIBLE};
+        String selection = String.format("%s = 1", CalendarContract.Calendars.VISIBLE);
+        Cursor c = cr.query(CalendarContract.Calendars.CONTENT_URI,
+                projection,
+                selection,
+                null, null);
+        while(c.moveToNext()) {
+            // the cursor, c, contains all the projection data items
+            // access the cursor’s contents by array index as declared in
+            // your projection
+            long id = c.getLong(0);
+            String name = c.getString(1);
+            calendars.add(name);
 
         }
-        cur.close();
+        c.close();
+
+
         return calendars;
+
     }
 
     public List<String> getRepAlt(ContentResolver cr, String accountEmail, String accountType) {
-        List<String> events = getCalendars(cr, accountEmail, accountType);
+        List<String> events = getCalendars(cr);
         List<String> studySessions = filter(events, "Studiepass");
         return studySessions;
     }

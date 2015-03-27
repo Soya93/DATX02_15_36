@@ -77,6 +77,20 @@ public class CalendarUtils {
     public static final int MINUTE = cal.get(Calendar.MINUTE);
 
 
+    public static final String[] CALENDAR_PROJECTION = new String[] {
+            CalendarContract.Instances.CALENDAR_ID,                 // 0
+            CalendarContract.Instances.CALENDAR_DISPLAY_NAME,       //1
+            CalendarContract.Instances.CALENDAR_COLOR               //2
+
+    };
+
+    // The indices for the projection array above for the events in the calendar
+    public static final int CALENDAR_ID = 0;
+    public static final int CALENDAR_DISPLAY_NAME = 1;
+    public static final int CALENDAR_COLOR = 2;
+
+
+
 
     public static String formatDate(long dateInMillis){
         Date date=new Date(dateInMillis);
