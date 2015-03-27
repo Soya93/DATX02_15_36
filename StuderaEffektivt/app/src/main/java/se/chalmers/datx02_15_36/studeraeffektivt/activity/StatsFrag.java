@@ -31,7 +31,7 @@ public class StatsFrag extends Fragment {
 
     private DBAdapter dbAdapter;
 
-    private String currCourse;
+    private String currCourse = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,21 +41,23 @@ public class StatsFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
 
-        //insertTestDataToDB();
+        insertTestDataToDB();
         instantiateView();
 
         return rootView;
     }
 
     private void instantiateView(){
+        spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
+        spinner.setSelection(0);
+        setCourses();
+
         hoursSpent = (TextView) rootView.findViewById(R.id.hours_spent_show);
         setHoursSpent();
         hoursLeft = (TextView) rootView.findViewById(R.id.hours_left_show);
         setHoursLeft();
         hoursTotal = (TextView) rootView.findViewById(R.id.hours_total_show);
         setHoursTotal();
-        spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
-        setCourses();
     }
 
     private void setCourses() {
@@ -74,26 +76,29 @@ public class StatsFrag extends Fragment {
 
     }
 
-    public void setSelectedCourse() {
+    public void setSelectedCourse(){
+        spinner.setSelection(0);
+        Log.i("DB", "Spinner: "+spinner);
+        Log.i("DB", "SelectedItem: "+spinner.getSelectedItem());
         String temp = spinner.getSelectedItem().toString();
         String[] parts = temp.split("-");
         this.currCourse = parts[0];
-        Log.d("selected course", currCourse);
-
     }
 
     private void setHoursSpent(){
-        String timeSpent = " "+(dbAdapter.getSpentTime("DDD111")/60)+" h";
+        setSelectedCourse();
+        Log.d("currCourse in stats", "_"+currCourse+"_");
+        String timeSpent = " "+(dbAdapter.getSpentTime(currCourse)/60)+" h";
         hoursSpent.setText(timeSpent);
     }
 
     private void setHoursLeft(){
-        String timeLeft = " "+((dbAdapter.getTimeOnCourse("DDD111")/60)-(dbAdapter.getSpentTime("DDD111")/60))+" h";
+        String timeLeft = " "+((dbAdapter.getTimeOnCourse(currCourse)/60)-(dbAdapter.getSpentTime(currCourse)/60))+" h";
         hoursLeft.setText(timeLeft);
     }
 
     private void setHoursTotal(){
-        String timeTotal = " "+(dbAdapter.getTimeOnCourse("DDD111")/60)+" h";
+        String timeTotal = " "+(dbAdapter.getTimeOnCourse(currCourse)/60)+" h";
         Log.i("DB", "time total: "+timeTotal);
         hoursTotal.setText(timeTotal);
     }
