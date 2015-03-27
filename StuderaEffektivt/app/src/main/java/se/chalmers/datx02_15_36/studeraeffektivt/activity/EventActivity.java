@@ -161,6 +161,7 @@ public class EventActivity extends ActionBarActivity {
         startTime.setText(startHour + ":" + startMinute);
         endTime.setText(endHour + ":" + endMinute);
 
+
         calStart = Calendar.getInstance();
         calEnd = Calendar.getInstance();
         calEnd.set(Calendar.HOUR_OF_DAY, endHour);
@@ -302,7 +303,10 @@ public class EventActivity extends ActionBarActivity {
             toast.show();
         } else {
 
-            calStart.getTime();
+            //calStart.set(startYear, startMonth, startDay, startHour, startMinute);
+            //calEnd.set(endYear, endMonth, endDay, endHour, endMinute);
+
+
             calendarFrag.editEvent(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, curEventID);
 
             onBackPressed();
