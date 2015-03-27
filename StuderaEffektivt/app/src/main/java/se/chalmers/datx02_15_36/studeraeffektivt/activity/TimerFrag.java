@@ -4,6 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.CountDownTimer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,8 +36,11 @@ public class TimerFrag extends Fragment {
     protected CountDownTimer studyTimer;
     protected CountDownTimer pauseTimer;
 
-    private Button startButton;
-    private Button resetButton;
+    private ImageButton startButton;
+    private ImageButton resetButton;
+    private ImageButton pauseButton;
+
+    private int buttonId;
 
     private long chosenSeconds;
     private long secondsUntilFinished;
@@ -57,7 +67,6 @@ public class TimerFrag extends Fragment {
     private String inputTime;
     private String nbrOfPauses;
     private String pausLength;
-    private String buttonText = "Starta Timer";
     private String ccode;
     private String textViewText;
 
@@ -87,11 +96,12 @@ public class TimerFrag extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (b != null) {
-            textView = (TextView) rootView.findViewById(R.id.text_timer);
-            String text = b.getString("buttonText");
-            startButton.setText(text);
+            textView = (TextView) rootView.findViewById(R.id.textView);
             String textV = b.getString("textViewText");
             textView.setText(textV);
+            int buttonId= b.getInt("buttonImage");
+            Log.d("Värdet", String.valueOf(buttonId));
+            startButton.setImageResource(buttonId);
 
         }
     }
@@ -99,6 +109,7 @@ public class TimerFrag extends Fragment {
 
     public void onStart () {
         super.onStart();
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -114,12 +125,12 @@ public class TimerFrag extends Fragment {
     }
 
     private void instantiate() {
-        resetButton = (Button) rootView.findViewById(R.id.button_reset);
-        startButton = (Button) rootView.findViewById(R.id.button_start_timer);
-        textView = (TextView) rootView.findViewById(R.id.text_timer);
+       resetButton = (ImageButton) rootView.findViewById(R.id.button_reset);
+        startButton = (ImageButton) rootView.findViewById(R.id.button_start_timer);
+        textView = (TextView) rootView.findViewById(R.id.textView);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        setCourses();
+       setCourses();
 
     }
 
@@ -159,7 +170,7 @@ public class TimerFrag extends Fragment {
 
         private void calculateStudySession () {
             long temp = (default_TotalTime - (default_NumberOfPauses * default_PauseTime));
-            this.default_StudyTime = temp / (default_NumberOfPauses + 1);
+            this.default_StudyTime = (temp / (default_NumberOfPauses + 1));
         }
 
         /**
@@ -171,16 +182,22 @@ public class TimerFrag extends Fragment {
 
                 public void onTick(long millisUntilFinished) {
                     studyTimerIsRunning = true;
-                    textViewText = ("Plugga " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
+                    String sec = String.format("%02d",(millisUntilFinished / 1000) % 60);
+                    String min = String.format("%02d",(millisUntilFinished / 1000) / 60);
+                    textViewText = (min + ":" + sec);
                     textView.setText(textViewText);
-                    progressBar.setProgress((int)(timePassed*100/default_StudyTime));
+                    progressBar.setProgress((int)(millisUntilFinished*1000/default_StudyTime));
                     secondsUntilFinished = millisUntilFinished;
                     timePassed += 100;
                 }
 
                 @Override
                 public void onFinish() {
+                    timePassed +=300;
+
+                    progressBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
                     studyTimerIsRunning = false;
+                    Log.d("Timepassed", String.valueOf(default_TotalTime-timePassed));
                     //Log session into database.
                     long inserted = dbAdapter.insertSession(ccode, milliSecondsToMin(default_StudyTime));
                     if (inserted > 0 && getActivity() != null) {
@@ -191,9 +208,11 @@ public class TimerFrag extends Fragment {
                         Toast toast = Toast.makeText(getActivity(), "Failed to add a Session", Toast.LENGTH_SHORT);
                         toast.show();
                     }
+                    progressBar.setProgress(0);
 
                     //Start pausetimer if time left.
                     if (timePassed < default_TotalTime) {
+
                         pauseTimerFunction(default_PauseTime, update_Time);
                         pauseTimer.start();
                     }
@@ -210,13 +229,18 @@ public class TimerFrag extends Fragment {
 
                 public void onTick(long millisUntilFinished) {
                     pauseTimerIsRunning = true;
-                    textView.setText("Paus " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
-                    secondsUntilFinished = millisUntilFinished;
+                    String sec = String.format("%02d",(millisUntilFinished / 1000) % 60);
+                    String min = String.format("%02d",(millisUntilFinished / 1000) / 60);
+                    textViewText = (min + ":" + sec);
+                    textView.setText(textViewText);
+                    progressBar.setProgress((int)(millisUntilFinished*1000/default_PauseTime));
                     timePassed += 100;
                 }
 
                 @Override
                 public void onFinish() {
+                    progressBar.getProgressDrawable().setColorFilter(Color.parseColor("#ff523799"), PorterDuff.Mode.SRC_IN);
+                    timePassed +=300;
                     pauseTimerIsRunning = false;
                     if (timePassed < default_TotalTime) {
                         studyTimerFunction(default_StudyTime, update_Time);
@@ -231,22 +255,28 @@ public class TimerFrag extends Fragment {
 
 
         public void startTimer () {
-            if (startButton.getText().equals("Starta Timer")) {
-                calculateStudySession();
-                studyTimerFunction(default_StudyTime, 100);
-                studyTimer.start();
-                buttonText = "Paus";
-                startButton.setText("Paus");
-            } else if (startButton.getText().equals("Paus")) {
-                cancelOneOfTimers();
-                startButton.setText("Återuppta");
-                buttonText = "Återuppta";
-            } else if (startButton.getText().equals("Återuppta")) {
-                handleTimeFromService(timePassed);
-                startButton.setText("Paus");
-                buttonText = "Paus";
+            if(!studyTimerIsRunning && !pauseTimerIsRunning) {
+                if (timePassed == 0) {
+                    calculateStudySession();
+                    studyTimerFunction(default_StudyTime, update_Time);
+                    studyTimer.start();
+
+                }
+                else {
+                    handleTimeFromService(timePassed);
+                }
+               buttonId = R.drawable.ic_pause;
+                startButton.setImageResource(buttonId);
             }
-        }
+            else if(studyTimerIsRunning || pauseTimerIsRunning){
+                cancelOneOfTimers();
+                buttonId = R.drawable.ic_start;
+                startButton.setImageResource(buttonId);
+
+            }
+
+
+            }
 
 
         protected void handleTimeFromService ( long timeFromService){
@@ -277,10 +307,9 @@ public class TimerFrag extends Fragment {
         public void resetTimer () {
             timePassed = 0;
             cancelOneOfTimers();
-            buttonText = "Starta Timer";
-            startButton.setText(buttonText);
             textViewText = "Ställ in en tid";
             textView.setText(textViewText);
+            startButton.setImageResource(R.drawable.ic_start);
 
         }
 
@@ -296,6 +325,8 @@ public class TimerFrag extends Fragment {
         }
 
         public void settingsTimer () {
+            timePassed=0;
+            cancelOneOfTimers();
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             LayoutInflater inflater = getActivity().getLayoutInflater();
             final View dialogView = inflater.inflate(R.layout.time_picker_dialog, null);
@@ -337,12 +368,9 @@ public class TimerFrag extends Fragment {
                     nbrOfPausesInput = (TextView) dialogView.findViewById(R.id.nbrOfPausesInt);
                     nbrOfPauses = nbrOfPausesInput.getText().toString();
 
-                    Log.d("Number of pauses", nbrOfPauses);
-
                     pausLengthInput = (TextView) dialogView.findViewById(R.id.pausLengthInt);
                     pausLength = pausLengthInput.getText().toString();
                     textView.setText(inputTime + ":00");
-                    Log.d("PauseLengt", pausLength);
                     parseFromDialog();
                     resetTimer();
 
@@ -383,7 +411,7 @@ public class TimerFrag extends Fragment {
         public void onDestroyView () {
             super.onDestroyView();
             b = new Bundle();
-            b.putString("buttonText", buttonText);
+            b.putInt("buttonImage", buttonId);
             b.putString("textViewText" ,textViewText);
         }
 
