@@ -94,7 +94,7 @@ public class CalendarUtils {
 
     public static String formatDate(long dateInMillis){
         Date date=new Date(dateInMillis);
-        SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy");
+        SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy/hh/mm/ss");
         return df2.format(date);
     }
 

@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,8 +109,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final long endTime = weekViewEvent.getEndTime().getTimeInMillis();
         Cursor cur = calendarModel.getEventDetailedInfo(cr, startTime, endTime, weekViewEvent.getId());
 
-
-
         //Fetch information from the cursor
         final String location = cur.getString(CalendarUtils.EVENT_INFO_LOCATION);
         final String description = cur.getString(CalendarUtils.EVENT_INFO_DESCRIPTION);
@@ -149,7 +146,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
     //Opens an dialog when pressing the buttom for adding a new event
-    private void openEditEvent(long eventID, long statTime, long endTime, String title, String location, String description, int calID) {
+
+    private void openEditEvent(long eventID, long startTime, long endTime, String title, String location, String description, int calID) {
+
         //Get all neccesary information about the event
 
         //send it further to the event activity
@@ -159,7 +158,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         intent.putExtra("isInAddMode", false);
         intent.putExtra("eventID", eventID);
-        intent.putExtra("startTime" , statTime);
+        intent.putExtra("startTime" , startTime);
         intent.putExtra("endTime", endTime);
         intent.putExtra("title", title);
         intent.putExtra("location", location);
@@ -225,7 +224,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             readEvents();
         }
         return eventList;
-
     }
 
     //Reads the events on the calendar from today until tomorrow
@@ -249,9 +247,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
             event.setColor(color);
 
-            if (!eventList.contains(event)) {
-                eventList.add(event);
-            }
+            eventList.add(event);
         }
         cur.close();
     }

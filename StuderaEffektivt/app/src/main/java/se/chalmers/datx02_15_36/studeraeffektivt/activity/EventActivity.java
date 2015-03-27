@@ -46,12 +46,27 @@ public class EventActivity extends ActionBarActivity {
     private long startTimeM;
     private long endTimeM;
     private long calendarID;
-    private CalendarFrag calendarFrag;
-    private long curEventID;
     private Bundle savedInstanceState;
 
-
+    private long startTimeMillis;
+    private long endTimeMillis;
+    private CalendarFrag calendarFrag;
+    private long curEventID;
     private boolean isInAddMode;
+
+    //Setting variables for the time/datepicker
+    private int startYear;
+    private int startMonth;
+    private int startDay;
+    private int startHour;
+    private int startMinute;
+
+
+    private int endYear;
+    private int endMonth;
+    private int endDay;
+    private int endHour;
+    private int endMinute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +75,8 @@ public class EventActivity extends ActionBarActivity {
         calendarFrag = new CalendarFrag();
         isInAddMode = getIntent().getBooleanExtra("isInAddMode", true);
         curEventID = getIntent().getLongExtra("eventID", 0L);
-        startTimeM = getIntent().getLongExtra("statTime", 0L);
-        endTimeM = getIntent().getLongExtra("endTime", 0L);
+        startTimeMillis = getIntent().getLongExtra("startTime", 0L);
+        endTimeMillis = getIntent().getLongExtra("endTime", 0L);
         title = getIntent().getStringExtra("title");
         location = getIntent().getStringExtra("location");
         description = getIntent().getStringExtra("description");
@@ -131,24 +146,51 @@ public class EventActivity extends ActionBarActivity {
         endTime = (TextView) findViewById(R.id.end_time_input);
         endTime.setOnClickListener(myTextViewHandler);
 
-
         if (isInAddMode) {
-            startDate.setText(CalendarUtils.DAY + "/" + CalendarUtils.MONTH + "/"
-                    + CalendarUtils.YEAR);
-            endDate.setText(CalendarUtils.DAY + "/" + CalendarUtils.MONTH + "/"
-                    + CalendarUtils.YEAR);
-            startTime.setText(CalendarUtils.HOUR + ":" + CalendarUtils.MINUTE);
-            endTime.setText(CalendarUtils.HOUR + 1 + ":" + CalendarUtils.MINUTE);
-        } else {
-            startDate.setText(startTimeM + "");
-            endDate.setText(endTimeM + "");
+            startYear = CalendarUtils.YEAR;
+            startMonth = CalendarUtils.MONTH + 1;
+            startDay = CalendarUtils.DAY;
+            startHour = CalendarUtils.HOUR;
+            startMinute = CalendarUtils.MINUTE;
 
+            endYear = CalendarUtils.YEAR;
+            endMonth = CalendarUtils.MONTH + 1;
+            endDay = CalendarUtils.DAY;
+            endHour = CalendarUtils.HOUR + 1;
+            endMinute = CalendarUtils.MINUTE;
+        } else {
+
+
+            Calendar c = Calendar.getInstance();
+
+            //Convert start time from millis
+            c.setTimeInMillis(startTimeMillis);
+            startYear = c.get(Calendar.YEAR);
+            startMonth = c.get(Calendar.MONTH) +1;
+            startDay = c.get(Calendar.DAY_OF_MONTH);
+            startHour = c.get(Calendar.HOUR_OF_DAY);
+            startMinute = c.get(Calendar.MINUTE);
+
+            //Convert end time from millis
+            c.setTimeInMillis(endTimeMillis);
+            endYear = c.get(Calendar.YEAR);
+            endMonth = c.get(Calendar.MONTH) + 1;
+            endDay = c.get(Calendar.DAY_OF_MONTH);
+            endHour = c.get(Calendar.HOUR_OF_DAY);
+            endMinute = c.get(Calendar.MINUTE);
         }
 
+        //Set the text of the labels accordingly
+        startDate.setText(startDay + "/" + startMonth + "/"
+                + startYear);
+        endDate.setText(endDay + "/" + endMonth + "/"
+                + endYear);
+        startTime.setText(startHour + ":" + startMinute);
+        endTime.setText(endHour + ":" + endMinute);
 
         calStart = Calendar.getInstance();
         calEnd = Calendar.getInstance();
-        calEnd.set(Calendar.HOUR_OF_DAY, CalendarUtils.HOUR + 1);
+        calEnd.set(Calendar.HOUR_OF_DAY, endHour);
     }
 
 
@@ -184,10 +226,6 @@ public class EventActivity extends ActionBarActivity {
 
                 break;
         }
-        Log.i("start h ", "" + calStart.get(Calendar.HOUR_OF_DAY) + ":" + calStart.get(Calendar.MINUTE));
-        Log.i("end h ", "" + calEnd.get(Calendar.HOUR_OF_DAY) + ":" + calEnd.get(Calendar.MINUTE));
-
-
     }
 
     public Dialog openCalendarPickerDialog(Bundle savedInstanceState) {
@@ -236,27 +274,43 @@ public class EventActivity extends ActionBarActivity {
             public void onDateSet(DatePicker view, int selectedYear,
                                   int selectedMonth, int selectedDay) {
                 String year1 = String.valueOf(selectedYear);
-                String month1 = String.valueOf(selectedMonth - 1);
+
+                String month1 = String.valueOf(selectedMonth + 1);
+
                 String day1 = String.valueOf(selectedDay);
 
                 if (isStart) {
-                    calStart.set(Integer.parseInt(year1), Integer.parseInt(month1), Integer.parseInt(day1));
+                    startYear = Integer.parseInt(year1);
+                    startMonth = Integer.parseInt(month1);
+                    startDay = Integer.parseInt(day1);
+                    calStart.set(startYear, startMonth, startDay);
                     startDate.setText(day1 + "/" + month1 + "/" + year1);
                 } else {
-                    calEnd.set(Integer.parseInt(year1), Integer.parseInt(month1), Integer.parseInt(day1));
+                    endYear = Integer.parseInt(year1);
+                    endMonth = Integer.parseInt(month1);
+                    endDay = Integer.parseInt(day1);
+                    calEnd.set(endYear, endMonth, endDay);
                     endDate.setText(day1 + "/" + month1 + "/" + year1);
                 }
             }
         };
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(EventActivity.this, datePickerListener, CalendarUtils.YEAR,
-                CalendarUtils.MONTH, CalendarUtils.DAY);
+        DatePickerDialog datePickerDialog;
+        if (isStart) {
+            datePickerDialog = new DatePickerDialog(EventActivity.this, datePickerListener, startYear,
+                    startMonth - 1, startDay);
+
+        } else {
+            datePickerDialog = new DatePickerDialog(EventActivity.this, datePickerListener, endYear,
+                    endMonth - 1, endDay);
+        }
+
         datePickerDialog.show();
-        datePickerDialog.setCancelable(false);
-        datePickerDialog.setTitle("Select the time");
+        datePickerDialog.setCancelable(true);
     }
 
     public void openTimePickerDialog(final boolean isStart) {
+
         TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
 
 
@@ -264,29 +318,37 @@ public class EventActivity extends ActionBarActivity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 String hour1 = String.valueOf(hourOfDay);
                 String minute1 = String.valueOf(minute);
-                Log.i("min", minute1);
-                Log.i("hour", hour1);
-
 
                 if (isStart) {
-                    calStart.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour1));
-                    calStart.set(Calendar.MINUTE, Integer.parseInt(minute1));
+                    startHour = Integer.parseInt(hour1);
+                    startMinute = Integer.parseInt(minute1);
+                    calStart.set(Calendar.HOUR_OF_DAY, startHour);
+                    calStart.set(Calendar.MINUTE, startMinute);
                     startTime.setText(hour1 + ":" + minute1);
+
                 } else {
-                    calEnd.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour1));
-                    calEnd.set(Calendar.MINUTE, Integer.parseInt(minute1));
+                    endHour = Integer.parseInt(hour1);
+                    endMinute = Integer.parseInt(minute1);
+                    calEnd.set(Calendar.HOUR_OF_DAY, endHour);
+                    calEnd.set(Calendar.MINUTE, endMinute);
                     endTime.setText(hour1 + ":" + minute1);
                 }
             }
         };
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(EventActivity.this,
-                R.style.Theme_IAPTheme, timePickerListener, CalendarUtils.HOUR,
-                CalendarUtils.MINUTE, true);
+        TimePickerDialog timePickerDialog;
+        if (isStart) {
+            timePickerDialog = new TimePickerDialog(EventActivity.this,
+                    R.style.Theme_IAPTheme, timePickerListener, startHour,
+                    startMinute, true);
+        } else {
+            timePickerDialog = new TimePickerDialog(EventActivity.this,
+                    R.style.Theme_IAPTheme, timePickerListener, endHour,
+                    endMinute, true);
+        }
 
         timePickerDialog.show();
-        timePickerDialog.setCancelable(false);
-        timePickerDialog.setTitle("Select the time");
+        timePickerDialog.setCancelable(true);
     }
 
     public void onOKButtonClicked(View v) {
@@ -303,7 +365,9 @@ public class EventActivity extends ActionBarActivity {
         */
         Log.i("ok button clicked", isInAddMode + "");
         if (isInAddMode) {
+
             calendarFrag.addEvent(title, location, description, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), getContentResolver(), calendarID);
+
 
             onBackPressed();
 
@@ -312,7 +376,13 @@ public class EventActivity extends ActionBarActivity {
             Toast toast = Toast.makeText(getApplicationContext(), text, duration);
             toast.show();
         } else {
+
             calendarFrag.editEvent(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, curEventID, calendarID);
+
+
+            //calStart.set(startYear, startMonth, startDay, startHour, startMinute);
+            //calEnd.set(endYear, endMonth, endDay, endHour, endMinute);
+
 
             onBackPressed();
 
@@ -328,16 +398,8 @@ public class EventActivity extends ActionBarActivity {
         onBackPressed();
     }
 
+
     public void setCalendarFrag(CalendarFrag calendarFrag) {
         this.calendarFrag = calendarFrag;
     }
-
-    public void setInAddMode(boolean isInAddMode) {
-        this.isInAddMode = isInAddMode;
-    }
-
-    public void setCurEventID(long curEventID) {
-        this.curEventID = curEventID;
-    }
 }
-

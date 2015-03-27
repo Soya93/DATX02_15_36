@@ -306,11 +306,8 @@ public class CalendarModel {
         startMillis = checkStartInterval(startMillis);
         endMillis = checkEndInterval(endMillis);
 
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.setTimeInMillis(startMillis);
-
-        Calendar endTime = Calendar.getInstance();
-        endTime.setTimeInMillis(endMillis);
+        Log.i("start", startMillis + "");
+        Log.i("end", endMillis + "");
 
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, startMillis);
@@ -344,10 +341,7 @@ public class CalendarModel {
         editLocation(cr, eventID, location);
         editDescription(cr, eventID, description);
         //addNotification(cr, eventID, minutes);
-
-
         return eventID;
-
     }
 
 
