@@ -2,11 +2,17 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 public class CalendarView {
 
@@ -20,7 +26,7 @@ public class CalendarView {
 
         TextView eventTimeLabel = (TextView) dialogView.findViewById(R.id.event_time_label);
         if (eventTimeLabel != null) {
-            eventTimeLabel.setText("Tid: " + startTime + " - " + endTime);
+            eventTimeLabel.setText("Tid: " + CalendarUtils.formatDate(startTime) + " - " + CalendarUtils.formatDate(endTime));
         }
 
         TextView eventLocationLabel = (TextView) dialogView.findViewById(R.id.event_location_label);

@@ -2,7 +2,9 @@ package se.chalmers.datx02_15_36.studeraeffektivt.util;
 
 import android.provider.CalendarContract;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * A class with constants for the Calendar model
@@ -73,6 +75,14 @@ public class CalendarUtils {
     public static final int DAY = cal.get(Calendar.DATE);
     public static final int HOUR = cal.get(Calendar.HOUR_OF_DAY);
     public static final int MINUTE = cal.get(Calendar.MINUTE);
+
+
+
+    public static String formatDate(long dateInMillis){
+        Date date=new Date(dateInMillis);
+        SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy");
+        return df2.format(date);
+    }
 
 
 
