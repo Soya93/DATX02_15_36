@@ -326,7 +326,7 @@ public class TimerFrag extends Fragment {
 
         public void settingsTimer () {
             timePassed=0;
-            cancelOneOfTimers();
+            resetTimer();
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             LayoutInflater inflater = getActivity().getLayoutInflater();
             final View dialogView = inflater.inflate(R.layout.time_picker_dialog, null);
@@ -372,7 +372,6 @@ public class TimerFrag extends Fragment {
                     pausLength = pausLengthInput.getText().toString();
                     textView.setText(inputTime + ":00");
                     parseFromDialog();
-                    resetTimer();
 
 
                 }
@@ -394,7 +393,15 @@ public class TimerFrag extends Fragment {
             try {
                 int timeFromDialog = Integer.parseInt(inputTime);
                 default_TotalTime = minToMilliSeconds(timeFromDialog);
-                int pauseFromDialog = Integer.parseInt(pausLength);
+                int pauseFromDialog;
+                if(pausLength.equals("")) {
+                    pauseFromDialog = 0;
+                }
+                else{
+                  pauseFromDialog = Integer.parseInt(pausLength);
+
+
+                }
                 default_PauseTime = minToMilliSeconds(pauseFromDialog);
                 int numberOfPauses = Integer.parseInt(nbrOfPauses);
                 default_NumberOfPauses = (long) numberOfPauses;
