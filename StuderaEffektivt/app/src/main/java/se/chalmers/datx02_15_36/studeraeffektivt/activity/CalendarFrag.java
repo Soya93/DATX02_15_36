@@ -59,7 +59,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private void initComponents() {
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
-                openAddEventDialog();
+                openAddEvent();
             }
         };
 
@@ -91,21 +91,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.notifyDatasetChanged();
     }
 
-    //Opens an dialog when pressing the buttom for adding a new event
-    private void openAddEventDialog() {
-        eventActivity = new EventActivity();
-        eventActivity.setCalendarFrag(this);
-        Intent intent = new Intent(getActivity(), eventActivity.getClass());
-        startActivity(intent);
-    }
-
-
-    //Adds an event to the calendar with the specified inputs
-    public void addEvent(String title, String location, String description, long startMillis, long endMillis, ContentResolver cr) {
-        long calID = 1;
-        calendarModel.addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
-        //TODO: Ta hänsyn till notifications
-    }
 
     //Reads all todays events, used in homescreen
     public List<String> getTodaysEvents() {
@@ -141,7 +126,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                openEditEventDialog(weekViewEvent.getId());
+                openEditEvent(weekViewEvent.getId());
             }
         });
 
@@ -150,15 +135,42 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
     //Opens an dialog when pressing the buttom for adding a new event
-    private void openEditEventDialog(long eventID) {
+    private void openAddEvent() {
+        eventActivity = new EventActivity();
+        eventActivity.setCalendarFrag(this);
+       // eventActivity.setInAddMode(true);
+        Intent intent = new Intent(getActivity(), eventActivity.getClass());
+        intent.putExtra("isInAddMode", true);
+        startActivity(intent);
+    }
+
+    //Opens an dialog when pressing the buttom for adding a new event
+    private void openEditEvent(long eventID) {
         //Get all neccesary information about the event
 
         //send it further to the event activity
 
         eventActivity = new EventActivity();
         eventActivity.setCalendarFrag(this);
+        //eventActivity.setInAddMode(false);
+       // eventActivity.setCurEventID(eventID);
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
+        intent.putExtra("isInAddMode", false);
+        intent.putExtra("eventID", eventID);
         startActivity(intent);
+    }
+
+    public void editEvent(ContentResolver cr, String title, long startMillis, long endMillis, String location, String description, long eventID) {
+        long calID = 1;
+
+        calendarModel.editEventAuto(cr, title, startMillis, endMillis, location, description, calID, eventID);
+    }
+
+    //Adds an event to the calendar with the specified inputs
+    public void addEvent(String title, String location, String description, long startMillis, long endMillis, ContentResolver cr) {
+        long calID = 1;
+        calendarModel.addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
+        //TODO: Ta hänsyn till notifications
     }
 /*
     public void openEditEventDialog(final long eventID) {

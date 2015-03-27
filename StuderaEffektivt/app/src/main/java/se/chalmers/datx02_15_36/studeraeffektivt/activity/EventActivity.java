@@ -30,12 +30,21 @@ public class EventActivity extends ActionBarActivity {
     private Calendar calStart;
     private Calendar calEnd;
     private CalendarFrag calendarFrag;
+    private long curEventID;
+
+
+
+    private boolean isInAddMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         calendarFrag = new CalendarFrag();
+        //isInAddMode = savedInstanceState.getBoolean("isInAddMode");
+        //curEventID = savedInstanceState.getLong("eventID");
+        isInAddMode = getIntent().getBooleanExtra("isInAddMode", true);
+        curEventID = getIntent().getLongExtra("eventID", 0L);
         initComponents();
     }
 
@@ -202,18 +211,39 @@ public class EventActivity extends ActionBarActivity {
             notification = Integer.parseInt(notificationString);
         }
         */
-        calendarFrag.addEvent(title, location, description, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), getContentResolver());
+        Log.i("ok button clicked", isInAddMode + "");
+        if(isInAddMode) {
+            calendarFrag.addEvent(title, location, description, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), getContentResolver());
 
-        onBackPressed();
+            onBackPressed();
 
-        CharSequence text = "Händelsen " + title + " har skapats";
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(getApplicationContext(), text, duration);
-        toast.show();
+            CharSequence text = "Händelsen " + title + " har skapats";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+            toast.show();
+        }else {
+            calendarFrag.editEvent(getContentResolver(),title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(),location,description, curEventID);
+
+            onBackPressed();
+
+            CharSequence text = "Händelsen " + title + " har redigerats";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+            toast.show();
+        }
+
     }
     public void onCancelButtonClicked(View v) {
         onBackPressed();
     }
     public void setCalendarFrag(CalendarFrag calendarFrag){ this.calendarFrag = calendarFrag; }
+
+    public void setInAddMode(boolean isInAddMode) {
+        this.isInAddMode = isInAddMode;
+    }
+
+    public void setCurEventID(long curEventID) {
+        this.curEventID = curEventID;
+    }
 }
 

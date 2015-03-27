@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 /**
@@ -323,6 +324,29 @@ public class CalendarModel {
         return eventID;
     }
 
+    public Long editEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, long eventID) {
+
+/*
+        int minutes = -1;
+        if (notification != null && !notification.isEmpty()) {
+            minutes = Integer.parseInt(notification);
+        }
+        */
+        editStartTime(cr, eventID, startMillis);
+        editEndTime(cr, eventID, endMillis);
+        editTitle(cr, eventID, title);
+        editLocation(cr, eventID, location);
+        editDescription(cr, eventID, description);
+        //addNotification(cr, eventID, minutes);
+
+        // get the event ID that is the last element in the Uri
+        //long id = Long.parseLong(uri.getLastPathSegment());
+        //
+        // ... do something with event ID
+        return eventID;
+
+    }
+
 
     //Builds a static Uri used for synchronizing
     static Uri asSyncAdapter(Uri uri, String account, String accountType) {
@@ -348,14 +372,14 @@ public class CalendarModel {
         cr.update(updateUri, values, null, null);
     }
 
-    public void editStartTime(ContentResolver cr, long eventID, long startMillis, long endMillis) {
+    public void editStartTime(ContentResolver cr, long eventID, long startMillis) {
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, startMillis);
         Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
         cr.update(updateUri, values, null, null);
     }
 
-    public void editEndTime(ContentResolver cr, long eventID, long startMillis, long endMillis) {
+    public void editEndTime(ContentResolver cr, long eventID, long endMillis) {
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTEND, endMillis);
         Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
