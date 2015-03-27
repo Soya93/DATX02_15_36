@@ -197,7 +197,7 @@ public class StudyTaskFragment extends Fragment {
         }
 
         //Lägger till deluppgifter om input för detta finns, tex a, b c.
-       if(seperateTaskParts.length > 1){
+      /* if(seperateTaskParts.length > 1){
             String elementToAdd;
             for(int i = 1; i< seperateTaskParts.length; i++){       //För varje deluppgift
                for(String s2 : stringlist){                         //För varje vihuv uppgift
@@ -220,7 +220,7 @@ public class StudyTaskFragment extends Fragment {
                         chapter,
                         s));
             }
-        }
+        }*/
 
         taskMap.put(chapter, studyTaskList);        //Uppdatera Hashmappen för nyckeln för kapitlet
 

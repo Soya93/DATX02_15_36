@@ -10,13 +10,29 @@
         android:layout_height="wrap_content"
         android:id="@+id/kursDetaljer"/>
 
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="250dp"
+        android:id="@+id/scrollViewOfTasks"
+        android:layout_below="@+id/kursDetaljer"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" >
+
+        <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            android:id="@+id/layoutWithinScrollViewOfTasks"></se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
+    </ScrollView>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Button"
         android:id="@+id/taskButton"
+        android:layout_below="@+id/scrollViewOfTasks"
         android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentRight="true"
+        />
 
 </RelativeLayout>

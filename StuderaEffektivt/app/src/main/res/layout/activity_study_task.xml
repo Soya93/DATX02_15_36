@@ -62,19 +62,6 @@
         <EditText
             android:layout_width="176dp"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
-            android:id="@+id/chapterEditText"
-            android:layout_gravity="left|bottom"
-            android:layout_below="@+id/addButton"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/deleteButton"
-            android:layout_toStartOf="@+id/deleteButton" />
-
-        <EditText
-            android:layout_width="176dp"
-            android:layout_height="wrap_content"
             android:ems="10"
             android:id="@+id/taskParts"
             android:layout_gravity="left|bottom"
@@ -106,17 +93,32 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="250dp"
         android:id="@+id/scrollViewOfTasks"
         android:layout_below="@+id/fourthLayout"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" >
-
         <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_centerHorizontal="true"
+            >
+
+        <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="horizontal"
-            android:id="@+id/layoutWithinScrollViewOfTasks"></LinearLayout>
+            android:layout_weight="1"
+            android:id="@+id/layoutWithinScrollViewOfTasks"></se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
+
+        <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:id="@+id/layoutWithinScrollViewOfReadingAssignments"></se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
+        </LinearLayout>
     </ScrollView>
 
 </RelativeLayout>

@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.internal.widget.AdapterViewCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 public class StudyTaskActivity extends ActionBarActivity {
 
@@ -32,10 +35,9 @@ public class StudyTaskActivity extends ActionBarActivity {
     private TextView taskOutput;
     private Button addButton;
     private Button deleteButton;
-    private EditText chapterEditText;
     private EditText taskParts;
-    private ScrollView scrollViewOfTasks;
-    private LinearLayout layoutWithinScrollViewOfTasks;
+    //private LinearLayout layoutWithinScrollViewOfTasks;
+    private FlowLayout layoutWithinScrollViewOfTasks;
     private Spinner chapterSpinner;
 
     private Intent intentFromPreviousFragment;
@@ -60,18 +62,12 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         courseCode = getIntent().getExtras().getString("CourseCode");
 
-        initComponents();
-
-       // bundleFromPreviousFragment = this.getArguments();
-
-
-
         //Create the database access point but check if the context is null first.
         if (this != null) {
             dbAdapter = new DBAdapter(this);
         }
 
-
+        initComponents();
     }
 
 
@@ -101,22 +97,15 @@ public class StudyTaskActivity extends ActionBarActivity {
         addButton = (Button) findViewById(R.id.addButton);
         deleteButton = (Button) findViewById(R.id.deleteButton);
         taskInput = (EditText) findViewById(R.id.taskInput);
-        //taskOutput = (TextView) findViewById(R.id.taskOutput);
-        chapterEditText = (EditText) findViewById(R.id.chapterEditText);
         taskParts = (EditText) findViewById(R.id.taskParts);
-        scrollViewOfTasks = (ScrollView) findViewById(R.id.scrollViewOfTasks);
-        layoutWithinScrollViewOfTasks = (LinearLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
+        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
         chapterSpinner = (Spinner) findViewById(R.id.chapterSpinner);
 
         Integer[] items = new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50};
         ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this,android.R.layout.simple_spinner_item, items);
         chapterSpinner.setAdapter(adapter);
 
-        Cursor cursor = dbAdapter.getAssignments();
-
-        while(cursor.moveToNext()){
-            layoutWithinScrollViewOfTasks.addView(new StudyTask(this,cursor.getString(cursor.getColumnIndex("ASSIGNMENTS_ccode")),cursor.getInt(cursor.getColumnIndex("ASSIGNMENTS_chapter")),cursor.getString(cursor.getColumnIndex("ASSIGNMENTS__assNr"))));
-        }
+        addTasksFromDatabase();
 
         addButton.setOnClickListener(myOnlyhandler);
         deleteButton.setOnClickListener(myOnlyhandler);
@@ -130,11 +119,6 @@ public class StudyTaskActivity extends ActionBarActivity {
 
             if(((Button) v)==addButton) {
                 int chapter = Integer.parseInt(chapterSpinner.getSelectedItem().toString());
-                /*if (chapterEditText.getText().equals("")) {
-                    chapter = 999;
-                } else {
-                    chapter = Integer.parseInt(chapterEditText.getText().toString());
-                }*/
                 addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString());
             }
             else if(((Button) v)==deleteButton){
@@ -144,11 +128,9 @@ public class StudyTaskActivity extends ActionBarActivity {
         }
     };
 
-    //Meod för att lägga till en uppgift
+    //Metod för att lägga till en uppgift
 
     public void addTask(int chapter, String taskString, String taskParts) {
-        //StudyTask studytask = new StudyTask(taskInput.getText().toString());
-        //ArrayList<String> studyTaskList = studytask.getlist();
 
         ArrayList<String> stringlist = new ArrayList();
         String[] separateLine;
@@ -163,13 +145,6 @@ public class StudyTaskActivity extends ActionBarActivity {
         int start;
         int end;
 
-        //Kolla om kapitlet man vill lägga till i redan finns bland uppgifterna, om inte: skapa en nyckel för detta kapitel
-
-        /*if (taskMap.containsKey(chapter)) {
-            studyTaskList = taskMap.get(chapter);
-        } else {
-            studyTaskList = new ArrayList<>();
-        }*/
 
         //Kollar om det finns kommatecken i input för uppgifter och separerar i så fall stringen så att alla element hamnar separat
         if (taskString.contains(",")) {
@@ -202,13 +177,9 @@ public class StudyTaskActivity extends ActionBarActivity {
             for (int i = 1; i < separateTaskParts.length; i++) {       //För varje deluppgift
                 for (String s2 : stringlist) {                         //För varje vihuv uppgift
                     elementToAdd = s2 + separateTaskParts[i];       //Sätt ihop dessa Huvuduppgift 1 och deluppgift a blir 1a
-                    /*if (!studyTaskList.contains(elementToAdd)) {
-                        studyTaskList.add(new StudyTask(this,
-                                this.bundleFromPreviousFragment.getString("CourseCode"),
-                                chapter,
-                                elementToAdd));             //Lägger till dessa i listan för det aktuella kapitlet och elementet inte finns.*/
-                        addToDatabase(chapter, elementToAdd);
-                    scrollViewOfTasks.addView(new StudyTask(this, courseCode, chapter, elementToAdd));
+                    addToListOfTasks(chapter, elementToAdd);
+                    addToDatabase(chapter, elementToAdd);
+
                    // }
                 }
             }
@@ -216,12 +187,8 @@ public class StudyTaskActivity extends ActionBarActivity {
         //lägger till huvuduppgifterna då deluppgifter inte finns
         else {
             for (String s : stringlist) {         //För varje huvuduppgift
-                /*if (!studyTaskList.contains(s)) {  //Lägg till om den inte redan finns
-                    studyTaskList.add(new StudyTask(this,
-                            this.bundleFromPreviousFragment.getString("CourseCode"),
-                            chapter,
-                            s));*/
-                    addToDatabase(chapter, s);
+                addToListOfTasks(chapter, s);
+                addToDatabase(chapter, s);
                // }
             }
 
@@ -234,13 +201,97 @@ public class StudyTaskActivity extends ActionBarActivity {
         }
     }
 
+    public void addReadAssignment(int chapter, String taskString){
+
+        String[] separateLine;
+
+        int start;
+        int end;
+
+        if (taskString.contains("-")) {
+
+            separateLine = taskString.split("-");   //Delar upp stringen till en array med elementen mellan bindesstrecken
+            start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
+            end = Integer.parseInt(separateLine[separateLine.length - 1]);
+
+            dbAdapter.insertAssignment(courseCode, chapter, null, start, end);
+            //TODO: lägga till i en separat scrollview för läsanvisningar
+
+        } else {
+            dbAdapter.insertAssignment(courseCode, chapter, null, Integer.parseInt(taskString), Integer.parseInt(taskString));
+        }
+
+    }
+
     public void deleteTask(String taskString){
+        //TODO: Kolla om den finns i databasen och ta bort den
         Cursor cursor = dbAdapter.getAssignments();
         Log.d("Data hämtat från databasen: ", "" + cursor.getCount());
     }
 
+    public void addToListOfTasks(int chapter, String elementToAdd){
+        StudyTask studyTask = new StudyTask(this, courseCode, chapter, elementToAdd, dbAdapter, true); //TODO: sätta in rätt bool från databasen
+        /*studyTask.setOnLongClickListener(
+                new AdapterView.OnItemLongClickListener() {
+
+                    public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                                   int pos, long id) {
+                        // TODO Auto-generated method stub
+
+                        Log.v("long clicked", "pos: " + pos);
+
+                        return true;
+                    }
+                }
+        );*/
+        studyTask.setLongClickable(true);
+        layoutWithinScrollViewOfTasks.addView(studyTask);
+    }
+
     public void addToDatabase(int chapter, String elementToAdd){
+        //TODO: Lägga till om det är läsanvisningar eller räkneuppgifter
         dbAdapter.insertAssignment(courseCode, chapter, elementToAdd, 0, 1);
-        layoutWithinScrollViewOfTasks.addView(new StudyTask(this, courseCode, chapter, elementToAdd));
+
+    }
+
+    public void addTasksFromDatabase(){
+
+        Cursor cursor = dbAdapter.getAssignments();
+
+        ArrayList<StudyTask> checkedArray = new ArrayList<>();
+        ArrayList<StudyTask> uncheckedArray = new ArrayList<>();
+
+        if(cursor!=null) {
+            while (cursor.moveToNext()) {
+
+                StudyTask studyTask = new StudyTask(
+                        this,
+                        cursor.getString(cursor.getColumnIndex("_ccode")),
+                        cursor.getInt(cursor.getColumnIndex("chapter")),
+                        cursor.getString(cursor.getColumnIndex("assNr")),
+                        dbAdapter,
+                        true);                                                      //TODO: sätta in rätt bool från databasen
+
+                if(studyTask.isChecked()){
+                    checkedArray.add(studyTask);
+                }
+                else
+                    uncheckedArray.add(studyTask);
+
+
+
+                /*layoutWithinScrollViewOfTasks.addView(new StudyTask(this,
+                        cursor.getString(cursor.getColumnIndex("_ccode")),
+                        cursor.getInt(cursor.getColumnIndex("chapter")),
+                        cursor.getString(cursor.getColumnIndex("assNr")), dbAdapter));*/
+            }
+            for(StudyTask s : checkedArray){
+                layoutWithinScrollViewOfTasks.addView(s);
+            }
+            for(StudyTask s : uncheckedArray){
+                layoutWithinScrollViewOfTasks.addView(s);
+            }
+
+        }
     }
 }

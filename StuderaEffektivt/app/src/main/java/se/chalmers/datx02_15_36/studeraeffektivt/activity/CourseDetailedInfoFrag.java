@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,10 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 /**
  * Created by SoyaPanda on 15-03-06.
@@ -24,43 +30,42 @@ public class CourseDetailedInfoFrag extends Fragment {
     private View view;
     private Bundle bundleFromPreviousFragment;
     private Button taskButton;
+    private ScrollView scrollViewOfTasks;
+    private FlowLayout layoutWithinScrollViewOfTasks;
 
     private String courseCode;
 
     private int containerId;
     private ViewGroup container;
 
+    private DBAdapter dbAdapter;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.activity_course_details, container, false);
         this.view = rootView;
-        this.container = container;
+        //this.container = container;
 
         initComponents();
 
         bundleFromPreviousFragment = this.getArguments();
-        containerId = bundleFromPreviousFragment.getInt("containerId");
+        //containerId = bundleFromPreviousFragment.getInt("containerId");
         selectedCourse = bundleFromPreviousFragment.getInt("kurs");
         courseCode = bundleFromPreviousFragment.getString("CourseCode");
         Course course = (Course) CourseFrag.courseList.get(selectedCourse).get("Courses");
 
+        //Create the database access point but check if the context is null first.
+        if (this != null) {
+            dbAdapter = new DBAdapter(getActivity());
+        }
+
+        addTasksFromDatabase();
 
         fillActivity(course);
 
         return rootView;
-        /*
-        view = inflater.inflate(R.layout.activity_course_details, container, false);
-        bundleFromPreviousFragment = this.getArguments();
-        containerId = bundleFromPreviousFragment.getInt("containerId");
-        selectedCourse = bundleFromPreviousFragment.getInt("kurs");
-        Course course = (Course) CourseFrag.courseList.get(selectedCourse).get("Courses");
-        kursDetaljer = (TextView) view.findViewById(R.id.kursDetaljer);
-        initComponents();
-        fillActivity(course);
-        this.container = container;
-        return view;*/
-    }
+        }
 
     public void fillActivity(Course course) {
         kursDetaljer.setText(course.toString());
@@ -71,6 +76,10 @@ public class CourseDetailedInfoFrag extends Fragment {
         taskButton.setOnClickListener(myOnlyhandler);
 
         kursDetaljer = (TextView) view.findViewById(R.id.kursDetaljer);
+
+        scrollViewOfTasks = (ScrollView) view.findViewById(R.id.scrollViewOfTasks);
+        layoutWithinScrollViewOfTasks = (FlowLayout) view.findViewById(R.id.layoutWithinScrollViewOfTasks);
+
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
@@ -87,19 +96,22 @@ public class CourseDetailedInfoFrag extends Fragment {
         i.putExtra("CourseCode", courseCode);
         startActivity(i);
 
-        /*Fragment fragment = new StudyTaskFragment();
+    }
 
-        Bundle bundle = new Bundle();
-        bundle.putInt("course", selectedCourse);
-        bundle.putString("key", (String) button.getText());
+    public void addTasksFromDatabase(){
 
-        fragment.setArguments(bundle);
-        FragmentManager fragmentManager = this.getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Cursor cursor = dbAdapter.getAssignments();
 
-        fragmentTransaction.add(containerId, fragment);
-        fragmentTransaction.hide(this);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();*/
+        if(cursor!=null) {
+            while (cursor.moveToNext()) {
+                //TODO: Skall göra så att denna lägger in i olika listor baserat på om uppgiften är gjort eller inte och läggas upp efter det. Vill på något sätt även sortera detta.     Fixa
+                layoutWithinScrollViewOfTasks.addView(new StudyTask(getActivity(),
+                        cursor.getString(cursor.getColumnIndex("_ccode")),
+                        cursor.getInt(cursor.getColumnIndex("chapter")),
+                        cursor.getString(cursor.getColumnIndex("assNr")),
+                        dbAdapter,
+                        true));                                             //TODO: sätta in rätt bool från databasen
+            }
+        }
     }
 }
