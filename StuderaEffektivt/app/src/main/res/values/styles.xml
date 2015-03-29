@@ -1,8 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- File created by the Android Action Bar Style Generator
+
+     Copyright (C) 2011 The Android Open Source Project
+     Copyright (C) 2012 readyState Software Ltd
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="Theme.Pluggapp" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarItemBackground">@drawable/selectable_background_pluggapp</item>
+        <item name="popupMenuStyle">@style/PopupMenu.Pluggapp</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.Pluggapp</item>
+        <item name="actionBarTabStyle">@style/ActionBarTabStyle.Pluggapp</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.Pluggapp</item>
+        <item name="actionBarStyle">@style/ActionBar.Solid.Pluggapp</item>
+        <item name="actionModeBackground">@drawable/cab_background_top_pluggapp</item>
+        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_pluggapp</item>
+        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Pluggapp</item>
+
+        <!-- Light.DarkActionBar specific -->
+        <item name="actionBarWidgetTheme">@style/Theme.Pluggapp.Widget</item>
+
+    </style>
+
+    <style name="ActionBar.Solid.Pluggapp" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="background">@drawable/ab_solid_pluggapp</item>
+        <item name="backgroundStacked">@drawable/ab_stacked_solid_pluggapp</item>
+        <item name="backgroundSplit">@drawable/ab_bottom_solid_pluggapp</item>
+        <item name="progressBarStyle">@style/ProgressBar.Pluggapp</item>
+    </style>
+
+    <style name="ActionBar.Transparent.Pluggapp" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="background">@drawable/ab_transparent_pluggapp</item>
+        <item name="progressBarStyle">@style/ProgressBar.Pluggapp</item>
+    </style>
+
+    <style name="PopupMenu.Pluggapp" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_pluggapp</item>
+    </style>
+
+    <style name="DropDownListView.Pluggapp" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_pluggapp</item>
+    </style>
+
+    <style name="ActionBarTabStyle.Pluggapp" parent="@style/Widget.AppCompat.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_pluggapp</item>
+    </style>
+
+    <style name="DropDownNav.Pluggapp" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
+        <item name="android:background">@drawable/spinner_background_ab_pluggapp</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_pluggapp</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_pluggapp</item>
+    </style>
+
+    <style name="ProgressBar.Pluggapp" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_pluggapp</item>
+    </style>
+
+    <style name="ActionButton.CloseMode.Pluggapp" parent="@style/Widget.AppCompat.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_pluggapp</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.Pluggapp.Widget" parent="@style/Theme.AppCompat">
+        <item name="popupMenuStyle">@style/PopupMenu.Pluggapp</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.Pluggapp</item>
     </style>
 
 </resources>
