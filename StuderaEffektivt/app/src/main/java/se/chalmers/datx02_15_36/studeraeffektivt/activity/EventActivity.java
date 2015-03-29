@@ -367,17 +367,15 @@ public class EventActivity extends ActionBarActivity {
         description = ((EditText) findViewById(R.id.description_input)).getText().toString();
 
         //TODO: Fix with notifications
-/*      String notificationString = ((EditText) dialogView.findViewById(R.id.notification_input)).getText().toString();
+        String notificationString = ((EditText) findViewById(R.id.notification_input)).getText().toString();
         notification = -1;
         if (notificationString != null && !notificationString.isEmpty()) {
             notification = Integer.parseInt(notificationString);
         }
-        */
         Log.i("ok button clicked", isInAddMode + "");
         if (isInAddMode) {
 
-            calendarFrag.addEvent(title, location, description, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), getContentResolver(), calendarID);
-
+            calendarFrag.addEvent(title, location, description, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), getContentResolver(), calendarID, notification);
 
             onBackPressed();
 
@@ -387,7 +385,7 @@ public class EventActivity extends ActionBarActivity {
             toast.show();
         } else {
 
-            calendarFrag.editEvent(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, curEventID, calendarID);
+            calendarFrag.editEvent(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, curEventID, calendarID, notification);
 
 
             //calStart.set(startYear, startMonth, startDay, startHour, startMinute);

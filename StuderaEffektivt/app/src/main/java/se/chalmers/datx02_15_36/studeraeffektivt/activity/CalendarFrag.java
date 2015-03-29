@@ -167,14 +167,14 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         startActivity(intent);
     }
 
-    public void editEvent(ContentResolver cr, String title, long startMillis, long endMillis, String location, String description, long eventID, long calID) {
-        calendarModel.editEventAuto(cr, title, startMillis, endMillis, location, description, calID, eventID);
+    public void editEvent(ContentResolver cr, String title, long startMillis, long endMillis, String location, String description, long eventID, long calID, int notification) {
+        calendarModel.editEventAuto(cr, title, startMillis, endMillis, location, description, calID, eventID, notification);
     }
 
     //Adds an event to the calendar with the specified inputs
-    public void addEvent(String title, String location, String description, long startMillis, long endMillis, ContentResolver cr, long calID) {
-        calendarModel.addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
-        //TODO: Ta hänsyn till notifications
+    public void addEvent(String title, String location, String description, long startMillis, long endMillis, ContentResolver cr, long calID, int notification) {
+        long id = calendarModel.addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
+        calendarModel.addNotification(cr, id, notification);
     }
 
 

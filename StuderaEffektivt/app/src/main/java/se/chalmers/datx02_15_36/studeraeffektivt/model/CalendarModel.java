@@ -309,22 +309,13 @@ public class CalendarModel {
         return eventID;
     }
 
-    public Long editEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, long eventID) {
-
-/*
-        int minutes = -1;
-        if (notification != null && !notification.isEmpty()) {
-            minutes = Integer.parseInt(notification);
-        }
-        */
-
+    public void editEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, long eventID, int notification) {
         editStartTime(cr, eventID, startMillis);
         editEndTime(cr, eventID, endMillis);
         editTitle(cr, eventID, title);
         editLocation(cr, eventID, location);
         editDescription(cr, eventID, description);
-        //addNotification(cr, eventID, minutes);
-        return eventID;
+        addNotification(cr, eventID, notification);
     }
 
 
