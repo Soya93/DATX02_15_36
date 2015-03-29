@@ -21,7 +21,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -43,8 +45,6 @@ public class EventActivity extends ActionBarActivity {
     private int notification;
     private Calendar calStart;
     private Calendar calEnd;
-    private long startTimeM;
-    private long endTimeM;
     private long calendarID;
     private Bundle savedInstanceState;
 
@@ -147,6 +147,8 @@ public class EventActivity extends ActionBarActivity {
         endTime.setOnClickListener(myTextViewHandler);
 
         if (isInAddMode) {
+            startTimeMillis = CalendarUtils.TODAY_IN_MILLIS;
+
             startYear = CalendarUtils.YEAR;
             startMonth = CalendarUtils.MONTH + 1;
             startDay = CalendarUtils.DAY;
@@ -158,9 +160,11 @@ public class EventActivity extends ActionBarActivity {
             endDay = CalendarUtils.DAY;
             endHour = CalendarUtils.HOUR + 1;
             endMinute = CalendarUtils.MINUTE;
+
+            CalendarUtils.cal.set(endYear, endMonth, endDay, endHour, endMinute);
+            endTimeMillis = CalendarUtils.cal.getTimeInMillis();
+
         } else {
-
-
             Calendar c = Calendar.getInstance();
 
             //Convert start time from millis
@@ -185,8 +189,14 @@ public class EventActivity extends ActionBarActivity {
                 + startYear);
         endDate.setText(endDay + "/" + endMonth + "/"
                 + endYear);
-        startTime.setText(startHour + ":" + startMinute);
-        endTime.setText(endHour + ":" + endMinute);
+
+      //  startTime.setText(startHour + ":" + startMinute);
+       // endTime.setText(String.format("%02d:%02d", endHour, endMinute));
+
+        SimpleDateFormat startFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat endFormat = new SimpleDateFormat("HH:mm");
+        startTime.setText(startFormat.format(new Date(startTimeMillis)));
+        endTime.setText(endFormat.format(new Date(endTimeMillis)));
 
         calStart = Calendar.getInstance();
         calEnd = Calendar.getInstance();

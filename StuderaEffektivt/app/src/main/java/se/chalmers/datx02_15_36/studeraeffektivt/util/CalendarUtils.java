@@ -69,12 +69,15 @@ public class CalendarUtils {
 
     public static final Calendar cal = Calendar.getInstance();
 
+
+
     //get todays date
     public static final int YEAR = cal.get(Calendar.YEAR);
     public static final int MONTH = cal.get(Calendar.MONTH);
     public static final int DAY = cal.get(Calendar.DATE);
     public static final int HOUR = cal.get(Calendar.HOUR_OF_DAY);
     public static final int MINUTE = cal.get(Calendar.MINUTE);
+    public static final long TODAY_IN_MILLIS = cal.getTimeInMillis();
 
 
     public static final String[] CALENDAR_PROJECTION = new String[] {
@@ -92,12 +95,9 @@ public class CalendarUtils {
 
 
 
-    public static String formatDate(long dateInMillis){
-        Date date=new Date(dateInMillis);
-        SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yy/hh/mm/ss");
-        return df2.format(date);
+    public static String formatDate(long startDateInMillis, long endDateInMillis){
+        SimpleDateFormat startFormat = new SimpleDateFormat("EEEE d MMMM, HH:mm");
+        SimpleDateFormat endFormat = new SimpleDateFormat("HH:mm");
+       return startFormat.format(new Date(startDateInMillis)) + "-" + endFormat.format(new Date(endDateInMillis));
     }
-
-
-
 }

@@ -228,7 +228,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     //Reads the events on the calendar from today until tomorrow
     private void readEvents() {
-        Cursor cur = calendarModel.getEventsCursor(cr, 0L, 0L);
+        Cursor cur = calendarModel.getEventsCursor(cr, CalendarUtils.TODAY_IN_MILLIS, 0L);
 
         while (cur.moveToNext()) {
             long id = cur.getLong(CalendarUtils.PROJECTION_ID_INDEX);

@@ -22,39 +22,22 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 public class CalendarModel {
 
     private Intent calIntent;
-    private Uri uri;
     private Calendar cal;
-    private Calendar todayDate;
-    private Calendar beginDay;
     private Calendar endDay;
-    private long startMillis;
-    private long endMillis;
-    private long todayMillis;
     private Cursor cur;
 
     public CalendarModel() {
-        uri = CalendarContract.Calendars.CONTENT_URI;
         cal = Calendar.getInstance();
-
-        //set todays date
-        todayDate = Calendar.getInstance();
-        todayDate.set(CalendarUtils.YEAR, CalendarUtils.MONTH, CalendarUtils.DAY);
-        todayMillis = todayDate.getTimeInMillis();
-
-        //set start DAY
-        beginDay = todayDate;
-        startMillis = todayDate.getTimeInMillis();
 
         //set end DAY
         endDay = Calendar.getInstance();
-        endDay.setTime(futureDate(beginDay.getTime(), 1));
-        endMillis = endDay.getTimeInMillis();
+        endDay.setTime(futureDate(CalendarUtils.cal.getTime(), 1));
 
         cur = null;
     }
 
     public List<String> readEventsToday(ContentResolver cr) {
-        return this.readEvents(cr, todayMillis, todayMillis);
+        return this.readEvents(cr, CalendarUtils.TODAY_IN_MILLIS, CalendarUtils.TODAY_IN_MILLIS);
     }
 
     public List<String> readEventsSunday(ContentResolver cr) {
@@ -132,7 +115,7 @@ public class CalendarModel {
      * @param startDate
      */
     private Long checkStartInterval(Long startDate) {
-        return startDate == 0L ? startMillis : startDate;
+        return startDate == 0L ? CalendarUtils.TODAY_IN_MILLIS : startDate;
     }
 
     /**
@@ -141,7 +124,7 @@ public class CalendarModel {
      * @param endDate
      */
     private Long checkEndInterval(Long endDate) {
-         return endDate == 0L ? endMillis : endDate;
+         return endDate == 0L ?  endDay.getTimeInMillis() : endDate;
     }
 
     /**

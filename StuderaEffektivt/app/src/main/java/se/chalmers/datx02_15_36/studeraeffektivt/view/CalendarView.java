@@ -26,7 +26,7 @@ public class CalendarView {
 
         TextView eventTimeLabel = (TextView) dialogView.findViewById(R.id.event_time_label);
         if (eventTimeLabel != null) {
-            eventTimeLabel.setText("Tid: " + CalendarUtils.formatDate(startTime) + " - " + CalendarUtils.formatDate(endTime));
+            eventTimeLabel.setText("Tid: " + CalendarUtils.formatDate(startTime, endTime));
         }
 
         TextView eventLocationLabel = (TextView) dialogView.findViewById(R.id.event_location_label);
@@ -35,7 +35,7 @@ public class CalendarView {
         }
 
         TextView eventDescriptionLabel = (TextView) dialogView.findViewById(R.id.event_description_label);
-        if (eventDescriptionLabel != null) {
+        if (eventDescriptionLabel != null || !description.isEmpty()) {
             eventDescriptionLabel.setText("Beskrivning: " + description);
         }
 
