@@ -16,13 +16,13 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
  */
 public class StudyTask extends CheckBox{
 
-    public int id;
     public int chapter;
     public String taskString;
     public boolean isCompleted;
     public String courseCode;
     private int startPage;
     private int endPage;
+    private String id;
 
     AssignmentType type;
     AssignmentStatus status;
@@ -40,6 +40,8 @@ public class StudyTask extends CheckBox{
         this.status = status;
         this.type = type;
 
+        this.id = courseCode + chapter + taskString;
+
         if(status==AssignmentStatus.DONE) {
             this.setChecked(true);
         }
@@ -56,6 +58,8 @@ public class StudyTask extends CheckBox{
         this.status = status;
         this.type = type;
 
+        this.id = courseCode + chapter + startPage + endPage;
+
         if(status==AssignmentStatus.DONE) {
             this.setChecked(true);
         }
@@ -63,6 +67,14 @@ public class StudyTask extends CheckBox{
         setText(startPage + "-" + endPage);
     }
 
+
+    public String getIdNr() {
+        return id;
+    }
+
+    public void setIdNr(String id) {
+        this.id = id;
+    }
 
     public boolean onTouch(View v, MotionEvent event) {
 
@@ -86,6 +98,7 @@ public class StudyTask extends CheckBox{
                 break;
         }
 
+
         return true;
     }
 
@@ -93,17 +106,7 @@ public class StudyTask extends CheckBox{
         return type;
     }
 
-    @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getChapter() {
+   public int getChapter() {
         return chapter;
     }
 

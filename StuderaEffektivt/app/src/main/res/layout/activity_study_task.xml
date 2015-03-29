@@ -19,7 +19,8 @@
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-
+            android:inputType="number"
+            android:digits="0123456789,-."
             android:id="@+id/taskInput" />
 
     </LinearLayout>
@@ -63,6 +64,8 @@
             android:layout_width="176dp"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:inputType="number"
+            android:digits="1234567890"
             android:id="@+id/taskParts"
             android:layout_gravity="left|bottom"
             android:layout_below="@+id/addButton"
@@ -81,7 +84,7 @@
 
         <ToggleButton
              android:layout_width="fill_parent"
-             android:layout_height="wrap_content"
+             android:layout_height="fill_parent"
              android:text="New ToggleButton"
              android:id="@+id/readOrTaskAssignment"
              android:textOff="Läsanvisningar"
@@ -91,34 +94,50 @@
              android:layout_toStartOf="@+id/taskParts" />
     </LinearLayout>
 
-    <ScrollView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="250dp"
-        android:id="@+id/scrollViewOfTasks"
+        android:layout_height="fill_parent"
+        android:id="@+id/fifthLayout"
         android:layout_below="@+id/fourthLayout"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" >
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_centerHorizontal="true"
-            >
+        android:layout_centerHorizontal="true"
+        android:weightSum="1">
+
+    <ScrollView
+        android:layout_width="10dp"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollViewOfTasks"
+        android:layout_weight="0.5"
+        android:layout_alignParentLeft="true"
+
+         >
 
         <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="horizontal"
-            android:layout_weight="1"
-            android:id="@+id/layoutWithinScrollViewOfTasks"></se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
+            android:id="@+id/layoutWithinScrollViewOfTasks">
+            </se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
 
-        <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:id="@+id/layoutWithinScrollViewOfReadingAssignments"></se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
-        </LinearLayout>
     </ScrollView>
+
+    <ScrollView
+        android:layout_width="10dp"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollViewOfReadingAssigmnents"
+        android:layout_weight="0.5"
+        android:layout_alignParentRight="true"
+        >
+
+           <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal"
+                android:id="@+id/layoutWithinScrollViewOfReadingAssignments">
+                </se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
+
+    </ScrollView>
+
+    </LinearLayout>
 
 </RelativeLayout>

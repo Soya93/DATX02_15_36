@@ -5,8 +5,10 @@ Saker att fixa är:
 
 Verkar inte hämta från databasen? gjorde det innan men inte nu, detta gäller för både courseDetailedInfoFrag och StudyTaskActivity, den andra button säger att det inte finns något där
 Göra så att bockade hamnar sist och obockade först.
-Ställa in så att man inte kan skriva in vad som helst i inputrutorna
 Uppdatera då man kryssar av en ruta, någon sortering
+göra så att något händer då man kryssar i en ruta. dI databas och för den specifika studytasken
+göra så att man inte kan lägga till flera lika dana uppgifter
+
  */
 
 import android.content.Intent;
@@ -303,12 +305,6 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-
-
-                if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE))
-                    done = true;
-                else
-                    done = false;
 
                 AssignmentStatus assignmentStatus;
                 AssignmentType assignmentType;
