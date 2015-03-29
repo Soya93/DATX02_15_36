@@ -74,7 +74,7 @@ public class DBAdapter {
         }
     }
 
-    public long deleteAssignment(int id){
+    public long deleteAssignment(String id){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         try{
@@ -84,7 +84,7 @@ public class DBAdapter {
         }
     }
 
-    public long setDone(int assignmentId){
+    public long setDone(String assignmentId){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -97,7 +97,7 @@ public class DBAdapter {
         }
     }
 
-    public long setUndone(int assignmentId){
+    public long setUndone(String assignmentId){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
 

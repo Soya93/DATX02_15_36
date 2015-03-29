@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -18,11 +20,11 @@ public class StudyTask extends CheckBox{
 
     public int chapter;
     public String taskString;
-    public boolean isCompleted;
     public String courseCode;
     private int startPage;
     private int endPage;
     private String id;
+    DBAdapter dbAdapter;
 
     AssignmentType type;
     AssignmentStatus status;
@@ -39,6 +41,7 @@ public class StudyTask extends CheckBox{
         this.taskString = taskString;
         this.status = status;
         this.type = type;
+        this.dbAdapter = dbAdapter;
 
         this.id = courseCode + chapter + taskString;
 
@@ -66,6 +69,8 @@ public class StudyTask extends CheckBox{
 
         setText(startPage + "-" + endPage);
     }
+
+
 
 
     public String getIdNr() {
