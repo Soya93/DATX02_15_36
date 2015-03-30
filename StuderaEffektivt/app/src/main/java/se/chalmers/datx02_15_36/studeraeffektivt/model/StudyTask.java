@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.model;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -34,7 +35,7 @@ public class StudyTask extends CheckBox{
         return status;
     }
 
-    public StudyTask(Context context,String courseCode,int chapter, String taskString, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
+   /* public StudyTask(Context context,String courseCode,int chapter, String taskString, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
         super(context);
         this.courseCode = courseCode;
         this.chapter = chapter;
@@ -49,25 +50,38 @@ public class StudyTask extends CheckBox{
             this.setChecked(true);
         }
 
-        super.setText(taskString);
-    }
+    }*/
 
-    public StudyTask(Context context,String courseCode,int chapter, int startPage, int endPage, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
+    public StudyTask(Context context,String courseCode,int chapter, String taskString, int startPage, int endPage, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
         super(context);
         this.courseCode = courseCode;
         this.chapter = chapter;
+        this.taskString = taskString;
         this.startPage = startPage;
         this.endPage = endPage;
         this.status = status;
         this.type = type;
 
-        this.id = courseCode + chapter + startPage + endPage;
+        Log.d("StudyTask courseCode: ", courseCode);
+        Log.d("StudyTask chapter: ", "" + chapter);
+        Log.d("StudyTask taskString: ", taskString);
+        Log.d("StudyTask startPage: ", "" + startPage);
+        Log.d("StudyTask endPage: ", "" + endPage);
+        Log.d("StudyTask type: ", type.toString());
+       // Log.d("StudyTask status: ", status.toString());
 
         if(status==AssignmentStatus.DONE) {
             this.setChecked(true);
         }
 
-        setText(startPage + "-" + endPage);
+        if(type == AssignmentType.READ){
+            setText(startPage + "-" + endPage);
+            this.id = "read" + courseCode + chapter + startPage + endPage;
+        }
+        else{
+            setText(taskString);
+            this.id = "other" + courseCode + chapter + taskString;
+        }
     }
 
 

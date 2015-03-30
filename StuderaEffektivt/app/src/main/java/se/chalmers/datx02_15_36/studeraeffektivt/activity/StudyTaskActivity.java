@@ -8,7 +8,7 @@ Göra så att bockade hamnar sist och obockade först.
 Uppdatera då man kryssar av en ruta, någon sortering
 göra så att något händer då man kryssar i en ruta. dI databas och för den specifika studytasken
 göra så att man inte kan lägga till flera likadana uppgifter
-
+Fixa så att man kan klicka "lägg till" utan att man skrivit något, nu krachar det
  */
 
 import android.content.Intent;
@@ -25,6 +25,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
@@ -42,7 +43,6 @@ public class StudyTaskActivity extends ActionBarActivity {
     //Components in the view
     private EditText taskInput;
     private Button addButton;
-    private Button deleteButton;
     private EditText taskParts;
     private FlowLayout listOfTasks;
     private FlowLayout listOfReadAssignments;
@@ -94,7 +94,6 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     public void initComponents() {
         addButton = (Button) findViewById(R.id.addButton);
-        deleteButton = (Button) findViewById(R.id.deleteButton);
         taskInput = (EditText) findViewById(R.id.taskInput);
         taskParts = (EditText) findViewById(R.id.taskParts);
         listOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
@@ -109,7 +108,6 @@ public class StudyTaskActivity extends ActionBarActivity {
         addTasksFromDatabase();
 
         addButton.setOnClickListener(myOnlyhandler);
-        deleteButton.setOnClickListener(myOnlyhandler);
 
 
     }
@@ -119,14 +117,19 @@ public class StudyTaskActivity extends ActionBarActivity {
 
             if ((v) == addButton) {
                 int chapter = Integer.parseInt(chapterSpinner.getSelectedItem().toString());
-                if(readOrTaskAssignment.isChecked()) {
-                    addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString());
+                if(!taskInput.getText().toString().equals("")) {
+                    if (readOrTaskAssignment.isChecked()) {
+                        addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString());
+                    }
+                    else {
+                        addReadAssignment(chapter, taskInput.getText().toString());
+                    }
                 }
+
                 else{
-                    addReadAssignment(chapter, taskInput.getText().toString());
+                    Toast.makeText(getApplicationContext(), "Format ej godkänt",
+                            Toast.LENGTH_LONG).show();
                 }
-            } else if ((v) == deleteButton) {
-                deleteTask(taskInput.getText().toString());
             }
 
         }
@@ -181,7 +184,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 for (String s2 : stringList) {                         //För varje vihuv uppgift
                     elementToAdd = s2 + separateTaskParts[i];       //Sätt ihop dessa Huvuduppgift 1 och deluppgift a blir 1a
 
-                    StudyTask studyTask = new StudyTask(this, courseCode, chapter, elementToAdd, dbAdapter, AssignmentType.OTHER, null);
+                    StudyTask studyTask = new StudyTask(this, courseCode, chapter, elementToAdd, 0, 0, dbAdapter, AssignmentType.OTHER, null);
                     addToListOfTasks(studyTask);
                     addToDatabase(studyTask);
                 }
@@ -190,7 +193,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         //lägger till huvuduppgifterna då deluppgifter inte finns
         else {
             for (String s : stringList) {         //För varje huvuduppgift
-                StudyTask studyTask = new StudyTask(this, courseCode, chapter, s, dbAdapter, AssignmentType.OTHER, null);
+                StudyTask studyTask = new StudyTask(this, courseCode, chapter, s, 0, 0, dbAdapter, AssignmentType.OTHER, null);
                 addToListOfTasks(studyTask);
                 addToDatabase(studyTask);
             }
@@ -210,25 +213,19 @@ public class StudyTaskActivity extends ActionBarActivity {
             start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
             end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
-            StudyTask studyTask = new StudyTask(this, courseCode, chapter, start, end, dbAdapter, AssignmentType.READ, null);
+            StudyTask studyTask = new StudyTask(this, courseCode, chapter, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, null);
 
             addToDatabase(studyTask);
             addToListOfTasks(studyTask);
 
         } else {
 
-            StudyTask studyTask = new StudyTask(this, courseCode, chapter, Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, null);
+            StudyTask studyTask = new StudyTask(this, courseCode, chapter, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, null);
 
             addToDatabase(studyTask);
             addToListOfTasks(studyTask);
         }
 
-    }
-
-    public void deleteTask(String taskString) {
-        //TODO: Kolla om den finns i databasen och ta bort den
-        Cursor cursor = dbAdapter.getAssignments();
-        Log.d("Data hämtat från databasen: ", "" + cursor.getCount());
     }
 
     public void addToListOfTasks(StudyTask studyTask) {
@@ -244,6 +241,15 @@ public class StudyTaskActivity extends ActionBarActivity {
     }
 
     public void addToDatabase(StudyTask studyTask) {
+
+        Log.d("Lägga till element i databasen: ", studyTask.getIdNr());
+        Log.d("Lägga till element i Kurskod: ", studyTask.getCourseCode());
+        Log.d("Lägga till element i Kapitel: ", "" + studyTask.getChapter());
+        Log.d("Lägga till element i Task: ", studyTask.getTaskString());
+        Log.d("Lägga till element i StartSida: ", "" + studyTask.getStartPage());
+        Log.d("Lägga till element i SlutSida: ", "" + studyTask.getEndPage());
+        Log.d("Lägga till element i Typ: ", studyTask.getType().toString());
+        //Log.d("Lägga till element i Status: ", studyTask.getStatus().toString());
 
         dbAdapter.insertAssignment(
                 studyTask.getCourseCode(),
@@ -285,6 +291,8 @@ public class StudyTaskActivity extends ActionBarActivity {
                         cursor.getString(cursor.getColumnIndex("_ccode")),
                         cursor.getInt(cursor.getColumnIndex("chapter")),
                         cursor.getString(cursor.getColumnIndex("assNr")),
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex("startPage"))),
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex("stopPage"))),
                         dbAdapter,
                         assignmentType,
                         assignmentStatus);

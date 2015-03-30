@@ -122,10 +122,13 @@ public class CourseDetailedInfoFrag extends Fragment {
                     assignmentType = AssignmentType.OTHER;
                 }
                 //TODO: Skall göra så att denna lägger in i olika listor baserat på om uppgiften är gjort eller inte och läggas upp efter det. Vill på något sätt även sortera detta.     Fixa
-                layoutWithinScrollViewOfTasks.addView(new StudyTask(getActivity(),
+                layoutWithinScrollViewOfTasks.addView(new StudyTask(
+                        getActivity(),
                         cursor.getString(cursor.getColumnIndex("_ccode")),
                         cursor.getInt(cursor.getColumnIndex("chapter")),
                         cursor.getString(cursor.getColumnIndex("assNr")),
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex("startPage"))),
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex("stopPage"))),
                         dbAdapter,
                         assignmentType,
                         assignmentStatus));                                             //TODO: sätta in rätt bool från databasen

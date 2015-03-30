@@ -6,92 +6,110 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="100dp"
         android:id="@+id/firstLayout"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:weightSum="1.5">
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="1"
+            android:id="@+id/chapterLayout"
+            android:layout_weight="0.5"
+            android:layout_toLeftOf="@+id/taskLayout">
 
-        <Spinner
-            android:layout_width="60dp"
+            <TextView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/chapterSpinner" />
+            android:id="@+id/chapterLabel"
+            android:layout_above="@+id/chapterSpinner"
+            android:layout_weight="0.80"
+            android:text="KAPITEL"/>
 
-        <EditText
+            <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/chapterSpinner"
+            android:layout_weight="0.20"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/chapterLabel"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/taskLayout"
+        android:layout_weight="0.5"
+        android:weightSum="1"
+        android:layout_toRightOf="@+id/chapterLayout">
+
+            <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="UPPGIFT"
+            android:layout_weight="0.5"/>
+
+            <EditText
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:inputType="number"
             android:digits="0123456789,-."
-            android:id="@+id/taskInput" />
+            android:id="@+id/taskInput"
+            android:layout_weight="0.5"/>
+        </LinearLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:id="@+id/secondLayout"
-        android:layout_below="@+id/firstLayout">
 
         <Button
-            android:layout_width="192dp"
-            android:layout_height="118dp"
-            android:text="New Button"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="Spara uppgift"
             android:id="@+id/addButton"
-            android:layout_gravity="center_vertical"
+            android:layout_toRightOf="@+id/taskLayout"
             android:layout_below="@+id/taskInput"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentRight="true"
+            android:layout_weight="0.52"/>
 
-        <Button
-            android:layout_width="186dp"
-            android:layout_height="118dp"
-            android:text="New Button"
-            android:id="@+id/deleteButton"
-            android:layout_gravity="right|center_vertical"
-            android:layout_below="@+id/taskInput"
-            android:layout_toRightOf="@+id/addButton"
-            android:layout_toEndOf="@+id/addButton" />
     </LinearLayout>
+
+
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:id="@+id/thirdLayout"
-        android:layout_below="@+id/secondLayout">
+        android:layout_below="@+id/firstLayout"
+        android:weightSum="1">
 
         <EditText
-            android:layout_width="176dp"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="number"
-            android:digits="1234567890"
+            android:inputType="text"
+            android:digits="abcdefghijklmnopqrstuvwxy"
             android:id="@+id/taskParts"
             android:layout_gravity="left|bottom"
             android:layout_below="@+id/addButton"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:id="@+id/fourthLayout"
-        android:layout_below="@+id/thirdLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="43dp">
+            android:layout_alignParentEnd="true"
+            android:layout_weight="0.5"/>
 
         <ToggleButton
-             android:layout_width="fill_parent"
-             android:layout_height="fill_parent"
-             android:text="New ToggleButton"
-             android:id="@+id/readOrTaskAssignment"
-             android:textOff="Läsanvisningar"
-             android:textOn="Uppgifter"
-             android:layout_centerVertical="true"
-             android:layout_toLeftOf="@+id/taskParts"
-             android:layout_toStartOf="@+id/taskParts" />
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="New ToggleButton"
+            android:id="@+id/readOrTaskAssignment"
+            android:textOff="Läsanvisningar"
+            android:textOn="Uppgifter"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/taskParts"
+            android:layout_toStartOf="@+id/taskParts"
+            android:layout_weight="0.5"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -99,7 +117,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/fifthLayout"
-        android:layout_below="@+id/fourthLayout"
+        android:layout_below="@+id/thirdLayout"
         android:layout_centerHorizontal="true"
         android:weightSum="1">
 
