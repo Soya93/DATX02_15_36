@@ -278,6 +278,11 @@ public class CalendarModel {
         Log.i("CalMod: ", startMillis+"");
         Log.i("CalMod: ", endMillis+"");
 
+        deleteEvent(cr, eventID);
+        addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
+
+        /*
+
         editStartTime(cr, eventID, startMillis);
         editEndTime(cr, eventID, endMillis);
         editTitle(cr, eventID, title);
@@ -285,6 +290,7 @@ public class CalendarModel {
         editDescription(cr, eventID, description);
         addNotification(cr, eventID, notification);
         editCalID(cr, eventID, calID);
+        */
     }
 
 

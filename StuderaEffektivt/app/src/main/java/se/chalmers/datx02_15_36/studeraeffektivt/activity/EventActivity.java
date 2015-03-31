@@ -84,10 +84,13 @@ public class EventActivity extends ActionBarActivity {
         location = getIntent().getStringExtra("location");
         description = getIntent().getStringExtra("description");
         calendarID = getIntent().getLongExtra("calID", 1);
+        calendarName = getIntent().getStringExtra("calName");
+        /*
         int index = calendarFrag.getCalendarModel().getCalendarIDs(getContentResolver()).indexOf(calendarID);
         Log.i("oncreate event avtivity: ", calendarID +" " + index);
         calendarName = calendarFrag.getCalendarModel().getCalendarNames(getContentResolver()).get(index);
         Log.i("oncreate event avtivity: ", calendarName);
+        */
 
 
         Log.i("oncreate event avtivity: ", calendarID +"");

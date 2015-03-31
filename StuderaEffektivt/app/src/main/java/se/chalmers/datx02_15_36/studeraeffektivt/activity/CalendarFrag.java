@@ -159,7 +159,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         //Fetch information from the cursor
         final String location = cur.getString(CalendarUtils.EVENT_INFO_LOCATION);
         final String description = cur.getString(CalendarUtils.EVENT_INFO_DESCRIPTION);
-        String calendar = cur.getString(CalendarUtils.EVENT_INFO_CALENDAR);
+        final String calendar = cur.getString(CalendarUtils.EVENT_INFO_CALENDAR);
         final int calID = cur.getInt(CalendarUtils.CALENDAR_ID);
         cur.close();
 
@@ -175,7 +175,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                openEditEvent(weekViewEvent.getId(), startTime, endTime, title, location, description, calID);
+                openEditEvent(weekViewEvent.getId(), startTime, endTime, title, location, description, calID, calendar);
             }
         });
 
@@ -194,7 +194,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     //Opens an dialog when pressing the buttom for adding a new event
 
-    private void openEditEvent(long eventID, long startTime, long endTime, String title, String location, String description, int calID) {
+    private void openEditEvent(long eventID, long startTime, long endTime, String title, String location, String description, int calID, String calName) {
 
         //Get all neccesary information about the event
 
@@ -211,6 +211,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         intent.putExtra("location", location);
         intent.putExtra("description", description);
         intent.putExtra("calID", calID);
+        intent.putExtra("calName", calName);
         startActivity(intent);
     }
 
