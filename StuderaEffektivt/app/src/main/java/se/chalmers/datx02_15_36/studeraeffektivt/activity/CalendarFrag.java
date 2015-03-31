@@ -15,6 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alamkanak.weekview.WeekView;
@@ -37,24 +40,25 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 public class CalendarFrag extends Fragment implements WeekView.MonthChangeListener,
         WeekView.EventClickListener, WeekView.EventLongPressListener {
 
-    public CalendarModel getCalendarModel() {
-        return calendarModel;
-    }
-
+    public ContentResolver cr;
+    boolean hasOnMonthChange;
     private CalendarModel calendarModel = new CalendarModel();
     private CalendarView calendarView = new CalendarView();
     private EventActivity eventActivity;
-    public ContentResolver cr;
     private View view;
     private WeekView mWeekView;
 
     private List<WeekViewEvent> eventList;
-    boolean hasOnMonthChange;
     private SubActionButton button1;
     private SubActionButton button2;
     private SubActionButton button3;
+    private SubActionButton button4;
+    int numberOfVisibleDays;
     private View.OnClickListener fabHandler;
 
+    public CalendarModel getCalendarModel() {
+        return calendarModel;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,6 +75,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         button1 = MainActivity.button1;
         button2 = MainActivity.button2;
         button3 = MainActivity.button3;
+        button4 = MainActivity.button4;
 
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
@@ -90,8 +95,12 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 }else if (v.getTag() == button2.getTag()) {
                     addRepetitionSession();
                     Log.i("main:", " 2 repetition");
+                }else if (v.getTag() == button3.getTag()) {
+                    //Instälningar - antal dagar
+                    changeNbrOfDaysDialog();
+
                 } else  {
-                    //Instälningar
+                    //Instälningar - vilka kalendrar
                     Log.i("main:", "inställningar");
                 }
             }
@@ -121,6 +130,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         button1.setOnClickListener(fabHandler);
         button2.setOnClickListener(fabHandler);
         button3.setOnClickListener(fabHandler);
+        button4.setOnClickListener(fabHandler);
+
 
     }
 
@@ -316,5 +327,45 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    public void changeNbrOfDaysDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        final String [] choices = {"1", "3", "5"};
+        numberOfVisibleDays = mWeekView.getNumberOfVisibleDays();
+        int index = getIndexOfVisibleDays();
+
+       builder.setTitle("Antalet dagar i vyn");
+       builder.setSingleChoiceItems(choices, index, new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int selected) {
+                   numberOfVisibleDays = Integer.parseInt((choices[selected]));
+           }
+       });
+
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                mWeekView.setNumberOfVisibleDays(numberOfVisibleDays);
+                mWeekView.goToHour(8.0);
+                hasOnMonthChange = false;
+                mWeekView.notifyDatasetChanged();
+            }
+        });
+
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private int getIndexOfVisibleDays(){
+        return numberOfVisibleDays == 1? 0: numberOfVisibleDays - 2;
     }
 }
