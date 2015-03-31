@@ -118,7 +118,9 @@ public class StatsFrag extends Fragment {
     }
 
     private void setAssLeft(){
-        assLeft.setText(" Don't know");
+        int assignments = dbAdapter.getAssignments(currCourse).getCount();
+        int doneAssignments = dbAdapter.getDoneAssignments(currCourse).getCount();
+        assLeft.setText(" "+(assignments-doneAssignments));
     }
 
     public void onStart(){

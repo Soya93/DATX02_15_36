@@ -133,15 +133,16 @@ public class DBAdapter {
     public Cursor getDoneAssignments(String ccode){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        //String[] columns = {"COUNT(*)"};
-        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "'";
+        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "' AND "
+                + dbHelper.ASSIGNMENTS_status + " = '" + AssignmentStatus.DONE.toString()+"'";
         return db.query(dbHelper.TABLE_ASSIGNMENTS, null, selection, null, null, null, null);
     }
 
-    public int getAssignments(String ccode){
+    public Cursor getAssignments(String ccode){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        return -1;
+        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "'";
+        return db.query(dbHelper.TABLE_ASSIGNMENTS, null, selection, null, null, null, null);
     }
 
     public Cursor getSessions() {
