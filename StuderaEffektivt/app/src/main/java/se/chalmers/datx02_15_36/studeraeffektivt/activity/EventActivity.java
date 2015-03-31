@@ -44,7 +44,7 @@ public class EventActivity extends ActionBarActivity {
     private String title;
     private String location;
     private String description;
-    private String calendar;
+    private String calendarName;
     private int notification;
     private Calendar calStart;
     private Calendar calEnd;
@@ -84,7 +84,10 @@ public class EventActivity extends ActionBarActivity {
         location = getIntent().getStringExtra("location");
         description = getIntent().getStringExtra("description");
         calendarID = getIntent().getLongExtra("calID", 1);
-        calendar = calendarFrag.getCalendarModel().getCalendarNames(getContentResolver()).get(0);
+        int index = calendarFrag.getCalendarModel().getCalendarIDs(getContentResolver()).indexOf(calendarID);
+        Log.i("oncreate event avtivity: ", calendarID +" " + index);
+        calendarName = calendarFrag.getCalendarModel().getCalendarNames(getContentResolver()).get(index);
+        Log.i("oncreate event avtivity: ", calendarName);
 
 
         Log.i("oncreate event avtivity: ", calendarID +"");
@@ -134,7 +137,7 @@ public class EventActivity extends ActionBarActivity {
         descriptionView.setText(description);
 
         calendarView = (TextView) findViewById(R.id.calendar_lable_input);
-        calendarView.setText(calendar);
+        calendarView.setText(calendarName);
         calendarView.setOnClickListener(myTextViewHandler);
 
         startDate = (TextView) findViewById(R.id.start_date_input);
@@ -257,8 +260,8 @@ public class EventActivity extends ActionBarActivity {
                         // The 'which' argument contains the index position
                         // of the selected item
                         calendarID = calIDs.get(which);
-                        calendar = calendars[which];
-                        calendarView.setText(calendar);
+                        calendarName = calendars[which];
+                        calendarView.setText(calendarName);
                     }
                 });
         return builder.create();
