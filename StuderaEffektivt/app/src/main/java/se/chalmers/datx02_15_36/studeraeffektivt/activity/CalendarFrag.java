@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import java.util.ArrayList;
@@ -50,9 +51,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     private List<WeekViewEvent> eventList;
     boolean hasOnMonthChange;
+    private FloatingActionButton actionButton;
     private SubActionButton button1;
     private SubActionButton button2;
     private SubActionButton button3;
+    private FloatingActionMenu actionMenu;
     private View.OnClickListener fabHandler;
 
 
@@ -71,6 +74,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         button1 = MainActivity.button1;
         button2 = MainActivity.button2;
         button3 = MainActivity.button3;
+        actionButton = MainActivity.actionButton;
+        actionMenu = MainActivity.actionMenu;
 
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
@@ -94,6 +99,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                     //Instälningar
                     Log.i("main:", "inställningar");
                 }
+
             }
         };
 
@@ -307,7 +313,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                         //TODO hämta några random uppgifter
                         String tasks = "";
                         int studyWeek = which + 1;
-                        startActivity(calendarModel.addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " + tasks));
+                        //startActivity(calendarModel.addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " + tasks));
 
                         // The 'which' argument contains the index position
                         // of the selected item

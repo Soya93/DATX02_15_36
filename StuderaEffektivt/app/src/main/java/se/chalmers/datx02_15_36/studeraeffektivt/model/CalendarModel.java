@@ -11,7 +11,10 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -132,9 +135,9 @@ public class CalendarModel {
      *
      * @param cr
      */
-    public List<String> getCalendars(ContentResolver cr) {
+    public List<String> getCalendarNames(ContentResolver cr) {
 
-        List<String> calendars = new ArrayList<String>();
+        List<String> calendarNames = new ArrayList<String>();
 
         String[] projection = {CalendarContract.Calendars._ID,
                 CalendarContract.Calendars.NAME,
@@ -154,21 +157,52 @@ public class CalendarModel {
             // your projection
             long id = c.getLong(0);
             String name = c.getString(1);
-            calendars.add(name);
+            calendarNames.add(name);
 
         }
         c.close();
-
-
-        return calendars;
+        return calendarNames;
 
     }
 
+    public List<Long> getCalendarIDs(ContentResolver cr) {
+
+        List<Long> calendarIDs = new ArrayList<Long>();
+
+        String[] projection = {CalendarContract.Calendars._ID,
+                CalendarContract.Calendars.NAME,
+                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+                CalendarContract.Calendars.CALENDAR_TIME_ZONE,
+                CalendarContract.Calendars.CALENDAR_COLOR,
+                CalendarContract.Calendars.IS_PRIMARY,
+                CalendarContract.Calendars.VISIBLE};
+        String selection = String.format("%s = 1", CalendarContract.Calendars.VISIBLE);
+        Cursor c = cr.query(CalendarContract.Calendars.CONTENT_URI,
+                projection,
+                selection,
+                null, null);
+        while(c.moveToNext()) {
+            // the cursor, c, contains all the projection data items
+            // access the cursor’s contents by array index as declared in
+            // your projection
+            long id = c.getLong(0);
+
+            calendarIDs.add(id);
+
+        }
+        c.close();
+        return calendarIDs;
+
+    }
+
+    /*
+    getCalendars är en map nu... vet inte om denna metod används...
     public List<String> getRepAlt(ContentResolver cr, String accountEmail, String accountType) {
         List<String> events = getCalendars(cr);
         List<String> studySessions = filter(events, "Studiepass");
         return studySessions;
     }
+    */
 
     public List<String> filter(List<String> events, String filterOn) {
         List<String> filteredList = new ArrayList<String>();
@@ -180,43 +214,7 @@ public class CalendarModel {
         return filteredList;
     }
 
-    /**
-     * Adds a manual event to the calendar with the given parameters as information
-     *
-     * @param startTime
-     * @param endTime
-     * @param allDay
-     * @param title
-     * @param location
-     * @param description
-     * @return
-     */
-    public Intent addEventManually(Long startTime, Long endTime, Boolean allDay, String title, String location, String description) {
-        calIntent = new Intent(Intent.ACTION_INSERT);
-        calIntent.setData(CalendarContract.Events.CONTENT_URI);
-        calIntent.setType("vnd.android.cursor.item/event");
-        calIntent.putExtra(CalendarContract.Events.TITLE, title);
-        calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, location);
-        calIntent.putExtra(CalendarContract.Events.DESCRIPTION, description);
-        calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, allDay);
-        startTime = checkStartInterval(startTime);
-        endTime = startTime + 1000 * 60 * 60 * 3;
-        calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
-        calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
-        return calIntent;
-        //Log.i("cal", CalendarContract.Calendars.CALENDAR_DISPLAY_NAME);
-    }
 
-    /**
-     * Opens the calendar of the users phone where the user may choose which one
-     *
-     * @return
-     */
-    public Intent openCalendar() {
-        calIntent = new Intent(Intent.ACTION_VIEW);
-        calIntent.setData(Uri.parse("content://com.android.calendar/time"));
-        return calIntent;
-    }
 
     /**
      * Calculates the future date depending on the number set in daysFromNow
@@ -250,39 +248,6 @@ public class CalendarModel {
         //TODO testa
     }
 
-    /**
-     * Adds an automatic event to the calendar
-     *
-     * @param cr
-     * @return the event ID
-     */
-    public Long addEventAuto(ContentResolver cr) {
-        // calID 1 is the users primary calendar
-        long calID = 1;
-        long startMillis = 0;
-        long endMillis = 0;
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(CalendarUtils.YEAR, CalendarUtils.MONTH, CalendarUtils.DAY);
-        startMillis = beginTime.getTimeInMillis();
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(CalendarUtils.YEAR, CalendarUtils.MONTH, CalendarUtils.DAY + 1);
-        endMillis = endTime.getTimeInMillis();
-
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.DTSTART, startMillis);
-        values.put(CalendarContract.Events.DTEND, endMillis);
-        values.put(CalendarContract.Events.TITLE, "TEST AUTO ADDING OF EVENT");
-        values.put(CalendarContract.Events.DESCRIPTION, "Good Job");
-        values.put(CalendarContract.Events.CALENDAR_ID, calID);
-        values.put(CalendarContract.Events.EVENT_TIMEZONE, "America/Los_Angeles");
-        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-
-        // get the event ID that is the last element in the Uri
-        long eventID = Long.parseLong(uri.getLastPathSegment());
-        //
-        // ... do something with event ID
-        return eventID;
-    }
 
     public Long addEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID) {
 
@@ -310,12 +275,16 @@ public class CalendarModel {
     }
 
     public void editEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, long eventID, int notification) {
+        Log.i("CalMod: ", startMillis+"");
+        Log.i("CalMod: ", endMillis+"");
+
         editStartTime(cr, eventID, startMillis);
         editEndTime(cr, eventID, endMillis);
         editTitle(cr, eventID, title);
         editLocation(cr, eventID, location);
         editDescription(cr, eventID, description);
         addNotification(cr, eventID, notification);
+        editCalID(cr, eventID, calID);
     }
 
 
@@ -393,5 +362,12 @@ public class CalendarModel {
         values.put(CalendarContract.Reminders.EVENT_ID, eventID);
         values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
         Uri uri = cr.insert(CalendarContract.Reminders.CONTENT_URI, values);
+    }
+
+    public void editCalID(ContentResolver cr, long eventID,  long calID) {
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.CALENDAR_ID, calID);
+        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
+        cr.update(updateUri, values, null, null);
     }
 }

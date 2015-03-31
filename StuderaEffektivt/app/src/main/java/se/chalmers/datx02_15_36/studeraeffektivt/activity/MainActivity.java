@@ -40,6 +40,7 @@ public class MainActivity extends ActionBarActivity {
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
+    public static FloatingActionMenu actionMenu;
     private View.OnClickListener fabHandler;
 
     /**
