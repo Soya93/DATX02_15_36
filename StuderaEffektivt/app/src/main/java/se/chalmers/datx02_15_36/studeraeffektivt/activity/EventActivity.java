@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.provider.CalendarContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -283,24 +284,31 @@ public class EventActivity extends ActionBarActivity {
             // when dialog box is closed, below method will be called.
             public void onDateSet(DatePicker view, int selectedYear,
                                   int selectedMonth, int selectedDay) {
-                String year1 = String.valueOf(selectedYear);
-
-                String month1 = String.valueOf(selectedMonth + 1);
-
-                String day1 = String.valueOf(selectedDay);
 
                 if (isStart) {
-                    startYear = Integer.parseInt(year1);
-                    startMonth = Integer.parseInt(month1);
-                    startDay = Integer.parseInt(day1);
+                    startYear = selectedYear;
+                    startMonth = selectedMonth + 1;
+                    startDay = selectedDay;
                     calStart.set(startYear, startMonth, startDay);
-                    startDate.setText(day1 + "/" + month1 + "/" + year1);
+                    startDate.setText(startDay + "/" + startMonth + "/" + startYear);
+                    if(endDay <= startDay && endMonth == startMonth && endYear == startYear || startMonth > endMonth || startYear > endYear){
+                        endDay = startDay;
+                        endMonth = startMonth;
+                        endYear = startYear;
+                        calEnd.set(endYear, endMonth, endDay);
+                        endDate.setText(endDay + "/" + endMonth + "/" + endYear);
+                    }
                 } else {
-                    endYear = Integer.parseInt(year1);
-                    endMonth = Integer.parseInt(month1);
-                    endDay = Integer.parseInt(day1);
+                    endYear = selectedYear;
+                    endMonth = selectedMonth + 1;
+                    endDay = selectedDay;
+                    if(endDay <= startDay && endMonth == startMonth && endYear == startYear || startMonth > endMonth || startYear > endYear){
+                        endDay = startDay;
+                        endMonth = startMonth;
+                        endYear = startYear;
+                    }
                     calEnd.set(endYear, endMonth, endDay);
-                    endDate.setText(day1 + "/" + month1 + "/" + year1);
+                    endDate.setText(endDay + "/" + endMonth + "/" + endYear);
                 }
             }
         };
@@ -326,22 +334,32 @@ public class EventActivity extends ActionBarActivity {
 
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                String hour1 = String.valueOf(hourOfDay);
-                String minute1 = String.valueOf(minute);
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
                 if (isStart) {
-                    startHour = Integer.parseInt(hour1);
-                    startMinute = Integer.parseInt(minute1);
+                    startHour = hourOfDay;
+                    startMinute = minute;
                     calStart.set(Calendar.HOUR_OF_DAY, startHour);
                     calStart.set(Calendar.MINUTE, startMinute);
-                    startTime.setText(hour1 + ":" + minute1);
+                    startTime.setText(timeFormat.format(new Date(calStart.getTimeInMillis())));
+                    String start = startHour + "";
 
+                    boolean startsWithZero = start.length() == 1;
+                    if(endHour <= startHour ||  startsWithZero && endHour >= startHour ){
+                        endHour = startHour + 1;
+                        calEnd.set(Calendar.HOUR_OF_DAY, endHour);
+                        calEnd.set(Calendar.MINUTE, endMinute);
+                        endTime.setText(timeFormat.format(new Date(calEnd.getTimeInMillis())));
+                    }
                 } else {
-                    endHour = Integer.parseInt(hour1);
-                    endMinute = Integer.parseInt(minute1);
+                    endHour = hourOfDay;
+                    if(endHour <= startHour){
+                        endHour = startHour + 1;
+                    }
+                    endMinute = minute;
                     calEnd.set(Calendar.HOUR_OF_DAY, endHour);
                     calEnd.set(Calendar.MINUTE, endMinute);
-                    endTime.setText(hour1 + ":" + minute1);
+                    endTime.setText(timeFormat.format(new Date(calEnd.getTimeInMillis())));
                 }
             }
         };
