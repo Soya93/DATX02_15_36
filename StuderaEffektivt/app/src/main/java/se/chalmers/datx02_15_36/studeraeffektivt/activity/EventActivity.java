@@ -26,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -42,7 +44,7 @@ public class EventActivity extends ActionBarActivity {
     private String title;
     private String location;
     private String description;
-    private String calendar;
+    private String calendarName;
     private int notification;
     private Calendar calStart;
     private Calendar calEnd;
@@ -82,7 +84,13 @@ public class EventActivity extends ActionBarActivity {
         location = getIntent().getStringExtra("location");
         description = getIntent().getStringExtra("description");
         calendarID = getIntent().getLongExtra("calID", 1);
-        calendar = calendarFrag.getCalendarModel().getCalendars(getContentResolver()).get(0);
+        calendarName = getIntent().getStringExtra("calName");
+        /*
+        int index = calendarFrag.getCalendarModel().getCalendarIDs(getContentResolver()).indexOf(calendarID);
+        Log.i("oncreate event avtivity: ", calendarID +" " + index);
+        calendarName = calendarFrag.getCalendarModel().getCalendarNames(getContentResolver()).get(index);
+        Log.i("oncreate event avtivity: ", calendarName);
+        */
 
 
         Log.i("oncreate event avtivity: ", calendarID +"");
@@ -132,7 +140,7 @@ public class EventActivity extends ActionBarActivity {
         descriptionView.setText(description);
 
         calendarView = (TextView) findViewById(R.id.calendar_lable_input);
-        calendarView.setText(calendar);
+        calendarView.setText(calendarName);
         calendarView.setOnClickListener(myTextViewHandler);
 
         startDate = (TextView) findViewById(R.id.start_date_input);
@@ -241,10 +249,11 @@ public class EventActivity extends ActionBarActivity {
 
     public Dialog openCalendarPickerDialog(Bundle savedInstanceState) {
 
-        List<String> cals = calendarFrag.getCalendarModel().getCalendars(getContentResolver());
-        final String[] calendars = new String[cals.size()];
-        for (int i = 0; i < cals.size(); i++) {
-            calendars[i] = cals.get(i);
+        final List<String> calNames = calendarFrag.getCalendarModel().getCalendarNames(getContentResolver());
+        final List<Long> calIDs = calendarFrag.getCalendarModel().getCalendarIDs(getContentResolver());
+        final String[] calendars = new String[calNames.size()];
+        for (int i = 0; i < calNames.size(); i++) {
+            calendars[i] = calNames.get(i);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -253,9 +262,9 @@ public class EventActivity extends ActionBarActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
                         // of the selected item
-
-                        calendar = calendars[which];
-                        calendarView.setText(calendar);
+                        calendarID = calIDs.get(which);
+                        calendarName = calendars[which];
+                        calendarView.setText(calendarName);
                     }
                 });
         return builder.create();
