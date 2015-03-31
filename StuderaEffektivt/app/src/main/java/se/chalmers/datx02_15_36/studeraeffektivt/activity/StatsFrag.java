@@ -17,21 +17,29 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 */
 
+import org.w3c.dom.Text;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 
 public class StatsFrag extends Fragment {
 
     private View rootView;
 
+    private Spinner spinner;
+    private String currCourse = "";
+
     private TextView hoursSpent;
     private TextView hoursLeft;
     private TextView hoursTotal;
-    private Spinner spinner;
+
+    private TextView assDone;
+    private TextView assLeft;
 
     private DBAdapter dbAdapter;
 
-    private String currCourse = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +66,11 @@ public class StatsFrag extends Fragment {
         setHoursLeft();
         hoursTotal = (TextView) rootView.findViewById(R.id.hours_total_show);
         setHoursTotal();
+
+        assDone = (TextView) rootView.findViewById(R.id.ass_done_show);
+        setAssDone();
+        assLeft = (TextView) rootView.findViewById(R.id.ass_left_show);
+        setAssLeft();
     }
 
     private void setCourses() {
@@ -73,13 +86,10 @@ public class StatsFrag extends Fragment {
             String cname = cursor.getString(cnameColumn);
             adapter.add(ccode + "-" + cname);
         }
-
     }
 
     public void setSelectedCourse(){
         spinner.setSelection(0);
-        Log.i("DB", "Spinner: "+spinner);
-        Log.i("DB", "SelectedItem: "+spinner.getSelectedItem());
         String temp = spinner.getSelectedItem().toString();
         String[] parts = temp.split("-");
         this.currCourse = parts[0];
@@ -87,7 +97,6 @@ public class StatsFrag extends Fragment {
 
     private void setHoursSpent(){
         setSelectedCourse();
-        Log.d("currCourse in stats", "_"+currCourse+"_");
         String timeSpent = " "+(dbAdapter.getSpentTime(currCourse)/60)+" h";
         hoursSpent.setText(timeSpent);
     }
@@ -99,8 +108,17 @@ public class StatsFrag extends Fragment {
 
     private void setHoursTotal(){
         String timeTotal = " "+(dbAdapter.getTimeOnCourse(currCourse)/60)+" h";
-        Log.i("DB", "time total: "+timeTotal);
         hoursTotal.setText(timeTotal);
+    }
+
+    private void setAssDone(){
+        Cursor cursor = dbAdapter.getDoneAssignments(currCourse);
+        String assignments = " "+cursor.getCount();
+        assDone.setText(assignments);
+    }
+
+    private void setAssLeft(){
+        assLeft.setText(" Don't know");
     }
 
     public void onStart(){
@@ -143,6 +161,14 @@ public class StatsFrag extends Fragment {
             Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for DD111", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
+        }
+
+        //Insert Assignments
+        long idA1 = dbAdapter.insertAssignment("DDD111", 0, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        if (idA1>0) {
+            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for DD111", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
         }
     }
 }

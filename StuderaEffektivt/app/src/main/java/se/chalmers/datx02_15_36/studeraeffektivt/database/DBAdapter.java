@@ -130,6 +130,20 @@ public class DBAdapter {
         return db.query(dbHelper.TABLE_ASSIGNMENTS, null, null, null, null, null, null);
     }
 
+    public Cursor getDoneAssignments(String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        //String[] columns = {"COUNT(*)"};
+        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "'";
+        return db.query(dbHelper.TABLE_ASSIGNMENTS, null, selection, null, null, null, null);
+    }
+
+    public int getAssignments(String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        return -1;
+    }
+
     public Cursor getSessions() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         return db.query(dbHelper.TABLE_SESSIONS, null, null, null, null, null, null);
