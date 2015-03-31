@@ -17,7 +17,11 @@ import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.TabAdapter;
@@ -32,6 +36,11 @@ public class MainActivity extends ActionBarActivity {
 
     private String userName = "user_Name";
     private Drawable tabResetIcon;
+    public static FloatingActionButton actionButton;
+    public static SubActionButton button1;
+    public static SubActionButton button2;
+    public static SubActionButton button3;
+    private View.OnClickListener fabHandler;
 
     /**
      * Called when the activity is first created.
@@ -89,6 +98,71 @@ public class MainActivity extends ActionBarActivity {
         calendarFrag = (CalendarFrag) mAdapter.getItem(1);
         calendarFrag.setContentResolver(this.getContentResolver());
 
+
+        // listener for FAB menu
+        FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
+            @Override
+            public void onMenuOpened(FloatingActionMenu floatingActionMenu) {
+
+            }
+
+            @Override
+            public void onMenuClosed(FloatingActionMenu floatingActionMenu) {
+
+            }
+
+        };
+
+        ImageView icon = new ImageView(this); // Create an icon
+        icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+
+
+
+        actionButton = new FloatingActionButton.Builder(this)
+                .setContentView(icon)
+                .build();
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
+        // repeat many times:
+        ImageView itemIcon1 = new ImageView(this);
+        itemIcon1.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+        button1 = itemBuilder.setContentView(itemIcon1).build();
+        button1.setTag(1);
+        button1.setOnClickListener(fabHandler);
+
+        ImageView itemIcon2 = new ImageView(this);
+        itemIcon2.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+        button2 = itemBuilder.setContentView(itemIcon2).build();
+        button2.setTag(2);
+        button2.setOnClickListener(fabHandler);
+
+        ImageView itemIcon3 = new ImageView(this);
+        itemIcon3.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+        button3 = itemBuilder.setContentView(itemIcon3).build();
+        button3.setTag(3);
+        button3.setOnClickListener(fabHandler);
+
+        Log.i("main: ", " button1 id:  " + button1.getId() + " button2 id : " + button2.getId()
+                + " button3 id: " + button3.getId());
+
+        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
+                .addSubActionView(button3)
+                .addSubActionView(button2)
+                .addSubActionView(button1)
+                .attachTo(actionButton)
+                .build();
+
+        actionMenu.setStateChangeListener(myFABHandler);
+
+
+
+
+
+
+
+
+
+
         homeFrag = (HomeFrag) mAdapter.getItem(0);
         homeFrag.setCalendarFrag(calendarFrag);
         homeFrag.setContext(this.getApplicationContext());
@@ -105,11 +179,27 @@ public class MainActivity extends ActionBarActivity {
                 R.drawable.ic_action_overflow_uns
         };
 
+
+
         /** Defining tab listener */
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
+
+
+                if (tab.getPosition() == 1) {
+                    actionButton.setVisibility(View.VISIBLE);
+                    button1.setVisibility(View.VISIBLE);
+                    button2.setVisibility(View.VISIBLE);
+                    button3.setVisibility(View.VISIBLE);
+                } else {
+                    actionButton.setVisibility(View.GONE);
+                    button1.setVisibility(View.GONE);
+                    button2.setVisibility(View.GONE);
+                    button3.setVisibility(View.GONE);
+                }
+
 
                 tabResetIcon = tab.getIcon();
                 int position = tab.getPosition();
@@ -238,6 +328,8 @@ public class MainActivity extends ActionBarActivity {
             startService(i);
         }
     }
+
+
 }
 
 

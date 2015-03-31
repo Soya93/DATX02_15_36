@@ -9,16 +9,23 @@ import android.database.Cursor;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -43,7 +50,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     private List<WeekViewEvent> eventList;
     boolean hasOnMonthChange;
-    private Button studySession;
+    private SubActionButton button1;
+    private SubActionButton button2;
+    private SubActionButton button3;
+    private View.OnClickListener fabHandler;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,11 +67,36 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
     private void initComponents() {
+
+        button1 = MainActivity.button1;
+        button2 = MainActivity.button2;
+        button3 = MainActivity.button3;
+
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 openAddEvent();
             }
         };
+
+        Log.i("calendar: ", " button1 id:  " + button1.getId() + " button2 id : " + button2.getId()
+                + " button3 id: " + button3.getId());
+
+        fabHandler = new View.OnClickListener() {
+
+            public void onClick(View v) {
+                if (v.getTag() == button1.getTag()) {
+                    openAddEvent();
+                    Log.i("main:", "1 studiepass");
+                }else if (v.getTag() == button2.getTag()) {
+                    addRepetitionSession();
+                    Log.i("main:", " 2 repetition");
+                } else  {
+                    //Instälningar
+                    Log.i("main:", "inställningar");
+                }
+            }
+        };
+
 
         // Get a reference for the week view in the layout.
         mWeekView = (WeekView) view.findViewById(R.id.weekView);
@@ -79,8 +115,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.setNumberOfVisibleDays(5);
         hasOnMonthChange = false;
         mWeekView.goToHour(8.0);
-        studySession = (Button) view.findViewById(R.id.button_add_study_session);
-        studySession.setOnClickListener(myButtonHandler);
+
+
+        //actionButton.setOnClickListener(myButtonHandler);
+        button1.setOnClickListener(fabHandler);
+        button2.setOnClickListener(fabHandler);
+        button3.setOnClickListener(fabHandler);
+
     }
 
     @Override
@@ -137,7 +178,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
     //Opens an dialog when pressing the buttom for adding a new event
-    private void openAddEvent() {
+    public void openAddEvent() {
         eventActivity = new EventActivity();
         eventActivity.setCalendarFrag(this);
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
@@ -158,7 +199,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         intent.putExtra("isInAddMode", false);
         intent.putExtra("eventID", eventID);
-        intent.putExtra("startTime" , startTime);
+        intent.putExtra("startTime", startTime);
         intent.putExtra("endTime", endTime);
         intent.putExtra("title", title);
         intent.putExtra("location", location);
@@ -181,7 +222,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     @Override
     public void onEventLongPress(final WeekViewEvent weekViewEvent, RectF rectF) {
         final String eventName = weekViewEvent.getName();
-        AlertDialog.Builder builder =  calendarView.updateDeleteInfoView(eventName, getActivity());
+        AlertDialog.Builder builder = calendarView.updateDeleteInfoView(eventName, getActivity());
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -200,8 +241,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         alertDialog.show();
     }
 
-   //Removes an event from the calendar
-    private void deleteEvent(long id, CharSequence event){
+    //Removes an event from the calendar
+    private void deleteEvent(long id, CharSequence event) {
         calendarModel.deleteEvent(cr, id);
 
         hasOnMonthChange = false;
@@ -256,7 +297,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         this.cr = cr;
     }
 
-    private void addRepetitionSession() {
+    public void addRepetitionSession() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //the alternatives
         String[] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
