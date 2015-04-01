@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
-    public static FloatingActionMenu actionMenu;
+    public static SubActionButton button4;
     private View.OnClickListener fabHandler;
 
     /**
@@ -104,13 +104,14 @@ public class MainActivity extends ActionBarActivity {
         FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
             @Override
             public void onMenuOpened(FloatingActionMenu floatingActionMenu) {
-
             }
 
             @Override
             public void onMenuClosed(FloatingActionMenu floatingActionMenu) {
 
+
             }
+
 
         };
 
@@ -143,10 +144,17 @@ public class MainActivity extends ActionBarActivity {
         button3.setTag(3);
         button3.setOnClickListener(fabHandler);
 
+        ImageView itemIcon4 = new ImageView(this);
+        itemIcon4.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+        button4 = itemBuilder.setContentView(itemIcon4).build();
+        button4.setTag(4);
+        button4.setOnClickListener(fabHandler);
+
         Log.i("main: ", " button1 id:  " + button1.getId() + " button2 id : " + button2.getId()
                 + " button3 id: " + button3.getId());
 
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
+                .addSubActionView(button4)
                 .addSubActionView(button3)
                 .addSubActionView(button2)
                 .addSubActionView(button1)
@@ -154,15 +162,6 @@ public class MainActivity extends ActionBarActivity {
                 .build();
 
         actionMenu.setStateChangeListener(myFABHandler);
-
-
-
-
-
-
-
-
-
 
         homeFrag = (HomeFrag) mAdapter.getItem(0);
         homeFrag.setCalendarFrag(calendarFrag);
@@ -194,11 +193,13 @@ public class MainActivity extends ActionBarActivity {
                     button1.setVisibility(View.VISIBLE);
                     button2.setVisibility(View.VISIBLE);
                     button3.setVisibility(View.VISIBLE);
+                    button4.setVisibility(View.VISIBLE);
                 } else {
                     actionButton.setVisibility(View.GONE);
                     button1.setVisibility(View.GONE);
                     button2.setVisibility(View.GONE);
                     button3.setVisibility(View.GONE);
+                    button4.setVisibility(View.GONE);
                 }
 
 
