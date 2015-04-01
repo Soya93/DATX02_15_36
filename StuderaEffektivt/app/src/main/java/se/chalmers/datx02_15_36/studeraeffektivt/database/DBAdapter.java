@@ -9,6 +9,9 @@ import android.util.Log;
 
 import java.sql.SQLException;
 
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+
 /**
  * A database adapter that is used to read and write to/from the database.
  * Three tables: Courses, Sessions, Assignments.
@@ -51,7 +54,8 @@ public class DBAdapter {
         }
     }
 
-    public long insertAssignment(String courseCode, int chapter, String assNr, int startPage, int stopPage, String type) {
+    public long insertAssignment(String courseCode, int chapter, String assNr,
+                                 int startPage, int stopPage, AssignmentType type, AssignmentStatus status) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -61,10 +65,48 @@ public class DBAdapter {
             cv.put(dbHelper.ASSIGNMENTS_assNr, assNr);
             cv.put(dbHelper.ASSIGNMENTS_startPage, startPage);
             cv.put(dbHelper.ASSIGNMENTS_stopPage, stopPage);
-            cv.put(dbHelper.ASSIGNMENTS_type, type);
+            cv.put(dbHelper.ASSIGNMENTS_type, type.toString());
+            cv.put(dbHelper.ASSIGNMENTS_status, status.toString());
 
             return db.insert(dbHelper.TABLE_ASSIGNMENTS, null, cv);
         } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    public long deleteAssignment(int id){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        try{
+            return db.delete(dbHelper.TABLE_ASSIGNMENTS, ""+id, null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+    public long setDone(int assignmentId){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(dbHelper.ASSIGNMENTS_status, AssignmentStatus.DONE.toString());
+
+        try {
+            return db.update(dbHelper.TABLE_ASSIGNMENTS, cv, dbHelper.ASSIGNMENTS__id + "=" + assignmentId, null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+    public long setUndone(int assignmentId){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        String nullString = null;
+        cv.put(dbHelper.ASSIGNMENTS_status, nullString);
+
+        try {
+            return db.update(dbHelper.TABLE_ASSIGNMENTS, cv, dbHelper.ASSIGNMENTS__id + "=" + assignmentId, null);
+        }catch (Exception e){
             return -1;
         }
     }
@@ -88,6 +130,21 @@ public class DBAdapter {
         return db.query(dbHelper.TABLE_ASSIGNMENTS, null, null, null, null, null, null);
     }
 
+    public Cursor getDoneAssignments(String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "' AND "
+                + dbHelper.ASSIGNMENTS_status + " = '" + AssignmentStatus.DONE.toString()+"'";
+        return db.query(dbHelper.TABLE_ASSIGNMENTS, null, selection, null, null, null, null);
+    }
+
+    public Cursor getAssignments(String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "'";
+        return db.query(dbHelper.TABLE_ASSIGNMENTS, null, selection, null, null, null, null);
+    }
+
     public Cursor getSessions() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         return db.query(dbHelper.TABLE_SESSIONS, null, null, null, null, null, null);
@@ -102,7 +159,9 @@ public class DBAdapter {
 
         cursor.moveToNext();
         if (cursor.getCount() > 0) {
-            return cursor.getInt(0);
+            int i = cursor.getInt(0);
+            cursor.close();
+            return i;
         } else {
             return -1;
         }
@@ -115,10 +174,13 @@ public class DBAdapter {
         String selection = dbHelper.TIMEONCOURSE__ccode + " = '" + ccode + "'";
         Cursor cursor = db.query(dbHelper.TABLE_TIMEONCOURSE, columns, selection, null, null, null, null);
 
-        cursor.moveToNext();
         if (cursor.getCount() > 0) {
-            return cursor.getInt(0);
+            cursor.moveToNext();
+            int i = cursor.getInt(0);
+            cursor.close();
+            return i;
         } else {
+            cursor.close();
             return -1;
         }
     }
