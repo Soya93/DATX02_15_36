@@ -42,24 +42,6 @@ public class MainActivity extends ActionBarActivity {
     private android.support.v7.app.ActionBar actionBar;
     private View view;
 
-    private MyCountDownTimer serviceMCDT;
-
-    private ServiceConnection sc = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            serviceMCDT = ((MyCountDownTimer.MCDTBinder) service).getService();
-            long timeFromService = serviceMCDT.returnTimePassed();
-            timerFrag.handleTimeFromService(timeFromService * 1000);
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            serviceMCDT = null;
-        }
-
-
-    };
 
     // Tab titles
     private String[] tabs = {"Hem", "Kalender", "Timer", "Statistik", "Tips"};
@@ -245,50 +227,13 @@ public class MainActivity extends ActionBarActivity {
         calendarFrag.createBuilder();
     }
 
-    protected void onResume() {
-        super.onResume();
-
-        if (isMyServiceRunning(MyCountDownTimer.class)) {
-            Intent i = new Intent(getBaseContext(), MyCountDownTimer.class);
-            bindService(i, sc, Context.BIND_AUTO_CREATE);
-
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    Intent i = new Intent(getBaseContext(), MyCountDownTimer.class);
-                    stopService(i);
-                    unbindService(sc);
-
-                }
-            }, 2000);
-
-        }
+    protected void onStart() {
+        super.onStart();
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     protected void onStop() {
         super.onStop();
-        if (timerFrag.pauseTimerIsRunning || timerFrag.studyTimerIsRunning) {
-            long timePassedToService = timerFrag.timePassed;
-            long totalTime = timerFrag.default_TotalTime;
-
-            timerFrag.cancelOneOfTimers();
-
-            Intent i = new Intent(this, MyCountDownTimer.class);
-            i.putExtra("TIME_PASSED", timePassedToService / 1000);
-            i.putExtra("TOTAL_TIME", totalTime / 1000);
-            startService(i);
-        }
-
     }
 
 
