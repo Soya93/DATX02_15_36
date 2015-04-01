@@ -43,12 +43,6 @@ public class CalendarModel {
         return this.readEvents(cr, CalendarUtils.TODAY_IN_MILLIS, CalendarUtils.TODAY_IN_MILLIS);
     }
 
-    public List<String> readEventsSunday(ContentResolver cr) {
-        Calendar sunday = Calendar.getInstance();
-        sunday.setTime(futureDate(sunday.getTime(), 2));
-        return this.readEvents(cr, sunday.getTimeInMillis(), sunday.getTimeInMillis());
-    }
-
     /**
      * Method which reads the events from a given start- and endinterval
      *
@@ -275,22 +269,10 @@ public class CalendarModel {
     }
 
     public void editEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, long eventID, int notification) {
-        Log.i("CalMod: ", startMillis+"");
-        Log.i("CalMod: ", endMillis+"");
 
         deleteEvent(cr, eventID);
         addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
 
-        /*
-
-        editStartTime(cr, eventID, startMillis);
-        editEndTime(cr, eventID, endMillis);
-        editTitle(cr, eventID, title);
-        editLocation(cr, eventID, location);
-        editDescription(cr, eventID, description);
-        addNotification(cr, eventID, notification);
-        editCalID(cr, eventID, calID);
-        */
     }
 
 
@@ -309,42 +291,6 @@ public class CalendarModel {
         cr.delete(deleteUri, null, null);
     }
 
-
-    // methods for modifying an event
-    public void editTitle(ContentResolver cr, long eventID, String newTitle) {
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.TITLE, newTitle);
-        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
-        cr.update(updateUri, values, null, null);
-    }
-
-    public void editStartTime(ContentResolver cr, long eventID, long startMillis) {
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.DTSTART, startMillis);
-        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
-        cr.update(updateUri, values, null, null);
-    }
-
-    public void editEndTime(ContentResolver cr, long eventID, long endMillis) {
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.DTEND, endMillis);
-        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
-        cr.update(updateUri, values, null, null);
-    }
-
-    public void editDescription(ContentResolver cr, long eventID, String description) {
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.DESCRIPTION, description);
-        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
-        cr.update(updateUri, values, null, null);
-    }
-
-    public void editLocation(ContentResolver cr, long eventID, String newLocation) {
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.EVENT_LOCATION, newLocation);
-        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
-        cr.update(updateUri, values, null, null);
-    }
 
     public void editEventColor(ContentResolver cr, long eventID, int color) {
         ContentValues values = new ContentValues();
@@ -370,10 +316,5 @@ public class CalendarModel {
         Uri uri = cr.insert(CalendarContract.Reminders.CONTENT_URI, values);
     }
 
-    public void editCalID(ContentResolver cr, long eventID,  long calID) {
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.CALENDAR_ID, calID);
-        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
-        cr.update(updateUri, values, null, null);
-    }
+
 }

@@ -5,19 +5,14 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
-import android.database.Cursor;
-import android.provider.CalendarContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -26,8 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -85,15 +78,7 @@ public class EventActivity extends ActionBarActivity {
         description = getIntent().getStringExtra("description");
         calendarID = getIntent().getLongExtra("calID", 1);
         calendarName = getIntent().getStringExtra("calName");
-        /*
-        int index = calendarFrag.getCalendarModel().getCalendarIDs(getContentResolver()).indexOf(calendarID);
-        Log.i("oncreate event avtivity: ", calendarID +" " + index);
-        calendarName = calendarFrag.getCalendarModel().getCalendarNames(getContentResolver()).get(index);
-        Log.i("oncreate event avtivity: ", calendarName);
-        */
 
-
-        Log.i("oncreate event avtivity: ", calendarID +"");
                 initComponents();
     }
 

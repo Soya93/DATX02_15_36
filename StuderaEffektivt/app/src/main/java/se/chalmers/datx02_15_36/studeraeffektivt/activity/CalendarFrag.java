@@ -215,6 +215,22 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         startActivity(intent);
     }
 
+    private void openAddRepetition(int studyWeek) {
+        eventActivity = new EventActivity();
+        eventActivity.setCalendarFrag(this);
+        Intent intent = new Intent(getActivity(), eventActivity.getClass());
+        intent.putExtra("isInAddMode", true);
+        intent.putExtra("startTime", 0L);
+        intent.putExtra("endTime", 0l);
+        intent.putExtra("title", "Repititonspass för LV" + studyWeek);
+        intent.putExtra("calID", 1);        // 1 är hem kalender
+        String name = calendarModel.getCalendarNames(cr).get(0);        //hemkalenderns namn finns p åposition 0
+        intent.putExtra("calName", name);
+
+
+        startActivity(intent);
+    }
+
     public void editEvent(ContentResolver cr, String title, long startMillis, long endMillis, String location, String description, long eventID, long calID, int notification) {
         calendarModel.editEventAuto(cr, title, startMillis, endMillis, location, description, calID, eventID, notification);
     }
@@ -314,6 +330,10 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                         //TODO hämta några random uppgifter
                         String tasks = "";
                         int studyWeek = which + 1;
+                        openAddRepetition(studyWeek);
+
+
+                        //calendarModel.addEventAuto(cr, "Repititonspass för LV" + studyWeek, 0L, 0L,null)
                         //startActivity(calendarModel.addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " + tasks));
 
                         // The 'which' argument contains the index position
