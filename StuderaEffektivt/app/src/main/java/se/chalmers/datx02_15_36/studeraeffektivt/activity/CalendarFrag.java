@@ -196,6 +196,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         eventActivity.setCalendarFrag(this);
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         intent.putExtra("isInAddMode", true);
+        intent.putExtra("calID", 1);        // 1 är hem kalender
+        String name = calendarModel.getCalendarNames(cr).get(0);        //hemkalenderns namn finns på position 0
+        intent.putExtra("calName", name);
         startActivity(intent);
     }
 
@@ -231,7 +234,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         intent.putExtra("endTime", 0l);
         intent.putExtra("title", "Repititonspass för LV" + studyWeek);
         intent.putExtra("calID", 1);        // 1 är hem kalender
-        String name = calendarModel.getCalendarNames(cr).get(0);        //hemkalenderns namn finns p åposition 0
+        String name = calendarModel.getCalendarNames(cr).get(0);        //hemkalenderns namn finns på position 0
         intent.putExtra("calName", name);
 
 
@@ -299,7 +302,17 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     //Reads the events on the calendar from today until tomorrow
     private void readEvents() {
-        Cursor cur = calendarModel.getEventsCursor(cr, CalendarUtils.TODAY_IN_MILLIS, 0L);
+        int year = CalendarUtils.YEAR;
+        int month = CalendarUtils.MONTH;
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, 1);
+        long startDay = cal.getTimeInMillis();
+        int daysInMonth =cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        cal.set(year, month, daysInMonth);
+        long endDay = cal.getTimeInMillis();
+
+        Cursor cur = calendarModel.getEventsCursor(cr, startDay, endDay);
+
 
         while (cur.moveToNext()) {
             long id = cur.getLong(CalendarUtils.PROJECTION_ID_INDEX);
@@ -314,6 +327,12 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             endTime.setTimeInMillis(cur.getLong(CalendarUtils.PROJECTION_END_INDEX));
 
             int color = cur.getInt(CalendarUtils.PROJECTION_COLOR_INDEX);
+
+            if(color == 0) {
+                color = cur.getInt(CalendarUtils.CALENDAR_COLOR);
+            }
+
+            Log.i("readEvents: name:" + eventName, "color: " + color);
 
             WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
             event.setColor(color);
