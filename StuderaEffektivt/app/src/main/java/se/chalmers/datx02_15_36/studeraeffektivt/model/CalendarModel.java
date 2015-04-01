@@ -34,7 +34,7 @@ public class CalendarModel {
 
         //set end DAY
         endDay = Calendar.getInstance();
-        endDay.setTime(futureDate(CalendarUtils.cal.getTime(), 1));
+        endDay.setTime(futureDate(1));
 
         cur = null;
     }
@@ -65,7 +65,7 @@ public class CalendarModel {
 
         //Prints out all the events in the given interval
         while (cur.moveToNext()) {
-            eventTitles.add(cur.getString(CalendarUtils.PROJECTION_TITLE_INDEX));
+            eventTitles.add(cur.getString(CalendarUtils.TITLE));
         }
         cur.close();
         return eventTitles;
@@ -92,12 +92,12 @@ public class CalendarModel {
         ContentUris.appendId(eventsUriBuilder, endInterval);
         Uri eventsUri = eventsUriBuilder.build();
 
-        cur = cr.query(eventsUri, CalendarUtils.EVENT_INFO_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+        cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
 
 
         //Prints out all the events in the given interval
         while (cur.moveToNext()) {
-            if(cur.getLong(CalendarUtils.EVENT_INFO_ID) == eventID) {
+            if(cur.getLong(CalendarUtils.EVENT_ID) == eventID) {
                 return cur;
             }
         }
@@ -174,7 +174,9 @@ public class CalendarModel {
         Cursor c = cr.query(CalendarContract.Calendars.CONTENT_URI,
                 projection,
                 selection,
-                null, null);
+                null,
+                null);
+
         while(c.moveToNext()) {
             // the cursor, c, contains all the projection data items
             // access the cursor’s contents by array index as declared in
@@ -182,7 +184,6 @@ public class CalendarModel {
             long id = c.getLong(0);
 
             calendarIDs.add(id);
-
         }
         c.close();
         return calendarIDs;
@@ -213,11 +214,10 @@ public class CalendarModel {
     /**
      * Calculates the future date depending on the number set in daysFromNow
      *
-     * @param date
      * @param daysFromNow
      * @return
      */
-    private Date futureDate(Date date, int daysFromNow) {
+    private Date futureDate(int daysFromNow) {
 
         if (CalendarUtils.MONTH == 2) {
             int newYear = CalendarUtils.YEAR + (CalendarUtils.MONTH + (CalendarUtils.DAY + daysFromNow) / 28) / 12;

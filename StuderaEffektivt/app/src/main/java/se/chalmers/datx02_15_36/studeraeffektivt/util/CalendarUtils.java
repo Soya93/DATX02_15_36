@@ -19,52 +19,40 @@ public class CalendarUtils {
             CalendarContract.Instances.BEGIN,         // 1
             CalendarContract.Instances.TITLE,         // 2
             CalendarContract.Instances.END,            // 3
-            CalendarContract.Instances.EVENT_COLOR     // 4
-    };
-
-    // The indices for the projection array above for the events in the calendar
-    public static final int PROJECTION_EVENT_ID_INDEX = 0;
-    public static final int PROJECTION_BEGIN_INDEX = 1;
-    public static final int PROJECTION_TITLE_INDEX = 2;
-    public static final int PROJECTION_END_INDEX = 3;
-    public static final int PROJECTION_COLOR_INDEX = 4;
-
-    /*Projection array for calendar of an account.
-    Creating indices for this array instead of doing dynamic lookups improves performance.*/
-    public static final String[] EVENT_PROJECTION = new String[] {
-            CalendarContract.Calendars._ID,                           // 0
-            CalendarContract.Calendars.ACCOUNT_NAME,                  // 1
-            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 2
-            CalendarContract.Calendars.OWNER_ACCOUNT                  // 3
-    };
-
-    // The indices for the projection array above for the calendar of an account.
-    public static final int PROJECTION_ID_INDEX = 0;
-    public static final int PROJECTION_ACCOUNT_NAME_INDEX = 1;
-    public static final int PROJECTION_DISPLAY_NAME_INDEX = 2;
-    public static final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
-
-
-    /*Projection array for calendar of an account. //TODO:change to Events instead of Instances?
-    Creating indices for this array instead of doing dynamic lookups improves performance.*/
-    public static final String[] EVENT_INFO_PROJECTION = new String[] {
-            CalendarContract.Instances.EVENT_ID,      // 0
-            CalendarContract.Instances.BEGIN,         // 1
-            CalendarContract.Instances.TITLE,         // 2
-            CalendarContract.Instances.END,           // 3
-            CalendarContract.Instances.EVENT_LOCATION, // 4
+            CalendarContract.Instances.EVENT_COLOR,   // 4
             CalendarContract.Instances.DESCRIPTION,     // 5
-            CalendarContract.Instances.CALENDAR_DISPLAY_NAME //6
+            CalendarContract.Instances.CALENDAR_DISPLAY_NAME,   // 6
+            CalendarContract.Instances.EVENT_LOCATION,  // 7
+            CalendarContract.Instances.CALENDAR_ID,     // 8
+            CalendarContract.Instances.OWNER_ACCOUNT,    // 9
+            CalendarContract.Instances.CALENDAR_COLOR,       //10
+            CalendarContract.Instances.VISIBLE              //11
+
     };
 
     // The indices for the projection array above for the events in the calendar
-    public static final int EVENT_INFO_ID = 0;
-    public static final int EVENT_INFO_BEGIN = 1;
-    public static final int EVENT_INFO_TITLE = 2;
-    public static final int EVENT_INFO_END = 3;
-    public static final int EVENT_INFO_LOCATION = 4;
-    public static final int EVENT_INFO_DESCRIPTION = 5;
-    public static final int EVENT_INFO_CALENDAR = 6;
+    public static final int EVENT_ID = 0;
+    public static final int EVENT_BEGIN = 1;
+    public static final int TITLE = 2;
+    public static final int EVENT_END = 3;
+    public static final int EVENT_COLOR= 4;
+    public static final int DESCRIPTION = 5;
+    public static final int CALENDAR_NAME = 6;
+    public static final int LOCATION = 7;
+    public static final int CALENDAR_ID = 8;
+    public static final int OWNER_ACCOUNT = 9;
+    public static final int CALENDAR_COLOR = 10;
+    public static final int VISIBLE = 11;
+
+
+
+
+
+
+
+
+    // The indices for the projection array above for the events in the calendar
+
 
 
     public static final Calendar cal = Calendar.getInstance();
@@ -80,17 +68,21 @@ public class CalendarUtils {
     public static final long TODAY_IN_MILLIS = cal.getTimeInMillis();
 
 
-    public static final String[] CALENDAR_PROJECTION = new String[] {
-            CalendarContract.Instances.CALENDAR_ID,                 // 0
-            CalendarContract.Instances.CALENDAR_DISPLAY_NAME,       //1
-            CalendarContract.Instances.CALENDAR_COLOR               //2
 
-    };
 
-    // The indices for the projection array above for the events in the calendar
-    public static final int CALENDAR_ID = 0;
-    public static final int CALENDAR_DISPLAY_NAME = 1;
-    public static final int CALENDAR_COLOR = 2;
+    public static final String[] CALENDAR_CC_PROJECTION = {CalendarContract.Calendars._ID,
+            CalendarContract.Calendars.NAME,
+            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+            CalendarContract.Calendars.CALENDAR_TIME_ZONE,
+            CalendarContract.Calendars.CALENDAR_COLOR,
+            CalendarContract.Calendars.IS_PRIMARY,
+            CalendarContract.Calendars.VISIBLE};
+
+    public static final int C_CALENDAR_ID = 0;
+    public static final int C_CALENDAR_COLOR =4;
+
+
+
 
 
 

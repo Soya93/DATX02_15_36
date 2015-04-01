@@ -225,14 +225,14 @@ public class EventActivity extends ActionBarActivity {
                 break;
             case R.id.calendar_lable_input:
                 Log.i("click on text view", " calendar lable");
-                Dialog dialog = openCalendarPickerDialog(savedInstanceState);
+                Dialog dialog = openCalendarPickerDialog();
                 dialog.show();
 
                 break;
         }
     }
 
-    public Dialog openCalendarPickerDialog(Bundle savedInstanceState) {
+    public Dialog openCalendarPickerDialog() {
 
         final List<String> calNames = calendarFrag.getCalendarModel().getCalendarNames(getContentResolver());
         final List<Long> calIDs = calendarFrag.getCalendarModel().getCalendarIDs(getContentResolver());
