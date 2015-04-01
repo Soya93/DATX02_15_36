@@ -87,32 +87,6 @@ public class StudyTask extends CheckBox{
         this.id = id;
     }
 
-    public boolean onTouch(View v, MotionEvent event) {
-
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
-
-            case MotionEvent.ACTION_DOWN:
-                v.setPressed(true);
-                // Start action ...
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_OUTSIDE:
-            case MotionEvent.ACTION_CANCEL:
-                v.setPressed(false);
-                // Stop action ...
-                break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                break;
-            case MotionEvent.ACTION_POINTER_UP:
-                break;
-            case MotionEvent.ACTION_MOVE:
-                break;
-        }
-
-
-        return true;
-    }
-
    public AssignmentType getType(){
         return type;
     }

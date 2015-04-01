@@ -12,7 +12,6 @@ Fixa så att man kan klicka "lägg till" utan att man skrivit något, nu krachar
 databasen töms då man tar bort en uppgift
  */
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -24,13 +23,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -192,7 +190,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 for (String s2 : stringList) {                         //För varje vihuv uppgift
                     elementToAdd = s2 + separateTaskParts[i];       //Sätt ihop dessa Huvuduppgift 1 och deluppgift a blir 1a
                     int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, elementToAdd, 0, 0, dbAdapter, AssignmentType.OTHER, null);
+                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, elementToAdd, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
                     addToListOfTasks(studyTask);
                     addToDatabase(studyTask);
                 }
@@ -202,7 +200,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         else {
             for (String s : stringList) {         //För varje huvuduppgift
                 int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, s, 0, 0, dbAdapter, AssignmentType.OTHER, null);
+                StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, s, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
                 addToListOfTasks(studyTask);
                 addToDatabase(studyTask);
             }
@@ -225,14 +223,14 @@ public class StudyTaskActivity extends ActionBarActivity {
             start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
             end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
-            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, null);
+            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
             addToDatabase(studyTask);
             addToListOfTasks(studyTask);
 
         } else {
 
-            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, null);
+            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
             addToDatabase(studyTask);
             addToListOfTasks(studyTask);
@@ -256,13 +254,13 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         dbAdapter.insertAssignment(
                 studyTask.getCourseCode(),
+                studyTask.getIdNr(),
                 studyTask.getChapter(),
                 studyTask.getTaskString(),
                 studyTask.getStartPage(),
                 studyTask.getEndPage(),
                 studyTask.getType(),
-                AssignmentStatus.DONE
-        //        studyTask.getStatus()
+                studyTask.getStatus()
         );
 
         Log.d("Lägga till element i databas: ", "" + dbAdapter.getAssignments().getCount());
@@ -288,7 +286,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 else{
                     assignmentStatus = null;
                 }
-                if(cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ)){
+                if(cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ.toString())){
                     assignmentType = AssignmentType.READ;
                 }
                 else{
@@ -300,7 +298,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
                 StudyTask studyTask = new StudyTask(
                         this,
-                        randomNum,
+                        cursor.getInt(cursor.getColumnIndex("_id")),
                         cursor.getString(cursor.getColumnIndex("_ccode")),
                         cursor.getInt(cursor.getColumnIndex("chapter")),
                         cursor.getString(cursor.getColumnIndex("assNr")),
@@ -322,17 +320,20 @@ public class StudyTaskActivity extends ActionBarActivity {
                         listOfReadAssignments.removeView(s);
                         listOfReadAssignments.addView(s);
                     }
-                    else{
+                    if(s.getType() == AssignmentType.OTHER) {
                         listOfTasks.removeView(s);
                         listOfTasks.addView(s);
                     }
                 }
                 for (StudyTask s : uncheckedArray) {
                     if(s.getType() == AssignmentType.READ) {
+                        listOfReadAssignments.removeView(s);
                         listOfReadAssignments.addView(s);
                     }
-                    else{
+                    if(s.getType() == AssignmentType.OTHER) {
+                        listOfTasks.removeView(s);
                         listOfTasks.addView(s);
+
                     }
                 }
 
@@ -359,13 +360,27 @@ public class StudyTaskActivity extends ActionBarActivity {
         studyTask.setOnLongClickListener(new View.OnLongClickListener() {
             public boolean onLongClick(View arg0) {
 
-                if(studyTask.getType() == AssignmentType.READ)
-                    listOfReadAssignments.removeView(studyTask);
-                else
-                    listOfTasks.removeView(studyTask);
+                //Creating the instance of PopupMenu
+                PopupMenu popup = new PopupMenu(StudyTaskActivity.this, studyTask);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.popup_remove_menu, popup.getMenu());
 
-                dbAdapter.deleteAssignment(studyTask.getIdNr());
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(studyTask.getType() == AssignmentType.READ)
+                            listOfReadAssignments.removeView(studyTask);
+                        else
+                            listOfTasks.removeView(studyTask);
 
+                        dbAdapter.deleteAssignment(studyTask.getIdNr());
+                        Toast.makeText(StudyTaskActivity.this,"Uppgift borttagen",Toast.LENGTH_SHORT).show();
+                        return true;
+
+                    }
+                });
+
+                popup.show();//showing popup menu
                 return true;
             }
         });

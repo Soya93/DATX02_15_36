@@ -79,9 +79,11 @@ public class StatsFrag extends Fragment {
         spinner.setSelection(0);
         Log.i("DB", "Spinner: "+spinner);
         Log.i("DB", "SelectedItem: "+spinner.getSelectedItem());
-        String temp = spinner.getSelectedItem().toString();
-        String[] parts = temp.split("-");
-        this.currCourse = parts[0];
+        if(spinner.getSelectedItem()!=null) {
+            String temp = spinner.getSelectedItem().toString();
+            String[] parts = temp.split("-");
+            this.currCourse = parts[0];
+        }
     }
 
     private void setHoursSpent(){
