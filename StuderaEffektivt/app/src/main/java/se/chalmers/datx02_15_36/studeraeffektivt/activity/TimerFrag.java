@@ -276,9 +276,7 @@ public class TimerFrag extends Fragment {
      }
 
         public void resetTimer () {
-            Intent i = new Intent(getActivity(), MyCountDownTimer.class);
-            getActivity().stopService(i);
-            getActivity().unbindService(sc);
+            serviceHandler.sendEmptyMessage(0);
             buttonId = R.drawable.ic_start;
             hasBeenPaused= false;
             startButton.setImageResource(buttonId);
