@@ -73,7 +73,6 @@ public class StatsFrag extends Fragment {
             String cname = cursor.getString(cnameColumn);
             adapter.add(ccode + "-" + cname);
         }
-
     }
 
     public void setSelectedCourse(){

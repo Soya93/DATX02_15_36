@@ -9,6 +9,7 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
@@ -24,7 +25,7 @@ public class StudyTask extends CheckBox{
     public String courseCode;
     private int startPage;
     private int endPage;
-    private String id;
+    private int id;
     DBAdapter dbAdapter;
 
     AssignmentType type;
@@ -52,8 +53,9 @@ public class StudyTask extends CheckBox{
 
     }*/
 
-    public StudyTask(Context context,String courseCode,int chapter, String taskString, int startPage, int endPage, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
+    public StudyTask(Context context,int id, String courseCode,int chapter, String taskString, int startPage, int endPage, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
         super(context);
+        this.id = id;
         this.courseCode = courseCode;
         this.chapter = chapter;
         this.taskString = taskString;
@@ -62,36 +64,26 @@ public class StudyTask extends CheckBox{
         this.status = status;
         this.type = type;
 
-        Log.d("StudyTask courseCode: ", courseCode);
-        Log.d("StudyTask chapter: ", "" + chapter);
-        Log.d("StudyTask taskString: ", taskString);
-        Log.d("StudyTask startPage: ", "" + startPage);
-        Log.d("StudyTask endPage: ", "" + endPage);
-        Log.d("StudyTask type: ", type.toString());
-       // Log.d("StudyTask status: ", status.toString());
-
         if(status==AssignmentStatus.DONE) {
             this.setChecked(true);
         }
 
         if(type == AssignmentType.READ){
             setText(startPage + "-" + endPage);
-            this.id = "read" + courseCode + chapter + startPage + endPage;
         }
         else{
             setText(taskString);
-            this.id = "other" + courseCode + chapter + taskString;
         }
     }
 
 
 
 
-    public String getIdNr() {
+    public int getIdNr() {
         return id;
     }
 
-    public void setIdNr(String id) {
+    public void setIdNr(int id) {
         this.id = id;
     }
 
@@ -121,7 +113,7 @@ public class StudyTask extends CheckBox{
         return true;
     }
 
-    public AssignmentType getType(){
+   public AssignmentType getType(){
         return type;
     }
 

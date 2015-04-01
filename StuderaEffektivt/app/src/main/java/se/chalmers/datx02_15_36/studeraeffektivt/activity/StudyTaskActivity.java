@@ -9,6 +9,7 @@ Uppdatera då man kryssar av en ruta, någon sortering
 göra så att något händer då man kryssar i en ruta. dI databas och för den specifika studytasken
 göra så att man inte kan lägga till flera likadana uppgifter
 Fixa så att man kan klicka "lägg till" utan att man skrivit något, nu krachar det
+databasen töms då man tar bort en uppgift
  */
 
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
@@ -69,6 +71,11 @@ public class StudyTaskActivity extends ActionBarActivity {
         initComponents();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+       //finish();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -179,12 +186,13 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         //Lägger till deluppgifter om input för detta finns, tex a, b c.
         String elementToAdd;
+        Random rand = new Random();
         if (separateTaskParts.length > 1) {
             for (int i = 1; i < separateTaskParts.length; i++) {       //För varje deluppgift
                 for (String s2 : stringList) {                         //För varje vihuv uppgift
                     elementToAdd = s2 + separateTaskParts[i];       //Sätt ihop dessa Huvuduppgift 1 och deluppgift a blir 1a
-
-                    StudyTask studyTask = new StudyTask(this, courseCode, chapter, elementToAdd, 0, 0, dbAdapter, AssignmentType.OTHER, null);
+                    int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
+                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, elementToAdd, 0, 0, dbAdapter, AssignmentType.OTHER, null);
                     addToListOfTasks(studyTask);
                     addToDatabase(studyTask);
                 }
@@ -193,7 +201,8 @@ public class StudyTaskActivity extends ActionBarActivity {
         //lägger till huvuduppgifterna då deluppgifter inte finns
         else {
             for (String s : stringList) {         //För varje huvuduppgift
-                StudyTask studyTask = new StudyTask(this, courseCode, chapter, s, 0, 0, dbAdapter, AssignmentType.OTHER, null);
+                int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
+                StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, s, 0, 0, dbAdapter, AssignmentType.OTHER, null);
                 addToListOfTasks(studyTask);
                 addToDatabase(studyTask);
             }
@@ -207,20 +216,23 @@ public class StudyTaskActivity extends ActionBarActivity {
         int start;
         int end;
 
+        Random rand = new Random();
+        int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
+
         if (taskString.contains("-")) {
 
             separateLine = taskString.split("-");   //Delar upp stringen till en array med elementen mellan bindesstrecken
             start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
             end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
-            StudyTask studyTask = new StudyTask(this, courseCode, chapter, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, null);
+            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, null);
 
             addToDatabase(studyTask);
             addToListOfTasks(studyTask);
 
         } else {
 
-            StudyTask studyTask = new StudyTask(this, courseCode, chapter, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, null);
+            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, null);
 
             addToDatabase(studyTask);
             addToListOfTasks(studyTask);
@@ -242,15 +254,6 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     public void addToDatabase(StudyTask studyTask) {
 
-        Log.d("Lägga till element i databasen: ", studyTask.getIdNr());
-        Log.d("Lägga till element i Kurskod: ", studyTask.getCourseCode());
-        Log.d("Lägga till element i Kapitel: ", "" + studyTask.getChapter());
-        Log.d("Lägga till element i Task: ", studyTask.getTaskString());
-        Log.d("Lägga till element i StartSida: ", "" + studyTask.getStartPage());
-        Log.d("Lägga till element i SlutSida: ", "" + studyTask.getEndPage());
-        Log.d("Lägga till element i Typ: ", studyTask.getType().toString());
-        //Log.d("Lägga till element i Status: ", studyTask.getStatus().toString());
-
         dbAdapter.insertAssignment(
                 studyTask.getCourseCode(),
                 studyTask.getChapter(),
@@ -258,8 +261,14 @@ public class StudyTaskActivity extends ActionBarActivity {
                 studyTask.getStartPage(),
                 studyTask.getEndPage(),
                 studyTask.getType(),
-                studyTask.getStatus());
+                AssignmentStatus.DONE
+        //        studyTask.getStatus()
+        );
+
+        Log.d("Lägga till element i databas: ", "" + dbAdapter.getAssignments().getCount());
     }
+
+
 
     public void addTasksFromDatabase() {
 
@@ -285,9 +294,13 @@ public class StudyTaskActivity extends ActionBarActivity {
                 else{
                     assignmentType = AssignmentType.OTHER;
                 }
+                //TODO: lös detta bättre för att tínte tillåta dubletter
+                Random rand = new Random();
+                int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
 
                 StudyTask studyTask = new StudyTask(
                         this,
+                        randomNum,
                         cursor.getString(cursor.getColumnIndex("_ccode")),
                         cursor.getInt(cursor.getColumnIndex("chapter")),
                         cursor.getString(cursor.getColumnIndex("assNr")),
@@ -305,10 +318,22 @@ public class StudyTaskActivity extends ActionBarActivity {
                     uncheckedArray.add(studyTask);
 
                 for (StudyTask s : checkedArray) {
-                    listOfTasks.addView(s);
+                    if(s.getType() == AssignmentType.READ) {
+                        listOfReadAssignments.removeView(s);
+                        listOfReadAssignments.addView(s);
+                    }
+                    else{
+                        listOfTasks.removeView(s);
+                        listOfTasks.addView(s);
+                    }
                 }
                 for (StudyTask s : uncheckedArray) {
-                    listOfTasks.addView(s);
+                    if(s.getType() == AssignmentType.READ) {
+                        listOfReadAssignments.addView(s);
+                    }
+                    else{
+                        listOfTasks.addView(s);
+                    }
                 }
 
             }

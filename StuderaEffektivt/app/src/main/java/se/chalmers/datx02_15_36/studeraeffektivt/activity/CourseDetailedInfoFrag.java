@@ -124,6 +124,7 @@ public class CourseDetailedInfoFrag extends Fragment {
                 //TODO: Skall göra så att denna lägger in i olika listor baserat på om uppgiften är gjort eller inte och läggas upp efter det. Vill på något sätt även sortera detta.     Fixa
                 layoutWithinScrollViewOfTasks.addView(new StudyTask(
                         getActivity(),
+                        1,
                         cursor.getString(cursor.getColumnIndex("_ccode")),
                         cursor.getInt(cursor.getColumnIndex("chapter")),
                         cursor.getString(cursor.getColumnIndex("assNr")),
