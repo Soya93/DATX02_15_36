@@ -315,16 +315,6 @@ public class StudyTaskActivity extends ActionBarActivity {
                 } else
                     uncheckedArray.add(studyTask);
 
-                for (StudyTask s : checkedArray) {
-                    if(s.getType() == AssignmentType.READ) {
-                        listOfReadAssignments.removeView(s);
-                        listOfReadAssignments.addView(s);
-                    }
-                    if(s.getType() == AssignmentType.OTHER) {
-                        listOfTasks.removeView(s);
-                        listOfTasks.addView(s);
-                    }
-                }
                 for (StudyTask s : uncheckedArray) {
                     if(s.getType() == AssignmentType.READ) {
                         listOfReadAssignments.removeView(s);
@@ -337,6 +327,16 @@ public class StudyTaskActivity extends ActionBarActivity {
                     }
                 }
 
+                for (StudyTask s : checkedArray) {
+                    if(s.getType() == AssignmentType.READ) {
+                        listOfReadAssignments.removeView(s);
+                        listOfReadAssignments.addView(s);
+                    }
+                    if(s.getType() == AssignmentType.OTHER) {
+                        listOfTasks.removeView(s);
+                        listOfTasks.addView(s);
+                    }
+                }
             }
         }
     }
