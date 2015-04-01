@@ -7,6 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ public class EventActivity extends ActionBarActivity {
     private TextView locationView;
     private TextView descriptionView;
     private TextView calendarView;
+    private TextView notificationView;
     private String title;
     private String location;
     private String description;
@@ -43,6 +45,11 @@ public class EventActivity extends ActionBarActivity {
     private Calendar calEnd;
     private long calendarID;
     private Bundle savedInstanceState;
+
+    ArrayMap<Integer, String> notificationAlternativesMap = new ArrayMap<>();
+
+    //String[] notificationAlternatives = {"Ingen", "Vid start", "1 minut", "5 minuter", "10 minuter", "15 minuter", "30 minuter", "1 timme", "2 timmar"};
+
 
     private long startTimeMillis;
     private long endTimeMillis;
@@ -78,8 +85,15 @@ public class EventActivity extends ActionBarActivity {
         description = getIntent().getStringExtra("description");
         calendarID = getIntent().getLongExtra("calID", 1);
         calendarName = getIntent().getStringExtra("calName");
+        notification = getIntent().getIntExtra("notification", -1);
+        /*
+        int index = calendarFrag.getCalendarModel().getCalendarIDs(getContentResolver()).indexOf(calendarID);
+        Log.i("oncreate event avtivity: ", calendarID +" " + index);
+        calendarName = calendarFrag.getCalendarModel().getCalendarNames(getContentResolver()).get(index);
+        Log.i("oncreate event avtivity: ", calendarName);
+        */
 
-                initComponents();
+        initComponents();
     }
 
 
@@ -140,6 +154,13 @@ public class EventActivity extends ActionBarActivity {
         endTime = (TextView) findViewById(R.id.end_time_input);
         endTime.setOnClickListener(myTextViewHandler);
 
+        notificationView = (TextView) findViewById(R.id.notification_input);
+        //notificationView.setText(notificationAlternatives[notification] + "");
+        notificationView.setOnClickListener(myTextViewHandler);
+        setNotificationMapValues();
+
+        notificationView.setText(notificationAlternativesMap.get(notification));
+
         if (isInAddMode) {
             startTimeMillis = CalendarUtils.TODAY_IN_MILLIS;
 
@@ -197,6 +218,17 @@ public class EventActivity extends ActionBarActivity {
         calEnd.set(Calendar.HOUR_OF_DAY, endHour);
     }
 
+    private void setNotificationMapValues(){
+        notificationAlternativesMap.put(-1, "Ingen");
+        notificationAlternativesMap.put(0, "Vid start");
+        notificationAlternativesMap.put(1, "1 minut");
+        notificationAlternativesMap.put(5, "5 minuter");
+        notificationAlternativesMap.put(10, "10 minuter");
+        notificationAlternativesMap.put(15, "15 minuter");
+        notificationAlternativesMap.put(30, "30 minuter");
+        notificationAlternativesMap.put(60, "1 timme");
+        notificationAlternativesMap.put(120, "2 timmar");
+    }
 
     private void goToTextView(TextView v) {
         int id = v.getId();
@@ -227,7 +259,10 @@ public class EventActivity extends ActionBarActivity {
                 Log.i("click on text view", " calendar lable");
                 Dialog dialog = openCalendarPickerDialog(savedInstanceState);
                 dialog.show();
-
+                break;
+            case R.id.notification_input:
+                Log.i("click on text view", " notification");
+                chooseNotification();
                 break;
         }
     }
@@ -378,12 +413,6 @@ public class EventActivity extends ActionBarActivity {
         location = ((EditText) findViewById(R.id.location_input)).getText().toString();
         description = ((EditText) findViewById(R.id.description_input)).getText().toString();
 
-        //TODO: Fix with notifications
-        String notificationString = ((EditText) findViewById(R.id.notification_input)).getText().toString();
-        notification = -1;
-        if (notificationString != null && !notificationString.isEmpty()) {
-            notification = Integer.parseInt(notificationString);
-        }
         Log.i("ok button clicked", isInAddMode + "");
         if (isInAddMode) {
 
@@ -399,11 +428,6 @@ public class EventActivity extends ActionBarActivity {
 
             calendarFrag.editEvent(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, curEventID, calendarID, notification);
 
-
-            //calStart.set(startYear, startMonth, startDay, startHour, startMinute);
-            //calEnd.set(endYear, endMonth, endDay, endHour, endMinute);
-
-
             onBackPressed();
 
             CharSequence text = "Händelsen " + title + " har redigerats";
@@ -411,13 +435,26 @@ public class EventActivity extends ActionBarActivity {
             Toast toast = Toast.makeText(getApplicationContext(), text, duration);
             toast.show();
         }
+    }
 
+    public void chooseNotification() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String[] alternatives = notificationAlternativesMap.values().toArray(new String[0]);
+
+        builder.setItems(alternatives, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                notification = notificationAlternativesMap.keyAt(which);
+                notificationView.setText(notificationAlternativesMap.valueAt(which));
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     public void onCancelButtonClicked(View v) {
         onBackPressed();
     }
-
 
     public void setCalendarFrag(CalendarFrag calendarFrag) {
         this.calendarFrag = calendarFrag;

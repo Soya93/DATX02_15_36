@@ -56,7 +56,6 @@ public class CalendarUtils {
             CalendarContract.Instances.DESCRIPTION,     // 5
             CalendarContract.Instances.CALENDAR_DISPLAY_NAME //6
     };
-
     // The indices for the projection array above for the events in the calendar
     public static final int EVENT_INFO_ID = 0;
     public static final int EVENT_INFO_BEGIN = 1;
@@ -65,6 +64,12 @@ public class CalendarUtils {
     public static final int EVENT_INFO_LOCATION = 4;
     public static final int EVENT_INFO_DESCRIPTION = 5;
     public static final int EVENT_INFO_CALENDAR = 6;
+
+    public static final String[] NOTIFICATION_PROJECTION = new String[]{
+            CalendarContract.Reminders.MINUTES //0
+    };
+    public static final int EVENT_INFO_NOTIFICATION = 0;
+
 
 
     public static final Calendar cal = Calendar.getInstance();

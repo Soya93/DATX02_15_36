@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -106,11 +107,35 @@ public class CalendarModel {
         return null;
     }
 
-    /**
-     * Checks if the startdate is zero, if so it is set to a good default
-     *
-     * @param startDate
-     */
+    public Cursor getNotificationCursor(ContentResolver cr, Long startInterval, Long endInterval,  Long eventID){
+       /* Uri.Builder eventsUriBuilder = CalendarContract.Reminders.CONTENT_URI.buildUpon();
+        ContentUris.appendId(eventsUriBuilder, startInterval);
+        ContentUris.appendId(eventsUriBuilder, endInterval);
+        Uri eventsUri = eventsUriBuilder.build();
+
+        // (ContentResolver cr, long eventId, String[] projection)
+
+        //cur = cr.query(eventsUri, CalendarUtils.NOTIFICATION_PROJECTION, null, null, CalendarContract.Reminders.MINUTES + " ASC");
+
+        cur =  CalendarContract.Reminders.query(cr, eventID, CalendarUtils.NOTIFICATION_PROJECTION);
+
+        //Prints out all the events in the given interval
+        while (cur.moveToNext()) {
+            if(cur.getLong(CalendarUtils.EVENT_INFO_NOTIFICATION_ID) == eventID) {
+                return cur;
+            }
+        }
+        cur.close();*/
+
+        return CalendarContract.Reminders.query(cr, eventID, CalendarUtils.NOTIFICATION_PROJECTION);
+    }
+
+
+        /**
+         * Checks if the startdate is zero, if so it is set to a good default
+         *
+         * @param startDate
+         */
     private Long checkStartInterval(Long startDate) {
         return startDate == 0L ? CalendarUtils.TODAY_IN_MILLIS : startDate;
     }
@@ -242,8 +267,13 @@ public class CalendarModel {
         //TODO testa
     }
 
+    public Long addEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, int notificationTime) {
+        long eventID = this.addEventAuto(cr, title, startMillis, endMillis, location,description, calID);
+        this.addNotification(cr,eventID, notificationTime);
+        return eventID;
+    }
 
-    public Long addEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID) {
+        public Long addEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID) {
 
         startMillis = checkStartInterval(startMillis);
         endMillis = checkEndInterval(endMillis);
@@ -251,6 +281,7 @@ public class CalendarModel {
         Log.i("start", startMillis + "");
         Log.i("end", endMillis + "");
 
+        TimeZone timeZone = TimeZone.getDefault();
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, startMillis);
         values.put(CalendarContract.Events.DTEND, endMillis);
@@ -258,7 +289,7 @@ public class CalendarModel {
         values.put(CalendarContract.Events.DESCRIPTION, description);
         values.put(CalendarContract.Events.CALENDAR_ID, calID);
         values.put(CalendarContract.Events.EVENT_LOCATION, location);
-        values.put(CalendarContract.Events.EVENT_TIMEZONE, "America/Los_Angeles");
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
         // get the event ID that is the last element in the Uri
@@ -271,8 +302,8 @@ public class CalendarModel {
     public void editEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, long eventID, int notification) {
 
         deleteEvent(cr, eventID);
-        addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
-
+        long newId = addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
+        this.addNotification(cr,newId, notification);
     }
 
 
@@ -286,9 +317,17 @@ public class CalendarModel {
 
     //deleting an event from a calendar
     public void deleteEvent(ContentResolver cr, long eventID) {
-        ContentValues values = new ContentValues(); // remove this line???
         Uri deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
         cr.delete(deleteUri, null, null);
+    }
+
+    private void addNotification(ContentResolver cr, long eventID, int min){
+        ContentValues values = new ContentValues();
+        min = min == -1? CalendarContract.Reminders.MINUTES_DEFAULT: min;
+        values.put(CalendarContract.Reminders.MINUTES, min);
+        values.put(CalendarContract.Reminders.EVENT_ID, eventID);
+        values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+        cr.insert(CalendarContract.Reminders.CONTENT_URI, values);
     }
 
 
@@ -299,14 +338,6 @@ public class CalendarModel {
         cr.update(updateUri, values, null, null);
     }
 
-    public void addNotification(ContentResolver cr, long eventID, int min){
-        ContentValues values = new ContentValues();
-        min = min == -1? CalendarContract.Reminders.MINUTES_DEFAULT: min;
-        values.put(CalendarContract.Reminders.MINUTES, min);
-        values.put(CalendarContract.Reminders.EVENT_ID, eventID);
-        values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-        Uri uri = cr.insert(CalendarContract.Reminders.CONTENT_URI, values);
-    }
 
     public void removeNotification(ContentResolver cr, long eventID) {
         ContentValues values = new ContentValues();
