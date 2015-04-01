@@ -25,10 +25,12 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -51,6 +53,8 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     private String courseCode;
 
+    private HashMap<Integer, ArrayList<StudyTask>> hashMapOfStudyTasks;
+
     //The access point of the database.
     private DBAdapter dbAdapter;
 
@@ -65,6 +69,8 @@ public class StudyTaskActivity extends ActionBarActivity {
         if (this != null) {
             dbAdapter = new DBAdapter(this);
         }
+
+        hashMapOfStudyTasks = new HashMap();
 
         initComponents();
     }
@@ -275,6 +281,8 @@ public class StudyTaskActivity extends ActionBarActivity {
         ArrayList<StudyTask> checkedArray = new ArrayList<>();
         ArrayList<StudyTask> uncheckedArray = new ArrayList<>();
 
+        TextView kapitelText = new TextView(this);
+
         if (cursor != null) {
             while (cursor.moveToNext()) {
 
@@ -292,9 +300,6 @@ public class StudyTaskActivity extends ActionBarActivity {
                 else{
                     assignmentType = AssignmentType.OTHER;
                 }
-                //TODO: lös detta bättre för att tínte tillåta dubletter
-                Random rand = new Random();
-                int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
 
                 StudyTask studyTask = new StudyTask(
                         this,
@@ -315,29 +320,47 @@ public class StudyTaskActivity extends ActionBarActivity {
                 } else
                     uncheckedArray.add(studyTask);
 
-                for (StudyTask s : uncheckedArray) {
-                    if(s.getType() == AssignmentType.READ) {
-                        listOfReadAssignments.removeView(s);
-                        listOfReadAssignments.addView(s);
-                    }
-                    if(s.getType() == AssignmentType.OTHER) {
-                        listOfTasks.removeView(s);
-                        listOfTasks.addView(s);
-
-                    }
+                if(hashMapOfStudyTasks.containsKey(studyTask.getChapter())){
+                    hashMapOfStudyTasks.get(studyTask.getChapter()).add(studyTask);
                 }
-
-                for (StudyTask s : checkedArray) {
-                    if(s.getType() == AssignmentType.READ) {
-                        listOfReadAssignments.removeView(s);
-                        listOfReadAssignments.addView(s);
-                    }
-                    if(s.getType() == AssignmentType.OTHER) {
-                        listOfTasks.removeView(s);
-                        listOfTasks.addView(s);
-                    }
+                else{
+                    ArrayList<StudyTask> a = new ArrayList();
+                    a.add(studyTask);
+                    hashMapOfStudyTasks.put(studyTask.getChapter(),a);
                 }
             }
+
+            for (Object value : hashMapOfStudyTasks.values()) {
+                ArrayList<StudyTask> a = (ArrayList) value;
+                kapitelText.setText("KAPITEL " + a.get(0).getChapter());
+                kapitelText = new TextView(this);
+                listOfTasks.addView(kapitelText);
+                for(int i = 0; i < a.size(); i++){
+                   listOfTasks.addView(a.get(i));
+                }
+            }
+
+            /*for (StudyTask s : uncheckedArray) {
+                if(s.getType() == AssignmentType.READ) {
+                    listOfReadAssignments.removeView(s);
+                    listOfReadAssignments.addView(s);
+                }
+                if(s.getType() == AssignmentType.OTHER) {
+                    listOfTasks.removeView(s);
+                    listOfTasks.addView(s);
+                }
+            }
+
+            for (StudyTask s : checkedArray) {
+                if(s.getType() == AssignmentType.READ) {
+                    listOfReadAssignments.removeView(s);
+                    listOfReadAssignments.addView(s);
+                }
+                if(s.getType() == AssignmentType.OTHER) {
+                    listOfTasks.removeView(s);
+                    listOfTasks.addView(s);
+                }
+            }*/
         }
     }
 
@@ -353,7 +376,6 @@ public class StudyTaskActivity extends ActionBarActivity {
                 } else {
                     dbAdapter.setUndone(studyTask.getIdNr());
                 }
-
             }
         });
 
@@ -376,7 +398,6 @@ public class StudyTaskActivity extends ActionBarActivity {
                         dbAdapter.deleteAssignment(studyTask.getIdNr());
                         Toast.makeText(StudyTaskActivity.this,"Uppgift borttagen",Toast.LENGTH_SHORT).show();
                         return true;
-
                     }
                 });
 
