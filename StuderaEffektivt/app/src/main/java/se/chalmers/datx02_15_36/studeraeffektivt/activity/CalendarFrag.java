@@ -15,11 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alamkanak.weekview.WeekView;
@@ -110,7 +105,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 }else if (v.getTag() == button3.getTag()) {
                     //Instälningar - antal dagar
                     changeNbrOfDaysDialog();
-
                 } else  {
                     //Instälningar - vilka kalendrar
                     changeVisibleCalendars();
@@ -144,8 +138,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         button2.setOnClickListener(fabHandler);
         button3.setOnClickListener(fabHandler);
         button4.setOnClickListener(fabHandler);
-
-
     }
 
     @Override
@@ -180,6 +172,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final String calendar = cur.getString(CalendarUtils.CALENDAR_NAME);
         final int calID = cur.getInt(CalendarUtils.CALENDAR_ID);
         cur.close();
+        final int notification = -1;
+        //Cursor curNot = calendarModel.getNotificationCursor(cr, startTime, endTime, weekViewEvent.getId());
+        //final int notification = curNot == null? -1: curNot.getInt(0);
 
         calendarView.updateEventInfoView(dialogView, title, startTime, endTime, location, description, calendar);
         builder.setView(dialogView);
@@ -193,7 +188,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                openEditEvent(weekViewEvent.getId(), startTime, endTime, title, location, description, calID, calendar);
+                openEditEvent(weekViewEvent.getId(), startTime, endTime, title, location, description, calID, calendar, notification);
             }
         });
 
@@ -215,7 +210,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     //Opens an dialog when pressing the buttom for adding a new event
 
-    private void openEditEvent(long eventID, long startTime, long endTime, String title, String location, String description, int calID, String calName) {
+    private void openEditEvent(long eventID, long startTime, long endTime, String title, String location, String description, int calID, String calName, int notification) {
 
         //Get all neccesary information about the event
 
@@ -233,6 +228,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         intent.putExtra("description", description);
         intent.putExtra("calID", calID);
         intent.putExtra("calName", calName);
+        intent.putExtra("notification", notification);
         startActivity(intent);
     }
 
@@ -258,8 +254,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     //Adds an event to the calendar with the specified inputs
     public void addEvent(String title, String location, String description, long startMillis, long endMillis, ContentResolver cr, long calID, int notification) {
-        long id = calendarModel.addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
-        calendarModel.addNotification(cr, id, notification);
+        calendarModel.addEventAuto(cr, title, startMillis, endMillis, location, description, calID, notification);
     }
 
 
@@ -373,7 +368,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     public void addRepetitionSession() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        //the alternatives
+        //the notificationAlternatives
         String[] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
         builder.setTitle("Välj ett pass att repetera")
                 .setItems(alternatives, new DialogInterface.OnClickListener() {
@@ -426,8 +421,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     public void changeNbrOfDaysDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
         final String [] choices = {"1", "3", "5"};
         numberOfVisibleDays = mWeekView.getNumberOfVisibleDays();
         int index = getIndexOfVisibleDays();
@@ -435,6 +428,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
        builder.setTitle("Antalet dagar i vyn");
        builder.setSingleChoiceItems(choices, index, new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialog, int selected) {
+
                    numberOfVisibleDays = Integer.parseInt((choices[selected]));
            }
        });
@@ -461,7 +455,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
     private int getIndexOfVisibleDays(){
-        return numberOfVisibleDays == 1? 0: numberOfVisibleDays - 2;
+        int i = numberOfVisibleDays == 3? numberOfVisibleDays-2: numberOfVisibleDays-3;
+        return numberOfVisibleDays == 1? numberOfVisibleDays-1: i;
     }
 
     private void calendarColors() {

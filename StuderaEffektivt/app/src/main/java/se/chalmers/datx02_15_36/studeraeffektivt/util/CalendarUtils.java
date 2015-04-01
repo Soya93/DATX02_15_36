@@ -46,12 +46,13 @@ public class CalendarUtils {
 
 
 
-
-
-
-
-
     // The indices for the projection array above for the events in the calendar
+
+
+    public static final String[] NOTIFICATION_PROJECTION = new String[]{
+            CalendarContract.Reminders.MINUTES //0
+    };
+    public static final int EVENT_INFO_NOTIFICATION = 0;
 
 
 
