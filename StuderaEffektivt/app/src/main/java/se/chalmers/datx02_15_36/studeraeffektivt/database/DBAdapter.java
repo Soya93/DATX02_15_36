@@ -159,7 +159,9 @@ public class DBAdapter {
 
         cursor.moveToNext();
         if (cursor.getCount() > 0) {
-            return cursor.getInt(0);
+            int i = cursor.getInt(0);
+            cursor.close();
+            return i;
         } else {
             return -1;
         }
@@ -172,10 +174,13 @@ public class DBAdapter {
         String selection = dbHelper.TIMEONCOURSE__ccode + " = '" + ccode + "'";
         Cursor cursor = db.query(dbHelper.TABLE_TIMEONCOURSE, columns, selection, null, null, null, null);
 
-        cursor.moveToNext();
         if (cursor.getCount() > 0) {
-            return cursor.getInt(0);
+            cursor.moveToNext();
+            int i = cursor.getInt(0);
+            cursor.close();
+            return i;
         } else {
+            cursor.close();
             return -1;
         }
     }
