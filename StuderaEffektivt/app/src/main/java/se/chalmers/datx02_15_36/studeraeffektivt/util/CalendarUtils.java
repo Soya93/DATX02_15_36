@@ -26,7 +26,8 @@ public class CalendarUtils {
             CalendarContract.Instances.CALENDAR_ID,     // 8
             CalendarContract.Instances.OWNER_ACCOUNT,    // 9
             CalendarContract.Instances.CALENDAR_COLOR,       //10
-            CalendarContract.Instances.VISIBLE              //11
+            CalendarContract.Instances.VISIBLE,              //11
+            CalendarContract.Instances.ALL_DAY              //12
 
     };
 
@@ -43,11 +44,7 @@ public class CalendarUtils {
     public static final int OWNER_ACCOUNT = 9;
     public static final int CALENDAR_COLOR = 10;
     public static final int VISIBLE = 11;
-
-
-
-    // The indices for the projection array above for the events in the calendar
-
+    public static final int ALL_DAY = 12;
 
     public static final String[] NOTIFICATION_PROJECTION = new String[]{
             CalendarContract.Reminders.MINUTES //0
@@ -81,16 +78,4 @@ public class CalendarUtils {
 
     public static final int C_CALENDAR_ID = 0;
     public static final int C_CALENDAR_COLOR =4;
-
-
-
-
-
-
-
-    public static String formatDate(long startDateInMillis, long endDateInMillis){
-        SimpleDateFormat startFormat = new SimpleDateFormat("EEEE d MMMM, HH:mm");
-        SimpleDateFormat endFormat = new SimpleDateFormat("HH:mm");
-       return startFormat.format(new Date(startDateInMillis)) + "-" + endFormat.format(new Date(endDateInMillis));
-    }
 }

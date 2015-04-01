@@ -186,7 +186,7 @@ public class CalendarModel {
 
     public List<Long> getCalendarIDs(ContentResolver cr) {
 
-        List<Long> calendarIDs = new ArrayList<Long>();
+        List<Long> calendarIDs = new ArrayList<>();
 
         String[] projection = {CalendarContract.Calendars._ID,
                 CalendarContract.Calendars.NAME,
@@ -206,7 +206,7 @@ public class CalendarModel {
             // the cursor, c, contains all the projection data items
             // access the cursor’s contents by array index as declared in
             // your projection
-            long id = c.getLong(0);
+            Long id = c.getLong(0);
 
             calendarIDs.add(id);
         }
@@ -214,15 +214,6 @@ public class CalendarModel {
         return calendarIDs;
 
     }
-
-    /*
-    getCalendars är en map nu... vet inte om denna metod används...
-    public List<String> getRepAlt(ContentResolver cr, String accountEmail, String accountType) {
-        List<String> events = getCalendars(cr);
-        List<String> studySessions = filter(events, "Studiepass");
-        return studySessions;
-    }
-    */
 
     public List<String> filter(List<String> events, String filterOn) {
         List<String> filteredList = new ArrayList<String>();
@@ -267,19 +258,12 @@ public class CalendarModel {
         //TODO testa
     }
 
-    public Long addEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, int notificationTime) {
-        long eventID = this.addEventAuto(cr, title, startMillis, endMillis, location,description, calID);
-        this.addNotification(cr,eventID, notificationTime);
-        return eventID;
-    }
+        public Long addEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, int notification, boolean isAllDay) {
 
-        public Long addEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID) {
+        Log.i("String", cr.toString());
 
         startMillis = checkStartInterval(startMillis);
         endMillis = checkEndInterval(endMillis);
-
-        Log.i("start", startMillis + "");
-        Log.i("end", endMillis + "");
 
         TimeZone timeZone = TimeZone.getDefault();
         ContentValues values = new ContentValues();
@@ -290,22 +274,21 @@ public class CalendarModel {
         values.put(CalendarContract.Events.CALENDAR_ID, calID);
         values.put(CalendarContract.Events.EVENT_LOCATION, location);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
+        values.put(CalendarContract.Events.ALL_DAY, isAllDay? 1:0);
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
         // get the event ID that is the last element in the Uri
         long eventID = Long.parseLong(uri.getLastPathSegment());
+        addNotification(cr, eventID, notification);
         //
         // ... do something with event ID
         return eventID;
     }
 
-    public void editEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, long eventID, int notification) {
-
+    public void editEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, long eventID, int notification, boolean isAllDay) {
         deleteEvent(cr, eventID);
-        long newId = addEventAuto(cr, title, startMillis, endMillis, location, description, calID);
-        this.addNotification(cr,newId, notification);
+        addEventAuto(cr, title, startMillis, endMillis, location, description, calID, notification, isAllDay);
     }
-
 
     //Builds a static Uri used for synchronizing
     static Uri asSyncAdapter(Uri uri, String account, String accountType) {
@@ -337,15 +320,5 @@ public class CalendarModel {
         Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
         cr.update(updateUri, values, null, null);
     }
-
-
-    public void removeNotification(ContentResolver cr, long eventID) {
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Reminders.MINUTES, CalendarContract.Reminders.MINUTES_DEFAULT);
-        values.put(CalendarContract.Reminders.EVENT_ID, eventID);
-        values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-        Uri uri = cr.insert(CalendarContract.Reminders.CONTENT_URI, values);
-    }
-
 
 }

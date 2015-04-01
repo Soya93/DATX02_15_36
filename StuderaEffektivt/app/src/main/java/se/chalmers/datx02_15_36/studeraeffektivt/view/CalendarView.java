@@ -26,7 +26,7 @@ public class CalendarView {
 
         TextView eventTimeLabel = (TextView) dialogView.findViewById(R.id.event_time_label);
         if (eventTimeLabel != null) {
-            eventTimeLabel.setText("Tid: " + CalendarUtils.formatDate(startTime, endTime));
+            eventTimeLabel.setText("Tid: " + formatDate(startTime, endTime));
         }
 
         TextView eventLocationLabel = (TextView) dialogView.findViewById(R.id.event_location_label);
@@ -57,6 +57,12 @@ public class CalendarView {
         builder.setView(dialogView);
 
         return builder;
+    }
+
+    public static String formatDate(long startDateInMillis, long endDateInMillis){
+        SimpleDateFormat startFormat = new SimpleDateFormat("EEEE d MMMM, HH:mm");
+        SimpleDateFormat endFormat = new SimpleDateFormat("HH:mm");
+        return startFormat.format(new Date(startDateInMillis)) + "-" + endFormat.format(new Date(endDateInMillis));
     }
 }
 

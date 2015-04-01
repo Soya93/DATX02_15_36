@@ -18,9 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.alamkanak.weekview.WeekView;
-import com.alamkanak.weekview.WeekViewEvent;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.alamkanak.weekview.WeekViewEvent;;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import java.util.ArrayList;
@@ -170,9 +168,12 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final String location = cur.getString(CalendarUtils.LOCATION);
         final String description = cur.getString(CalendarUtils.DESCRIPTION);
         final String calendar = cur.getString(CalendarUtils.CALENDAR_NAME);
-        final int calID = cur.getInt(CalendarUtils.CALENDAR_ID);
+        final long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
+        final int allDay = cur.getInt(CalendarUtils.ALL_DAY);
         cur.close();
         final int notification = -1;
+
+        //Notification cursor
         //Cursor curNot = calendarModel.getNotificationCursor(cr, startTime, endTime, weekViewEvent.getId());
         //final int notification = curNot == null? -1: curNot.getInt(0);
 
@@ -188,7 +189,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                openEditEvent(weekViewEvent.getId(), startTime, endTime, title, location, description, calID, calendar, notification);
+                openEditEvent(weekViewEvent.getId(), startTime, endTime, title, location, description, calID, calendar, notification, allDay);
             }
         });
 
@@ -209,13 +210,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
     //Opens an dialog when pressing the buttom for adding a new event
-
-    private void openEditEvent(long eventID, long startTime, long endTime, String title, String location, String description, int calID, String calName, int notification) {
-
-        //Get all neccesary information about the event
-
-        //send it further to the event activity
-
+    private void openEditEvent(long eventID, long startTime, long endTime, String title, String location, String description, Long calID, String calName, int notification, int isAllDay) {
         eventActivity = new EventActivity();
         eventActivity.setCalendarFrag(this);
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
@@ -229,6 +224,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         intent.putExtra("calID", calID);
         intent.putExtra("calName", calName);
         intent.putExtra("notification", notification);
+        intent.putExtra("isAllDay", isAllDay);
         startActivity(intent);
     }
 
@@ -247,16 +243,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         startActivity(intent);
     }
-
-    public void editEvent(ContentResolver cr, String title, long startMillis, long endMillis, String location, String description, long eventID, long calID, int notification) {
-        calendarModel.editEventAuto(cr, title, startMillis, endMillis, location, description, calID, eventID, notification);
-    }
-
-    //Adds an event to the calendar with the specified inputs
-    public void addEvent(String title, String location, String description, long startMillis, long endMillis, ContentResolver cr, long calID, int notification) {
-        calendarModel.addEventAuto(cr, title, startMillis, endMillis, location, description, calID, notification);
-    }
-
 
     @Override
     public void onEventLongPress(final WeekViewEvent weekViewEvent, RectF rectF) {
@@ -313,7 +299,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         int year = CalendarUtils.YEAR;
         int month = CalendarUtils.MONTH;
         Calendar cal = Calendar.getInstance();
-        cal.set(year, month, 1);
+        cal.set(year, month-1, 1);
         long startDay = cal.getTimeInMillis();
         int daysInMonth =cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         cal.set(year, month, daysInMonth);
@@ -335,7 +321,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 long id = cur.getLong(CalendarUtils.EVENT_ID);
 
                //event name ska vara här!!
-
                 Calendar startTime = Calendar.getInstance();
                 startTime.setTimeInMillis(cur.getLong(CalendarUtils.EVENT_BEGIN));
 
@@ -343,14 +328,19 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 Calendar endTime = Calendar.getInstance();
                 endTime.setTimeInMillis(cur.getLong(CalendarUtils.EVENT_END));
 
-                int color = cur.getInt(CalendarUtils.EVENT_COLOR);
+               Log.i("name ", eventName + "all day? " + (cur.getInt(CalendarUtils.ALL_DAY) == 1));
 
-                //TODO fix this! calendar color is also 0
+              if(cur.getInt(CalendarUtils.ALL_DAY) == 1){
+                   startTime.set(Calendar.HOUR_OF_DAY, 0);
+                   startTime.set(Calendar.MINUTE, 0);
+                   endTime.set(Calendar.HOUR_OF_DAY, 23);
+                   endTime.set(Calendar.MINUTE, 59);
+               }
+
+               int color = cur.getInt(CalendarUtils.EVENT_COLOR);
                 if(color == 0) {
                     color = cur.getInt(CalendarUtils.CALENDAR_COLOR);
                 }
-
-                //Log.i("readEvents: name:" + eventName, "color: " + color);
 
                 WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
                 event.setColor(color);
