@@ -8,6 +8,12 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
         import android.util.AttributeSet;
         import android.view.View;
         import android.view.ViewGroup;
+        import android.widget.TextView;
+
+        import java.util.ArrayList;
+        import java.util.HashMap;
+
+        import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 
 
 /**
@@ -19,6 +25,8 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
 public class FlowLayout extends ViewGroup {
     private final static int PAD_H = 2, PAD_V = 2; // Space between child views.
     private int mHeight;
+
+    private TextView kapitelText;
 
     public FlowLayout(Context context) {
         super(context);
@@ -85,5 +93,25 @@ public class FlowLayout extends ViewGroup {
             }
         }
     } // end onLayout()
+
+    public void addMap(HashMap<Integer, ArrayList<StudyTask>> hashMap){
+        for (Object value : hashMap.values()) {
+            ArrayList<StudyTask> a = (ArrayList) value;
+            kapitelText = new TextView(this.getContext());
+            kapitelText.setText("KAPITEL " + a.get(0).getChapter());
+            this.addView(kapitelText);
+            int counter = 0;
+            for(int i = 0; i < a.size(); i++){
+                this.removeView(a.get(i));
+                if(a.get(i).isChecked()) {
+                    this.addView(a.get(i));
+                    counter++;
+                }
+                else{
+                    this.addView(a.get(i),counter);
+                }
+            }
+        }
+    }
 
 }

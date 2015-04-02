@@ -54,6 +54,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     private String courseCode;
 
     private HashMap<Integer, ArrayList<StudyTask>> hashMapOfStudyTasks;
+    private HashMap<Integer, ArrayList<StudyTask>> hashMapOfReadingAssignments;
 
     //The access point of the database.
     private DBAdapter dbAdapter;
@@ -71,6 +72,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         }
 
         hashMapOfStudyTasks = new HashMap();
+        hashMapOfReadingAssignments = new HashMap<>();
 
         initComponents();
     }
@@ -246,7 +248,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     public void addToListOfTasks(StudyTask studyTask) {
 
-        initCheckbox(studyTask);
+        //initCheckbox(studyTask);
 
         if(studyTask.getType().equals(AssignmentType.READ)){
             listOfReadAssignments.addView(studyTask);
@@ -313,7 +315,8 @@ public class StudyTaskActivity extends ActionBarActivity {
                         assignmentType,
                         assignmentStatus);
 
-                initCheckbox(studyTask);
+
+                //initCheckbox(studyTask);
 
                 if (studyTask.isChecked()) {
                     checkedArray.add(studyTask);
@@ -328,9 +331,20 @@ public class StudyTaskActivity extends ActionBarActivity {
                     a.add(studyTask);
                     hashMapOfStudyTasks.put(studyTask.getChapter(),a);
                 }
+                if(hashMapOfReadingAssignments.containsKey(studyTask.getChapter())){
+                    hashMapOfReadingAssignments.get(studyTask.getChapter()).add(studyTask);
+                }
+                else{
+                    ArrayList<StudyTask> a = new ArrayList();
+                    a.add(studyTask);
+                    hashMapOfReadingAssignments.put(studyTask.getChapter(),a);
+                }
             }
 
-            for (Object value : hashMapOfStudyTasks.values()) {
+            listOfTasks.addMap(hashMapOfStudyTasks);
+            listOfReadAssignments.addMap(hashMapOfReadingAssignments);
+
+           /* for (Object value : hashMapOfStudyTasks.values()) {
                 ArrayList<StudyTask> a = (ArrayList) value;
                 kapitelText.setText("KAPITEL " + a.get(0).getChapter());
                 kapitelText = new TextView(this);
@@ -338,7 +352,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 for(int i = 0; i < a.size(); i++){
                    listOfTasks.addView(a.get(i));
                 }
-            }
+            }*/
 
             /*for (StudyTask s : uncheckedArray) {
                 if(s.getType() == AssignmentType.READ) {
@@ -364,7 +378,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         }
     }
 
-    public void initCheckbox(final StudyTask studyTask){
+   /* public void initCheckbox(final StudyTask studyTask){
         studyTask.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -408,5 +422,5 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         studyTask.setLongClickable(true);
         studyTask.setClickable(true);
-    }
+    }*/
 }
