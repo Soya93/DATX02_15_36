@@ -268,8 +268,6 @@ public class MainActivity extends ActionBarActivity {
         timerFrag.settingsTimer();
     }
 
-<<<<<<< HEAD
-
     //Does not work properly, but looks more beautiful...
     public void openDialog2(View view) {
         calendarFrag.openDialog();
@@ -284,7 +282,7 @@ public class MainActivity extends ActionBarActivity {
 
     protected void onStart() {
         super.onStart();
-=======
+
     protected void onResume() {
         super.onResume();
 
@@ -303,14 +301,11 @@ public class MainActivity extends ActionBarActivity {
             }, 2000);
 
         }
->>>>>>> feature/calendar_gui_stuff
     }
 
 
     protected void onStop() {
         super.onStop();
-<<<<<<< HEAD
-=======
         if (timerFrag.pauseTimerIsRunning || timerFrag.studyTimerIsRunning) {
             long timePassedToService = timerFrag.timePassed;
             long totalTime = timerFrag.default_TotalTime;
@@ -322,7 +317,6 @@ public class MainActivity extends ActionBarActivity {
             i.putExtra("TOTAL_TIME", totalTime / 1000);
             startService(i);
         }
->>>>>>> feature/calendar_gui_stuff
     }
 
 

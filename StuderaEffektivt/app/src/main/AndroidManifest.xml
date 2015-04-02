@@ -19,10 +19,8 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-<<<<<<< HEAD
     <uses-permission android:name="android.permission.VIBRATE" />
 
-=======
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -31,7 +29,6 @@
         android:xlargeScreens="true" />
 
     <!-- -http://developer.android.com/training/multiscreen/screensizes.html -->
->>>>>>> feature/calendar_gui_stuff
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -57,10 +54,6 @@
         <fragment
             android:name=".activity.CalendarActivity"
             android:label="@string/title_activity_calendar" />
-
-        <activity
-            android:name=".view.CalendarView"
-            android:label="@string/title_activity_calendar_view" />
 
         <fragment
             android:name=".activity.TipActivity"
