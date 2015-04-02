@@ -1,5 +1,6 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -144,11 +145,14 @@ public class TimerFrag extends Fragment {
     public void onStart() {
         super.onStart();
         startButton.setImageResource(buttonId);
-        Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
+        if(isMyServiceRunning(MyCountDownTimer.class)) {
+            Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
 
-        getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
+            getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
+        }
 
         sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+
 
         int buttonTemp = sharedPref.getInt("buttonImage", -1);
         if (buttonTemp > 0) {
@@ -266,8 +270,9 @@ public class TimerFrag extends Fragment {
         i.putExtra("TIME_STUDY", default_StudyTime);
         i.putExtra("TIME_PAUSE", default_PauseTime);
         i.putExtra("TOTAL_TIME", default_TotalTime);
-        getActivity().startService(i);
         getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
+        getActivity().startService(i);
+
     }
 
 
@@ -378,10 +383,12 @@ public class TimerFrag extends Fragment {
 
     public void onDestroyView() {
         super.onDestroyView();
-        getActivity().unbindService(sc);
-        handler.removeMessages(0);
-        handler.removeMessages(1);
-        handler.removeMessages(2);
+        if(isMyServiceRunning(MyCountDownTimer.class)) {
+            getActivity().unbindService(sc);
+            handler.removeMessages(0);
+            handler.removeMessages(1);
+            handler.removeMessages(2);
+        }
 
         saveFragmentState();
     }
@@ -402,5 +409,15 @@ public class TimerFrag extends Fragment {
         Log.d("ONDESTROY", String.valueOf(sharedPref.getInt("buttonImage", -1)));
     }
 
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
