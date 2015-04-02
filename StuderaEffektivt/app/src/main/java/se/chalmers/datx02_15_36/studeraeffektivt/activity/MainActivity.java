@@ -227,14 +227,6 @@ public class MainActivity extends ActionBarActivity {
         calendarFrag.createBuilder();
     }
 
-    protected void onStart() {
-        super.onStart();
-    }
-
-
-    protected void onStop() {
-        super.onStop();
-    }
 
 
 
