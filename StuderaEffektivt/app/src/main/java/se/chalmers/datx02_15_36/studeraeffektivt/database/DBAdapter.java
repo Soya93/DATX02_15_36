@@ -151,6 +151,21 @@ public class DBAdapter {
         return db.query(dbHelper.TABLE_ASSIGNMENTS, null, null, null, null, null, null);
     }
 
+    public Cursor getDoneAssignments(String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "' AND "
+                + dbHelper.ASSIGNMENTS_status + " = '" + AssignmentStatus.DONE.toString()+"'";
+        return db.query(dbHelper.TABLE_ASSIGNMENTS, null, selection, null, null, null, null);
+    }
+
+    public Cursor getAssignments(String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "'";
+        return db.query(dbHelper.TABLE_ASSIGNMENTS, null, selection, null, null, null, null);
+    }
+
     public Cursor getSessions() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         return db.query(dbHelper.TABLE_SESSIONS, null, null, null, null, null, null);
@@ -165,7 +180,9 @@ public class DBAdapter {
 
         cursor.moveToNext();
         if (cursor.getCount() > 0) {
-            return cursor.getInt(0);
+            int i = cursor.getInt(0);
+            cursor.close();
+            return i;
         } else {
             return -1;
         }
@@ -178,10 +195,13 @@ public class DBAdapter {
         String selection = dbHelper.TIMEONCOURSE__ccode + " = '" + ccode + "'";
         Cursor cursor = db.query(dbHelper.TABLE_TIMEONCOURSE, columns, selection, null, null, null, null);
 
-        cursor.moveToNext();
         if (cursor.getCount() > 0) {
-            return cursor.getInt(0);
+            cursor.moveToNext();
+            int i = cursor.getInt(0);
+            cursor.close();
+            return i;
         } else {
+            cursor.close();
             return -1;
         }
     }

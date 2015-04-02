@@ -58,5 +58,6 @@
     <color name="yellow">#E6DA23</color>
 
     <string name="title_activity_study_task">StudyTaskActivity</string>
+    <string name="title_activity_event">EventActivity</string>
 
 </resources>

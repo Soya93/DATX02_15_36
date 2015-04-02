@@ -50,6 +50,8 @@ public class LoginActivity extends Activity implements OnClickListener{
         logInHandler = new LogInHandler(this.getApplicationContext());
 
         mPlusSignInButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
+        mPlusSignInButton.setSize(SignInButton.SIZE_STANDARD);
+        mPlusSignInButton.setColorScheme(SignInButton.COLOR_LIGHT);
         mPlusSignInButton.setOnClickListener(this);
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
