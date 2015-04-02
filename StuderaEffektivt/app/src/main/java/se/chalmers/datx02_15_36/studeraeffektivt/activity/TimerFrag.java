@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -47,9 +48,9 @@ public class TimerFrag extends Fragment {
     private boolean hasBeenPaused = false;
 
 
-    protected long default_TotalTime = (55 * 60);
-    protected int default_StudyTime = (25*60);
-    protected long default_PauseTime = (5 * 60);
+    protected long default_TotalTime = (55 * 60*1000);
+    protected long default_StudyTime = (25 * 60*1000);
+    protected long default_PauseTime = (5 * 60*1000);
     protected long default_NumberOfPauses = 1;
 
     private TextView textView;
@@ -77,20 +78,22 @@ public class TimerFrag extends Fragment {
 
     private DBAdapter dbAdapter;
     private Handler serviceHandler;
+    private SharedPreferences sharedPref;
+    private String prefName = "ButtonPref";
 
 
-    private  Handler handler = new Handler(Looper.getMainLooper()) {
+    private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch(msg.what) {
+            switch (msg.what) {
                 case TIMER_1:
-                Bundle b = msg.getData();
-                int serviceInt = b.getInt("timePassed", -1);
-                setTimerView(serviceInt);
+                    Bundle b = msg.getData();
+                    long serviceInt = b.getLong("timePassed", -1);
+                    setTimerView(serviceInt);
                     break;
                 case CHANGE_COLOR_0:
 
-                        setProgressColor(Color.GREEN);
+                    setProgressColor(Color.GREEN);
                     insertIntoDataBase();
                     break;
 
@@ -107,12 +110,7 @@ public class TimerFrag extends Fragment {
         public void onServiceConnected(ComponentName name, IBinder service) {
             timerService = ((MyCountDownTimer.MCDTBinder) service).getService();
             timerService.setHandler(handler);
-            serviceHandler= timerService.getServiceHandler();
-
-
-
-
-
+            serviceHandler = timerService.getServiceHandler();
 
 
         }
@@ -138,30 +136,38 @@ public class TimerFrag extends Fragment {
     }
 
 
-
-
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (b != null) {
             textView = (TextView) rootView.findViewById(R.id.textView);
             String textV = b.getString("textViewText");
             textView.setText(textV);
-            int buttonId= b.getInt("buttonImage");
-            startButton.setImageResource(buttonId);
+
         }
     }
 
 
-    public void onStart () {
+    public void onStart() {
         super.onStart();
-        Intent i = new Intent(getActivity().getBaseContext(),MyCountDownTimer.class);
+        startButton.setImageResource(buttonId);
+        Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
 
-        getActivity().bindService(i,sc,Context.BIND_AUTO_CREATE);
+        getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
+
+        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+
+        int buttonTemp = sharedPref.getInt("buttonImage", -1);
+        if (buttonTemp > 0) {
+            buttonId = buttonTemp;
+            startButton.setImageResource(buttonId);
+        }
+        hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
+
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setSelectedCourse ();
+                setSelectedCourse();
             }
 
             @Override
@@ -177,7 +183,7 @@ public class TimerFrag extends Fragment {
         textView = (TextView) rootView.findViewById(R.id.textView);
         spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-       setCourses();
+        setCourses();
 
         setTimerView(default_StudyTime);
 
@@ -186,7 +192,7 @@ public class TimerFrag extends Fragment {
     private void setCourses() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-       spinner.setAdapter(adapter);
+        spinner.setAdapter(adapter);
         Cursor cursor = dbAdapter.getCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
@@ -199,27 +205,27 @@ public class TimerFrag extends Fragment {
     }
 
 
-        public void setSelectedCourse (){
-            String temp =spinner.getSelectedItem().toString();
-            String [] parts = temp.split("-");
-            this.ccode = parts[0];
-            Log.d("selected course", ccode);
+    public void setSelectedCourse() {
+        String temp = spinner.getSelectedItem().toString();
+        String[] parts = temp.split("-");
+        this.ccode = parts[0];
+        Log.d("selected course", ccode);
 
-        }
-
-
-        private long minToMilliSeconds ( int parsedTime){
-            return ((long) parsedTime * 60 * 1000);
-        }
-
-        private int milliSecondsToMin (long milliSeconds){
-            return ((int) milliSeconds/1000/60);
-        }
+    }
 
 
-        /**
-         * Set the timer.
-         */
+    private long minToMilliSeconds(int parsedTime) {
+        return ((long) parsedTime * 60 * 1000);
+    }
+
+    private int milliSecondsToMin(long milliSeconds) {
+        return ((int) milliSeconds / 1000 / 60);
+    }
+
+
+    /**
+     * Set the timer.
+     */
 
     private void insertIntoDataBase() {
         long inserted = dbAdapter.insertSession(ccode, milliSecondsToMin(default_StudyTime));
@@ -234,163 +240,168 @@ public class TimerFrag extends Fragment {
 
     }
 
-    private void setProgressColor (int c) {
+    private void setProgressColor(int c) {
         progressBar.getProgressDrawable().setColorFilter(c, PorterDuff.Mode.SRC_IN);
         progressBar.setProgress(0);
     }
 
 
-
-
-        public void startTimer () {
-            if(buttonId == R.drawable.ic_start && !hasBeenPaused){
-            Intent i = new Intent(getActivity().getBaseContext(),MyCountDownTimer.class);
+    public void startTimer() {
+        if (buttonId == R.drawable.ic_start && !hasBeenPaused) {
+            spinner.setEnabled(false);
+            Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
+            i.putExtra("TIME_STUDY", default_StudyTime);
+            i.putExtra("TIME_PAUSE", default_PauseTime);
+            i.putExtra("TOTAL_TIME", default_TotalTime);
             getActivity().startService(i);
-            getActivity().bindService(i,sc,Context.BIND_AUTO_CREATE);
-                buttonId = R.drawable.ic_pause;
+            getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
+            buttonId = R.drawable.ic_pause;
             startButton.setImageResource(buttonId);
-            }
-            else if (buttonId == R.drawable.ic_pause){
-                hasBeenPaused = true;
-                serviceHandler.sendEmptyMessage(0);
-                buttonId = R.drawable.ic_start;
-                startButton.setImageResource(buttonId);
-
-            }
-            else if (buttonId == R.drawable.ic_start && hasBeenPaused){
-                serviceHandler.sendEmptyMessage(1);
-                buttonId = R.drawable.ic_pause;
-                startButton.setImageResource(buttonId);
-            }
-
-
-
-                }
-
-     public void setTimerView(int secUntilFinished ) {
-         String sec = String.format("%02d", (secUntilFinished) % 60);
-         String min = String.format("%02d", (secUntilFinished) / 60);
-         textViewText = (min + ":" + sec);
-         textView.setText(textViewText);
-         progressBar.setProgress(secUntilFinished * 1000 / default_StudyTime);
-     }
-
-        public void resetTimer () {
+        } else if (buttonId == R.drawable.ic_pause) {
+            hasBeenPaused = true;
             serviceHandler.sendEmptyMessage(0);
             buttonId = R.drawable.ic_start;
-            hasBeenPaused= false;
             startButton.setImageResource(buttonId);
 
-
+        } else if (buttonId == R.drawable.ic_start && hasBeenPaused) {
+            serviceHandler.sendEmptyMessage(1);
+            buttonId = R.drawable.ic_pause;
+            startButton.setImageResource(buttonId);
         }
-
-
-        public void settingsTimer () {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            final View dialogView = inflater.inflate(R.layout.time_picker_dialog, null);
-            builder.setView(dialogView);
-
-            builder.setPositiveButton("Nästa", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-
-
-                    inputText = (TextView) dialogView.findViewById(R.id.inputTime);
-                    inputTime = inputText.getText().toString();
-                    nextDialog();
-
-                }
-            });
-
-            builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    // Do nothing
-                }
-            });
-
-
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
-
-        private void nextDialog () {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            final View dialogView = inflater.inflate(R.layout.time_picker_dialog2, null);
-            builder.setView(dialogView);
-
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    nbrOfPausesInput = (TextView) dialogView.findViewById(R.id.nbrOfPausesInt);
-                    nbrOfPauses = nbrOfPausesInput.getText().toString();
-
-                    pausLengthInput = (TextView) dialogView.findViewById(R.id.pausLengthInt);
-                    pausLength = pausLengthInput.getText().toString();
-                    textView.setText(inputTime + ":00");
-                    parseFromDialog();
-
-
-                }
-            });
-
-            builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    // Cancel
-                }
-            });
-
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
-
-
-        public void parseFromDialog () {
-            try {
-                int timeFromDialog = Integer.parseInt(inputTime);
-                default_TotalTime = minToMilliSeconds(timeFromDialog);
-                int pauseFromDialog;
-                if(pausLength.equals("")) {
-                    pauseFromDialog = 0;
-                }
-                else{
-                  pauseFromDialog = Integer.parseInt(pausLength);
-
-
-                }
-                default_PauseTime = minToMilliSeconds(pauseFromDialog);
-                int numberOfPauses = Integer.parseInt(nbrOfPauses);
-                default_NumberOfPauses = (long) numberOfPauses;
-
-
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
-        public void onDestroyView () {
-            super.onDestroyView();
-            getActivity().unbindService(sc);
-            handler.removeMessages(0);
-            handler.removeMessages(1);
-            handler.removeMessages(2);
-
-            saveFragmentState();
-        }
-
-        private void saveFragmentState() {
-            b = new Bundle();
-            b.putInt("buttonImage", buttonId);
-            b.putString("textViewText" ,textViewText);
-        }
-
-
-
 
 
     }
+
+    public void setTimerView(long secUntilFinished) {
+        String sec = String.format("%02d", (secUntilFinished) % 60);
+        String min = String.format("%02d", (secUntilFinished) / 60);
+        textViewText = (min + ":" + sec);
+        textView.setText(textViewText);
+        progressBar.setProgress((int)(secUntilFinished * 1000 / default_StudyTime));
+    }
+
+    public void resetTimer() {
+        serviceHandler.sendEmptyMessage(0);
+        buttonId = R.drawable.ic_start;
+        hasBeenPaused = false;
+        startButton.setImageResource(buttonId);
+
+
+    }
+
+
+    public void settingsTimer() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.time_picker_dialog, null);
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("Nästa", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+
+
+                inputText = (TextView) dialogView.findViewById(R.id.inputTime);
+                inputTime = inputText.getText().toString();
+                nextDialog();
+
+            }
+        });
+
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // Do nothing
+            }
+        });
+
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void nextDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.time_picker_dialog2, null);
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                nbrOfPausesInput = (TextView) dialogView.findViewById(R.id.nbrOfPausesInt);
+                nbrOfPauses = nbrOfPausesInput.getText().toString();
+
+                pausLengthInput = (TextView) dialogView.findViewById(R.id.pausLengthInt);
+                pausLength = pausLengthInput.getText().toString();
+                textView.setText(inputTime + ":00");
+                parseFromDialog();
+
+
+            }
+        });
+
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // Cancel
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
+    public void parseFromDialog() {
+        try {
+            int timeFromDialog = Integer.parseInt(inputTime);
+            default_TotalTime = minToMilliSeconds(timeFromDialog);
+            int pauseFromDialog;
+            if (pausLength.equals("")) {
+                pauseFromDialog = 0;
+            } else {
+                pauseFromDialog = Integer.parseInt(pausLength);
+
+
+            }
+            default_PauseTime = minToMilliSeconds(pauseFromDialog);
+            int numberOfPauses = Integer.parseInt(nbrOfPauses);
+            default_NumberOfPauses = (long) numberOfPauses;
+
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().unbindService(sc);
+        handler.removeMessages(0);
+        handler.removeMessages(1);
+        handler.removeMessages(2);
+
+        saveFragmentState();
+    }
+
+    private void saveFragmentState() {
+        b = new Bundle();
+        b.putInt("buttonImage", buttonId);
+        b.putString("textViewText", textViewText);
+        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("buttonImage", buttonId);
+        editor.putBoolean("hasPaused", hasBeenPaused);
+        Log.d("buttonId", String.valueOf(buttonId));
+
+
+        editor.apply();
+
+        Log.d("ONDESTROY", String.valueOf(sharedPref.getInt("buttonImage", -1)));
+    }
+
+
+}

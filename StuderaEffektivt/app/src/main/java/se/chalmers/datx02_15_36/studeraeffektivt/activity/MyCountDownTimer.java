@@ -31,7 +31,7 @@ public class MyCountDownTimer extends Service {
     private final int STOP = 2;
 
 
-    private int studyTime,totalTime,pauseTime;
+    private long studyTime,totalTime,pauseTime;
     private long timeUntilFinished;
     private int timePassed=0;
     private int count=0;
@@ -75,9 +75,9 @@ public class MyCountDownTimer extends Service {
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        studyTime = intent.getIntExtra("TIME_STUDY", 30*1000);
-        pauseTime = intent.getIntExtra("TIME_PAUSE",15*1000);
-        totalTime = intent.getIntExtra("TOTAL_TIME", 100*1000);
+        studyTime = intent.getLongExtra("TIME_STUDY", 30*1000);
+        pauseTime = intent.getLongExtra("TIME_PAUSE",15*1000);
+        totalTime = intent.getLongExtra("TOTAL_TIME", 100*1000);
         startCountDown();
         return START_NOT_STICKY;
     }
@@ -102,9 +102,9 @@ public class MyCountDownTimer extends Service {
 
     }
 
-    private void sendMessage(int countDownTime) {
+    private void sendMessage(long countDownTime) {
         Message msg = mHandler.obtainMessage();
-        bundle.putInt("timePassed", countDownTime);
+        bundle.putLong("timePassed", countDownTime);
         msg.setData(bundle);
         mHandler.sendMessage(msg);
     }
