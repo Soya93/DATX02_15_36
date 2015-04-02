@@ -114,6 +114,7 @@ public class MyCountDownTimer extends Service {
         studyTimer = new CountDownTimer(millisInFuture, countDownInterval) {
 
             public void onTick(long millisUntilFinished) {
+                timePassed+=100;
                 timeUntilFinished=millisUntilFinished;
                 sendMessage((int)millisUntilFinished);
 

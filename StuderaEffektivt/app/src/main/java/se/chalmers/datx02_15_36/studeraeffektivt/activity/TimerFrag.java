@@ -1,7 +1,5 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,17 +8,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
-import android.os.CountDownTimer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -250,12 +243,7 @@ public class TimerFrag extends Fragment {
     public void startTimer() {
         if (buttonId == R.drawable.ic_start && !hasBeenPaused) {
             spinner.setEnabled(false);
-            Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
-            i.putExtra("TIME_STUDY", default_StudyTime);
-            i.putExtra("TIME_PAUSE", default_PauseTime);
-            i.putExtra("TOTAL_TIME", default_TotalTime);
-            getActivity().startService(i);
-            getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
+            sendDataToService();
             buttonId = R.drawable.ic_pause;
             startButton.setImageResource(buttonId);
         } else if (buttonId == R.drawable.ic_pause) {
@@ -270,8 +258,18 @@ public class TimerFrag extends Fragment {
             startButton.setImageResource(buttonId);
         }
 
-
     }
+
+
+    private void sendDataToService () {
+        Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
+        i.putExtra("TIME_STUDY", default_StudyTime);
+        i.putExtra("TIME_PAUSE", default_PauseTime);
+        i.putExtra("TOTAL_TIME", default_TotalTime);
+        getActivity().startService(i);
+        getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
+    }
+
 
     public void setTimerView(long secUntilFinished) {
         String sec = String.format("%02d", (secUntilFinished)/1000 % 60);
