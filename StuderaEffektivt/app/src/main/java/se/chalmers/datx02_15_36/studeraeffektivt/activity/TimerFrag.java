@@ -286,7 +286,7 @@ public class TimerFrag extends Fragment {
         String min = String.format("%02d", (secUntilFinished) /1000/ 60);
         textViewText = (min + ":" + sec);
         textView.setText(textViewText);
-        progressBar.setProgress((int)(secUntilFinished * 1000 / default_StudyTime));
+        progressBar.setProgress((int)(secUntilFinished*1000  / default_StudyTime));
     }
 
     public void resetTimer() {
@@ -297,7 +297,8 @@ public class TimerFrag extends Fragment {
 
 
     }
-
+    private void calculateStudySession() {
+            this.default_StudyTime = default_TotalTime - ((default_NumberOfPauses*default_PauseTime)/default_NumberOfPauses+1);}
 
     public void settingsTimer() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -379,7 +380,9 @@ public class TimerFrag extends Fragment {
             default_PauseTime = minToMilliSeconds(pauseFromDialog);
             int numberOfPauses = Integer.parseInt(nbrOfPauses);
             default_NumberOfPauses = (long) numberOfPauses;
-            //calculateStudySession();
+            calculateStudySession();
+
+            //Log.d("StudySession",)
 
 
         } catch (Throwable e) {
