@@ -268,18 +268,6 @@ public class MainActivity extends ActionBarActivity {
         timerFrag.settingsTimer();
     }
 
-    //Does not work properly, but looks more beautiful...
-    public void openDialog2(View view) {
-        calendarFrag.openDialog();
-
-        Log.i("week", calendarFrag.getWeek() + "");
-
-        if (calendarFrag.getWeek() != -1) {
-            startActivity(calendarFrag.addRepetition());
-        }
-        calendarFrag.createBuilder();
-    }
-
     protected void onStart() {
         super.onStart();
 
