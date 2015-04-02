@@ -43,8 +43,8 @@ public class TimerFrag extends Fragment {
 
 
     protected long default_TotalTime = (55 * 60*1000);
-    protected long default_StudyTime = (25 * 60*1000);
-    protected long default_PauseTime = (5 * 60*1000);
+    protected long default_StudyTime = (2 * 60*1000);
+    protected long default_PauseTime = (1 * 60*1000);
     protected long default_NumberOfPauses = 1;
 
     private TextView textView;
@@ -330,6 +330,8 @@ public class TimerFrag extends Fragment {
     }
 
     private void nextDialog() {
+          resetTimer();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.time_picker_dialog2, null);
@@ -377,6 +379,7 @@ public class TimerFrag extends Fragment {
             default_PauseTime = minToMilliSeconds(pauseFromDialog);
             int numberOfPauses = Integer.parseInt(nbrOfPauses);
             default_NumberOfPauses = (long) numberOfPauses;
+            //calculateStudySession();
 
 
         } catch (Throwable e) {
