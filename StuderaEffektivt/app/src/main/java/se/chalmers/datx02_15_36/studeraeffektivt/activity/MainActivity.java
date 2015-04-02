@@ -17,7 +17,11 @@ import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.TabAdapter;
@@ -32,6 +36,12 @@ public class MainActivity extends ActionBarActivity {
 
     private String userName = "user_Name";
     private Drawable tabResetIcon;
+    public static FloatingActionButton actionButton;
+    public static SubActionButton button1;
+    public static SubActionButton button2;
+    public static SubActionButton button3;
+    public static SubActionButton button4;
+    private View.OnClickListener fabHandler;
 
     /**
      * Called when the activity is first created.
@@ -71,6 +81,70 @@ public class MainActivity extends ActionBarActivity {
         calendarFrag = (CalendarFrag) mAdapter.getItem(1);
         calendarFrag.setContentResolver(this.getContentResolver());
 
+
+        // listener for FAB menu
+        FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
+            @Override
+            public void onMenuOpened(FloatingActionMenu floatingActionMenu) {
+            }
+
+            @Override
+            public void onMenuClosed(FloatingActionMenu floatingActionMenu) {
+
+
+            }
+
+
+        };
+
+        ImageView icon = new ImageView(this); // Create an icon
+        icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+
+
+
+        actionButton = new FloatingActionButton.Builder(this)
+                .setContentView(icon)
+                .build();
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
+        // repeat many times:
+        ImageView itemIcon1 = new ImageView(this);
+        itemIcon1.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+        button1 = itemBuilder.setContentView(itemIcon1).build();
+        button1.setTag(1);
+        button1.setOnClickListener(fabHandler);
+
+        ImageView itemIcon2 = new ImageView(this);
+        itemIcon2.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+        button2 = itemBuilder.setContentView(itemIcon2).build();
+        button2.setTag(2);
+        button2.setOnClickListener(fabHandler);
+
+        ImageView itemIcon3 = new ImageView(this);
+        itemIcon3.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+        button3 = itemBuilder.setContentView(itemIcon3).build();
+        button3.setTag(3);
+        button3.setOnClickListener(fabHandler);
+
+        ImageView itemIcon4 = new ImageView(this);
+        itemIcon4.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+        button4 = itemBuilder.setContentView(itemIcon4).build();
+        button4.setTag(4);
+        button4.setOnClickListener(fabHandler);
+
+        Log.i("main: ", " button1 id:  " + button1.getId() + " button2 id : " + button2.getId()
+                + " button3 id: " + button3.getId());
+
+        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
+                .addSubActionView(button4)
+                .addSubActionView(button3)
+                .addSubActionView(button2)
+                .addSubActionView(button1)
+                .attachTo(actionButton)
+                .build();
+
+        actionMenu.setStateChangeListener(myFABHandler);
+
         homeFrag = (HomeFrag) mAdapter.getItem(0);
         homeFrag.setCalendarFrag(calendarFrag);
         homeFrag.setContext(this.getApplicationContext());
@@ -87,11 +161,29 @@ public class MainActivity extends ActionBarActivity {
                 R.drawable.ic_action_overflow_uns
         };
 
+
+
         /** Defining tab listener */
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
+
+
+                if (tab.getPosition() == 1) {
+                    actionButton.setVisibility(View.VISIBLE);
+                    button1.setVisibility(View.VISIBLE);
+                    button2.setVisibility(View.VISIBLE);
+                    button3.setVisibility(View.VISIBLE);
+                    button4.setVisibility(View.VISIBLE);
+                } else {
+                    actionButton.setVisibility(View.GONE);
+                    button1.setVisibility(View.GONE);
+                    button2.setVisibility(View.GONE);
+                    button3.setVisibility(View.GONE);
+                    button4.setVisibility(View.GONE);
+                }
+
 
                 tabResetIcon = tab.getIcon();
                 int position = tab.getPosition();
@@ -115,8 +207,6 @@ public class MainActivity extends ActionBarActivity {
                     default:
                         break;
                 }
-
-
             }
 
             @Override
@@ -166,42 +256,6 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    //Calendar buttons redirections
-    public void addStudySession(View view) {
-        startActivity(calendarFrag.addStudySession());
-    }
-
-    public void readCalendar(View view) {
-        calendarFrag.readCalendar();
-    }
-
-    public void openCalendar(View view) {
-        startActivity(calendarFrag.openCalendar());
-    }
-
-    public void openDialog(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(calendarFrag.getActivity());
-
-        //the alternatives
-        String[] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
-
-        builder.setTitle("Välj ett pass att repetera")
-                .setItems(alternatives, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //TODO hämta några random uppgifter
-                        String tasks = "";
-                        int studyWeek = which + 1;
-                        startActivity(calendarFrag.getCalendarModel().addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " + tasks));
-
-                        // The 'which' argument contains the index position
-                        // of the selected item
-                    }
-                });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
     public void startTimer(View view) {
         timerFrag.startTimer();
     }
@@ -214,6 +268,7 @@ public class MainActivity extends ActionBarActivity {
         timerFrag.settingsTimer();
     }
 
+<<<<<<< HEAD
 
     //Does not work properly, but looks more beautiful...
     public void openDialog2(View view) {
@@ -229,13 +284,46 @@ public class MainActivity extends ActionBarActivity {
 
     protected void onStart() {
         super.onStart();
+=======
+    protected void onResume() {
+        super.onResume();
+
+        if (isMyServiceRunning(MyCountDownTimer.class)) {
+            Intent i = new Intent(getBaseContext(), MyCountDownTimer.class);
+            bindService(i, sc, Context.BIND_AUTO_CREATE);
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    Intent i = new Intent(getBaseContext(), MyCountDownTimer.class);
+                    stopService(i);
+                    unbindService(sc);
+
+                }
+            }, 2000);
+
+        }
+>>>>>>> feature/calendar_gui_stuff
     }
 
 
     protected void onStop() {
         super.onStop();
-    }
+<<<<<<< HEAD
+=======
+        if (timerFrag.pauseTimerIsRunning || timerFrag.studyTimerIsRunning) {
+            long timePassedToService = timerFrag.timePassed;
+            long totalTime = timerFrag.default_TotalTime;
 
+            timerFrag.cancelOneOfTimers();
+
+            Intent i = new Intent(this, MyCountDownTimer.class);
+            i.putExtra("TIME_PASSED", timePassedToService / 1000);
+            i.putExtra("TOTAL_TIME", totalTime / 1000);
+            startService(i);
+        }
+>>>>>>> feature/calendar_gui_stuff
+    }
 
 
 }
