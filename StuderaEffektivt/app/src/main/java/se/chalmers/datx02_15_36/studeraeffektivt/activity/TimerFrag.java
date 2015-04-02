@@ -58,6 +58,7 @@ public class TimerFrag extends Fragment {
     public static final int CHANGE_COLOR_0 = 1;
     public static final int CHANGE_COLOR_1 = 2;
 
+    private long serviceInt;
 
     private String inputTime;
     private String nbrOfPauses;
@@ -82,7 +83,7 @@ public class TimerFrag extends Fragment {
             switch (msg.what) {
                 case TIMER_1:
                     Bundle b = msg.getData();
-                    long serviceInt = b.getLong("timePassed", -1);
+                    serviceInt = b.getLong("timePassed", -1);
                     setTimerView(serviceInt);
                     break;
                 case CHANGE_COLOR_0:
@@ -160,6 +161,10 @@ public class TimerFrag extends Fragment {
             startButton.setImageResource(buttonId);
         }
         hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
+        if(hasBeenPaused){
+           long temp = sharedPref.getLong("timeLeft",-1);
+                     setTimerView(temp);
+        }
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -183,7 +188,7 @@ public class TimerFrag extends Fragment {
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         setCourses();
 
-        setTimerView(default_StudyTime/1000);
+        setTimerView(default_StudyTime);
 
     }
 
@@ -402,11 +407,17 @@ public class TimerFrag extends Fragment {
         editor.putInt("buttonImage", buttonId);
         editor.putBoolean("hasPaused", hasBeenPaused);
         Log.d("buttonId", String.valueOf(buttonId));
+        Log.d("hasPaused",String.valueOf(hasBeenPaused));
 
 
-        editor.apply();
+
+
+        if(hasBeenPaused){
+            editor.putLong("timeLeft",serviceInt);
+        }
 
         Log.d("ONDESTROY", String.valueOf(sharedPref.getInt("buttonImage", -1)));
+         editor.apply();
     }
 
 
