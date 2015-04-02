@@ -7,7 +7,6 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.ArrayMap;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,9 +19,13 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -49,7 +52,7 @@ public class EventActivity extends ActionBarActivity {
     private boolean isAllDayEvent;
     private CheckBox checkBox;
 
-    ArrayMap<Integer, String> notificationAlternativesMap = new ArrayMap<>();
+    Map<Integer, String> notificationAlternativesMap = new LinkedHashMap<>();
 
     //String[] notificationAlternatives = {"Ingen", "Vid start", "1 minut", "5 minuter", "10 minuter", "15 minuter", "30 minuter", "1 timme", "2 timmar"};
 
@@ -450,12 +453,13 @@ public class EventActivity extends ActionBarActivity {
 
     public void chooseNotification() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        String[] alternatives = notificationAlternativesMap.values().toArray(new String[0]);
+        final List <String> alternatives = new ArrayList <> (notificationAlternativesMap.values());
 
-        builder.setItems(alternatives, new DialogInterface.OnClickListener() {
+
+        builder.setItems(alternatives.toArray(new String[0]), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                notification = notificationAlternativesMap.keyAt(which);
-                notificationView.setText(notificationAlternativesMap.valueAt(which));
+                notification = alternatives.indexOf(alternatives.get(which));
+                notificationView.setText(alternatives.get(which));
             }
         });
 
