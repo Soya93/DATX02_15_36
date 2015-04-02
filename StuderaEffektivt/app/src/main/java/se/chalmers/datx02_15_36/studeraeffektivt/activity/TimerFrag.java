@@ -141,6 +141,7 @@ public class TimerFrag extends Fragment {
         if (b != null) {
             textView = (TextView) rootView.findViewById(R.id.textView);
             String textV = b.getString("textViewText");
+            setProgressColor(Color.BLUE);
             textView.setText(textV);
 
         }
@@ -185,7 +186,7 @@ public class TimerFrag extends Fragment {
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         setCourses();
 
-        setTimerView(default_StudyTime);
+        setTimerView(default_StudyTime/1000);
 
     }
 
@@ -273,8 +274,8 @@ public class TimerFrag extends Fragment {
     }
 
     public void setTimerView(long secUntilFinished) {
-        String sec = String.format("%02d", (secUntilFinished) % 60);
-        String min = String.format("%02d", (secUntilFinished) / 60);
+        String sec = String.format("%02d", (secUntilFinished)/1000 % 60);
+        String min = String.format("%02d", (secUntilFinished) /1000/ 60);
         textViewText = (min + ":" + sec);
         textView.setText(textViewText);
         progressBar.setProgress((int)(secUntilFinished * 1000 / default_StudyTime));

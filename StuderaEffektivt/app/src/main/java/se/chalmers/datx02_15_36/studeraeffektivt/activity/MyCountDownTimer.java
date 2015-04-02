@@ -115,7 +115,7 @@ public class MyCountDownTimer extends Service {
 
             public void onTick(long millisUntilFinished) {
                 timeUntilFinished=millisUntilFinished;
-                sendMessage((int)millisUntilFinished/1000);
+                sendMessage((int)millisUntilFinished);
 
 
             }
@@ -130,11 +130,11 @@ public class MyCountDownTimer extends Service {
 
                 if (count == 1) {
                     studyTimer = timerFunction(pauseTime, 100);
-                    sendMessage(pauseTime/1000);
+                    sendMessage(pauseTime);
                     mHandler.sendEmptyMessage(1);
                 } else if (count == 0) {
                    studyTimer = timerFunction(studyTime,100);
-                    sendMessage(studyTime/1000);
+                    sendMessage(studyTime);
                     mHandler.sendEmptyMessage(2);
                 }
                 studyTimer.start();
