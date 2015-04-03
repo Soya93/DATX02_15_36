@@ -322,22 +322,25 @@ public class StudyTaskActivity extends ActionBarActivity {
                     checkedArray.add(studyTask);
                 } else
                     uncheckedArray.add(studyTask);
+                if(studyTask.getType() == AssignmentType.OTHER) {
 
-                if(hashMapOfStudyTasks.containsKey(studyTask.getChapter())){
-                    hashMapOfStudyTasks.get(studyTask.getChapter()).add(studyTask);
+                    if (hashMapOfStudyTasks.containsKey(studyTask.getChapter())) {
+                        hashMapOfStudyTasks.get(studyTask.getChapter()).add(studyTask);
+                    } else {
+                        ArrayList<StudyTask> a = new ArrayList();
+                        a.add(studyTask);
+                        hashMapOfStudyTasks.put(studyTask.getChapter(), a);
+                    }
+
                 }
-                else{
-                    ArrayList<StudyTask> a = new ArrayList();
-                    a.add(studyTask);
-                    hashMapOfStudyTasks.put(studyTask.getChapter(),a);
-                }
-                if(hashMapOfReadingAssignments.containsKey(studyTask.getChapter())){
-                    hashMapOfReadingAssignments.get(studyTask.getChapter()).add(studyTask);
-                }
-                else{
-                    ArrayList<StudyTask> a = new ArrayList();
-                    a.add(studyTask);
-                    hashMapOfReadingAssignments.put(studyTask.getChapter(),a);
+                else {
+                    if (hashMapOfReadingAssignments.containsKey(studyTask.getChapter())) {
+                        hashMapOfReadingAssignments.get(studyTask.getChapter()).add(studyTask);
+                    } else {
+                        ArrayList<StudyTask> a = new ArrayList();
+                        a.add(studyTask);
+                        hashMapOfReadingAssignments.put(studyTask.getChapter(), a);
+                    }
                 }
             }
 
