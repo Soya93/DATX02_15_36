@@ -4,18 +4,14 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
-
+import com.shamanland.fab.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
-
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 
@@ -28,7 +24,7 @@ public class HomeFrag extends Fragment {
     private Context context;
     private CalendarFrag calendarFrag;
     private boolean hasInit = false;
-    private FloatingActionButton homeActionButton;
+    private FloatingActionButton homeFAB;
     private View.OnClickListener fabHandler;
 
     @Override
@@ -50,18 +46,22 @@ public class HomeFrag extends Fragment {
         layout.addView(todayTextView);
         hasInit = true;
         this.setCalendarInfoToday();
-       // homeActionButton = MainActivity.homeActionButton;
 
-        /*
+        homeFAB = (FloatingActionButton) view.findViewById(R.id.home_fab);
+        homeFAB.setTag(1);
+        homeFAB.setOnClickListener(fabHandler);
+
+
+
         fabHandler = new View.OnClickListener() {
 
             public void onClick(View v) {
-                if (v.getTag() == homeActionButton.getTag()) {
+                if (v.getTag() == homeFAB.getTag()) {
                     calendarFrag.changeVisibleCalendars();
                 }
             }
         };
-        */
+
     }
 
    public void setCalendarFrag(CalendarFrag calendarFrag){

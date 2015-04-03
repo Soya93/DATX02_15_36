@@ -36,7 +36,6 @@ public class MainActivity extends ActionBarActivity {
 
     private String userName = "user_Name";
     private Drawable tabResetIcon;
-    public static FloatingActionButton homeActionButton;
     public static FloatingActionButton actionButton;
     public static SubActionButton button1;
     public static SubActionButton button2;
@@ -100,14 +99,8 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView icon = new ImageView(this); // Create an icon
         icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
-/*
-        homeActionButton = new FloatingActionButton.Builder(this)
-                .setContentView(icon)
-                .build();
 
-        homeActionButton.setTag(5);
-        homeActionButton.setOnClickListener(fabHandler);
-        */
+
 
 
         actionButton = new FloatingActionButton.Builder(this)
