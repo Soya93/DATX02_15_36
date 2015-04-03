@@ -118,7 +118,8 @@ public class StudyTaskActivity extends ActionBarActivity {
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
         chapterSpinner.setAdapter(adapter);
 
-        addTasksFromDatabase();
+        listOfTasks.addTasksFromDatabase(dbAdapter, courseCode);
+        listOfReadAssignments.addTasksFromDatabase(dbAdapter, courseCode);
 
         addButton.setOnClickListener(myOnlyhandler);
 
@@ -276,7 +277,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
 
 
-    public void addTasksFromDatabase() {
+    /*public void addTasksFromDatabase() {
 
         Cursor cursor = dbAdapter.getAssignments();
 
@@ -377,9 +378,9 @@ public class StudyTaskActivity extends ActionBarActivity {
                     listOfTasks.removeView(s);
                     listOfTasks.addView(s);
                 }
-            }*/
+            }
         }
-    }
+    }*/
 
    /* public void initCheckbox(final StudyTask studyTask){
         studyTask.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

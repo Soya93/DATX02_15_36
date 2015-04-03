@@ -62,7 +62,7 @@ public class CourseDetailedInfoFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
 
-        addTasksFromDatabase();
+        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode);
 
         fillActivity(course);
 
@@ -100,7 +100,7 @@ public class CourseDetailedInfoFrag extends Fragment {
 
     }
 
-    public void addTasksFromDatabase(){
+    /*public void addTasksFromDatabase(){
 
         Cursor cursor = dbAdapter.getAssignments();
 
@@ -135,5 +135,5 @@ public class CourseDetailedInfoFrag extends Fragment {
                         assignmentStatus));                                             //TODO: sätta in rätt bool från databasen
             }
         }
-    }
+    }*/
 }
