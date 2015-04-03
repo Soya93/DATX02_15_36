@@ -28,7 +28,6 @@ public class CalendarUtils {
             CalendarContract.Instances.CALENDAR_COLOR,       //10
             CalendarContract.Instances.VISIBLE,              //11
             CalendarContract.Instances.ALL_DAY              //12
-
     };
 
     // The indices for the projection array above for the events in the calendar
@@ -47,15 +46,14 @@ public class CalendarUtils {
     public static final int ALL_DAY = 12;
 
     public static final String[] NOTIFICATION_PROJECTION = new String[]{
-            CalendarContract.Reminders.MINUTES //0
+            CalendarContract.Reminders.EVENT_ID, // 0
+            CalendarContract.Reminders.MINUTES, //1
     };
-    public static final int EVENT_INFO_NOTIFICATION = 0;
-
+    public static final int NOTIFICATION_ID = 0;
+    public static final int NOTIFICATION_TIME = 1;
 
 
     public static final Calendar cal = Calendar.getInstance();
-
-
 
     //get todays date
     public static final int YEAR = cal.get(Calendar.YEAR);

@@ -153,8 +153,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.setHorizontalScrollBarEnabled(false); // doesn't work... :(
 
 
-
-
         //actionButton.setOnClickListener(myButtonHandler);
         button1.setOnClickListener(fabHandler);
         button2.setOnClickListener(fabHandler);
@@ -182,6 +180,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
 
         final String title = weekViewEvent.getName();
+        final long eventId = weekViewEvent.getId();
 
         //Get a cursor for the detailed information of the event
         final long startTime = weekViewEvent.getStartTime().getTimeInMillis();
@@ -195,11 +194,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
         final int allDay = cur.getInt(CalendarUtils.ALL_DAY);
         cur.close();
-        final int notification = -1;
 
-        //Notification cursor
-        //Cursor curNot = calendarModel.getNotificationCursor(cr, startTime, endTime, weekViewEvent.getId());
-        //final int notification = curNot == null? -1: curNot.getInt(0);
+        final int notification = calendarModel.getNotificationTime(cr, startTime,endTime,eventId);
 
         calendarView.updateEventInfoView(dialogView, title, startTime, endTime, location, description, calendar);
         builder.setView(dialogView);
@@ -213,7 +209,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                openEditEvent(weekViewEvent.getId(), startTime, endTime, title, location, description, calID, calendar, notification, allDay);
+                openEditEvent(eventId, startTime, endTime, title, location, description, calID, calendar, notification, allDay);
             }
         });
 
@@ -407,8 +403,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final List<String> calNames = getCalendarModel().getCalendarNamesInstances(cr);
         final List<Long> calIDs = getCalendarModel().getCalendarIDsInstances(cr);
         final String[] calendars = calNames.toArray(new String[calNames.size()]);
-        final List <Long> visibleList = new ArrayList<>();
-
         final boolean [] checkedArray = new boolean [calIDs.size()];
 
         int i = 0;
@@ -422,17 +416,17 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 .setMultiChoiceItems(calendars, checkedArray,  new DialogInterface.OnMultiChoiceClickListener() {
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         if (isChecked) {
-                            visibleList.add(calIDs.get(which));
+                            if(!visibleCalendars.contains(which)) {
+                                visibleCalendars.add(calIDs.get(which));
+                            }
+                        } else {
+                            visibleCalendars.remove(which);
                         }
                     }
                 });
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                visibleCalendars = visibleList;
-                for(int i=0; i<visibleCalendars.size(); i++){
-                    Log.i("in changecalendars ", visibleCalendars.get(i)+"");
-                }
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
             }
@@ -461,13 +455,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                    numberOfVisibleDays = Integer.parseInt((choices[selected]));
            }
        });
-
-
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 mWeekView.setNumberOfVisibleDays(numberOfVisibleDays);
-                mWeekView.goToHour(CalendarUtils.HOUR-1);
+                mWeekView.goToHour(CalendarUtils.HOUR > 16? 16: CalendarUtils.HOUR);
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
             }

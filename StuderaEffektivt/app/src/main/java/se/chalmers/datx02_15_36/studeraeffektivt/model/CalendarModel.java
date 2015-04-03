@@ -11,7 +11,9 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -103,29 +105,24 @@ public class CalendarModel {
         return null;
     }
 
-    public Cursor getNotificationCursor(ContentResolver cr, Long startInterval, Long endInterval,  Long eventID){
-       /* Uri.Builder eventsUriBuilder = CalendarContract.Reminders.CONTENT_URI.buildUpon();
+    public int getNotificationTime (ContentResolver cr, Long startInterval, Long endInterval,  Long eventID){
+        Uri.Builder eventsUriBuilder = CalendarContract.Reminders.CONTENT_URI.buildUpon();
         ContentUris.appendId(eventsUriBuilder, startInterval);
         ContentUris.appendId(eventsUriBuilder, endInterval);
         Uri eventsUri = eventsUriBuilder.build();
-
-        // (ContentResolver cr, long eventId, String[] projection)
-
-        //cur = cr.query(eventsUri, CalendarUtils.NOTIFICATION_PROJECTION, null, null, CalendarContract.Reminders.MINUTES + " ASC");
-
         cur =  CalendarContract.Reminders.query(cr, eventID, CalendarUtils.NOTIFICATION_PROJECTION);
 
         //Prints out all the events in the given interval
         while (cur.moveToNext()) {
-            if(cur.getLong(CalendarUtils.EVENT_INFO_NOTIFICATION_ID) == eventID) {
-                return cur;
+            if(cur.getLong(CalendarUtils.NOTIFICATION_ID) == eventID) {
+                Log.i("getNotTIme", "eventid: " + cur.getLong(CalendarUtils.NOTIFICATION_ID) + " time: " + cur.getInt(CalendarUtils.NOTIFICATION_TIME));
+                return cur.getInt(CalendarUtils.NOTIFICATION_TIME);
             }
         }
-        cur.close();*/
+        cur.close();
 
-        return CalendarContract.Reminders.query(cr, eventID, CalendarUtils.NOTIFICATION_PROJECTION);
+        return -1;
     }
-
 
         /**
          * Checks if the startdate is zero, if so it is set to a good default
@@ -144,6 +141,41 @@ public class CalendarModel {
     private Long checkEndInterval(Long endDate) {
          return endDate == 0L ?  endDay.getTimeInMillis() : endDate;
     }
+
+    public Map<Long, String> getCalendarInfo(ContentResolver cr) {
+        Map<Long, String> calendarNames = new LinkedHashMap<>();
+        Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
+                .buildUpon();
+
+        int year = CalendarUtils.YEAR;
+        int month = CalendarUtils.MONTH;
+        Calendar cal = Calendar.getInstance();
+        cal.set(year-1, month, 1);
+        long startDay = cal.getTimeInMillis();
+        cal.set(year+1, month, 1);
+        long endDay = cal.getTimeInMillis();
+
+        ContentUris.appendId(eventsUriBuilder, startDay);
+        ContentUris.appendId(eventsUriBuilder, endDay);
+        Uri eventsUri = eventsUriBuilder.build();
+
+        Cursor c = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+
+        while(c.moveToNext()) {
+            // the cursor, c, contains all the projection data items
+            // access the cursor’s contents by array index as declared in
+            // your projection
+            Long id = c.getLong(CalendarUtils.CALENDAR_ID);
+            String name = c.getString(CalendarUtils.CALENDAR_NAME);
+
+            int isVisible = c.getInt(CalendarUtils.VISIBLE);
+            if(!calendarNames.containsKey(id) && isVisible == 1)
+                calendarNames.put(id,name);
+        }
+        c.close();
+        return calendarNames;
+    }
+
 
     public List<String> getCalendarNamesInstances(ContentResolver cr) {
 
@@ -173,39 +205,6 @@ public class CalendarModel {
             int isVisible = c.getInt(CalendarUtils.VISIBLE);
             if(!calendarNames.contains(name) && isVisible == 1)
                 calendarNames.add(name);
-            Log.i("calendarname: ", name);
-        }
-        c.close();
-        return calendarNames;
-    }
-
-
-    /**
-     * Returns the calendar of a user specified by its google email.
-     *
-     * @param cr
-     */
-    public List<String> getCalendarNamesCalendars(ContentResolver cr) {
-        List<String> calendarNames = new ArrayList<>();
-
-        String[] projection = {CalendarContract.Calendars._ID,
-                CalendarContract.Calendars.NAME,
-                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-                CalendarContract.Calendars.CALENDAR_TIME_ZONE,
-                CalendarContract.Calendars.CALENDAR_COLOR,
-                CalendarContract.Calendars.IS_PRIMARY,
-                CalendarContract.Calendars.VISIBLE};
-        String selection = String.format("%s = 1", CalendarContract.Calendars.VISIBLE);
-        Cursor c = cr.query(CalendarContract.Calendars.CONTENT_URI,
-                projection,
-                selection,
-                null, null);
-        while(c.moveToNext()) {
-            // the cursor, c, contains all the projection data items
-            // access the cursor’s contents by array index as declared in
-            // your projection
-            String name = c.getString(1);
-            calendarNames.add(name);
         }
         c.close();
         return calendarNames;
@@ -244,38 +243,6 @@ public class CalendarModel {
         return calendarIDs;
     }
 
-    public List<Long> getCalendarIDsCalendars(ContentResolver cr) {
-
-        List<Long> calendarIDs = new ArrayList<>();
-
-        String[] projection = {CalendarContract.Calendars._ID,
-                CalendarContract.Calendars.NAME,
-                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-                CalendarContract.Calendars.CALENDAR_TIME_ZONE,
-                CalendarContract.Calendars.CALENDAR_COLOR,
-                CalendarContract.Calendars.IS_PRIMARY,
-                CalendarContract.Calendars.VISIBLE};
-        String selection = String.format("%s = 1", CalendarContract.Calendars.VISIBLE);
-        Cursor c = cr.query(CalendarContract.Calendars.CONTENT_URI,
-                projection,
-                selection,
-                null,
-                null);
-
-        while(c.moveToNext()) {
-            // the cursor, c, contains all the projection data items
-            // access the cursor’s contents by array index as declared in
-            // your projection
-            Long id = c.getLong(0);
-
-            calendarIDs.add(id);
-            Log.i("calendarid: ", id + "");
-        }
-        c.close();
-        return calendarIDs;
-
-    }
-
     public List<String> filter(List<String> events, String filterOn) {
         List<String> filteredList = new ArrayList<String>();
         for (String e : events) {
@@ -285,8 +252,6 @@ public class CalendarModel {
         }
         return filteredList;
     }
-
-
 
     /**
      * Calculates the future date depending on the number set in daysFromNow
@@ -367,10 +332,9 @@ public class CalendarModel {
 
     private void addNotification(ContentResolver cr, long eventID, int min){
         ContentValues values = new ContentValues();
-        min = min == -1? CalendarContract.Reminders.MINUTES_DEFAULT: min;
-        values.put(CalendarContract.Reminders.MINUTES, min);
-        values.put(CalendarContract.Reminders.EVENT_ID, eventID);
-        values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+            values.put(CalendarContract.Reminders.MINUTES, min);
+            values.put(CalendarContract.Reminders.EVENT_ID, eventID);
+            values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
         cr.insert(CalendarContract.Reminders.CONTENT_URI, values);
     }
 

@@ -453,12 +453,14 @@ public class EventActivity extends ActionBarActivity {
     public void chooseNotification() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final List <String> alternatives = new ArrayList <> (notificationAlternativesMap.values());
+        final List <Integer> times = new ArrayList <> (notificationAlternativesMap.keySet());
 
 
         builder.setItems(alternatives.toArray(new String[0]), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                notification = alternatives.indexOf(alternatives.get(which));
+                notification = times.get(which);
                 notificationView.setText(alternatives.get(which));
+                Log.i("notificationname ",alternatives.get(which) + "time "+ notification );
             }
         });
 
