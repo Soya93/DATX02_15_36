@@ -102,7 +102,8 @@ public class FlowLayout extends ViewGroup {
             this.addView(kapitelText);
             int counter = 0;
             for(int i = 0; i < a.size(); i++){
-                this.removeView(a.get(i));
+                
+                ((ViewGroup) a.get(i).getParent()).removeView(a.get(i));
                 if(a.get(i).isChecked()) {
                     this.addView(a.get(i));
                     counter++;
