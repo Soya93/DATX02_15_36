@@ -6,6 +6,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
 
         import android.content.Context;
         import android.util.AttributeSet;
+        import android.util.Log;
         import android.view.View;
         import android.view.ViewGroup;
         import android.widget.TextView;
@@ -100,12 +101,14 @@ public class FlowLayout extends ViewGroup {
             kapitelText = new TextView(this.getContext());
             kapitelText.setText("KAPITEL " + a.get(0).getChapter());
             this.addView(kapitelText);
-            int counter = 0;
+            int counter = this.getChildCount();
             for(int i = 0; i < a.size(); i++){
-                
-                ((ViewGroup) a.get(i).getParent()).removeView(a.get(i));
-                if(a.get(i).isChecked()) {
-                    this.addView(a.get(i));
+
+                if(a.get(i).getParent()!=null){
+                    ((ViewGroup) a.get(i).getParent()).removeView(a.get(i));
+                }
+                if(!a.get(i).isChecked()) {
+                    this.addView(a.get(i), counter);
                     counter++;
                 }
                 else{
