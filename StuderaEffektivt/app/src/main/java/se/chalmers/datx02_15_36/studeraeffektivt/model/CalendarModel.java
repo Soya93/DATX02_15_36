@@ -11,13 +11,9 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
-import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 /**
@@ -149,32 +145,47 @@ public class CalendarModel {
          return endDate == 0L ?  endDay.getTimeInMillis() : endDate;
     }
 
-    /**
-     * Returns the calendar of a user specified by its google email.
-     *
-     * @param cr
-     */
-    public List<String> getCalendarNames(ContentResolver cr) {
+    public List<String> getCalendarNamesInstances(ContentResolver cr) {
 
-       /* List<String> calendarNames = new ArrayList<String>();
-
-       /* Uri.Builder uriBuilder = CalendarContract.Instances.CONTENT_URI
+       List<String> calendarNames = new ArrayList<>();
+        Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
 
-        Cursor c = cr.query(null, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+        int year = CalendarUtils.YEAR;
+        int month = CalendarUtils.MONTH;
+        Calendar cal = Calendar.getInstance();
+        cal.set(year-1, month, 1);
+        long startDay = cal.getTimeInMillis();
+        cal.set(year+1, month, 1);
+        long endDay = cal.getTimeInMillis();
+
+        ContentUris.appendId(eventsUriBuilder, startDay);
+        ContentUris.appendId(eventsUriBuilder, endDay);
+        Uri eventsUri = eventsUriBuilder.build();
+
+        Cursor c = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
 
         while(c.moveToNext()) {
             // the cursor, c, contains all the projection data items
             // access the cursor’s contents by array index as declared in
             // your projection
-            String name = c.getString(1);
-            calendarNames.add(name);
+            String name = c.getString(CalendarUtils.CALENDAR_NAME);
+            int isVisible = c.getInt(CalendarUtils.VISIBLE);
+            if(!calendarNames.contains(name) && isVisible == 1)
+                calendarNames.add(name);
             Log.i("calendarname: ", name);
         }
         c.close();
-        return calendarNames;*/
+        return calendarNames;
+    }
 
 
+    /**
+     * Returns the calendar of a user specified by its google email.
+     *
+     * @param cr
+     */
+    public List<String> getCalendarNamesCalendars(ContentResolver cr) {
         List<String> calendarNames = new ArrayList<>();
 
         String[] projection = {CalendarContract.Calendars._ID,
@@ -195,14 +206,45 @@ public class CalendarModel {
             // your projection
             String name = c.getString(1);
             calendarNames.add(name);
-            Log.i("calendarname: ", name);
         }
         c.close();
         return calendarNames;
-
     }
 
-    public List<Long> getCalendarIDs(ContentResolver cr) {
+    public List<Long> getCalendarIDsInstances(ContentResolver cr) {
+
+        List<Long> calendarIDs = new ArrayList<>();
+        Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
+                .buildUpon();
+
+        int year = CalendarUtils.YEAR;
+        int month = CalendarUtils.MONTH;
+        Calendar cal = Calendar.getInstance();
+        cal.set(year-1, month, 1);
+        long startDay = cal.getTimeInMillis();
+        cal.set(year+1, month, 1);
+        long endDay = cal.getTimeInMillis();
+
+        ContentUris.appendId(eventsUriBuilder, startDay);
+        ContentUris.appendId(eventsUriBuilder, endDay);
+        Uri eventsUri = eventsUriBuilder.build();
+
+        Cursor c = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+
+        while(c.moveToNext()) {
+            // the cursor, c, contains all the projection data items
+            // access the cursor’s contents by array index as declared in
+            // your projection
+            Long id = c.getLong(CalendarUtils.CALENDAR_ID);
+            int isVisible = c.getInt(CalendarUtils.VISIBLE);
+            if(!calendarIDs.contains(id) && isVisible == 1)
+                calendarIDs.add(id);
+        }
+        c.close();
+        return calendarIDs;
+    }
+
+    public List<Long> getCalendarIDsCalendars(ContentResolver cr) {
 
         List<Long> calendarIDs = new ArrayList<>();
 
