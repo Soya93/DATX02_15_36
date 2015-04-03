@@ -36,6 +36,7 @@ public class MainActivity extends ActionBarActivity {
 
     private String userName = "user_Name";
     private Drawable tabResetIcon;
+    public static FloatingActionButton homeActionButton;
     public static FloatingActionButton actionButton;
     public static SubActionButton button1;
     public static SubActionButton button2;
@@ -100,6 +101,12 @@ public class MainActivity extends ActionBarActivity {
         ImageView icon = new ImageView(this); // Create an icon
         icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
 
+        homeActionButton = new FloatingActionButton.Builder(this)
+                .setContentView(icon)
+                .build();
+
+        homeActionButton.setTag(5);
+        homeActionButton.setOnClickListener(fabHandler);
 
 
         actionButton = new FloatingActionButton.Builder(this)
@@ -131,9 +138,6 @@ public class MainActivity extends ActionBarActivity {
         button4 = itemBuilder.setContentView(itemIcon4).build();
         button4.setTag(4);
         button4.setOnClickListener(fabHandler);
-
-        Log.i("main: ", " button1 id:  " + button1.getId() + " button2 id : " + button2.getId()
-                + " button3 id: " + button3.getId());
 
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
                 .addSubActionView(button4)
@@ -169,13 +173,20 @@ public class MainActivity extends ActionBarActivity {
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
 
-
-                if (tab.getPosition() == 1) {
+                if(tab.getPosition() == 0) {
+                    actionButton.setVisibility(View.GONE);
+                    button1.setVisibility(View.GONE);
+                    button2.setVisibility(View.GONE);
+                    button3.setVisibility(View.GONE);
+                    button4.setVisibility(View.GONE);
+                    homeActionButton.setVisibility(View.VISIBLE);
+                }else if (tab.getPosition() == 1) {
                     actionButton.setVisibility(View.VISIBLE);
                     button1.setVisibility(View.VISIBLE);
                     button2.setVisibility(View.VISIBLE);
                     button3.setVisibility(View.VISIBLE);
                     button4.setVisibility(View.VISIBLE);
+                    homeActionButton.setVisibility(View.GONE);
                 } else {
                     actionButton.setVisibility(View.GONE);
                     button1.setVisibility(View.GONE);

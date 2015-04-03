@@ -150,9 +150,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         // set the time for which hour that are shown
         mWeekView.goToHour(CalendarUtils.HOUR -1);
 
-
         //Disable horizontal scroll in calendar view
-        mWeekView.setHorizontalScrollBarEnabled(false);
+        mWeekView.setHorizontalScrollBarEnabled(false); // doesn't work... :(
+
 
 
         //actionButton.setOnClickListener(myButtonHandler);
@@ -478,9 +478,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         if (numberOfVisibleDays == 1) {
             newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + 1);
         } else {
-            Log.i("1 day: ", "");
-            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) +numberOfVisibleDays - 1);
-            Log.i("days: ", ""+ numberOfVisibleDays);
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays - 1);
         }
 
         mWeekView.goToDate(newDate);

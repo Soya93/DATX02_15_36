@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class HomeFrag extends Fragment {
     private Context context;
     private CalendarFrag calendarFrag;
     private boolean hasInit = false;
+    private FloatingActionButton homeActionButton;
+    private View.OnClickListener fabHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,6 +50,16 @@ public class HomeFrag extends Fragment {
         layout.addView(todayTextView);
         hasInit = true;
         this.setCalendarInfoToday();
+        homeActionButton = MainActivity.homeActionButton;
+
+        fabHandler = new View.OnClickListener() {
+
+            public void onClick(View v) {
+                if (v.getTag() == homeActionButton.getTag()) {
+                    calendarFrag.changeVisibleCalendars();
+                }
+            }
+        };
     }
 
    public void setCalendarFrag(CalendarFrag calendarFrag){
