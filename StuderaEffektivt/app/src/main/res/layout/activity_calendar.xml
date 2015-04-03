@@ -24,7 +24,34 @@
         app:headerRowBackgroundColor="#ffefefef"
         app:dayBackgroundColor="#05000000"
         app:todayBackgroundColor="#1848adff"
-        app:headerColumnBackground="#ffffffff"/>
+        app:headerColumnBackground="#ffffffff"
+        android:layout_below="@+id/cal_back_button" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:id="@+id/cal_back_button"
+        android:layout_alignEnd="@+id/weekView"
+        android:layout_marginEnd="250dp"
+        android:layout_alignParentTop="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forward"
+        android:id="@+id/cal_forward_button"
+        android:layout_alignBottom="@+id/cal_back_button"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Today"
+        android:id="@+id/go_to_today_button"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
 
     <!--

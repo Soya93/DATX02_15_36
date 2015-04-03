@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.alamkanak.weekview.WeekView;
@@ -51,6 +52,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private SubActionButton button2;
     private SubActionButton button3;
     private SubActionButton button4;
+    private Button backButton;
+    private Button forwradButton;
+    private Button goToTodayButton;
     int numberOfVisibleDays;
     private View.OnClickListener fabHandler;
 
@@ -65,11 +69,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         this.view = inflater.inflate(R.layout.activity_calendar, container, false);
         calendarModel = new CalendarModel();
 
+
         visibleCalendars = calendarModel.getCalendarIDsInstances(cr);
-        for(int i=0; i<visibleCalendars.size(); i++){
-            Log.i("onCreate calfrag", visibleCalendars.get(i) + "");
-        }
-        //calendarColors();
+
         this.initComponents();
         return view;
     }
@@ -81,24 +83,39 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         button3 = MainActivity.button3;
         button4 = MainActivity.button4;
 
+        backButton = (Button) view.findViewById(R.id.cal_back_button);
+        forwradButton = (Button) view.findViewById(R.id.cal_forward_button);
+        goToTodayButton = (Button) view.findViewById(R.id.go_to_today_button);
+
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
-                openAddEvent();
+                if (v.getId() == backButton.getId()) {
+                    Log.i("OnButton Click calFrag: ", "back button clicked");
+                    onBackClick();
+                }else if (v.getId() == forwradButton.getId()) {
+                    Log.i("OnButton Click calFrag: ", "forward button clicked");
+                    onForwardCLick();
+                } else {
+                    onTodayClick();
+                }
+
             }
         };
 
-        Log.i("calendar: ", " button1 id:  " + button1.getId() + " button2 id : " + button2.getId()
-                + " button3 id: " + button3.getId());
+        backButton.setOnClickListener(myButtonHandler);
+        forwradButton.setOnClickListener(myButtonHandler);
+        goToTodayButton.setOnClickListener(myButtonHandler);
+
+
+
 
         fabHandler = new View.OnClickListener() {
 
             public void onClick(View v) {
                 if (v.getTag() == button1.getTag()) {
                     openAddEvent();
-                    Log.i("main:", "1 studiepass");
                 }else if (v.getTag() == button2.getTag()) {
                     addRepetitionSession();
-                    Log.i("main:", " 2 repetition");
                 }else if (v.getTag() == button3.getTag()) {
                     //Instälningar - antal dagar
                     changeNbrOfDaysDialog();
@@ -127,7 +144,14 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         // Set number of visible days in the calendar view
         mWeekView.setNumberOfVisibleDays(5);
         hasOnMonthChange = false;
-        mWeekView.goToHour(8.0);
+
+
+        // set the time for which hour that are shown
+        mWeekView.goToHour(CalendarUtils.HOUR -1);
+
+
+        //Disable horizontal scroll in calendar view
+        mWeekView.setHorizontalScrollBarEnabled(false);
 
 
         //actionButton.setOnClickListener(myButtonHandler);
@@ -310,12 +334,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         while (cur.moveToNext()) {
             long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
 
+
            if(visibleCalendars.contains(calID)) {
 
                 long id = cur.getLong(CalendarUtils.EVENT_ID);
 
-               String eventName = cur.getString(CalendarUtils.TITLE);
-               Calendar startTime = Calendar.getInstance();
+                String eventName = cur.getString(CalendarUtils.TITLE);
+                Calendar startTime = Calendar.getInstance();
                 startTime.setTimeInMillis(cur.getLong(CalendarUtils.EVENT_BEGIN));
 
 
@@ -439,7 +464,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 mWeekView.setNumberOfVisibleDays(numberOfVisibleDays);
-                mWeekView.goToHour(8.0);
+                mWeekView.goToHour(CalendarUtils.HOUR-1);
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
             }
@@ -460,20 +485,35 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         return numberOfVisibleDays == 1? numberOfVisibleDays-1: i;
     }
 
-    private void calendarColors() {
-        Cursor c = cr.query(CalendarContract.Calendars.CONTENT_URI,
-                CalendarUtils.CALENDAR_CC_PROJECTION,
-                null,
-                null, null);
-        while(c.moveToNext()) {
-            // the cursor, c, contains all the projection data items
-            // access the cursor’s contents by array index as declared in
-            // your projection
-            long id = c.getLong(0);
-            int  color = c.getInt(4);
-            calendarColors.put(id, color);
 
-        }
-        c.close();
+
+    private void onForwardCLick() {
+        //Log.i("Forward Click calFrag: ", "" + (CalendarUtils.HOUR -1) + " " + (mWeekView.getLastVisibleDay().get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays -1));
+        //mWeekView.scrollTo(CalendarUtils.HOUR -1, mWeekView.getLastVisibleDay().get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays -1);
+
+        Calendar newDate = mWeekView.getLastVisibleDay();
+        newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays -1);
+        mWeekView.goToDate(newDate);
+        hasOnMonthChange = false;
+        mWeekView.notifyDatasetChanged();
     }
+
+    private void onBackClick() {
+       // Log.i("Back Click calFrag: ", "" + (CalendarUtils.HOUR -1) + " " + (mWeekView.getFirstVisibleDay().get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays +1));
+        //mWeekView.scrollTo(CalendarUtils.HOUR -1, mWeekView.getFirstVisibleDay().get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays +1);
+
+        Calendar newDate = mWeekView.getFirstVisibleDay();
+        newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays +1);
+        mWeekView.goToDate(newDate);
+        hasOnMonthChange = false;
+        mWeekView.notifyDatasetChanged();
+    }
+
+    private void onTodayClick() {
+        mWeekView.goToToday();
+        mWeekView.goToHour(CalendarUtils.HOUR-1);
+        hasOnMonthChange = false;
+        mWeekView.notifyDatasetChanged();
+    }
+
 }
