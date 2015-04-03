@@ -1,7 +1,6 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -66,7 +65,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         this.view = inflater.inflate(R.layout.activity_calendar, container, false);
         calendarModel = new CalendarModel();
 
-        visibleCalendars = calendarModel.getCalendarIDs(cr);
+        visibleCalendars = calendarModel.getCalendarIDsInstances(cr);
         for(int i=0; i<visibleCalendars.size(); i++){
             Log.i("onCreate calfrag", visibleCalendars.get(i) + "");
         }
@@ -204,7 +203,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         intent.putExtra("isInAddMode", true);
         intent.putExtra("calID", 1);        // 1 är hem kalender
-        String name = calendarModel.getCalendarNames(cr).get(0);        //hemkalenderns namn finns på position 0
+        String name = calendarModel.getCalendarNamesInstances(cr).get(0);        //hemkalenderns namn finns på position 0
         intent.putExtra("calName", name);
         startActivity(intent);
     }
@@ -237,7 +236,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         intent.putExtra("endTime", 0l);
         intent.putExtra("title", "Repititonspass för LV" + studyWeek);
         intent.putExtra("calID", 1);        // 1 är hem kalender
-        String name = calendarModel.getCalendarNames(cr).get(0);        //hemkalenderns namn finns på position 0
+        String name = calendarModel.getCalendarNamesInstances(cr).get(0);        //hemkalenderns namn finns på position 0
         intent.putExtra("calName", name);
 
 
@@ -377,8 +376,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
     public void changeVisibleCalendars() {
-        final List<String> calNames = getCalendarModel().getCalendarNames(cr);
-        final List<Long> calIDs = getCalendarModel().getCalendarIDs(cr);
+        final List<String> calNames = getCalendarModel().getCalendarNamesInstances(cr);
+        final List<Long> calIDs = getCalendarModel().getCalendarIDsInstances(cr);
         final String[] calendars = calNames.toArray(new String[calNames.size()]);
         final List <Long> visibleList = new ArrayList<>();
 

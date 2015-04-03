@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,9 +93,9 @@ public class EventActivity extends ActionBarActivity {
         notification = getIntent().getIntExtra("notification", -1);
         isAllDayEvent = getIntent().getIntExtra("isAllDay", 0) == 1;
         /*
-        int index = calendarFrag.getCalendarModel().getCalendarIDs(getContentResolver()).indexOf(calendarID);
+        int index = calendarFrag.getCalendarModel().getCalendarIDsCalendars(getContentResolver()).indexOf(calendarID);
         Log.i("oncreate event avtivity: ", calendarID +" " + index);
-        calendarName = calendarFrag.getCalendarModel().getCalendarNames(getContentResolver()).get(index);
+        calendarName = calendarFrag.getCalendarModel().getCalendarNamesCalendars(getContentResolver()).get(index);
         Log.i("oncreate event avtivity: ", calendarName);
         */
 
@@ -291,8 +290,8 @@ public class EventActivity extends ActionBarActivity {
 
     public Dialog openCalendarPickerDialog() {
 
-        final List<String> calNames = calendarFrag.getCalendarModel().getCalendarNames(getContentResolver());
-        final List<Long> calIDs = calendarFrag.getCalendarModel().getCalendarIDs(getContentResolver());
+        final List<String> calNames = calendarFrag.getCalendarModel().getCalendarNamesCalendars(getContentResolver());
+        final List<Long> calIDs = calendarFrag.getCalendarModel().getCalendarIDsCalendars(getContentResolver());
         final String[] calendars = new String[calNames.size()];
         for (int i = 0; i < calNames.size(); i++) {
             calendars[i] = calNames.get(i);
