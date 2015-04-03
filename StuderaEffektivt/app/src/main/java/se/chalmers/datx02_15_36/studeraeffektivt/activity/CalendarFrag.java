@@ -68,6 +68,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         this.view = inflater.inflate(R.layout.activity_calendar, container, false);
         calendarModel = new CalendarModel();
 
+
         numberOfVisibleDays = 5;
 
         visibleCalendars = calendarModel.getCalendarIDsInstances(cr);
@@ -150,6 +151,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         //Disable horizontal scroll in calendar view
         mWeekView.setHorizontalScrollBarEnabled(false); // doesn't work... :(
+
 
 
 
@@ -335,7 +337,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
 
             //Checks so the events belongs to an calendar that should be visible
-
            if(visibleCalendars.contains(calID)) {
 
                 long id = cur.getLong(CalendarUtils.EVENT_ID);

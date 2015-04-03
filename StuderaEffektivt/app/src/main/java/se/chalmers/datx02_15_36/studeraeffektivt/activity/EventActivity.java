@@ -290,8 +290,8 @@ public class EventActivity extends ActionBarActivity {
 
     public Dialog openCalendarPickerDialog() {
 
-        final List<String> calNames = calendarFrag.getCalendarModel().getCalendarNamesCalendars(getContentResolver());
-        final List<Long> calIDs = calendarFrag.getCalendarModel().getCalendarIDsCalendars(getContentResolver());
+        final List<String> calNames = calendarFrag.getCalendarModel().getCalendarNamesInstances(getContentResolver());
+        final List<Long> calIDs = calendarFrag.getCalendarModel().getCalendarIDsInstances(getContentResolver());
         final String[] calendars = new String[calNames.size()];
         for (int i = 0; i < calNames.size(); i++) {
             calendars[i] = calNames.get(i);
