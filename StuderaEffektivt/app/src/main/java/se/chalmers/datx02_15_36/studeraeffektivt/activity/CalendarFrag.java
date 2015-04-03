@@ -70,7 +70,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         calendarModel = new CalendarModel();
 
 
+
         visibleCalendars = calendarModel.getCalendarIDsInstances(cr);
+
+
+        numberOfVisibleDays = 5;
 
         this.initComponents();
         return view;
@@ -90,10 +94,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v.getId() == backButton.getId()) {
-                    Log.i("OnButton Click calFrag: ", "back button clicked");
                     onBackClick();
                 }else if (v.getId() == forwradButton.getId()) {
-                    Log.i("OnButton Click calFrag: ", "forward button clicked");
                     onForwardCLick();
                 } else {
                     onTodayClick();
@@ -142,6 +144,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.setEventLongPressListener(this);
 
         // Set number of visible days in the calendar view
+
         mWeekView.setNumberOfVisibleDays(5);
         hasOnMonthChange = false;
 
@@ -488,22 +491,28 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
 
     private void onForwardCLick() {
-        //Log.i("Forward Click calFrag: ", "" + (CalendarUtils.HOUR -1) + " " + (mWeekView.getLastVisibleDay().get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays -1));
-        //mWeekView.scrollTo(CalendarUtils.HOUR -1, mWeekView.getLastVisibleDay().get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays -1);
+        Calendar newDate = mWeekView.getFirstVisibleDay();
+        if (numberOfVisibleDays == 1) {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + 1);
+        } else {
+            Log.i("1 day: ", "");
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) +numberOfVisibleDays - 1);
+            Log.i("days: ", ""+ numberOfVisibleDays);
+        }
 
-        Calendar newDate = mWeekView.getLastVisibleDay();
-        newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays -1);
         mWeekView.goToDate(newDate);
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
     }
 
     private void onBackClick() {
-       // Log.i("Back Click calFrag: ", "" + (CalendarUtils.HOUR -1) + " " + (mWeekView.getFirstVisibleDay().get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays +1));
-        //mWeekView.scrollTo(CalendarUtils.HOUR -1, mWeekView.getFirstVisibleDay().get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays +1);
-
         Calendar newDate = mWeekView.getFirstVisibleDay();
-        newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays +1);
+        if (numberOfVisibleDays == 1) {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) -1);
+        } else {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays + 1);
+        }
+
         mWeekView.goToDate(newDate);
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
