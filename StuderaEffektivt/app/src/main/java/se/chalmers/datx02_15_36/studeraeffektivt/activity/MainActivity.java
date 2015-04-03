@@ -100,13 +100,14 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView icon = new ImageView(this); // Create an icon
         icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
-
+/*
         homeActionButton = new FloatingActionButton.Builder(this)
                 .setContentView(icon)
                 .build();
 
         homeActionButton.setTag(5);
         homeActionButton.setOnClickListener(fabHandler);
+        */
 
 
         actionButton = new FloatingActionButton.Builder(this)
@@ -179,14 +180,14 @@ public class MainActivity extends ActionBarActivity {
                     button2.setVisibility(View.GONE);
                     button3.setVisibility(View.GONE);
                     button4.setVisibility(View.GONE);
-                    homeActionButton.setVisibility(View.VISIBLE);
+                    //homeActionButton.setVisibility(View.VISIBLE);
                 }else if (tab.getPosition() == 1) {
                     actionButton.setVisibility(View.VISIBLE);
                     button1.setVisibility(View.VISIBLE);
                     button2.setVisibility(View.VISIBLE);
                     button3.setVisibility(View.VISIBLE);
                     button4.setVisibility(View.VISIBLE);
-                    homeActionButton.setVisibility(View.GONE);
+                    //homeActionButton.setVisibility(View.GONE);
                 } else {
                     actionButton.setVisibility(View.GONE);
                     button1.setVisibility(View.GONE);

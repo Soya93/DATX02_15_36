@@ -50,8 +50,9 @@ public class HomeFrag extends Fragment {
         layout.addView(todayTextView);
         hasInit = true;
         this.setCalendarInfoToday();
-        homeActionButton = MainActivity.homeActionButton;
+       // homeActionButton = MainActivity.homeActionButton;
 
+        /*
         fabHandler = new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -60,6 +61,7 @@ public class HomeFrag extends Fragment {
                 }
             }
         };
+        */
     }
 
    public void setCalendarFrag(CalendarFrag calendarFrag){
