@@ -68,7 +68,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         visibleCalendars = calendarModel.getCalendarIDs(cr);
         for(int i=0; i<visibleCalendars.size(); i++){
-            Log.i("onCreate calfrag", visibleCalendars.get(i)+"");
+            Log.i("onCreate calfrag", visibleCalendars.get(i) + "");
         }
         //calendarColors();
         this.initComponents();
@@ -311,24 +311,17 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         while (cur.moveToNext()) {
             long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
 
-            String eventName = cur.getString(CalendarUtils.TITLE);
-
-            //Checks so the events belongs to an calendar that should be visible
-            //Log.i("readEvents: contains cal? ", visibleCalendars.contains(calID)+"");
-           // Log.i("readEvents: calID " + calID+"", "event name: " +eventName);
            if(visibleCalendars.contains(calID)) {
 
                 long id = cur.getLong(CalendarUtils.EVENT_ID);
 
-               //event name ska vara här!!
-                Calendar startTime = Calendar.getInstance();
+               String eventName = cur.getString(CalendarUtils.TITLE);
+               Calendar startTime = Calendar.getInstance();
                 startTime.setTimeInMillis(cur.getLong(CalendarUtils.EVENT_BEGIN));
 
 
                 Calendar endTime = Calendar.getInstance();
                 endTime.setTimeInMillis(cur.getLong(CalendarUtils.EVENT_END));
-
-               Log.i("name ", eventName + "all day? " + (cur.getInt(CalendarUtils.ALL_DAY) == 1));
 
               if(cur.getInt(CalendarUtils.ALL_DAY) == 1){
                    startTime.set(Calendar.HOUR_OF_DAY, 0);
@@ -344,6 +337,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
                 WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
                 event.setColor(color);
+
+
 
                 eventList.add(event);
             }
@@ -381,31 +376,48 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         alertDialog.show();
     }
 
-    public Dialog changeVisibleCalendars() {
-
+    public void changeVisibleCalendars() {
         final List<String> calNames = getCalendarModel().getCalendarNames(cr);
         final List<Long> calIDs = getCalendarModel().getCalendarIDs(cr);
-        final String[] calendars = new String[calNames.size()];
-        for (int i = 0; i < calNames.size(); i++) {
-            calendars[i] = calNames.get(i);
+        final String[] calendars = calNames.toArray(new String[calNames.size()]);
+        final List <Long> visibleList = new ArrayList<>();
+
+        final boolean [] checkedArray = new boolean [calIDs.size()];
+
+        int i = 0;
+        for(long id: calIDs){
+            checkedArray[i] = (visibleCalendars.contains(id));
+            i ++;
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Välj kalender")
-                .setMultiChoiceItems(calendars,null,  new DialogInterface.OnMultiChoiceClickListener() {
+                .setMultiChoiceItems(calendars, checkedArray,  new DialogInterface.OnMultiChoiceClickListener() {
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         if (isChecked) {
-                            visibleCalendars.add(calIDs.get(which));
-
-                        } else if (visibleCalendars.contains(calIDs.get(which))) {
-                            visibleCalendars.remove(calIDs.get(which));
+                            visibleList.add(calIDs.get(which));
                         }
                     }
                 });
-        mWeekView.notifyDatasetChanged();
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                visibleCalendars = visibleList;
+                for(int i=0; i<visibleCalendars.size(); i++){
+                    Log.i("in changecalendars ", visibleCalendars.get(i)+"");
+                }
+                hasOnMonthChange = false;
+                mWeekView.notifyDatasetChanged();
+            }
+        });
 
-
-        return builder.create();
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
 

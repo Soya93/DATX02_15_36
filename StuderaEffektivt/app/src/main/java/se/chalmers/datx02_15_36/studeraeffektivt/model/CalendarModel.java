@@ -156,7 +156,26 @@ public class CalendarModel {
      */
     public List<String> getCalendarNames(ContentResolver cr) {
 
-        List<String> calendarNames = new ArrayList<String>();
+       /* List<String> calendarNames = new ArrayList<String>();
+
+       /* Uri.Builder uriBuilder = CalendarContract.Instances.CONTENT_URI
+                .buildUpon();
+
+        Cursor c = cr.query(null, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+
+        while(c.moveToNext()) {
+            // the cursor, c, contains all the projection data items
+            // access the cursor’s contents by array index as declared in
+            // your projection
+            String name = c.getString(1);
+            calendarNames.add(name);
+            Log.i("calendarname: ", name);
+        }
+        c.close();
+        return calendarNames;*/
+
+
+        List<String> calendarNames = new ArrayList<>();
 
         String[] projection = {CalendarContract.Calendars._ID,
                 CalendarContract.Calendars.NAME,
@@ -174,10 +193,9 @@ public class CalendarModel {
             // the cursor, c, contains all the projection data items
             // access the cursor’s contents by array index as declared in
             // your projection
-            long id = c.getLong(0);
             String name = c.getString(1);
             calendarNames.add(name);
-
+            Log.i("calendarname: ", name);
         }
         c.close();
         return calendarNames;
@@ -209,6 +227,7 @@ public class CalendarModel {
             Long id = c.getLong(0);
 
             calendarIDs.add(id);
+            Log.i("calendarid: ", id + "");
         }
         c.close();
         return calendarIDs;
