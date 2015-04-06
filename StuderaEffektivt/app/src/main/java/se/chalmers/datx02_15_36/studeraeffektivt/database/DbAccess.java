@@ -1,4 +1,4 @@
-package se.chalmers.datx02_15_36.studeraeffektivt.model;
+package se.chalmers.datx02_15_36.studeraeffektivt.database;
 
 
 import android.content.ContentValues;
@@ -10,7 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import android.util.Log;
 
-
+/*
+This class is not used as far as I know? Check out DBAdapter instead. Mvh Patte
+ */
 public class DbAccess{
     public static final String KEY_studentName = "studentName";
     public static final String KEY_time = "timeSpent";

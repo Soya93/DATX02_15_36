@@ -1,200 +1,303 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 
 
 public class TimerFrag extends Fragment {
 
-    protected CountDownTimer studyTimer;
-    protected CountDownTimer pauseTimer;
+    private ImageButton startButton;
 
-    private Button startButton;
-    private Button resetButton;
+    private int buttonId = R.drawable.ic_start;
+    private boolean hasBeenPaused = false;
 
-    private long chosenSeconds;
-    private long secondsUntilFinished;
 
-    protected long timePassed;
-    protected long default_TotalTime = (30 * 60 * 1000);
-    protected long default_StudyTime;
-    protected long default_PauseTime = (5 * 60 * 1000);
+    protected long default_TotalTime = (55 * 60*1000);
+    protected long default_StudyTime = (2 * 60*1000);
+    protected long default_PauseTime = (1 * 60*1000);
     protected long default_NumberOfPauses = 1;
 
-
-    private final long update_Time = 1000;
     private TextView textView;
-
-    protected boolean studyTimerIsRunning = false;
-    protected boolean pauseTimerIsRunning = false;
 
     private View rootView;
     private TextView inputText;
     private TextView pausLengthInput;
     private TextView nbrOfPausesInput;
 
+    public static final int TIMER_1 = 0;
+    public static final int CHANGE_COLOR_0 = 1;
+    public static final int CHANGE_COLOR_1 = 2;
+
+    private long serviceInt;
 
     private String inputTime;
     private String nbrOfPauses;
     private String pausLength;
+    private String ccode;
+    private String textViewText;
 
+    private Bundle b;
+    private Spinner spinner;
+    private ProgressBar progressBar;
+
+
+    private DBAdapter dbAdapter;
+    private Handler serviceHandler;
+    private SharedPreferences sharedPref;
+    private String prefName = "ButtonPref";
+
+
+    private Handler handler = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case TIMER_1:
+                    Bundle b = msg.getData();
+                    serviceInt = b.getLong("timePassed", -1);
+                    setTimerView(serviceInt);
+                    break;
+                case CHANGE_COLOR_0:
+
+                    setProgressColor(Color.GREEN);
+                    insertIntoDataBase();
+                    break;
+
+                case CHANGE_COLOR_1:
+                    setProgressColor(Color.BLUE);
+                    break;
+            }
+
+        }
+    };
+    MyCountDownTimer timerService;
+    private ServiceConnection sc = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            timerService = ((MyCountDownTimer.MCDTBinder) service).getService();
+            timerService.setHandler(handler);
+            serviceHandler = timerService.getServiceHandler();
+
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            timerService = null;
+        }
+
+
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_timer, container, false);
+        if (getActivity() != null) {
+            dbAdapter = new DBAdapter(getActivity());
+        }
         instantiate();
+
+
         return rootView;
     }
 
 
-    private void instantiate() {
-        resetButton = (Button) rootView.findViewById(R.id.button_reset);
-        startButton = (Button) rootView.findViewById(R.id.button_start_timer);
-        textView = (TextView) rootView.findViewById(R.id.text_timer);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (b != null) {
+            textView = (TextView) rootView.findViewById(R.id.textView);
+            String textV = b.getString("textViewText");
+            setProgressColor(Color.BLUE);
+            textView.setText(textV);
+
+        }
+    }
+
+
+    public void onStart() {
+        super.onStart();
+        startButton.setImageResource(buttonId);
+        if(isMyServiceRunning(MyCountDownTimer.class)) {
+            Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
+
+            getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
+        }
+
+        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+
+
+        int buttonTemp = sharedPref.getInt("buttonImage", -1);
+        if (buttonTemp > 0) {
+            buttonId = buttonTemp;
+            startButton.setImageResource(buttonId);
+        }
+        hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
+        if(hasBeenPaused){
+           long temp = sharedPref.getLong("timeLeft",-1);
+                     setTimerView(temp);
+        }
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setSelectedCourse();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
     }
+
+    private void instantiate() {
+        startButton = (ImageButton) rootView.findViewById(R.id.button_start_timer);
+        textView = (TextView) rootView.findViewById(R.id.textView);
+        spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        setCourses();
+
+        setTimerView(default_StudyTime);
+
+    }
+
+    private void setCourses() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        Cursor cursor = dbAdapter.getCourses();
+        int cnameColumn = cursor.getColumnIndex("cname");
+        int ccodeColumn = cursor.getColumnIndex("_ccode");
+        while (cursor.moveToNext()) {
+            String ccode = cursor.getString(ccodeColumn);
+            String cname = cursor.getString(cnameColumn);
+            adapter.add(ccode + "-" + cname);
+        }
+
+    }
+
+
+    public void setSelectedCourse() {
+        String temp = spinner.getSelectedItem().toString();
+        String[] parts = temp.split("-");
+        this.ccode = parts[0];
+        Log.d("selected course", ccode);
+
+    }
+
 
     private long minToMilliSeconds(int parsedTime) {
         return ((long) parsedTime * 60 * 1000);
     }
 
-
-    private void calculateStudySession() {
-        long temp = (default_TotalTime - (default_NumberOfPauses * default_PauseTime));
-        this.default_StudyTime = temp / (default_NumberOfPauses + 1);
+    private int milliSecondsToMin(long milliSeconds) {
+        return ((int) milliSeconds / 1000 / 60);
     }
+
 
     /**
      * Set the timer.
      */
-    public CountDownTimer studyTimerFunction(long millisInFuture, long countDownInterval) {
 
-        studyTimer = new CountDownTimer(millisInFuture, countDownInterval) {
-
-            public void onTick(long millisUntilFinished) {
-                studyTimerIsRunning = true;
-
-                textView.setText("Plugga " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
-
-
-                secondsUntilFinished = millisUntilFinished;
-                timePassed += 100;
-            }
-
-            @Override
-            public void onFinish() {
-                studyTimerIsRunning = false;
-                if (timePassed < default_TotalTime) {
-                    pauseTimerFunction(default_PauseTime, update_Time);
-                    pauseTimer.start();
-                }
-
-            }
-        };
-        return studyTimer;
+    private void insertIntoDataBase() {
+        long inserted = dbAdapter.insertSession(ccode, milliSecondsToMin(default_StudyTime));
+        if (inserted > 0 && getActivity() != null) {
+            Toast toast = Toast.makeText(getActivity(), "Session:" + milliSecondsToMin(default_StudyTime)
+                    + "minutes added to " + ccode, Toast.LENGTH_SHORT);
+            toast.show();
+        } else if (getActivity() != null) {
+            Toast toast = Toast.makeText(getActivity(), "Failed to add a Session", Toast.LENGTH_SHORT);
+            toast.show();
+        }
 
     }
 
-    public CountDownTimer pauseTimerFunction(long millisInFuture, long countDownInterval) {
-
-        pauseTimer = new CountDownTimer(millisInFuture, countDownInterval) {
-
-            public void onTick(long millisUntilFinished) {
-                pauseTimerIsRunning = true;
-
-                textView.setText("Paus " + (millisUntilFinished / 1000) / 60 + ":" + (millisUntilFinished / 1000) % 60);
-                secondsUntilFinished = millisUntilFinished;
-                timePassed += 100;
-            }
-
-            @Override
-            public void onFinish() {
-                pauseTimerIsRunning = false;
-                if (timePassed < default_TotalTime) {
-                    studyTimerFunction(default_StudyTime, update_Time);
-                    studyTimer.start();
-                }
-
-            }
-        };
-        return pauseTimer;
-
+    private void setProgressColor(int c) {
+        progressBar.getProgressDrawable().setColorFilter(c, PorterDuff.Mode.SRC_IN);
+        progressBar.setProgress(0);
     }
 
 
     public void startTimer() {
-        if (startButton.getText().equals("Starta Timer")) {
-            calculateStudySession();
-            studyTimerFunction(default_StudyTime, 100);
-            studyTimer.start();
-            startButton.setText("Paus");
-        } else if (startButton.getText().equals("Paus")) {
-            cancelOneOfTimers();
-            startButton.setText("Återuppta");
-        } else if (startButton.getText().equals("Återuppta")) {
-            handleTimeFromService(timePassed);
-            startButton.setText("Paus");
+        if (buttonId == R.drawable.ic_start && !hasBeenPaused) {
+            spinner.setEnabled(false);
+            sendDataToService();
+            buttonId = R.drawable.ic_pause;
+            startButton.setImageResource(buttonId);
+        } else if (buttonId == R.drawable.ic_pause) {
+            hasBeenPaused = true;
+            serviceHandler.sendEmptyMessage(0);
+            buttonId = R.drawable.ic_start;
+            startButton.setImageResource(buttonId);
+
+        } else if (buttonId == R.drawable.ic_start && hasBeenPaused) {
+            serviceHandler.sendEmptyMessage(1);
+            buttonId = R.drawable.ic_pause;
+            startButton.setImageResource(buttonId);
         }
+
     }
 
 
-    protected void handleTimeFromService(long timeFromService) {
-        long temp = 0;
-        this.timePassed = timeFromService;
-        Log.d("timeFromService", "value" + timeFromService);
-        boolean isItStudy = true;
-        while (temp < timeFromService) {
-            if (isItStudy) {
-                temp += default_StudyTime;
-                isItStudy = false;
-            } else {
-                temp += default_PauseTime;
-                isItStudy = true;
-            }
-        }
-        Log.d("isItStudy", "value" + isItStudy);
-        temp = temp - timeFromService;
-        Log.d("temp", "value" + temp);
-        if (isItStudy) {
-            pauseTimerFunction(temp, update_Time);
-            pauseTimer.start();
-        } else {
-            studyTimerFunction(temp, update_Time);
-            studyTimer.start();
-
-        }
-
+    private void sendDataToService () {
+        Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
+        i.putExtra("TIME_STUDY", default_StudyTime);
+        i.putExtra("TIME_PAUSE", default_PauseTime);
+        i.putExtra("TOTAL_TIME", default_TotalTime);
+        getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
+        getActivity().startService(i);
 
     }
 
+
+    public void setTimerView(long secUntilFinished) {
+        String sec = String.format("%02d", (secUntilFinished)/1000 % 60);
+        String min = String.format("%02d", (secUntilFinished) /1000/ 60);
+        textViewText = (min + ":" + sec);
+        textView.setText(textViewText);
+        progressBar.setProgress((int)(secUntilFinished * 1000 / default_StudyTime));
+    }
 
     public void resetTimer() {
-        cancelOneOfTimers();
-        startButton.setText("Starta Timer");
-        textView.setText("Studera " + (default_StudyTime / 1000) / 60 + ":" + (default_StudyTime / 1000) % 60);
+        serviceHandler.sendEmptyMessage(0);
+        buttonId = R.drawable.ic_start;
+        hasBeenPaused = false;
+        startButton.setImageResource(buttonId);
+
 
     }
 
-    protected void cancelOneOfTimers() {
-        if (studyTimerIsRunning) {
-            studyTimer.cancel();
-            studyTimerIsRunning = false;
-        } else if (pauseTimerIsRunning) {
-            pauseTimer.cancel();
-            pauseTimerIsRunning = true;
-        }
-    }
 
     public void settingsTimer() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -227,6 +330,8 @@ public class TimerFrag extends Fragment {
     }
 
     private void nextDialog() {
+          resetTimer();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.time_picker_dialog2, null);
@@ -238,14 +343,10 @@ public class TimerFrag extends Fragment {
                 nbrOfPausesInput = (TextView) dialogView.findViewById(R.id.nbrOfPausesInt);
                 nbrOfPauses = nbrOfPausesInput.getText().toString();
 
-                Log.d("Number of pauses", nbrOfPauses);
-
                 pausLengthInput = (TextView) dialogView.findViewById(R.id.pausLengthInt);
                 pausLength = pausLengthInput.getText().toString();
                 textView.setText(inputTime + ":00");
-                Log.d("PauseLengt", pausLength);
                 parseFromDialog();
-                resetTimer();
 
 
             }
@@ -267,11 +368,19 @@ public class TimerFrag extends Fragment {
         try {
             int timeFromDialog = Integer.parseInt(inputTime);
             default_TotalTime = minToMilliSeconds(timeFromDialog);
-            int pauseFromDialog = Integer.parseInt(pausLength);
+            int pauseFromDialog;
+            if (pausLength.equals("")) {
+                pauseFromDialog = 0;
+            } else {
+                pauseFromDialog = Integer.parseInt(pausLength);
+
+
+            }
             default_PauseTime = minToMilliSeconds(pauseFromDialog);
             int numberOfPauses = Integer.parseInt(nbrOfPauses);
             default_NumberOfPauses = (long) numberOfPauses;
-            calculateStudySession();
+            //calculateStudySession();
+
 
         } catch (Throwable e) {
             e.printStackTrace();
@@ -280,6 +389,49 @@ public class TimerFrag extends Fragment {
 
     }
 
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(isMyServiceRunning(MyCountDownTimer.class)) {
+            getActivity().unbindService(sc);
+            handler.removeMessages(0);
+            handler.removeMessages(1);
+            handler.removeMessages(2);
+        }
+
+        saveFragmentState();
+    }
+
+    private void saveFragmentState() {
+        b = new Bundle();
+        b.putInt("buttonImage", buttonId);
+        b.putString("textViewText", textViewText);
+        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("buttonImage", buttonId);
+        editor.putBoolean("hasPaused", hasBeenPaused);
+        Log.d("buttonId", String.valueOf(buttonId));
+        Log.d("hasPaused",String.valueOf(hasBeenPaused));
+
+
+
+
+        if(hasBeenPaused){
+            editor.putLong("timeLeft",serviceInt);
+        }
+
+        Log.d("ONDESTROY", String.valueOf(sharedPref.getInt("buttonImage", -1)));
+         editor.apply();
+    }
+
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
-

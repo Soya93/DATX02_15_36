@@ -34,13 +34,14 @@ public class TipFrag extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_tip, container, false);
         this.view = rootView;
         this.container = container;
-        initComponentsList(view);
+
+        initComponentsList();
         bundleFromPreviousFragment = this.getArguments();
         containerId = bundleFromPreviousFragment.getInt("containerId");
         return rootView;
     }
 
-    private void initComponentsList(View view) {
+    private void initComponentsList() {
 
         buttonList = new ArrayList<Button>();
 
@@ -81,12 +82,15 @@ public class TipFrag extends Fragment {
     public void goToTip(Button b) {
 
         Fragment fragment = new TipDetailedInfoFrag();
+
         Bundle bundle = new Bundle();
         bundle.putString("key", (String) b.getText());
+
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = this.getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(containerId, fragment);
+
+        fragmentTransaction.add(containerId, fragment, "detailedtipfragment");
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();

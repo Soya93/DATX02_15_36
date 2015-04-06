@@ -79,4 +79,11 @@
         <item name="dropDownListViewStyle">@style/DropDownListView.Pluggapp</item>
     </style>
 
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <!-- Default style for ImageButtons -->
+        <item name="android:imageButtonStyle">?android:borderlessButtonStyle</item>
+        <!-- Default style for Buttons -->
+        <item name="android:buttonStyle">?android:borderlessButtonStyle</item>
+    </style>
+
 </resources>

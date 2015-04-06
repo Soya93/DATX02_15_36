@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.CalendarFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.FifthTabFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.HomeFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.MyProfileFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.StatsFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerFrag;
 
@@ -43,7 +44,11 @@ public class TabAdapter extends FragmentPagerAdapter {
                 return statsFrag;
             case 4:
                 //FifthTab fragment activity
+<<<<<<< HEAD
                 return fifthTabFrag;
+=======
+                return new MyProfileFrag();
+>>>>>>> uppgifter
         }
 
         return null;

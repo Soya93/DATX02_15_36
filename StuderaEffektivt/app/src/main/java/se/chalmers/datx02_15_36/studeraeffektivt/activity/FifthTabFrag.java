@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +23,10 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
  * create an instance of this fragment.
  */
 public class FifthTabFrag extends Fragment {
+
+    //The access point of the database.
+    private DBAdapter dbAdapter;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -74,6 +79,12 @@ public class FifthTabFrag extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        //Create the database access point but check if the context is null first.
+        if(getActivity() != null){
+            dbAdapter = new DBAdapter(getActivity());
+        }
+
     }
 
     @Override
@@ -133,8 +144,14 @@ public class FifthTabFrag extends Fragment {
         tipButton.setOnClickListener(myOnlyhandler);
         courseButton = (Button) view.findViewById(R.id.button11);
         courseButton.setOnClickListener(myOnlyhandler);
+<<<<<<< HEAD
         hasInit = true;
         Log.i("init", hasInit + "");
+=======
+        settingsButton = (Button) view.findViewById(R.id.button12);
+        settingsButton.setOnClickListener(myOnlyhandler);
+
+>>>>>>> uppgifter
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
@@ -163,14 +180,21 @@ public class FifthTabFrag extends Fragment {
 
                 fragment = new TipFrag();
                 fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 currentlyShown = fragment;
                 break;
             case "Kurser":
                 fragment = new CourseFrag();
                 fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "coursefragment");
+                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
+                currentlyShown = fragment;
+                break;
+            case "Inställningar":
+                fragment = new MyProfileFrag();
+                fragment.setArguments(bundle);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "myprofilefrag");
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 currentlyShown = fragment;
                 break;
