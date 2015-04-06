@@ -66,6 +66,9 @@ public class CalendarUtils {
 
 
 
+
+
+
     public static final String[] CALENDAR_CC_PROJECTION = {CalendarContract.Calendars._ID,
             CalendarContract.Calendars.NAME,
             CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,

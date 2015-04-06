@@ -38,8 +38,49 @@ public class CalendarModel {
         cur = null;
     }
 
-    public List<String> readEventsToday(ContentResolver cr) {
-        return this.readEvents(cr, CalendarUtils.TODAY_IN_MILLIS, CalendarUtils.TODAY_IN_MILLIS);
+    public ArrayList<HomeEventItem> readEventsToday(ContentResolver cr) {
+        Log.i("calModel", "readEventsToday");
+
+        ArrayList <HomeEventItem> eventsToday = new ArrayList<>();
+
+        /*
+
+        Calendar cal = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        long startInterval = cal.getTimeInMillis();
+
+
+        cal2.set(Calendar.MINUTE, 59);
+        long endInterval = cal2.getTimeInMillis();
+        */
+
+        long startInterval = 0L;
+        long endInterval = 0L;
+        Log.i("calModel", startInterval + " : " + endInterval);
+
+        Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
+                .buildUpon();
+        startInterval = checkStartInterval(startInterval);
+        endInterval = checkEndInterval(endInterval);
+        ContentUris.appendId(eventsUriBuilder, startInterval);
+        ContentUris.appendId(eventsUriBuilder, endInterval);
+        Uri eventsUri = eventsUriBuilder.build();
+
+        cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+
+        //Prints out all the events in the given interval
+        while (cur.moveToNext()) {
+            HomeEventItem item = new HomeEventItem();
+            item.setTitleS(cur.getString(CalendarUtils.TITLE));
+            item.setTimeS(cur.getString(CalendarUtils.EVENT_BEGIN) + "-" + cur.getString(CalendarUtils.EVENT_END));
+            item.setLocationS(cur.getString(CalendarUtils.LOCATION));
+            item.setTimeToStartS(Calendar.getInstance().getTimeInMillis() - cur.getLong(CalendarUtils.EVENT_BEGIN) +"");
+            eventsToday.add(item);
+        }
+        cur.close();
+        return eventsToday;
     }
 
     /**

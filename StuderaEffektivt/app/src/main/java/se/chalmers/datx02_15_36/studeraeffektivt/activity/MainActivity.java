@@ -82,6 +82,10 @@ public class MainActivity extends ActionBarActivity {
         calendarFrag.setContentResolver(this.getContentResolver());
 
 
+        homeFrag = (HomeFrag) mAdapter.getItem(0);
+        homeFrag.setContentResolver(this.getContentResolver());
+
+
         // listener for FAB menu
         FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
             @Override

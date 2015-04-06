@@ -6,11 +6,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="422dp"
+        android:id="@+id/home_list" />
+
     <com.shamanland.fab.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_medal"
         android:id="@+id/home_fab"
         app:floatingActionButtonSize="mini"
-        />
+        android:layout_gravity="right" />
 </LinearLayout>
