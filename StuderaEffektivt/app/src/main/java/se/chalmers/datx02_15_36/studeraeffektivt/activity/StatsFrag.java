@@ -60,17 +60,24 @@ public class StatsFrag extends Fragment {
         spinner.setSelection(0);
         setCourses();
 
+        setTextViews();
+    }
+
+    private void setTextViews(){
         hoursSpent = (TextView) rootView.findViewById(R.id.hours_spent_show);
-        setHoursSpent();
+        hoursSpent.setText(""+getHoursSpent());
+
         hoursLeft = (TextView) rootView.findViewById(R.id.hours_left_show);
-        setHoursLeft();
+        hoursLeft.setText(""+getHoursLeft());
+
         hoursTotal = (TextView) rootView.findViewById(R.id.hours_total_show);
-        setHoursTotal();
+        hoursTotal.setText(""+getHoursTotal());
 
         assDone = (TextView) rootView.findViewById(R.id.ass_done_show);
-        setAssDone();
+        assDone.setText(""+getAssDone());
+
         assLeft = (TextView) rootView.findViewById(R.id.ass_left_show);
-        setAssLeft();
+        assLeft.setText(""+getAssLeft());
     }
 
     private void setCourses() {
@@ -95,32 +102,27 @@ public class StatsFrag extends Fragment {
         this.currCourse = parts[0];
     }
 
-    private void setHoursSpent(){
+    private int getHoursSpent(){
         setSelectedCourse();
-        String timeSpent = " "+(dbAdapter.getSpentTime(currCourse)/60)+" h";
-        hoursSpent.setText(timeSpent);
+        return (dbAdapter.getSpentTime(currCourse)/60);
     }
 
-    private void setHoursLeft(){
-        String timeLeft = " "+((dbAdapter.getTimeOnCourse(currCourse)/60)-(dbAdapter.getSpentTime(currCourse)/60))+" h";
-        hoursLeft.setText(timeLeft);
+    private int getHoursLeft(){
+        return ((dbAdapter.getTimeOnCourse(currCourse)/60)-(dbAdapter.getSpentTime(currCourse)/60));
     }
 
-    private void setHoursTotal(){
-        String timeTotal = " "+(dbAdapter.getTimeOnCourse(currCourse)/60)+" h";
-        hoursTotal.setText(timeTotal);
+    private int getHoursTotal(){
+        return (dbAdapter.getTimeOnCourse(currCourse)/60);
     }
 
-    private void setAssDone(){
-        Cursor cursor = dbAdapter.getDoneAssignments(currCourse);
-        String assignments = " "+cursor.getCount();
-        assDone.setText(assignments);
+    private int getAssDone(){
+        return dbAdapter.getDoneAssignments(currCourse).getCount();
     }
 
-    private void setAssLeft(){
+    private int getAssLeft(){
         int assignments = dbAdapter.getAssignments(currCourse).getCount();
         int doneAssignments = dbAdapter.getDoneAssignments(currCourse).getCount();
-        assLeft.setText(" "+(assignments-doneAssignments));
+        return (assignments-doneAssignments);
     }
 
     public void onStart(){
