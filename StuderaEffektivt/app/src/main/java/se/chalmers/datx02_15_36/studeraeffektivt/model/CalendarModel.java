@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 
 /**
  * A class representing the model of a calendar
@@ -43,7 +44,8 @@ public class CalendarModel {
 
         ArrayList <HomeEventItem> eventsToday = new ArrayList<>();
 
-        /*
+/*
+        //TODO fixa så pågående event kommer med
 
         Calendar cal = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
@@ -54,11 +56,13 @@ public class CalendarModel {
 
         cal2.set(Calendar.MINUTE, 59);
         long endInterval = cal2.getTimeInMillis();
+
         */
 
         long startInterval = 0L;
         long endInterval = 0L;
-        Log.i("calModel", startInterval + " : " + endInterval);
+
+
 
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
@@ -74,9 +78,15 @@ public class CalendarModel {
         while (cur.moveToNext()) {
             HomeEventItem item = new HomeEventItem();
             item.setTitleS(cur.getString(CalendarUtils.TITLE));
-            item.setTimeS(cur.getString(CalendarUtils.EVENT_BEGIN) + "-" + cur.getString(CalendarUtils.EVENT_END));
+            if (cur.getInt(CalendarUtils.ALL_DAY) == 1) {
+                item.setTimeS("Heldag");
+            } else {
+                item.setTimeS(CalendarView.formatTime(cur.getLong(CalendarUtils.EVENT_BEGIN), cur.getLong(CalendarUtils.EVENT_END)));
+                item.setTimeToStartS(CalendarView.formatTimeToEvent(Calendar.getInstance().getTimeInMillis(), cur.getLong(CalendarUtils.EVENT_BEGIN)));
+            }
+
             item.setLocationS(cur.getString(CalendarUtils.LOCATION));
-            item.setTimeToStartS(Calendar.getInstance().getTimeInMillis() - cur.getLong(CalendarUtils.EVENT_BEGIN) +"");
+
             eventsToday.add(item);
         }
         cur.close();

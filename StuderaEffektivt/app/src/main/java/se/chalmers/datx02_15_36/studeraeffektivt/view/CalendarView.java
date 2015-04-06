@@ -64,5 +64,18 @@ public class CalendarView {
         SimpleDateFormat endFormat = new SimpleDateFormat("HH:mm");
         return startFormat.format(new Date(startDateInMillis)) + "-" + endFormat.format(new Date(endDateInMillis));
     }
+
+    public static String formatTime(long startDateInMillis, long endDateInMillis){
+        SimpleDateFormat startFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat endFormat = new SimpleDateFormat("HH:mm");
+        return startFormat.format(new Date(startDateInMillis)) + "-" + endFormat.format(new Date(endDateInMillis));
+    }
+
+    public static String formatTimeToEvent(long timeNow, long eventStart){
+        long diff = eventStart - timeNow;
+        SimpleDateFormat time = new SimpleDateFormat("HH:mm");
+        return time.format(new Date(diff));
+    }
+
 }
 
