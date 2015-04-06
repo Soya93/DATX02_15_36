@@ -94,15 +94,15 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".TechniquesActivity"
+            android:name=".activity.TechniquesActivity"
             android:label="@string/title_activity_techniques" >
         </activity>
         <activity
-            android:name=".DetailedInfoActivity"
+            android:name=".activity.DetailedInfoActivity"
             android:label="@string/title_activity_detailed_info" >
         </activity>
         <activity
-            android:name=".TipsActivity"
+            android:name=".activity.TipsActivity"
             android:label="@string/title_activity_tips" >
         </activity>
     </application>

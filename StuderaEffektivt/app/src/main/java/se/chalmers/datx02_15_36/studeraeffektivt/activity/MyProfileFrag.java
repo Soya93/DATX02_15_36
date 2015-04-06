@@ -13,7 +13,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
     import android.widget.Button;
 
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
-    import se.chalmers.datx02_15_36.studeraeffektivt.TechniquesActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 
 public class MyProfileFrag extends Fragment {
@@ -180,6 +179,9 @@ public class MyProfileFrag extends Fragment {
                 fragment = new CourseFrag();
                 fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "coursefragment");
+                fragmentTransaction.hide(this);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 break;
             case R.id.addTask:
@@ -189,9 +191,10 @@ public class MyProfileFrag extends Fragment {
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
                 break;
             case R.id.tips:
+                startActivity(new Intent(getActivity(), TipsActivity.class));
                 fragment = new TipFrag();
-                fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");
+                /*fragment.setArguments(bundle);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");*/
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 break;
             case R.id.techniques:
@@ -203,9 +206,6 @@ public class MyProfileFrag extends Fragment {
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
                 break;
         }
-        fragmentTransaction.hide(this);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
     }
 
 }
