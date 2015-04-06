@@ -17,7 +17,14 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 */
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
@@ -37,6 +44,9 @@ public class StatsFrag extends Fragment {
 
     private TextView assDone;
     private TextView assLeft;
+
+    private PieChart pieHours;
+    private PieChart pieAssignments;
 
     private DBAdapter dbAdapter;
 
@@ -60,10 +70,78 @@ public class StatsFrag extends Fragment {
         spinner.setSelection(0);
         setCourses();
 
-        setTextViews();
+        instantiatePieHours();
+        instantiatePieAssignments();
+
     }
 
-    private void setTextViews(){
+    private void instantiatePieHours(){
+        pieHours = (PieChart) rootView.findViewById(R.id.pie_hours);
+        pieHours.setNoDataTextDescription("TIMMAR DU LAGT");
+
+        //Set up pie chart data
+        Log.d("BAJS", "pieHours spent: "+getHoursSpent());
+        Log.d("BAJS", "pieHours left: "+getHoursLeft());
+
+        ArrayList<Entry> pieEntries = new ArrayList<Entry>();
+        Entry hoursDone = new Entry(getHoursSpent(),0);
+        Entry hoursLeft = new Entry(getHoursLeft(),1);
+        pieEntries.add(hoursDone);
+        pieEntries.add(hoursLeft);
+
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, "Timmar");
+        ArrayList<PieDataSet> dataSets = new ArrayList<PieDataSet>();
+        dataSets.add(pieDataSet);
+        ArrayList<String> pieLabels = new ArrayList<String>();
+        pieLabels.add("Klara");
+        pieLabels.add("Kvar");
+
+        PieData pieData = new PieData(pieLabels,pieDataSet);
+        pieHours.setData(pieData);
+
+        //Style pie chart data
+        pieHours.setDescription("");
+        pieHours.setDrawHoleEnabled(true);
+        pieHours.setUsePercentValues(true);
+
+        //Show pie chart data
+        pieHours.invalidate();
+    }
+
+    private void instantiatePieAssignments(){
+        pieAssignments = (PieChart) rootView.findViewById(R.id.pie_assignments);
+        pieAssignments.setNoDataTextDescription("UPPGIFTER DU GJORT");
+
+        //Set up pie chart data
+        Log.d("BAJS", "pieAsses done: "+getAssDone());
+        Log.d("BAJS", "pieAsses left: "+getAssLeft());
+
+        ArrayList<Entry> pieEntries = new ArrayList<Entry>();
+        Entry assesDone = new Entry(getAssDone(),0);
+        Entry assesLeft = new Entry(getAssLeft(),1);
+        pieEntries.add(assesDone);
+        pieEntries.add(assesLeft);
+
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, "Uppgifter");
+        ArrayList<PieDataSet> dataSets = new ArrayList<PieDataSet>();
+        dataSets.add(pieDataSet);
+        ArrayList<String> pieLabels = new ArrayList<String>();
+        pieLabels.add("Klara");
+        pieLabels.add("Kvar");
+
+        PieData pieData = new PieData(pieLabels,pieDataSet);
+        pieAssignments.setData(pieData);
+
+        //Style pie chart data
+        pieAssignments.setDescription("");
+        pieAssignments.setDrawHoleEnabled(true);
+        pieAssignments.setUsePercentValues(true);
+
+        //Show pie chart data
+        pieAssignments.invalidate();
+    }
+
+    /*private void setTextViews(){
         hoursSpent = (TextView) rootView.findViewById(R.id.hours_spent_show);
         hoursSpent.setText(""+getHoursSpent());
 
@@ -78,7 +156,7 @@ public class StatsFrag extends Fragment {
 
         assLeft = (TextView) rootView.findViewById(R.id.ass_left_show);
         assLeft.setText(""+getAssLeft());
-    }
+    }*/
 
     private void setCourses() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);

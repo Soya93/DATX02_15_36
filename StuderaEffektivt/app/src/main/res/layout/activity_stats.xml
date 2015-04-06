@@ -1,125 +1,42 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin" android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin" android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.StatsFrag">
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/spinner_stats"
-        android:layout_alignParentTop="true"
+        android:layout_width="395dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
-    <!-- Hours -->
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <view
+            android:id="@+id/pie_hours"
+            class="com.github.mikephil.charting.charts.PieChart"
+            android:layout_width="181dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+
+        <view
+            android:id="@+id/pie_assignments"
+            class="com.github.mikephil.charting.charts.PieChart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <view
+        android:id="@+id/line_hours"
+        class="com.github.mikephil.charting.charts.LineChart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Timmar lagda:"
-        android:id="@+id/hours_spent"
-        android:layout_marginTop="117dp"
-        android:autoText="false"
-        android:phoneNumber="true"
-        android:layout_marginLeft="96dp"
-        android:layout_marginStart="96dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Timmar kvar:"
-        android:id="@+id/hours_left"
-        android:layout_below="@+id/hours_spent"
-        android:layout_alignRight="@+id/hours_spent"
-        android:layout_alignEnd="@+id/hours_spent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Timmar totalt:"
-        android:id="@+id/hours_total"
-        android:layout_below="@+id/hours_left"
-        android:layout_alignRight="@+id/hours_left"
-        android:layout_alignEnd="@+id/hours_left" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0h"
-        android:id="@+id/hours_spent_show"
-        android:layout_alignTop="@+id/hours_spent"
-        android:layout_toRightOf="@+id/hours_left" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0h"
-        android:id="@+id/hours_left_show"
-        android:layout_above="@+id/hours_total"
-        android:layout_toRightOf="@+id/hours_total"
-        android:layout_toEndOf="@+id/hours_total" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0h"
-        android:id="@+id/hours_total_show"
-        android:layout_below="@+id/hours_left"
-        android:layout_toRightOf="@+id/hours_total"
-        android:layout_toEndOf="@+id/hours_total" />
-
-    <!-- Assignments -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Uppgifter klara:"
-        android:id="@+id/ass_done"
-        android:layout_marginTop="121dp"
-        android:layout_below="@+id/hours_total"
-        android:layout_alignRight="@+id/hours_spent"
-        android:layout_alignEnd="@+id/hours_spent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Uppgifter kvar:"
-        android:id="@+id/ass_left"
-        android:layout_alignTop="@+id/ass_left_show"
-        android:layout_alignRight="@+id/ass_done"
-        android:layout_alignEnd="@+id/ass_done" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0st"
-        android:id="@+id/ass_done_show"
-        android:layout_above="@+id/ass_left"
-        android:layout_toRightOf="@+id/ass_left"
-        android:layout_toEndOf="@+id/ass_left" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0st"
-        android:id="@+id/ass_left_show"
-        android:layout_below="@+id/ass_done"
-        android:layout_alignLeft="@+id/ass_done_show"
-        android:layout_alignStart="@+id/ass_done_show" />
+        android:layout_gravity="center_horizontal" />
 
 
-</RelativeLayout>
+</LinearLayout>
