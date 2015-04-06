@@ -59,5 +59,6 @@
 
     <string name="title_activity_study_task">StudyTaskActivity</string>
     <string name="title_activity_event">EventActivity</string>
+    <string name="title_activity_activity_my_profile">activity_my_profile</string>
 
 </resources>

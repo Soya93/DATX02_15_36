@@ -1,46 +1,37 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+    import android.net.Uri;
+    import android.os.Bundle;
+    import android.support.v4.app.Fragment;
+    import android.support.v4.app.FragmentManager;
+    import android.support.v4.app.FragmentTransaction;
+    import android.util.Log;
+    import android.view.LayoutInflater;
+    import android.view.View;
+    import android.view.ViewGroup;
+    import android.widget.Button;
 
-import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+    import se.chalmers.datx02_15_36.studeraeffektivt.R;
+    import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FifthTabFrag.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FifthTabFrag#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class FifthTabFrag extends Fragment {
+public class MyProfileFrag extends Fragment {
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+
+    private Button addCourseButton;
+    private Button seePrevCoursesButton;
+    private Button addTaskButton;
+    private Button tipButton;
+    private Button techniqueButton;
+    private ViewGroup container;
+    private View view;
 
     //The access point of the database.
     private DBAdapter dbAdapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private Button tipButton;
-    private Button courseButton;
-    private Button settingsButton;
-
-    private ViewGroup container;
-    private View view;
-
-
-    private Fragment currentlyShown = this;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -67,7 +58,7 @@ public class FifthTabFrag extends Fragment {
         return fragment;
     }
 
-    public FifthTabFrag() {
+    public MyProfileFrag() {
         // Required empty public constructor
     }
 
@@ -90,7 +81,7 @@ public class FifthTabFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.activity_fifth_tab, container, false);
+        View rootView = inflater.inflate(R.layout.activity_my_profile, container, false);
         this.view = rootView;
         this.container = container;
         //currentlyShown = this;
@@ -140,13 +131,20 @@ public class FifthTabFrag extends Fragment {
     }
 
     private void initComponents() {
-        tipButton = (Button) view.findViewById(R.id.button1);
-        tipButton.setOnClickListener(myOnlyhandler);
-        courseButton = (Button) view.findViewById(R.id.button11);
-        courseButton.setOnClickListener(myOnlyhandler);
-        settingsButton = (Button) view.findViewById(R.id.button12);
-        settingsButton.setOnClickListener(myOnlyhandler);
+        addCourseButton = (Button) view.findViewById(R.id.addCourse);
+        addCourseButton.setOnClickListener(myOnlyhandler);
 
+        seePrevCoursesButton= (Button) view.findViewById(R.id.prevCourses);
+        seePrevCoursesButton.setOnClickListener(myOnlyhandler);
+
+        addTaskButton= (Button) view.findViewById(R.id.addTask);
+        addTaskButton.setOnClickListener(myOnlyhandler);
+
+        tipButton = (Button) view.findViewById(R.id.tips);
+        tipButton.setOnClickListener(myOnlyhandler);
+
+        techniqueButton =  (Button) view.findViewById(R.id.techniques);
+        techniqueButton.setOnClickListener(myOnlyhandler);
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
@@ -159,8 +157,7 @@ public class FifthTabFrag extends Fragment {
 
     private void goToButtonView(Button b) {
 
-        String buttonText = b.getText().toString();
-
+        int id = b.getId();
         Fragment fragment;
 
         Bundle bundle = new Bundle();
@@ -170,42 +167,41 @@ public class FifthTabFrag extends Fragment {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        switch (buttonText) {
-            case "Studietips och studiestilar":
-
-                fragment = new TipFrag();
+        switch (id) {
+            case R.id.addCourse:
+                /*fragment = new CourseFrag();
                 fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");
-                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
-                currentlyShown = fragment;
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "coursefragment");
+                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
                 break;
-            case "Kurser":
+            case R.id.prevCourses:
                 fragment = new CourseFrag();
                 fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "coursefragment");
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
-                currentlyShown = fragment;
                 break;
-            case "Inställningar":
-                fragment = new MyProfileFrag();
+            case R.id.addTask:
+                /*fragment = new MyProfileFrag();
                 fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "myprofilefrag");
+                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
+                break;
+            case R.id.tips:
+                fragment = new TipFrag();
+                fragment.setArguments(bundle);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
-                currentlyShown = fragment;
+                break;
+            case R.id.techniques:
+                fragment = new TipFrag();
+                fragment.setArguments(bundle);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");
+                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 break;
         }
-        Log.d("FifthTabFrag ", "currentlyshown = " + currentlyShown);
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-    }
-
-    public FifthTabFrag getCurrentlyShown() {
-        return (FifthTabFrag) currentlyShown;
-    }
-
-    public void setCurrentlyShown() {
-
     }
 
 }
