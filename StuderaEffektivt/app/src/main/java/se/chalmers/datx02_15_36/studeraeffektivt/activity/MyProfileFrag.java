@@ -1,5 +1,6 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+    import android.content.Intent;
     import android.net.Uri;
     import android.os.Bundle;
     import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
     import android.widget.Button;
 
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
+    import se.chalmers.datx02_15_36.studeraeffektivt.TechniquesActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 
 public class MyProfileFrag extends Fragment {
@@ -193,10 +195,12 @@ public class MyProfileFrag extends Fragment {
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 break;
             case R.id.techniques:
-                fragment = new TechniquesFrag();
+                startActivity(new Intent(getActivity(), TechniquesActivity.class));
+
+                /*fragment = new TechniquesFrag();
                 fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");
-                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
+                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
                 break;
         }
         fragmentTransaction.hide(this);

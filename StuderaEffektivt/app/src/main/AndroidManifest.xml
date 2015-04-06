@@ -30,8 +30,11 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" /> <!-- -http://developer.android.com/training/multiscreen/screensizes.html -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
+    <!-- -http://developer.android.com/training/multiscreen/screensizes.html -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -53,24 +56,22 @@
 
         <fragment
             android:name=".activity.TimerFrag"
-            android:label="TimerFrag"></fragment>
+            android:label="TimerFrag" />
         <fragment
             android:name=".activity.CalendarFrag"
-            android:label="CalendarFrag"></fragment>
-
+            android:label="CalendarFrag" />
         <fragment
             android:name=".activity.TipFrag"
-            android:label="TipFrag"></fragment>
+            android:label="TipFrag" />
         <fragment
             android:name=".activity.TipDetailedInfoFrag"
-            android:label="TipDetailedInfoFrag"></fragment>
-
+            android:label="TipDetailedInfoFrag" />
         <fragment
             android:name=".activity.Statistics"
-            android:label="StatsFrag"></fragment>
+            android:label="StatsFrag" />
         <fragment
             android:name="activity.HomeFrag"
-            android:label="HomeFrag"></fragment>
+            android:label="HomeFrag" />
         <fragment
             android:name=".activity.MyProfileFrag"
             android:label="@string/title_activity_activity_my_profile" >
@@ -91,6 +92,19 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".TechniquesActivity"
+            android:label="@string/title_activity_techniques" >
+        </activity>
+        <activity
+            android:name=".DetailedInfoActivity"
+            android:label="@string/title_activity_detailed_info" >
+        </activity>
+        <activity
+            android:name=".TipsActivity"
+            android:label="@string/title_activity_tips" >
+        </activity>
     </application>
 
 </manifest>
