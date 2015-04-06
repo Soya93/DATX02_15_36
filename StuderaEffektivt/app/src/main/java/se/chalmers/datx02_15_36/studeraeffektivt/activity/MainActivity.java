@@ -215,7 +215,7 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
-                //tab.setIcon(tabResetIcon);
+                tab.setIcon(tabResetIcon);
             }
 
             @Override
