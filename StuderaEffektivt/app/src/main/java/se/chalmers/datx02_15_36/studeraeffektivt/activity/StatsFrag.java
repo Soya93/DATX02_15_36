@@ -1,6 +1,8 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,10 +19,12 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 */
 
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.w3c.dom.Text;
 
@@ -59,9 +63,10 @@ public class StatsFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
 
-        //insertTestDataToDB("DDD111");
-        //insertTestDataToDB("BBB222");
-        //insertDifferentTestData("OOO333");
+        insertTestDataToDB("DDD111");
+        insertTestDataToDB("BBB222");
+        insertDifferentTestData("OOO333");
+
         instantiateView();
 
         return rootView;
@@ -74,6 +79,7 @@ public class StatsFrag extends Fragment {
         Log.i("DB", "initial selection: "+spinner.getSelectedItem());
 
         instantiatePieHours();
+        instantiatePieAss();
     }
 
     private void instantiatePieHours(){
@@ -81,6 +87,9 @@ public class StatsFrag extends Fragment {
         pieHours.setNoDataTextDescription("TIMMAR DU LAGT");
 
         //Set up pie chart data
+        Log.i("stats", "hours spent: "+getHoursSpent());
+        Log.i("stats", "hours left: "+getHoursLeft());
+
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
         Entry hoursDone = new Entry(50,0);
         Entry hoursLeft = new Entry(50,1);
@@ -88,6 +97,7 @@ public class StatsFrag extends Fragment {
         pieEntries.add(hoursLeft);
 
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "Timmar");
+        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
         ArrayList<PieDataSet> dataSets = new ArrayList<PieDataSet>();
         dataSets.add(pieDataSet);
         ArrayList<String> pieLabels = new ArrayList<String>();
@@ -99,11 +109,47 @@ public class StatsFrag extends Fragment {
 
         //Style pie chart data
         pieHours.setDescription("");
+        pieHours.setCenterText("Timmar");
         pieHours.setDrawHoleEnabled(true);
-        pieHours.setUsePercentValues(true);
+        pieHours.setHoleColorTransparent(true);
 
         //Show pie chart data
         pieHours.invalidate();
+    }
+
+    private void instantiatePieAss(){
+        pieAssignments = (PieChart) rootView.findViewById(R.id.pie_assignments);
+        pieAssignments.setNoDataTextDescription("UPPGIFTER DU LAGT");
+
+        //Set up pie chart data
+        Log.i("stats", "asses done: "+getAssDone());
+        Log.i("stats", "asses left: "+getAssLeft());
+
+        ArrayList<Entry> pieEntries = new ArrayList<Entry>();
+        Entry assesDone = new Entry(50,0);
+        Entry assesLeft = new Entry(50,1);
+        pieEntries.add(assesDone);
+        pieEntries.add(assesLeft);
+
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, "Uppgifter");
+        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+        ArrayList<PieDataSet> dataSets = new ArrayList<PieDataSet>();
+        dataSets.add(pieDataSet);
+        ArrayList<String> pieLabels = new ArrayList<String>();
+        pieLabels.add("Klara");
+        pieLabels.add("Kvar");
+
+        PieData pieData = new PieData(pieLabels,pieDataSet);
+        pieAssignments.setData(pieData);
+
+        //Style pie chart data
+        pieAssignments.setDescription("");
+        pieAssignments.setCenterText("Uppgifter");
+        pieAssignments.setDrawHoleEnabled(true);
+        pieAssignments.setHoleColorTransparent(true);
+
+        //Show pie chart data
+        pieAssignments.invalidate();
     }
 
     private void setCourses() {
@@ -143,16 +189,14 @@ public class StatsFrag extends Fragment {
         setAssDone();
         assLeft = (TextView) rootView.findViewById(R.id.ass_left_show);
         setAssLeft();
+    }*/
+
+    private int getHoursSpent(){
+        return (dbAdapter.getSpentTime(currCourse)/60);
     }
 
-    private void setHoursSpent(){
-        String timeSpent = " "+(dbAdapter.getSpentTime(currCourse)/60)+" h";
-        hoursSpent.setText(timeSpent);
-    }
-
-    private void setHoursLeft(){
-        String timeLeft = " "+((dbAdapter.getTimeOnCourse(currCourse)/60)-(dbAdapter.getSpentTime(currCourse)/60))+" h";
-        hoursLeft.setText(timeLeft);
+    private int getHoursLeft(){
+        return ((dbAdapter.getTimeOnCourse(currCourse)/60)-(dbAdapter.getSpentTime(currCourse)/60));
     }
 
     private void setHoursTotal(){
@@ -160,18 +204,15 @@ public class StatsFrag extends Fragment {
         hoursTotal.setText(timeTotal);
     }
 
-    private void setAssDone(){
-        Cursor cursor = dbAdapter.getDoneAssignments(currCourse);
-        String assignments = " "+cursor.getCount();
-        cursor.close();
-        assDone.setText(assignments);
+    private int getAssDone(){
+        return dbAdapter.getDoneAssignments(currCourse).getCount();
     }
 
-    private void setAssLeft(){
+    private int getAssLeft(){
         int assignments = dbAdapter.getAssignments(currCourse).getCount();
         int doneAssignments = dbAdapter.getDoneAssignments(currCourse).getCount();
-        assLeft.setText(" "+(assignments-doneAssignments));
-    }*/
+        return (assignments-doneAssignments);
+    }
 
     public void onStart(){
         super.onStart();
@@ -185,20 +226,14 @@ public class StatsFrag extends Fragment {
         });
     }
 
-    public void onResume(){
-        super.onResume();
-        Log.i("DB", "In onResume");
-        //instantiateView();
-    }
-
     private void insertTestDataToDB(String course) {
         //Insert course
         long idCourse = dbAdapter.insertCourse(course, "Default Course");
-        if (idCourse > 0) {
+       /* if (idCourse > 0) {
             Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         //Insert sessions
         long idS1 = dbAdapter.insertSession(course, 60);
@@ -207,62 +242,62 @@ public class StatsFrag extends Fragment {
         long idS4 = dbAdapter.insertSession(course, 30);
         long idS5 = dbAdapter.insertSession(course, 60);
         long idS6 = dbAdapter.insertSession(course, 60);
-        if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
+        /*if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
             Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         //Insert TimeOnCourse.
         long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
-        if (idTOC>0) {
+        /*if (idTOC>0) {
             Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         //Insert Assignments
         long idA1 = dbAdapter.insertAssignment(course, 0, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
-        if (idA1>0) {
+        /*if (idA1>0) {
             Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
     private void insertDifferentTestData(String course){
         //Insert course
         long idCourse = dbAdapter.insertCourse(course, "Other Course");
-        if (idCourse > 0) {
+        /*if (idCourse > 0) {
             Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         //Insert sessions
 
         long idS5 = dbAdapter.insertSession(course, 60);
         long idS6 = dbAdapter.insertSession(course, 60);
-        if (idS5 > 0 && idS6 > 0) {
+       /* if (idS5 > 0 && idS6 > 0) {
             Toast.makeText(getActivity(), "Added two sessions to "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         //Insert TimeOnCourse.
         long idTOC = dbAdapter.insertTimeOnCourse(course, 500);
-        if (idTOC>0) {
+        /*if (idTOC>0) {
             Toast.makeText(getActivity(), "Added TimeOnCourse 500 for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         //Insert Assignments
         long idA1 = dbAdapter.insertAssignment(course, 0, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
-        if (idA1>0) {
+        /*if (idA1>0) {
             Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 }
