@@ -1,78 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1">
-
-
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Tid kvar"
-        android:id="@+id/text_timer"
-        android:layout_weight="0.10"
+        android:id="@+id/header_title"
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/button_settings"
-        android:layout_alignStart="@+id/button_settings"
-        android:layout_marginTop="104dp" />
-
-
-    <Button
-        android:id="@+id/button_start_timer"
+        android:layout_marginTop="48dp"
+        android:paddingBottom="5dp"
+        android:gravity="center_horizontal|bottom"
+        android:shadowDx="1.0"
+        android:shadowDy="2.0"
+        android:shadowRadius="5.0"
+        android:textSize="50sp"
+        />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Starta Timer"
-        android:onClick="startTimer"
-        android:layout_weight="0.10"
-        android:layout_above="@+id/button_settings"
-        android:layout_toRightOf="@+id/text_timer"
-        android:layout_toEndOf="@+id/text_timer"
-        android:layout_marginBottom="66dp" />
-
-    <Button
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text="Nollställ"
-        android:id="@+id/button_reset"
-        android:layout_gravity="right"
-        android:onClick="resetTimer"
-        android:layout_weight="0.10"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button_container"
         android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/button_settings"
-        android:layout_alignStart="@+id/button_settings"
-        android:layout_marginLeft="41dp"
-        android:layout_marginStart="41dp" />
+        android:max="1000"
+        android:progress="1000"
+        android:progressDrawable="@drawable/progressbarbg" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text=""
         android:id="@+id/textView"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.10"
-        android:layout_below="@+id/text_timer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:shadowDx="1.0"
+        android:shadowDy="2.0"
+        android:shadowRadius="3.0"
+        android:textSize="60sp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ställ in tid"
-        android:id="@+id/button_settings"
-        android:onClick="settingsTimer"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+
+    <RelativeLayout
+        android:id="@+id/button_container"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true">
+        <!-- Divider -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/button_start_timer"
+            android:padding="0dp"/>
+
+        <ImageButton
+            android:id="@+id/button_start_timer"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textSize="20sp"
+            android:onClick="startTimer"
+            android:src="@drawable/ic_start"
+            android:layout_alignParentBottom="true" />
+
+        <ImageButton
+            style="?android:attr/buttonStyleSmall"
+            android:onClick="resetTimer"
+            android:id="@+id/button_reset"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_stop"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <ImageButton
+            style="?android:attr/buttonStyleSmall"
+            android:id="@+id/button"
+            android:onClick="settingsTimer"
+            android:src="@drawable/ic_settings"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/spinner_timer"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/text_timer"
-        android:layout_toStartOf="@+id/text_timer" />
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="171dp"
+        android:layout_marginEnd="171dp" />
 
 </RelativeLayout>

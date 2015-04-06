@@ -59,7 +59,9 @@ public class StatsFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
 
-        insertTestDataToDB();
+        //insertTestDataToDB("DDD111");
+        //insertTestDataToDB("BBB222");
+        //insertDifferentTestData("OOO333");
         instantiateView();
 
         return rootView;
@@ -67,8 +69,9 @@ public class StatsFrag extends Fragment {
 
     private void instantiateView(){
         spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
-        spinner.setSelection(0);
         setCourses();
+        spinner.setSelection(0);
+        Log.i("DB", "initial selection: "+spinner.getSelectedItem());
 
         instantiatePieHours();
         instantiatePieAssignments();
@@ -171,13 +174,16 @@ public class StatsFrag extends Fragment {
             String cname = cursor.getString(cnameColumn);
             adapter.add(ccode + "-" + cname);
         }
+        cursor.close();
     }
 
-    public void setSelectedCourse(){
-        spinner.setSelection(0);
-        String temp = spinner.getSelectedItem().toString();
-        String[] parts = temp.split("-");
-        this.currCourse = parts[0];
+    private void setSelectedCourse(){
+        Log.i("DB", "spinner's selected item: "+spinner.getSelectedItem());
+        if(spinner.getSelectedItem() != null){
+            String temp = spinner.getSelectedItem().toString();
+            String[] parts = temp.split("-");
+            this.currCourse = parts[0];
+        }
     }
 
     private int getHoursSpent(){
@@ -215,40 +221,82 @@ public class StatsFrag extends Fragment {
         });
     }
 
-    private void insertTestDataToDB() {
+    public void onResume(){
+        super.onResume();
+        Log.i("DB", "In onResume");
+        //instantiateView();
+    }
+
+    private void insertTestDataToDB(String course) {
         //Insert course
-        long idCourse = dbAdapter.insertCourse("DDD111", "Default Course");
+        long idCourse = dbAdapter.insertCourse(course, "Default Course");
         if (idCourse > 0) {
-            Toast.makeText(getActivity(), "DDD111 created", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
         }
 
         //Insert sessions
-        long idS1 = dbAdapter.insertSession("DDD111", 60);
-        long idS2 = dbAdapter.insertSession("DDD111", 120);
-        long idS3 = dbAdapter.insertSession("DDD111", 300);
-        long idS4 = dbAdapter.insertSession("DDD111", 30);
-        long idS5 = dbAdapter.insertSession("DDD111", 60);
-        long idS6 = dbAdapter.insertSession("DDD111", 60);
+        long idS1 = dbAdapter.insertSession(course, 60);
+        long idS2 = dbAdapter.insertSession(course, 120);
+        long idS3 = dbAdapter.insertSession(course, 300);
+        long idS4 = dbAdapter.insertSession(course, 30);
+        long idS5 = dbAdapter.insertSession(course, 60);
+        long idS6 = dbAdapter.insertSession(course, 60);
         if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
-            Toast.makeText(getActivity(), "Added six sessions to DDD111", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
         }
 
         //Insert TimeOnCourse.
-        long idTOC = dbAdapter.insertTimeOnCourse("DDD111", 1200);
+        long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
         if (idTOC>0) {
-            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for DD111", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
         }
 
         //Insert Assignments
-        long idA1 = dbAdapter.insertAssignment("DDD111", 0, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        long idA1 = dbAdapter.insertAssignment(course, 0, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
-            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for DD111", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void insertDifferentTestData(String course){
+        //Insert course
+        long idCourse = dbAdapter.insertCourse(course, "Other Course");
+        if (idCourse > 0) {
+            Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
+        }
+
+        //Insert sessions
+
+        long idS5 = dbAdapter.insertSession(course, 60);
+        long idS6 = dbAdapter.insertSession(course, 60);
+        if (idS5 > 0 && idS6 > 0) {
+            Toast.makeText(getActivity(), "Added two sessions to "+course, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
+        }
+
+        //Insert TimeOnCourse.
+        long idTOC = dbAdapter.insertTimeOnCourse(course, 500);
+        if (idTOC>0) {
+            Toast.makeText(getActivity(), "Added TimeOnCourse 500 for "+course, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
+        }
+
+        //Insert Assignments
+        long idA1 = dbAdapter.insertAssignment(course, 0, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        if (idA1>0) {
+            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
         }
