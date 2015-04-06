@@ -193,7 +193,7 @@ public class MyProfileFrag extends Fragment {
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 break;
             case R.id.techniques:
-                fragment = new TipFrag();
+                fragment = new TechniquesFrag();
                 fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);

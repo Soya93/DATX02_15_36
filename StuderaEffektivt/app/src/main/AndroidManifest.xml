@@ -28,13 +28,9 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
-    <android:uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
-    <android:uses-permission
-        android:name="android.permission.READ_PHONE_STATE" />
-    <android:uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" /> <!-- -http://developer.android.com/training/multiscreen/screensizes.html -->
     <application
         android:allowBackup="true"
@@ -56,7 +52,6 @@
             android:screenOrientation="portrait" />
 
         <fragment
-<<<<<<< HEAD
             android:name=".activity.TimerFrag"
             android:label="TimerFrag"></fragment>
         <fragment
@@ -75,26 +70,10 @@
             android:label="StatsFrag"></fragment>
         <fragment
             android:name="activity.HomeFrag"
-            android:label="HomeFrag">
-=======
-            android:name=".activity.TimerActivity"
-            android:label="TimerActivity" />
+            android:label="HomeFrag"></fragment>
         <fragment
-            android:name=".activity.CalendarActivity"
-            android:label="@string/title_activity_calendar" />
-        <fragment
-            android:name=".activity.TipActivity"
-            android:label="@string/title_activity_tips" />
-        <fragment
-            android:name=".activity.TipDetailedInfoActivity"
-            android:label="@string/title_activity_tip_view" />
-        <fragment
-            android:name=".activity.Statistics"
-            android:label="@string/title_activity_statistics" />
-        <fragment
-            android:name=".HomeActivity"
-            android:label="Home" >
->>>>>>> uppgifter
+            android:name=".activity.MyProfileFrag"
+            android:label="@string/title_activity_activity_my_profile" >
         </fragment>
 
         <service android:name=".activity.MyCountDownTimer" >
@@ -112,11 +91,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
-        <fragment
-            android:name=".activity.MyProfileFrag"
-            android:label="@string/title_activity_activity_my_profile" >
-        </fragment>
     </application>
 
 </manifest>

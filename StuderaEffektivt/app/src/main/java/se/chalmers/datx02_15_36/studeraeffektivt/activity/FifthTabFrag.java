@@ -144,14 +144,8 @@ public class FifthTabFrag extends Fragment {
         tipButton.setOnClickListener(myOnlyhandler);
         courseButton = (Button) view.findViewById(R.id.button11);
         courseButton.setOnClickListener(myOnlyhandler);
-<<<<<<< HEAD
-        hasInit = true;
-        Log.i("init", hasInit + "");
-=======
         settingsButton = (Button) view.findViewById(R.id.button12);
         settingsButton.setOnClickListener(myOnlyhandler);
-
->>>>>>> uppgifter
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {

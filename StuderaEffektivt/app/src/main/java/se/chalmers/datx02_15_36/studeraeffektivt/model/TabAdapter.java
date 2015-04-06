@@ -44,11 +44,7 @@ public class TabAdapter extends FragmentPagerAdapter {
                 return statsFrag;
             case 4:
                 //FifthTab fragment activity
-<<<<<<< HEAD
-                return fifthTabFrag;
-=======
                 return new MyProfileFrag();
->>>>>>> uppgifter
         }
 
         return null;

@@ -35,7 +35,6 @@ public class MainActivity extends ActionBarActivity {
     private CalendarFrag calendarFrag;
     private TimerFrag timerFrag;
     private StatsFrag statsFrag;
-    private FifthTabFrag fifthTabFrag;
 
     private String userName = "user_Name";
     private Drawable tabResetIcon;
@@ -155,7 +154,6 @@ public class MainActivity extends ActionBarActivity {
 
         timerFrag = (TimerFrag) mAdapter.getItem(2);
         statsFrag = (StatsFrag) mAdapter.getItem(3);
-        fifthTabFrag = (FifthTabFrag) mAdapter.getItem(4);
 
         final int[] ICONS = new int[]{
                 R.drawable.ic_home1_uns,
@@ -217,11 +215,7 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onTabUnselected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
-                tab.setIcon(tabResetIcon);
-                if(tab.getPosition()== 4 && fifthTabFrag.hasInit()){
-                    fragmentTransaction.remove(fifthTabFrag.getCurrentlyShown());
-                    //fragmentTransaction.commit();
-                }
+                //tab.setIcon(tabResetIcon);
             }
 
             @Override
