@@ -26,6 +26,9 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
@@ -206,6 +209,12 @@ public class StatsFrag extends Fragment {
         int assignments = dbAdapter.getAssignments(currCourse).getCount();
         int doneAssignments = dbAdapter.getDoneAssignments(currCourse).getCount();
         return (assignments-doneAssignments);
+    }
+
+    private int getCurrWeekNumber(){
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        return calendar.get(Calendar.WEEK_OF_YEAR);
     }
 
     public void onStart(){
