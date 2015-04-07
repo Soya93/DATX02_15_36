@@ -28,9 +28,6 @@ public class HomeAdapter extends ArrayAdapter<HomeEventItem> {
         this.context = context;
         this.itemsArrayList = itemsArrayList;
 
-        for (HomeEventItem eitem : itemsArrayList) {
-            Log.i("Home adapter list:", eitem.getTitleS() );
-        }
 
     }
 
@@ -51,8 +48,6 @@ public class HomeAdapter extends ArrayAdapter<HomeEventItem> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        Log.i("homeAdapter", position + "");
 
         // 1. Create inflater
         LayoutInflater inflater = (LayoutInflater) context

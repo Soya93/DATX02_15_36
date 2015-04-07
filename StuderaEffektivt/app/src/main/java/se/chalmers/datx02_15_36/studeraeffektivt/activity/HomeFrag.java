@@ -27,9 +27,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeEventItem;
 
 public class HomeFrag extends Fragment {
 
-    private TextView todayTextView;
+
     private List<String> events;
-    private LinearLayout layout;
     private View rootView;
     private Context context;
     private CalendarFrag calendarFrag;
@@ -51,13 +50,7 @@ public class HomeFrag extends Fragment {
     }
 
     private void initComponents(View view) {
-        todayTextView = new TextView(context);
-        todayTextView.setText("Idag");
-        todayTextView.setTextSize(20);
-        todayTextView.setTextColor(Color.BLACK);
         events = new ArrayList<String>();
-        //layout = (LinearLayout) rootView.findViewById(R.id.linearLayout1);
-       // layout.addView(todayTextView);
         hasInit = true;
 
 
@@ -90,7 +83,7 @@ public class HomeFrag extends Fragment {
     }
 
     public void setTodaysEvents() {
-        ArrayList<HomeEventItem> eventsList = new ArrayList<HomeEventItem>();
+        ArrayList<HomeEventItem> eventsList;
 
         eventsList = getEvents();
 

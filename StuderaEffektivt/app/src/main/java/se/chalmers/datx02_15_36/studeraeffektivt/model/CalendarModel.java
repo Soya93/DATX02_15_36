@@ -44,20 +44,27 @@ public class CalendarModel {
 
         ArrayList <HomeEventItem> eventsToday = new ArrayList<>();
 
-/*
+
         //TODO fixa så pågående event kommer med
+
+        // sätt start tid till dagens början
+        // filtera bort de som har passerat
+        // kolla så event som sträcker sig över flera dagar kommer med...
 
         Calendar cal = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
 
-        cal.set(Calendar.HOUR_OF_DAY, 23);
+
+/*
         long startInterval = cal.getTimeInMillis();
 
-
+        cal2.set(Calendar.HOUR_OF_DAY, 23);
         cal2.set(Calendar.MINUTE, 59);
-        long endInterval = cal2.getTimeInMillis();
+        cal2.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH));
 
-        */
+        long endInterval = cal2.getTimeInMillis();
+*/
+
 
         long startInterval = 0L;
         long endInterval = 0L;
@@ -72,16 +79,23 @@ public class CalendarModel {
         ContentUris.appendId(eventsUriBuilder, endInterval);
         Uri eventsUri = eventsUriBuilder.build();
 
+       // String selection = "((dtstart >= "+c_start.getTimeInMillis()+") AND (dtend <= "+c_end.getTimeInMillis()+"))";
+
         cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
 
         //Prints out all the events in the given interval
         while (cur.moveToNext()) {
             HomeEventItem item = new HomeEventItem();
+            // set the title
             item.setTitleS(cur.getString(CalendarUtils.TITLE));
+
             if (cur.getInt(CalendarUtils.ALL_DAY) == 1) {
                 item.setTimeS("Heldag");
             } else {
+                //set the time for the event
                 item.setTimeS(CalendarView.formatTime(cur.getLong(CalendarUtils.EVENT_BEGIN), cur.getLong(CalendarUtils.EVENT_END)));
+
+                //set the time to the start of the event
                 item.setTimeToStartS(CalendarView.formatTimeToEvent(Calendar.getInstance().getTimeInMillis(), cur.getLong(CalendarUtils.EVENT_BEGIN)));
             }
 

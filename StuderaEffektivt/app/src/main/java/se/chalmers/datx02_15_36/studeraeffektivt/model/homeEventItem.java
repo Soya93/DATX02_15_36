@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.model;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,8 +31,13 @@ public class HomeEventItem{
         return titleS;
     }
 
-    public void setTitleS(String titleS) {
-        this.titleS = titleS;
+    public void setTitleS(String title) {
+
+        if(title.length() > 20) {
+            this.titleS = title.substring(0,20) + "...";
+        } else {
+            this.titleS = title;
+        }
     }
 
     public String getTimeS() {

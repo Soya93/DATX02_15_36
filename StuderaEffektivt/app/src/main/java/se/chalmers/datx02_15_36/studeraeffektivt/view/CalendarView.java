@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -73,8 +74,17 @@ public class CalendarView {
 
     public static String formatTimeToEvent(long timeNow, long eventStart){
         long diff = eventStart - timeNow;
-        SimpleDateFormat time = new SimpleDateFormat("HH:mm");
-        return time.format(new Date(diff));
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(diff);
+
+        if(cal.get(Calendar.HOUR) >= 1) {
+            SimpleDateFormat hours = new SimpleDateFormat("H");
+            return hours.format(new Date(diff)) + "h";
+        }else {
+            SimpleDateFormat mins = new SimpleDateFormat("m");
+            return mins.format(new Date(diff)) + "min";
+        }
+
     }
 
 }
