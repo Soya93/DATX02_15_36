@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.sql.SQLException;
-
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 
@@ -206,7 +204,8 @@ public class DBAdapter {
         //Variables for the Sessions table.
         private static final String TABLE_SESSIONS = "SESSIONS";
         private static final String SESSIONS_ccode = "_ccode";
-        private static final String SESSIONS__startTimestamp = "_startTimestamp";
+        private static final String SESSIONS__id = "_id";
+        private static final String SESSION_timestamp = "timestamp";
         private static final String SESSIONS_minutes = "minutes";
 
         //Variables for the Assignments table.
@@ -234,18 +233,30 @@ public class DBAdapter {
         public void onCreate(SQLiteDatabase db) {
             //Called when database is created.
             //Creation of schemas and initial insert of data.
-            db.execSQL("CREATE TABLE " + TABLE_COURSES + " (" + COURSES__ccode + " VARCHAR(50) PRIMARY KEY, " + COURSES_cname + " VARCHAR(50))");
+            db.execSQL("CREATE TABLE " + TABLE_COURSES + " ("
+                    + COURSES__ccode + " VARCHAR(50) PRIMARY KEY, "
+                    + COURSES_cname + " VARCHAR(50))");
 
-            db.execSQL("CREATE TABLE " + TABLE_SESSIONS + " (" + SESSIONS__startTimestamp + " INTEGER PRIMARY KEY, " +
-                    SESSIONS_minutes + " INT, " + SESSIONS_ccode + " VARCHAR(50))");
+            db.execSQL("CREATE TABLE " + TABLE_SESSIONS + " ("
+                    + SESSIONS__id + " INTEGER PRIMARY KEY, "
+                    + SESSIONS_minutes + " INT, "
+                    + SESSIONS_ccode + " VARCHAR(50), "
+                    + SESSION_timestamp + " DATETIME DEFAULT CURRENT_TIMESTAMP)");
 
-            db.execSQL("CREATE TABLE " + TABLE_ASSIGNMENTS + " (" + ASSIGNMENTS__id + " PRIMARY KEY, "
-                    + ASSIGNMENTS_ccode + " VARCHAR(50), " + ASSIGNMENTS_chapter + " INT, " + ASSIGNMENTS_assNr +
-                    " VARCHAR(50), " + ASSIGNMENTS_startPage + " INT, " + ASSIGNMENTS_stopPage + " INT, "
-                    + ASSIGNMENTS_type + " VARCHAR(50), " + ASSIGNMENTS_status + " VARCHAR(50))");
+            db.execSQL("CREATE TABLE " + TABLE_ASSIGNMENTS + " ("
+                    + ASSIGNMENTS__id + " PRIMARY KEY, "
+                    + ASSIGNMENTS_ccode + " VARCHAR(50), "
+                    + ASSIGNMENTS_chapter + " INT, "
+                    + ASSIGNMENTS_assNr +" VARCHAR(50), "
+                    + ASSIGNMENTS_startPage + " INT, "
+                    + ASSIGNMENTS_stopPage + " INT, "
+                    + ASSIGNMENTS_type + " VARCHAR(50), "
+                    + ASSIGNMENTS_status + " VARCHAR(50))");
 
-            db.execSQL("CREATE TABLE " + TABLE_TIMEONCOURSE + "(" + TIMEONCOURSE__ccode + " VARCHAR(50) PRIMARY KEY, " +
-                    TIMEONCOURSE_time + " INT, FOREIGN KEY(" + TIMEONCOURSE__ccode + ") REFERENCES " + COURSES__ccode + ")");
+            db.execSQL("CREATE TABLE " + TABLE_TIMEONCOURSE + "("
+                    + TIMEONCOURSE__ccode + " VARCHAR(50) PRIMARY KEY, "
+                    + TIMEONCOURSE_time + " INT, "
+                    + "FOREIGN KEY(" + TIMEONCOURSE__ccode + ") REFERENCES " + COURSES__ccode + ")");
         }
 
         @Override
