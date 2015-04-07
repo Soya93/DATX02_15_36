@@ -206,6 +206,7 @@ public class DBAdapter {
         private static final String SESSIONS_ccode = "_ccode";
         private static final String SESSIONS__id = "_id";
         private static final String SESSION_timestamp = "timestamp";
+        private static final String SESSION_week = "week";
         private static final String SESSIONS_minutes = "minutes";
 
         //Variables for the Assignments table.
@@ -241,7 +242,8 @@ public class DBAdapter {
                     + SESSIONS__id + " INTEGER PRIMARY KEY, "
                     + SESSIONS_minutes + " INT, "
                     + SESSIONS_ccode + " VARCHAR(50), "
-                    + SESSION_timestamp + " DATETIME DEFAULT CURRENT_TIMESTAMP)");
+                    + SESSION_timestamp + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
+                    + SESSION_week + " INT)");
 
             db.execSQL("CREATE TABLE " + TABLE_ASSIGNMENTS + " ("
                     + ASSIGNMENTS__id + " PRIMARY KEY, "
