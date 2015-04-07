@@ -168,7 +168,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.notifyDatasetChanged();
     }
 
-
+    //TODO remove this??
     //Reads all todays events, used in homescreen
     public ArrayList<HomeEventItem> getTodaysEvents() {
         return calendarModel.readEventsToday(cr);

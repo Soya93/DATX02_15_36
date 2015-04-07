@@ -69,6 +69,11 @@ public class EventActivity extends ActionBarActivity {
     private int startHour;
     private int startMinute;
 
+    private String startWeekday;
+    private String endWeekday;
+    private String startMonthS;
+    private String endMonthS;
+
 
     private int endYear;
     private int endMonth;
@@ -100,6 +105,15 @@ public class EventActivity extends ActionBarActivity {
         */
 
         initComponents();
+
+        String title;
+        if(isInAddMode){
+            title = "Nytt event";
+        }else {
+            title = "Redigera event";
+        }
+
+        this.setTitle(title);
     }
 
 
@@ -130,7 +144,6 @@ public class EventActivity extends ActionBarActivity {
 
         View.OnClickListener myTextViewHandler = new View.OnClickListener() {
             public void onClick(View v) {
-                Log.i("onClick", "");
                 goToTextView((TextView) v);
             }
         };
@@ -170,6 +183,8 @@ public class EventActivity extends ActionBarActivity {
         checkBox.setChecked(isAllDayEvent);
         checkBox.setOnClickListener(myTextViewHandler);
 
+
+
         if (isInAddMode) {
             startTimeMillis = CalendarUtils.TODAY_IN_MILLIS;
 
@@ -179,8 +194,9 @@ public class EventActivity extends ActionBarActivity {
             startHour = CalendarUtils.HOUR;
             startMinute = CalendarUtils.MINUTE;
 
+
             endYear = CalendarUtils.YEAR;
-            endMonth = CalendarUtils.MONTH + 1;
+            endMonth = CalendarUtils.MONTH +1;
             endDay = CalendarUtils.DAY;
             endHour = CalendarUtils.HOUR + 1;
             endMinute = CalendarUtils.MINUTE;
@@ -189,6 +205,8 @@ public class EventActivity extends ActionBarActivity {
             endTimeMillis = CalendarUtils.cal.getTimeInMillis();
 
         } else {
+
+
             Calendar c = Calendar.getInstance();
 
             //Convert start time from millis
@@ -199,6 +217,7 @@ public class EventActivity extends ActionBarActivity {
             startHour = c.get(Calendar.HOUR_OF_DAY);
             startMinute = c.get(Calendar.MINUTE);
 
+
             //Convert end time from millis
             c.setTimeInMillis(endTimeMillis);
             endYear = c.get(Calendar.YEAR);
@@ -206,14 +225,16 @@ public class EventActivity extends ActionBarActivity {
             endDay = c.get(Calendar.DAY_OF_MONTH);
             endHour = c.get(Calendar.HOUR_OF_DAY);
             endMinute = c.get(Calendar.MINUTE);
+
         }
 
-        //Set the text of the labels accordingly
-        startDate.setText(startDay + "/" + startMonth + "/"
-                + startYear);
-        endDate.setText(endDay + "/" + endMonth + "/"
-                + endYear);
 
+        SimpleDateFormat startDateFormat = new SimpleDateFormat("E d MMM yyyy");
+        SimpleDateFormat endDateFormat = new SimpleDateFormat("E d MMM yyyy");
+        startDate.setText(startDateFormat.format((new Date(startTimeMillis))));
+        endDate.setText(endDateFormat.format((new Date(endTimeMillis))));
+
+        // Set format on the time
         SimpleDateFormat startFormat = new SimpleDateFormat("HH:mm");
         SimpleDateFormat endFormat = new SimpleDateFormat("HH:mm");
         startTime.setText(startFormat.format(new Date(startTimeMillis)));
@@ -340,13 +361,22 @@ public class EventActivity extends ActionBarActivity {
                     startMonth = selectedMonth + 1;
                     startDay = selectedDay;
                     calStart.set(startYear, startMonth, startDay);
-                    startDate.setText(startDay + "/" + startMonth + "/" + startYear);
+
+                    SimpleDateFormat startDateFormat = new SimpleDateFormat("E d MMM yyyy");
+
+                    startDate.setText(startDateFormat.format((new Date(calStart.getTimeInMillis()))));
+
+
+                    //startDate.setText(startDay + "/" + startMonth + "/" + startYear);
                     if(endDay <= startDay && endMonth == startMonth && endYear == startYear || startMonth > endMonth || startYear > endYear){
                         endDay = startDay;
                         endMonth = startMonth;
                         endYear = startYear;
                         calEnd.set(endYear, endMonth, endDay);
-                        endDate.setText(endDay + "/" + endMonth + "/" + endYear);
+
+                        SimpleDateFormat endDateFormat = new SimpleDateFormat("E d MMM yyyy");
+                        endDate.setText(endDateFormat.format((new Date(calEnd.getTimeInMillis()))));
+                        //endDate.setText(endDay + "/" + endMonth + "/" + endYear);
                     }
                 } else {
                     endYear = selectedYear;
@@ -358,7 +388,10 @@ public class EventActivity extends ActionBarActivity {
                         endYear = startYear;
                     }
                     calEnd.set(endYear, endMonth, endDay);
-                    endDate.setText(endDay + "/" + endMonth + "/" + endYear);
+
+                    SimpleDateFormat endDateFormat = new SimpleDateFormat("E d MMM yyyy");
+                    endDate.setText(endDateFormat.format((new Date(calEnd.getTimeInMillis()))));
+                    //endDate.setText(endDay + "/" + endMonth + "/" + endYear);
                 }
             }
         };
@@ -460,7 +493,7 @@ public class EventActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int which) {
                 notification = times.get(which);
                 notificationView.setText(alternatives.get(which));
-                Log.i("notificationname ",alternatives.get(which) + "time "+ notification );
+                Log.i("notificationname ", alternatives.get(which) + "time " + notification);
             }
         });
 
