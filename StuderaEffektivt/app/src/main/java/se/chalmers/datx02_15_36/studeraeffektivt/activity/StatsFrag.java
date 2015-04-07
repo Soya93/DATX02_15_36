@@ -1,8 +1,6 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,7 +17,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 */
 
-import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -63,10 +60,8 @@ public class StatsFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
 
-        insertTestDataToDB("DDD111");
-        insertTestDataToDB("BBB222");
-        insertDifferentTestData("OOO333");
-
+        //insertTestDataToDB();
+        //insertTestDataToDB2();
         instantiateView();
 
         return rootView;
@@ -79,7 +74,8 @@ public class StatsFrag extends Fragment {
         Log.i("DB", "initial selection: "+spinner.getSelectedItem());
 
         instantiatePieHours();
-        instantiatePieAss();
+        instantiatePieAssignments();
+
     }
 
     private void instantiatePieHours(){
@@ -87,12 +83,12 @@ public class StatsFrag extends Fragment {
         pieHours.setNoDataTextDescription("TIMMAR DU LAGT");
 
         //Set up pie chart data
-        Log.i("stats", "hours spent: "+getHoursSpent());
-        Log.i("stats", "hours left: "+getHoursLeft());
+        Log.d("BAJS", "pieHours spent: "+getHoursSpent());
+        Log.d("BAJS", "pieHours left: "+getHoursLeft());
 
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
-        Entry hoursDone = new Entry(50,0);
-        Entry hoursLeft = new Entry(50,1);
+        Entry hoursDone = new Entry(getHoursSpent(),0);
+        Entry hoursLeft = new Entry(getHoursLeft(),1);
         pieEntries.add(hoursDone);
         pieEntries.add(hoursLeft);
 
@@ -117,22 +113,22 @@ public class StatsFrag extends Fragment {
         pieHours.invalidate();
     }
 
-    private void instantiatePieAss(){
+    private void instantiatePieAssignments(){
         pieAssignments = (PieChart) rootView.findViewById(R.id.pie_assignments);
-        pieAssignments.setNoDataTextDescription("UPPGIFTER DU LAGT");
+        pieAssignments.setNoDataTextDescription("UPPGIFTER DU GJORT");
 
         //Set up pie chart data
-        Log.i("stats", "asses done: "+getAssDone());
-        Log.i("stats", "asses left: "+getAssLeft());
+        Log.d("BAJS", "pieAsses done: "+getAssDone());
+        Log.d("BAJS", "pieAsses left: "+getAssLeft());
 
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
-        Entry assesDone = new Entry(50,0);
-        Entry assesLeft = new Entry(50,1);
+        Entry assesDone = new Entry(getAssDone(),0);
+        Entry assesLeft = new Entry(getAssLeft(),1);
         pieEntries.add(assesDone);
         pieEntries.add(assesLeft);
 
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "Uppgifter");
-        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         ArrayList<PieDataSet> dataSets = new ArrayList<PieDataSet>();
         dataSets.add(pieDataSet);
         ArrayList<String> pieLabels = new ArrayList<String>();
@@ -152,6 +148,19 @@ public class StatsFrag extends Fragment {
         pieAssignments.invalidate();
     }
 
+    /*private void setTextViews(){
+        hoursSpent = (TextView) rootView.findViewById(R.id.hours_spent_show);
+        hoursSpent.setText(""+getHoursSpent());
+        hoursLeft = (TextView) rootView.findViewById(R.id.hours_left_show);
+        hoursLeft.setText(""+getHoursLeft());
+        hoursTotal = (TextView) rootView.findViewById(R.id.hours_total_show);
+        hoursTotal.setText(""+getHoursTotal());
+        assDone = (TextView) rootView.findViewById(R.id.ass_done_show);
+        assDone.setText(""+getAssDone());
+        assLeft = (TextView) rootView.findViewById(R.id.ass_left_show);
+        assLeft.setText(""+getAssLeft());
+    }*/
+
     private void setCourses() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -165,11 +174,10 @@ public class StatsFrag extends Fragment {
             String cname = cursor.getString(cnameColumn);
             adapter.add(ccode + "-" + cname);
         }
-        cursor.close();
     }
 
-    private void setSelectedCourse(){
-        Log.i("DB", "spinner's selected item: "+spinner.getSelectedItem());
+    public void setSelectedCourse(){
+        Log.i("DB", "spinner's selected item: " + spinner.getSelectedItem());
         if(spinner.getSelectedItem() != null){
             String temp = spinner.getSelectedItem().toString();
             String[] parts = temp.split("-");
@@ -177,21 +185,8 @@ public class StatsFrag extends Fragment {
         }
     }
 
-    /*private void setTextViews() {
-        hoursSpent = (TextView) rootView.findViewById(R.id.hours_spent_show);
-        setHoursSpent();
-        hoursLeft = (TextView) rootView.findViewById(R.id.hours_left_show);
-        setHoursLeft();
-        hoursTotal = (TextView) rootView.findViewById(R.id.hours_total_show);
-        setHoursTotal();
-
-        assDone = (TextView) rootView.findViewById(R.id.ass_done_show);
-        setAssDone();
-        assLeft = (TextView) rootView.findViewById(R.id.ass_left_show);
-        setAssLeft();
-    }*/
-
     private int getHoursSpent(){
+        setSelectedCourse();
         return (dbAdapter.getSpentTime(currCourse)/60);
     }
 
@@ -199,9 +194,8 @@ public class StatsFrag extends Fragment {
         return ((dbAdapter.getTimeOnCourse(currCourse)/60)-(dbAdapter.getSpentTime(currCourse)/60));
     }
 
-    private void setHoursTotal(){
-        String timeTotal = " "+(dbAdapter.getTimeOnCourse(currCourse)/60)+" h";
-        hoursTotal.setText(timeTotal);
+    private int getHoursTotal(){
+        return (dbAdapter.getTimeOnCourse(currCourse)/60);
     }
 
     private int getAssDone(){
@@ -226,78 +220,79 @@ public class StatsFrag extends Fragment {
         });
     }
 
-    private void insertTestDataToDB(String course) {
+    private void insertTestDataToDB() {
         //Insert course
-        long idCourse = dbAdapter.insertCourse(course, "Default Course");
-       /* if (idCourse > 0) {
-            Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
+        long idCourse = dbAdapter.insertCourse("DDD111", "Default Course");
+        if (idCourse > 0) {
+            Toast.makeText(getActivity(), "DDD111 created", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
-        }*/
+        }
 
         //Insert sessions
-        long idS1 = dbAdapter.insertSession(course, 60);
-        long idS2 = dbAdapter.insertSession(course, 120);
-        long idS3 = dbAdapter.insertSession(course, 300);
-        long idS4 = dbAdapter.insertSession(course, 30);
-        long idS5 = dbAdapter.insertSession(course, 60);
-        long idS6 = dbAdapter.insertSession(course, 60);
-        /*if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
-            Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).show();
+        long idS1 = dbAdapter.insertSession("DDD111", 60);
+        long idS2 = dbAdapter.insertSession("DDD111", 120);
+        long idS3 = dbAdapter.insertSession("DDD111", 300);
+        long idS4 = dbAdapter.insertSession("DDD111", 30);
+        long idS5 = dbAdapter.insertSession("DDD111", 60);
+        long idS6 = dbAdapter.insertSession("DDD111", 60);
+        if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
+            Toast.makeText(getActivity(), "Added six sessions to DDD111", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
-        }*/
+        }
 
         //Insert TimeOnCourse.
-        long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
-        /*if (idTOC>0) {
-            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
+        long idTOC = dbAdapter.insertTimeOnCourse("DDD111", 1200);
+        if (idTOC>0) {
+            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for DD111", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
-        }*/
+        }
 
         //Insert Assignments
-        long idA1 = dbAdapter.insertAssignment(course, 0, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
-        /*if (idA1>0) {
-            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
+        long idA1 = dbAdapter.insertAssignment("DDD111", 0, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        if (idA1>0) {
+            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for DD111", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
-        }*/
+        }
     }
 
-    private void insertDifferentTestData(String course){
+    private void insertTestDataToDB2() {
         //Insert course
-        long idCourse = dbAdapter.insertCourse(course, "Other Course");
-        /*if (idCourse > 0) {
-            Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
+        long idCourse = dbAdapter.insertCourse("APA007", "Apkursen");
+        if (idCourse > 0) {
+            Toast.makeText(getActivity(), "APA007 created", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
-        }*/
+        }
 
         //Insert sessions
-
-        long idS5 = dbAdapter.insertSession(course, 60);
-        long idS6 = dbAdapter.insertSession(course, 60);
-       /* if (idS5 > 0 && idS6 > 0) {
-            Toast.makeText(getActivity(), "Added two sessions to "+course, Toast.LENGTH_SHORT).show();
+        long idS1 = dbAdapter.insertSession("APA007", 60);
+        long idS2 = dbAdapter.insertSession("APA007", 120);
+        long idS3 = dbAdapter.insertSession("APA007", 300);
+        long idS4 = dbAdapter.insertSession("APA007", 30);
+        if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0) {
+            Toast.makeText(getActivity(), "Added six sessions to APA007", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
-        }*/
+        }
 
         //Insert TimeOnCourse.
-        long idTOC = dbAdapter.insertTimeOnCourse(course, 500);
-        /*if (idTOC>0) {
-            Toast.makeText(getActivity(), "Added TimeOnCourse 500 for "+course, Toast.LENGTH_SHORT).show();
+        long idTOC = dbAdapter.insertTimeOnCourse("APA007", 1200);
+        if (idTOC>0) {
+            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for APA007", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
-        }*/
+        }
 
         //Insert Assignments
-        long idA1 = dbAdapter.insertAssignment(course, 0, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
-        /*if (idA1>0) {
-            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
+        long idA1 = dbAdapter.insertAssignment("APA007", 0, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        if (idA1>0) {
+            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for APA007", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
-        }*/
+        }
     }
 }
