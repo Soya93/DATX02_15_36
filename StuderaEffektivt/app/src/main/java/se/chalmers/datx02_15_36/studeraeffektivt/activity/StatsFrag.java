@@ -34,6 +34,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 public class StatsFrag extends Fragment {
 
@@ -53,6 +54,7 @@ public class StatsFrag extends Fragment {
     private PieChart pieAssignments;
 
     private DBAdapter dbAdapter;
+    private Utils utils;
 
 
     @Override
@@ -62,6 +64,8 @@ public class StatsFrag extends Fragment {
         if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
         }
+
+        utils = new Utils();
 
         insertTestDataToDB();
         insertTestDataToDB2();
@@ -211,12 +215,6 @@ public class StatsFrag extends Fragment {
         return (assignments-doneAssignments);
     }
 
-    private int getCurrWeekNumber(){
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(new Date());
-        return calendar.get(Calendar.WEEK_OF_YEAR);
-    }
-
     public void onStart(){
         super.onStart();
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -239,12 +237,12 @@ public class StatsFrag extends Fragment {
         }
 
         //Insert sessions
-        long idS1 = dbAdapter.insertSession("DDD111", 60);
-        long idS2 = dbAdapter.insertSession("DDD111", 120);
-        long idS3 = dbAdapter.insertSession("DDD111", 300);
-        long idS4 = dbAdapter.insertSession("DDD111", 30);
-        long idS5 = dbAdapter.insertSession("DDD111", 60);
-        long idS6 = dbAdapter.insertSession("DDD111", 60);
+        long idS1 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(), 60);
+        long idS2 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(), 120);
+        long idS3 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(),300);
+        long idS4 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(),30);
+        long idS5 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(),60);
+        long idS6 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(),60);
         if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
             Toast.makeText(getActivity(), "Added six sessions to DDD111", Toast.LENGTH_SHORT).show();
         } else {
@@ -278,10 +276,10 @@ public class StatsFrag extends Fragment {
         }
 
         //Insert sessions
-        long idS1 = dbAdapter.insertSession("APA007", 60);
-        long idS2 = dbAdapter.insertSession("APA007", 120);
-        long idS3 = dbAdapter.insertSession("APA007", 300);
-        long idS4 = dbAdapter.insertSession("APA007", 30);
+        long idS1 = dbAdapter.insertSession("APA007", utils.getCurrWeekNumber(),60);
+        long idS2 = dbAdapter.insertSession("APA007", utils.getCurrWeekNumber(),120);
+        long idS3 = dbAdapter.insertSession("APA007", utils.getCurrWeekNumber(),300);
+        long idS4 = dbAdapter.insertSession("APA007", utils.getCurrWeekNumber(),30);
         if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0) {
             Toast.makeText(getActivity(), "Added six sessions to APA007", Toast.LENGTH_SHORT).show();
         } else {

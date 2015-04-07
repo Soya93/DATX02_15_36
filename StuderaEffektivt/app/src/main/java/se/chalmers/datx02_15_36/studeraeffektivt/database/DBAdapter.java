@@ -38,12 +38,13 @@ public class DBAdapter {
         }
     }
 
-    public long insertSession(String courseCode, int minutes) {
+    public long insertSession(String courseCode, int week, int minutes) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         try {
             cv.put(dbHelper.COURSES__ccode, courseCode);
+            cv.put(dbHelper.SESSION_week, week);
             cv.put(dbHelper.SESSIONS_minutes, minutes);
 
             return db.insert(dbHelper.TABLE_SESSIONS, null, cv);

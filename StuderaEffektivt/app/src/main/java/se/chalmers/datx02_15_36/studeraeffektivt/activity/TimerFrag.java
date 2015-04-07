@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 
 public class TimerFrag extends Fragment {
@@ -76,6 +77,7 @@ public class TimerFrag extends Fragment {
     private SharedPreferences sharedPref;
     private String prefName = "ButtonPref";
 
+    private Utils utils;
 
     private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
@@ -231,7 +233,7 @@ public class TimerFrag extends Fragment {
      */
 
     private void insertIntoDataBase() {
-        long inserted = dbAdapter.insertSession(ccode, milliSecondsToMin(default_StudyTime));
+        long inserted = dbAdapter.insertSession(ccode, Utils.getCurrWeekNumber(), milliSecondsToMin(default_StudyTime));
         if (inserted > 0 && getActivity() != null) {
             Toast toast = Toast.makeText(getActivity(), "Session:" + milliSecondsToMin(default_StudyTime)
                     + "minutes added to " + ccode, Toast.LENGTH_SHORT);
@@ -247,7 +249,6 @@ public class TimerFrag extends Fragment {
         progressBar.getProgressDrawable().setColorFilter(c, PorterDuff.Mode.SRC_IN);
         progressBar.setProgress(0);
     }
-
 
     public void startTimer() {
         if (buttonId == R.drawable.ic_start && !hasBeenPaused) {
@@ -283,10 +284,10 @@ public class TimerFrag extends Fragment {
 
     public void setTimerView(long secUntilFinished) {
         String sec = String.format("%02d", (secUntilFinished)/1000 % 60);
-        String min = String.format("%02d", (secUntilFinished) /1000/ 60);
+        String min = String.format("%02d", (secUntilFinished) / 1000 / 60);
         textViewText = (min + ":" + sec);
         textView.setText(textViewText);
-        progressBar.setProgress((int)(secUntilFinished*1000  / default_StudyTime));
+        progressBar.setProgress((int) (secUntilFinished * 1000 / default_StudyTime));
     }
 
     public void resetTimer() {
