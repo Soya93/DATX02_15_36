@@ -38,6 +38,7 @@ public class HomeFrag extends Fragment {
     private List<String> todaysEventsTitles;
     private CalendarModel calModel;
     private ContentResolver cr;
+    private ListView listView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,23 +65,7 @@ public class HomeFrag extends Fragment {
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v.getTag() == homeFAB.getTag()) {
-                    //calendarFrag.changeVisibleCalendars();
-                    ArrayList<HomeEventItem> eventsList = new ArrayList<HomeEventItem>();
-
-                    eventsList = getEvents();
-
-                    HomeAdapter adapter = new HomeAdapter(context, eventsList);
-
-
-                    ListView listView = (ListView) rootView.findViewById(R.id.home_list);
-                    listView.setAdapter(adapter);
-
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            //startActivity(new Intent(rootView.getContext(), ExampleDetailsActivity.class));
-                        }
-                    });
+                    calendarFrag.changeVisibleCalendars();
                 }
             }
         };
@@ -88,30 +73,7 @@ public class HomeFrag extends Fragment {
         homeFAB = (FloatingActionButton) view.findViewById(R.id.home_fab);
         homeFAB.setTag(1);
         homeFAB.setOnClickListener(myButtonHandler);
-/*
-        ArrayList<HomeEventItem> eventsList = new ArrayList<HomeEventItem>();
-
-        eventsList = getEvents();
-
-        HomeAdapter adapter = new HomeAdapter(context, eventsList);
-
-
-        ListView listView = (ListView) rootView.findViewById(R.id.home_list);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View rootView, int position, long id) {
-                //startActivity(new Intent(rootView.getContext(), ExampleDetailsActivity.class));
-            }
-        });
-        */
-
-
-
-
-
-
+        homeFAB.setSize(FloatingActionButton.SIZE_NORMAL);
 
     }
 
@@ -127,66 +89,25 @@ public class HomeFrag extends Fragment {
         return calModel.readEventsToday(cr);
     }
 
-    /**
-     * Sets the info about todays events in the homescreen
-     *
-     * @return
-     */
-    public void setCalendarInfoToday() {
-        if (calendarFrag != null && hasInit) {
+    public void setTodaysEvents() {
+        ArrayList<HomeEventItem> eventsList = new ArrayList<HomeEventItem>();
 
-            //get calendarinfo of today from calendar
-          // todaysEventsTitles = calendarFrag.getTodaysEvents();
+        eventsList = getEvents();
 
-            /*
+        HomeAdapter adapter = new HomeAdapter(context, eventsList);
 
+        listView = (ListView) rootView.findViewById(R.id.home_list);
+        listView.setAdapter(adapter);
 
-            if (todaysEventsTitles != null || !todaysEventsTitles.isEmpty()) {
-                for (String str : todaysEventsTitles) {
-
-                    HomeEventItem eventItem = new HomeEventItem(this.getActivity().getApplicationContext());
-                    eventItem.setTitle(str);
-                    eventItem.setTime("10-12");
-                    eventItem.setLocation("hemma");
-                    eventItem.setTimeToStart("10 min");
-
-
-
-                    Log.i("Home: ", str);
-
-
-
-                        TextView tmp = new TextView(context);
-                        tmp.setText(str);
-                        tmp.setTextColor(Color.BLACK);
-
-                    TextView tmp2 = new TextView(context);
-                    tmp2.setText("hej");
-
-
-                    // so events will not be added several times
-                    if (!events.contains(str)) {
-                        events.add(str);
-                        layout.addView(eventItem);
-                        layout.addView(tmp);
-                        layout.addView(tmp2);
-
-                    }
-
-                }
-            } else {
-                TextView tmp2 = new TextView(context);
-                tmp2.setText("");
-                TextView tmp = new TextView(context);
-                tmp.setText("Det finns inga planerade händelser idag");
-                tmp.setTextColor(Color.BLACK);
-                layout.addView(tmp2);
-                layout.addView(tmp);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //TODO när man klickar på en händelse
             }
-            hasInit = false;
-            */
-        }
+        });
     }
+
+
 
     public void setContext(Context context) {
         this.context = context;
