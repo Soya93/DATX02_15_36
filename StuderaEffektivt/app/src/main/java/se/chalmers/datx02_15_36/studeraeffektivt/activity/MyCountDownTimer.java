@@ -15,9 +15,12 @@ import android.os.Message;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 
 /**
  * Created by alexandraback on 24/02/15.
@@ -40,6 +43,9 @@ public class MyCountDownTimer extends Service {
     private final IBinder iBinder = new MCDTBinder();
     private Handler mHandler;
     private CountDownTimer studyTimer;
+    private DBAdapter dbAdapter;
+    private String ccode;
+    private long studyTimePassed=0;
 
 
     private  Handler handler = new Handler(Looper.getMainLooper()) {
@@ -78,6 +84,8 @@ public class MyCountDownTimer extends Service {
         studyTime = intent.getLongExtra("TIME_STUDY", 30*1000);
         pauseTime = intent.getLongExtra("TIME_PAUSE",15*1000);
         totalTime = intent.getLongExtra("TOTAL_TIME", 100*1000);
+        ccode= intent.getStringExtra("CCODE");
+        dbAdapter = new DBAdapter(getBaseContext());
         startCountDown();
         return START_NOT_STICKY;
     }
@@ -98,6 +106,9 @@ public class MyCountDownTimer extends Service {
 
     public void onDestroy () {
         super.onDestroy();
+        if(count==0 ){
+            insertIntoDataBase(studyTimePassed);
+        }
         studyTimer.cancel();
 
     }
@@ -117,6 +128,10 @@ public class MyCountDownTimer extends Service {
                 timePassed+=100;
                 timeUntilFinished=millisUntilFinished;
                 sendMessage((int)millisUntilFinished);
+                if(count==0){
+                    studyTimePassed+=100;
+
+                }
 
 
             }
@@ -127,18 +142,20 @@ public class MyCountDownTimer extends Service {
 
                 vi.vibrate(1000);
                 sendMessage(0);
-                count = (count + 1) % 2;
+                if(timePassed<totalTime) {
+                    count = (count + 1) % 2;
 
-                if (count == 1) {
-                    studyTimer = timerFunction(pauseTime, 100);
-                    sendMessage(pauseTime);
-                    mHandler.sendEmptyMessage(1);
-                } else if (count == 0) {
-                   studyTimer = timerFunction(studyTime,100);
-                    sendMessage(studyTime);
-                    mHandler.sendEmptyMessage(2);
+                    if (count == 1) {
+                        studyTimer = timerFunction(pauseTime, 100);
+                        sendMessage(pauseTime);
+                        mHandler.sendEmptyMessage(1);
+                    } else if (count == 0) {
+                        studyTimer = timerFunction(studyTime, 100);
+                        sendMessage(studyTime);
+                        mHandler.sendEmptyMessage(2);
+                    }
+                    studyTimer.start();
                 }
-                studyTimer.start();
 
             }
 
@@ -150,6 +167,10 @@ public class MyCountDownTimer extends Service {
 
 
     public void pauseTimer() {
+        if(count == 0 && ccode!=null){
+          insertIntoDataBase(studyTimePassed);
+            studyTimePassed=0;
+        }
         studyTimer.cancel();
         mHandler.removeMessages(0);
     }
@@ -159,6 +180,22 @@ public class MyCountDownTimer extends Service {
         timerFunction(timeUntilFinished,100);
         studyTimer.start();
 
+    }
+
+    private void insertIntoDataBase(long millisPassed) {
+        long inserted = dbAdapter.insertSession(ccode, milliSecondsToMin(millisPassed));
+        if (inserted > 0 && getBaseContext() != null) {
+            Toast toast = Toast.makeText(getBaseContext(), "Session:" + milliSecondsToMin(millisPassed)
+                    + "minutes added to " + ccode, Toast.LENGTH_SHORT);
+            toast.show();
+        } else if (getBaseContext() != null) {
+            Toast toast = Toast.makeText(getBaseContext(), "Failed to add a Session", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
+    }
+    private int milliSecondsToMin(long milliSeconds) {
+        return ((int) milliSeconds / 1000 / 60);
     }
 
 

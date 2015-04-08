@@ -89,7 +89,6 @@ public class TimerFrag extends Fragment {
                 case CHANGE_COLOR_0:
 
                     setProgressColor(Color.GREEN);
-                    insertIntoDataBase();
                     break;
 
                 case CHANGE_COLOR_1:
@@ -230,18 +229,7 @@ public class TimerFrag extends Fragment {
      * Set the timer.
      */
 
-    private void insertIntoDataBase() {
-        long inserted = dbAdapter.insertSession(ccode, milliSecondsToMin(default_StudyTime));
-        if (inserted > 0 && getActivity() != null) {
-            Toast toast = Toast.makeText(getActivity(), "Session:" + milliSecondsToMin(default_StudyTime)
-                    + "minutes added to " + ccode, Toast.LENGTH_SHORT);
-            toast.show();
-        } else if (getActivity() != null) {
-            Toast toast = Toast.makeText(getActivity(), "Failed to add a Session", Toast.LENGTH_SHORT);
-            toast.show();
-        }
 
-    }
 
     private void setProgressColor(int c) {
         progressBar.getProgressDrawable().setColorFilter(c, PorterDuff.Mode.SRC_IN);
@@ -272,6 +260,7 @@ public class TimerFrag extends Fragment {
 
     private void sendDataToService () {
         Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
+        i.putExtra("CCODE",ccode);
         i.putExtra("TIME_STUDY", default_StudyTime);
         i.putExtra("TIME_PAUSE", default_PauseTime);
         i.putExtra("TOTAL_TIME", default_TotalTime);
