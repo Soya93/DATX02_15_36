@@ -339,21 +339,6 @@ public class EventActivity extends ActionBarActivity {
                 });
         return builder.create();
 
-
-
-        /*
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.calendar_picker_dialog, null);
-        builder.setView(dialogView);
-
-        ListView calendarList = (ListView) findViewById(R.id.calendar_list);
-
-
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-        */
     }
 
     public void openDatePickerDialog(final boolean isStart) {
@@ -457,13 +442,15 @@ public class EventActivity extends ActionBarActivity {
         TimePickerDialog timePickerDialog;
         if (isStart) {
             timePickerDialog = new TimePickerDialog(EventActivity.this,
-                    R.style.Theme_IAPTheme, timePickerListener, startHour,
+                    R.style.Base_Theme_AppCompat_Light_Dialog, timePickerListener, startHour,
                     startMinute, true);
         } else {
             timePickerDialog = new TimePickerDialog(EventActivity.this,
-                    R.style.Theme_IAPTheme, timePickerListener, endHour,
+                    R.style.Base_Theme_AppCompat_Light_Dialog, timePickerListener, endHour,
                     endMinute, true);
+
         }
+
 
         timePickerDialog.show();
         timePickerDialog.setCancelable(true);
