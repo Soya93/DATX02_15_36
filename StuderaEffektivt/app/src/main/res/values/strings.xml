@@ -62,5 +62,6 @@
     <string name="title_activity_activity_my_profile">activity_my_profile</string>
     <string name="title_activity_techniques">TechniquesActivity</string>
     <string name="title_activity_detailed_info">DetailedInfoActivity</string>
+    <string name="title_activity_techs_ntips">TechsNTipsActivity</string>
 
 </resources>

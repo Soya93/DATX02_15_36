@@ -105,6 +105,10 @@
             android:name=".activity.TipsActivity"
             android:label="@string/title_activity_tips" >
         </activity>
+        <activity
+            android:name=".activity.TechsNTipsActivity"
+            android:label="@string/title_activity_techs_ntips" >
+        </activity>
     </application>
 
 </manifest>

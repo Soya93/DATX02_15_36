@@ -1,6 +1,9 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +30,12 @@ public class TipsActivity extends ActionBarActivity {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Studietips");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+        getWindow().getDecorView().findViewById(android.R.id.content).setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -73,9 +82,24 @@ public class TipsActivity extends ActionBarActivity {
      */
     public void goToTip(Button b) {
 
-        Intent it = new Intent(this, DetailedInfoActivity.class);
+        Fragment fragment = new TipDetailedInfoFrag();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("key", (String) b.getText());
+
+        fragment.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.add(getWindow().getDecorView().findViewById(android.R.id.content).getId(), fragment, "detailedtipfragment");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        getWindow().getDecorView().findViewById(android.R.id.content).setVisibility(View.INVISIBLE);
+
+
+       /* Intent it = new Intent(this, DetailedInfoActivity.class);
         it.putExtra("key", (String) b.getText());
         Log.i("tipNameTF", (String) b.getText());
-        startActivity(it);
+        startActivity(it);*/
     }
 }

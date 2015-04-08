@@ -191,15 +191,18 @@ public class MyProfileFrag extends Fragment {
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
                 break;
             case R.id.tips:
-                startActivity(new Intent(getActivity(), TipsActivity.class));
+                Intent it = new Intent(getActivity(), TechsNTipsActivity.class);
+                it.putExtra("ActivityTitle", "Studietips");
+                startActivity(it);
                 fragment = new TipFrag();
                 /*fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");*/
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 break;
             case R.id.techniques:
-                startActivity(new Intent(getActivity(), TechniquesActivity.class));
-
+                Intent its = new Intent(getActivity(), TechsNTipsActivity.class);
+                its.putExtra("ActivityTitle", "Studietekniker");
+                startActivity(its);
                 /*fragment = new TechniquesFrag();
                 fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");

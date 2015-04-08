@@ -1,5 +1,6 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,8 +38,10 @@ public class TechniquesFrag extends Fragment {
         this.container = container;
 
         initComponentsList();
-        bundleFromPreviousFragment = this.getArguments();
-        containerId = bundleFromPreviousFragment.getInt("containerId");
+        /* bundleFromPreviousFragment = this.getArguments();
+        containerId = bundleFromPreviousFragment.getInt("containerId");*/
+        containerId = getActivity().getWindow().getDecorView().findViewById(android.R.id.content).getId();
+
         return rootView;
     }
 
@@ -84,5 +87,12 @@ public class TechniquesFrag extends Fragment {
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onDetach()
+    {
+        super.onDetach();
+        getActivity().finish();
     }
 }

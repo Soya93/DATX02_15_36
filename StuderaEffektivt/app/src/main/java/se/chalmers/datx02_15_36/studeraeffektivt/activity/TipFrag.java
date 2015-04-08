@@ -38,8 +38,9 @@ public class TipFrag extends Fragment {
         this.container = container;
 
         initComponentsList();
-        bundleFromPreviousFragment = this.getArguments();
-        containerId = bundleFromPreviousFragment.getInt("containerId");
+        /*bundleFromPreviousFragment = this.getArguments();
+        containerId = bundleFromPreviousFragment.getInt("containerId");*/
+        containerId = getActivity().getWindow().getDecorView().findViewById(android.R.id.content).getId();
 
         return rootView;
     }
@@ -89,5 +90,12 @@ public class TipFrag extends Fragment {
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onDetach()
+    {
+        super.onDetach();
+        getActivity().finish();
     }
 }
