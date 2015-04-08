@@ -57,6 +57,11 @@
     <color name="green">#78CF20</color>
     <color name="yellow">#E6DA23</color>
 
+    <string name="title_activity_study_task">StudyTaskActivity</string>
     <string name="title_activity_event">EventActivity</string>
+    <string name="title_activity_activity_my_profile">activity_my_profile</string>
+    <string name="title_activity_techniques">TechniquesActivity</string>
+    <string name="title_activity_detailed_info">DetailedInfoActivity</string>
+    <string name="title_activity_techs_ntips">TechsNTipsActivity</string>
 
 </resources>

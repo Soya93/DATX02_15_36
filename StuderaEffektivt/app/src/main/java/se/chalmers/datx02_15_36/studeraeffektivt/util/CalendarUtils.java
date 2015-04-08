@@ -46,12 +46,14 @@ public class CalendarUtils {
     public static final int ALL_DAY = 12;
 
     public static final String[] NOTIFICATION_PROJECTION = new String[]{
-            CalendarContract.Reminders.EVENT_ID, // 0
-            CalendarContract.Reminders.MINUTES, //1
+            CalendarContract.Reminders._ID, //0
+            CalendarContract.Reminders.EVENT_ID, // 1
+            CalendarContract.Reminders.MINUTES, //2
     };
     public static final int NOTIFICATION_ID = 0;
-    public static final int NOTIFICATION_TIME = 1;
-
+    public static final int NOTIFICATION_EVENT_ID = 1;
+    public static final int NOTIFICATION_TIME = 2;
+    public static final int NOTIFICATION_DEFAULT = CalendarContract.Reminders.MINUTES_DEFAULT;
 
     public static final Calendar cal = Calendar.getInstance();
 
@@ -64,11 +66,6 @@ public class CalendarUtils {
     public static final long TODAY_IN_MILLIS = cal.getTimeInMillis();
 
 
-
-
-
-
-
     public static final String[] CALENDAR_CC_PROJECTION = {CalendarContract.Calendars._ID,
             CalendarContract.Calendars.NAME,
             CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
@@ -79,4 +76,5 @@ public class CalendarUtils {
 
     public static final int C_CALENDAR_ID = 0;
     public static final int C_CALENDAR_COLOR =4;
+
 }

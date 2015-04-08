@@ -50,8 +50,9 @@ public class CourseFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_course, container, false);
+        View rootView = inflater.inflate(R.layout.activity_course, container, false);
         this.container = container;
+        this.view = rootView;
         initComponents();
         bundleFromPreviousFragment = this.getArguments();
         containerId = bundleFromPreviousFragment.getInt("containerId");
@@ -59,13 +60,17 @@ public class CourseFrag extends Fragment {
         simpleAdpt = new SimpleAdapter(this.getActivity(), courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
         listOfCourses.setAdapter(simpleAdpt);
 
+
+
+
         //Create the database access point but check if the context is null first.
         if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
         }
         showCourseList();
 
-        return view;
+        return rootView;
+
     }
 
     /**
@@ -146,6 +151,7 @@ public class CourseFrag extends Fragment {
                 selected = (int) courseList.indexOf(courseMap);
                 bundleToNextFragment.putInt("containerId", ((ViewGroup) container.getParent()).getId());
                 bundleToNextFragment.putInt("kurs", courseList.indexOf(courseMap));
+                bundleToNextFragment.putString("CourseCode", course1.getCourseCode());
                 goToDetails(bundleToNextFragment);
             }
         });
@@ -154,10 +160,13 @@ public class CourseFrag extends Fragment {
 
     public void goToDetails(Bundle bundle) {
         Fragment fragment = new CourseDetailedInfoFrag();
+        //Fragment fragment = new StudyTaskFragment();
+
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = this.getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(containerId, fragment);
+
+        fragmentTransaction.add(containerId, fragment, "detailedcoursefragment");
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();

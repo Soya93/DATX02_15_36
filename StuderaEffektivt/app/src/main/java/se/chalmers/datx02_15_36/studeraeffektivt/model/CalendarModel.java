@@ -179,9 +179,27 @@ public class CalendarModel {
 
         //Prints out all the events in the given interval
         while (cur.moveToNext()) {
-            if(cur.getLong(CalendarUtils.NOTIFICATION_ID) == eventID) {
-                Log.i("getNotTIme", "eventid: " + cur.getLong(CalendarUtils.NOTIFICATION_ID) + " time: " + cur.getInt(CalendarUtils.NOTIFICATION_TIME));
+            if(cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) == eventID) {
+                Log.i("getNotTIme", "eventid: " + cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) + " time: " + cur.getInt(CalendarUtils.NOTIFICATION_TIME));
                 return cur.getInt(CalendarUtils.NOTIFICATION_TIME);
+            }
+        }
+        cur.close();
+
+        return -1;
+    }
+
+    public int getNotificationID (ContentResolver cr, Long startInterval, Long endInterval, Long eventID){
+        Uri.Builder eventsUriBuilder = CalendarContract.Reminders.CONTENT_URI.buildUpon();
+        ContentUris.appendId(eventsUriBuilder, startInterval);
+        ContentUris.appendId(eventsUriBuilder, endInterval);
+        cur =  CalendarContract.Reminders.query(cr, eventID, CalendarUtils.NOTIFICATION_PROJECTION);
+
+        //Prints out all the events in the given interval
+        while (cur.moveToNext()) {
+            if(cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) == eventID) {
+                Log.i("getNotTIme", "eventid: " + cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) + " time: " + cur.getInt(CalendarUtils.NOTIFICATION_ID));
+                return cur.getInt(CalendarUtils.NOTIFICATION_ID);
             }
         }
         cur.close();
@@ -370,7 +388,7 @@ public class CalendarModel {
 
         // get the event ID that is the last element in the Uri
         long eventID = Long.parseLong(uri.getLastPathSegment());
-        addNotification(cr, eventID, notification);
+        addNotification(cr, eventID, notification, startMillis, endMillis);
         //
         // ... do something with event ID
         return eventID;
@@ -395,12 +413,25 @@ public class CalendarModel {
         cr.delete(deleteUri, null, null);
     }
 
-    private void addNotification(ContentResolver cr, long eventID, int min){
+    private void addNotification(ContentResolver cr, long eventID, int min, long start, long end){
         ContentValues values = new ContentValues();
-            values.put(CalendarContract.Reminders.MINUTES, min);
-            values.put(CalendarContract.Reminders.EVENT_ID, eventID);
-            values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-        cr.insert(CalendarContract.Reminders.CONTENT_URI, values);
+            min = min == -1? CalendarUtils.NOTIFICATION_DEFAULT: min;
+            if(min != -1) {
+                values.put(CalendarContract.Reminders.MINUTES, min);
+                values.put(CalendarContract.Reminders.EVENT_ID, eventID);
+                values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+                values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+                cr.insert(CalendarContract.Reminders.CONTENT_URI, values);
+            } else {
+                Log.i("addNOt", CalendarUtils.NOTIFICATION_DEFAULT + "");
+                //removeNotification(cr,  getNotificationID(cr, start, end, eventID));
+            }
+    }
+
+    private void removeNotification(ContentResolver cr, long reminderID){
+        Uri reminderUri = ContentUris.withAppendedId(
+                CalendarContract.Reminders.CONTENT_URI, reminderID);
+        cr.delete(reminderUri, null, null);
     }
 
 

@@ -2,6 +2,8 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -160,7 +162,7 @@ public class MainActivity extends ActionBarActivity {
                 R.drawable.ic_cal2_uns,
                 R.drawable.ic_timer_uns,
                 R.drawable.ic_pilegraph_uns,
-                R.drawable.ic_action_overflow_uns
+                R.drawable.ic_social_person_uns
         };
 
 
@@ -211,7 +213,7 @@ public class MainActivity extends ActionBarActivity {
                         tab.setIcon(R.drawable.ic_pilegraph);
                         break;
                     case 4:
-                        tab.setIcon(R.drawable.ic_action_overflow);
+                        tab.setIcon(R.drawable.ic_social_person);
                         break;
                     default:
                         break;

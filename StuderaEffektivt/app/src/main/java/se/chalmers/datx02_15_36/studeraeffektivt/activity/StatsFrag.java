@@ -49,6 +49,7 @@ public class StatsFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
 
+        //insertTestDataToDB();
         //insertTestDataToDB("DDD111");
         //insertTestDataToDB("BBB222");
         //insertDifferentTestData("OOO333");
@@ -93,8 +94,15 @@ public class StatsFrag extends Fragment {
             String cname = cursor.getString(cnameColumn);
             adapter.add(ccode + "-" + cname);
         }
-        cursor.close();
     }
+
+   /* public void setSelectedCourse(){
+        spinner.setSelection(0);
+        Log.i("DB", "Spinner: "+spinner);
+        Log.i("DB", "SelectedItem: "+spinner.getSelectedItem());
+        if(spinner.getSelectedItem()!=null) {
+        cursor.close();
+    }*/
 
     private void setSelectedCourse(){
         Log.i("DB", "spinner's selected item: "+spinner.getSelectedItem());

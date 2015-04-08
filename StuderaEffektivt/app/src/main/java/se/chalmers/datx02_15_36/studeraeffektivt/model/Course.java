@@ -44,5 +44,9 @@ public class Course {
         return courseCode + " - " + courseName;
     }
 
+    public String getCourseCode(){
+        return courseCode;
+    }
+
 
 }

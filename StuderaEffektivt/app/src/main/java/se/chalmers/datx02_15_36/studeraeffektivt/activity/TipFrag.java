@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,12 @@ import java.util.List;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 /**
- * A class displaying the available tip of studytechniques or studytips depending on what is chosen.
+ * A class displaying the available tip of studytips depending on what is chosen.
  */
 public class TipFrag extends Fragment {
 
     private List<Button> buttonList;
+    private TextView header;
 
     private View view;
     private ViewGroup container;
@@ -34,13 +36,16 @@ public class TipFrag extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_tip, container, false);
         this.view = rootView;
         this.container = container;
-        initComponentsList(view);
-        bundleFromPreviousFragment = this.getArguments();
-        containerId = bundleFromPreviousFragment.getInt("containerId");
+
+        initComponentsList();
+        /*bundleFromPreviousFragment = this.getArguments();
+        containerId = bundleFromPreviousFragment.getInt("containerId");*/
+        containerId = getActivity().getWindow().getDecorView().findViewById(android.R.id.content).getId();
+
         return rootView;
     }
 
-    private void initComponentsList(View view) {
+    private void initComponentsList() {
 
         buttonList = new ArrayList<Button>();
 
@@ -54,14 +59,6 @@ public class TipFrag extends Fragment {
         buttonList.add((Button) view.findViewById(R.id.button8));
         buttonList.add((Button) view.findViewById(R.id.button9));
         buttonList.add((Button) view.findViewById(R.id.button10));
-        buttonList.add((Button) view.findViewById(R.id.button11));
-        buttonList.add((Button) view.findViewById(R.id.button12));
-        buttonList.add((Button) view.findViewById(R.id.button13));
-        buttonList.add((Button) view.findViewById(R.id.button14));
-        buttonList.add((Button) view.findViewById(R.id.button15));
-        buttonList.add((Button) view.findViewById(R.id.button16));
-        buttonList.add((Button) view.findViewById(R.id.button17));
-        buttonList.add((Button) view.findViewById(R.id.button18));
 
         for (Button b : buttonList) {
             b.setOnClickListener(myOnlyhandler);
@@ -81,14 +78,24 @@ public class TipFrag extends Fragment {
     public void goToTip(Button b) {
 
         Fragment fragment = new TipDetailedInfoFrag();
+
         Bundle bundle = new Bundle();
         bundle.putString("key", (String) b.getText());
+
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = this.getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(containerId, fragment);
+
+        fragmentTransaction.add(containerId, fragment, "detailedtipfragment");
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onDetach()
+    {
+        super.onDetach();
+        getActivity().finish();
     }
 }

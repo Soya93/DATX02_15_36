@@ -1,0 +1,139 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.MyProfileFrag"
+    android:id="@+id/table">
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="5dp"
+        android:drawableLeft="@drawable/ic_content_add_circle"
+        android:text="Lägg till en kurs"
+        android:background="?android:attr/selectableItemBackground"
+        android:id="@+id/addCourse"
+        android:enabled="true"
+        android:clickable="true"
+        android:layout_below="@+id/courselabel"
+        android:layout_alignParentStart="true" />
+
+    <View
+        android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="#c0c0c0"
+        android:layout_gravity="center_vertical"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:id="@+id/line"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Kurser"
+        android:id="@+id/courselabel"
+        android:layout_below="@+id/line"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="5dp"
+        android:drawableLeft="@drawable/ic_social_school"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="Se tidigare kurser"
+        android:id="@+id/prevCourses"
+        android:enabled="true"
+        android:backgroundTint="@null"
+
+        android:clickable="true"
+        android:layout_marginTop="56dp"
+        android:layout_below="@+id/addCourse"
+        android:layout_alignParentStart="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView2"
+        android:layout_alignStart="@+id/addCourse"
+        android:layout_above="@+id/prevCourses"
+        android:layout_below="@+id/addCourse" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"
+        android:layout_gravity="center_vertical"
+        android:layout_row="1"
+        android:layout_column="1"
+        android:id="@+id/line2"
+        android:layout_alignBottom="@+id/prevCourses"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Uppgifter"
+        android:id="@+id/textView6"
+        android:layout_below="@+id/line2"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="5dp"
+        android:drawableLeft="@drawable/ic_content_add_circle"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="Lägg till uppgifter"
+        android:id="@+id/addTask"
+        android:enabled="true"
+        android:clickable="true"
+        android:layout_below="@+id/textView6"
+        android:layout_alignParentEnd="true" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"
+        android:layout_gravity="center_vertical"
+        android:layout_row="1"
+        android:layout_column="1"
+        android:id="@+id/line3"
+        android:layout_below="@+id/addTask"
+        android:layout_alignStart="@+id/addTask" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="5dp"
+        android:text="Studietips"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawableLeft="@drawable/ic_image_wb_incandescent"
+        android:id="@+id/tips"
+        android:enabled="true"
+        android:clickable="true"
+        android:layout_below="@+id/addTask"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="5dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawableLeft="@drawable/ic_social_school"
+        android:text="Studietekniker"
+        android:id="@+id/techniques"
+        android:enabled="true"
+        android:clickable="true"
+        android:layout_below="@+id/tips"
+        android:layout_alignStart="@+id/tips" />
+
+
+</RelativeLayout>
