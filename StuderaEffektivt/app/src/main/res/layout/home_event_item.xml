@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="right">
+
+        <TableLayout
+            android:layout_width="279dp"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Large Text"
+                    android:id="@+id/event_name_item_lable"
+                    android:textColor="#000000"
+                    android:gravity="right"
+                    android:paddingLeft="12dp"
+                    android:layout_gravity="left" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/event_time_item_lable"
+                    android:text="tid"
+                    android:textColor="#000000"
+                    android:paddingLeft="15dp"
+                    android:layout_gravity="left" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Plats"
+                    android:id="@+id/location_item_lable"
+                    android:textColor="#000000"
+                    android:paddingLeft="15dp"
+                    android:layout_gravity="left" />
+            </TableRow>
+
+        </TableLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="66dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="tid till start"
+            android:id="@+id/time_to_event_item_lable"
+            android:layout_column="1"
+            android:layout_gravity="right"
+            android:textColor="#000000"
+            android:gravity="center|left"
+            android:paddingRight="12dp"
+            android:textAlignment="gravity" />
+
+    </GridLayout>
+
+</LinearLayout>

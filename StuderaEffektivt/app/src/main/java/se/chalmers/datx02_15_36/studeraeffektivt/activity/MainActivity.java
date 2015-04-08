@@ -84,6 +84,10 @@ public class MainActivity extends ActionBarActivity {
         calendarFrag.setContentResolver(this.getContentResolver());
 
 
+        homeFrag = (HomeFrag) mAdapter.getItem(0);
+        homeFrag.setContentResolver(this.getContentResolver());
+
+
         // listener for FAB menu
         FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
             @Override
@@ -240,6 +244,12 @@ public class MainActivity extends ActionBarActivity {
                 // on changing the page§    §
                 // make respected tab selected
                 actionBar.setSelectedNavigationItem(position);
+
+                //When home page is selected
+                if(position == 0) {
+                    Log.i("Main:", "on home frag selected");
+                    homeFrag.setTodaysEvents();
+                }
             }
 
             @Override

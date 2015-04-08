@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 
 /**
  * A class representing the model of a calendar
@@ -38,8 +39,72 @@ public class CalendarModel {
         cur = null;
     }
 
-    public List<String> readEventsToday(ContentResolver cr) {
-        return this.readEvents(cr, CalendarUtils.TODAY_IN_MILLIS, CalendarUtils.TODAY_IN_MILLIS);
+    public ArrayList<HomeEventItem> readEventsToday(ContentResolver cr) {
+        Log.i("calModel", "readEventsToday");
+
+        ArrayList <HomeEventItem> eventsToday = new ArrayList<>();
+
+
+        //TODO fixa så pågående event kommer med
+
+        // sätt start tid till dagens början
+        // filtera bort de som har passerat
+        // kolla så event som sträcker sig över flera dagar kommer med...
+
+        Calendar cal = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+
+/*
+        long startInterval = cal.getTimeInMillis();
+
+        cal2.set(Calendar.HOUR_OF_DAY, 23);
+        cal2.set(Calendar.MINUTE, 59);
+        cal2.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH));
+
+        long endInterval = cal2.getTimeInMillis();
+*/
+
+
+        long startInterval = 0L;
+        long endInterval = 0L;
+
+
+
+        Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
+                .buildUpon();
+        startInterval = checkStartInterval(startInterval);
+        endInterval = checkEndInterval(endInterval);
+        ContentUris.appendId(eventsUriBuilder, startInterval);
+        ContentUris.appendId(eventsUriBuilder, endInterval);
+        Uri eventsUri = eventsUriBuilder.build();
+
+       // String selection = "((dtstart >= "+c_start.getTimeInMillis()+") AND (dtend <= "+c_end.getTimeInMillis()+"))";
+
+        cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
+
+        //Prints out all the events in the given interval
+        while (cur.moveToNext()) {
+            HomeEventItem item = new HomeEventItem();
+            // set the title
+            item.setTitleS(cur.getString(CalendarUtils.TITLE));
+
+            if (cur.getInt(CalendarUtils.ALL_DAY) == 1) {
+                item.setTimeS("Heldag");
+            } else {
+                //set the time for the event
+                item.setTimeS(CalendarView.formatTime(cur.getLong(CalendarUtils.EVENT_BEGIN), cur.getLong(CalendarUtils.EVENT_END)));
+
+                //set the time to the start of the event
+                item.setTimeToStartS(CalendarView.formatTimeToEvent(Calendar.getInstance().getTimeInMillis(), cur.getLong(CalendarUtils.EVENT_BEGIN)));
+            }
+
+            item.setLocationS(cur.getString(CalendarUtils.LOCATION));
+
+            eventsToday.add(item);
+        }
+        cur.close();
+        return eventsToday;
     }
 
     /**

@@ -28,6 +28,7 @@ import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeEventItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 
@@ -167,9 +168,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.notifyDatasetChanged();
     }
 
-
+    //TODO remove this??
     //Reads all todays events, used in homescreen
-    public List<String> getTodaysEvents() {
+    public ArrayList<HomeEventItem> getTodaysEvents() {
         return calendarModel.readEventsToday(cr);
     }
 
@@ -418,9 +419,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                         if (isChecked) {
                             if(!visibleCalendars.contains(which)) {
                                 visibleCalendars.add(calIDs.get(which));
+                                //visibleCalendars.add(which, calIDs.get(which));
                             }
                         } else {
                             visibleCalendars.remove(which);
+                            //visibleCalendars.set(which, null);
                         }
                     }
                 });
