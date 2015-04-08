@@ -163,6 +163,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     @Override
     public void onResume() {
+        Log.i("calFrag: ", "onResume");
         super.onResume();
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();

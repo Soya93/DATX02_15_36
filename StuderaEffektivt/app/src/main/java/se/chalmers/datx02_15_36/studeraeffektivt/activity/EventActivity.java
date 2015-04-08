@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,13 +13,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,8 +26,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 public class EventActivity extends ActionBarActivity {
@@ -49,7 +50,8 @@ public class EventActivity extends ActionBarActivity {
     private Long calendarID;
     private Bundle savedInstanceState;
     private boolean isAllDayEvent;
-    private CheckBox checkBox;
+    private Switch allDaySwitch;
+
 
     Map<Integer, String> notificationAlternativesMap = new LinkedHashMap<>();
 
@@ -97,23 +99,21 @@ public class EventActivity extends ActionBarActivity {
         calendarName = getIntent().getStringExtra("calName");
         notification = getIntent().getIntExtra("notification", -1);
         isAllDayEvent = getIntent().getIntExtra("isAllDay", 0) == 1;
-        /*
-        int index = calendarFrag.getCalendarModel().getCalendarIDsCalendars(getContentResolver()).indexOf(calendarID);
-        Log.i("oncreate event avtivity: ", calendarID +" " + index);
-        calendarName = calendarFrag.getCalendarModel().getCalendarNamesCalendars(getContentResolver()).get(index);
-        Log.i("oncreate event avtivity: ", calendarName);
-        */
+
 
         initComponents();
 
         String title;
         if(isInAddMode){
-            title = "Nytt event";
+            title = "Ny händelse";
         }else {
-            title = "Redigera event";
+            title = "Redigera händelse";
         }
 
         this.setTitle(title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
     }
 
 
@@ -132,7 +132,15 @@ public class EventActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.save_event) {
+            onOKButtonClicked();
+            return true;
+        }
+        else if (id == android.R.id.home) {
+           this.finish();
+           return true;
+        } else if (id == R.id.delete_event) {
+            deleteEvent(calendarID, title, getContentResolver());
             return true;
         }
 
@@ -179,9 +187,9 @@ public class EventActivity extends ActionBarActivity {
         setNotificationMapValues();
         notificationView.setText(notificationAlternativesMap.get(notification));
 
-        checkBox = (CheckBox) findViewById(R.id.checkBox);
-        checkBox.setChecked(isAllDayEvent);
-        checkBox.setOnClickListener(myTextViewHandler);
+        allDaySwitch = (Switch) findViewById(R.id.all_day_switch);
+        allDaySwitch.setChecked(isAllDayEvent);
+        allDaySwitch.setOnClickListener(myTextViewHandler);
 
 
 
@@ -291,9 +299,9 @@ public class EventActivity extends ActionBarActivity {
                 Log.i("click on text view", " notification");
                 chooseNotification();
                 break;
-            case R.id.checkBox:
-                checkBox.setChecked(checkBox.isChecked());
-                isAllDayEvent = checkBox.isChecked();
+            case R.id.all_day_switch:
+                allDaySwitch.setChecked(allDaySwitch.isChecked());
+                isAllDayEvent = allDaySwitch.isChecked();
                 hideTimeLabels(isAllDayEvent);
                 break;
         }
@@ -461,7 +469,7 @@ public class EventActivity extends ActionBarActivity {
         timePickerDialog.setCancelable(true);
     }
 
-    public void onOKButtonClicked(View v) {
+    public void onOKButtonClicked() {
         title = ((EditText) findViewById(R.id.title_input)).getText().toString();
         location = ((EditText) findViewById(R.id.location_input)).getText().toString();
         description = ((EditText) findViewById(R.id.description_input)).getText().toString();
@@ -501,11 +509,21 @@ public class EventActivity extends ActionBarActivity {
         alertDialog.show();
     }
 
-    public void onCancelButtonClicked(View v) {
-        onBackPressed();
-    }
 
     public void setCalendarFrag(CalendarFrag calendarFrag) {
         this.calendarFrag = calendarFrag;
+    }
+
+    private void deleteEvent(long id, String title, ContentResolver cr) {
+        CalendarModel calendarModel = calendarFrag.getCalendarModel();
+        calendarModel.deleteEvent(cr, id);
+
+        this.finish();
+
+        Context context = getApplicationContext();
+        CharSequence text = "Händelsen " + title + " har tagits bort";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 }

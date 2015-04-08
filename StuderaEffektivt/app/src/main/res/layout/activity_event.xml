@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
 
     <TableRow
@@ -16,6 +17,7 @@
             android:maxLines ="4"
             android:maxLength ="2000"
             android:hint="Event Titel"
+            android:background="@null"
             android:scrollHorizontally="false"
             android:id="@+id/title_input"
             android:layout_column="0"
@@ -42,8 +44,8 @@
             android:layout_column="1"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp" />
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -77,22 +79,30 @@
             android:layout_column="1"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp" />
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" />
 
-        <CheckBox
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Hela dagen"
-            android:id="@+id/checkBox"
+            android:id="@+id/all_day_label"
             android:layout_column="3"
-            android:checked="false"
-            android:clickable="false"
-            android:onClick="goToTextView"
             android:gravity="center_vertical"
-            android:paddingTop="20dp"
-            android:paddingBottom="10dp"
-            android:textAlignment="center" />
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp" />
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/all_day_switch"
+            android:layout_column="4"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp"
+            android:checked="false"
+            android:gravity="center_vertical|right" />
+
     </TableRow>
 
     <TableRow
@@ -176,13 +186,14 @@
             android:layout_column="1"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp" />
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Lägg till plats"
+            android:background="@null"
             android:id="@+id/location_input"
             android:layout_column="3"
             android:gravity="center_vertical"
@@ -194,23 +205,6 @@
         android:layout_width="fill_parent"
         android:layout_height="2dip"
         android:background="#ffffff" />
-
-
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Påminnelse"
-            android:id="@+id/notification_lable"
-            android:layout_column="3"
-            android:gravity="center_vertical"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp" />
-    </TableRow>
 
 
     <TableRow
@@ -227,8 +221,8 @@
             android:layout_column="1"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp" />
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -236,8 +230,12 @@
             android:inputType="number"
             android:ems="10"
             android:id="@+id/notification_input"
+            android:hint="Lägg till notifikation"
             android:onClick="goToTextView"
-            android:layout_column="3" />
+            android:layout_column="3"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:gravity="center_vertical" />
     </TableRow>
 
     <View
@@ -257,14 +255,15 @@
             android:layout_column="1"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp" />
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Lägg till beskrivning"
             android:id="@+id/description_input"
+            android:background="@null"
             android:layout_column="3"
             android:gravity="center_vertical"
             android:paddingTop="10dp"
@@ -278,21 +277,6 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Avbryt"
-            android:id="@+id/cancel_button"
-            android:layout_column="1"
-            android:onClick="onCancelButtonClicked" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OK"
-            android:id="@+id/ok_button"
-            android:layout_column="3"
-            android:onClick="onOKButtonClicked" />
     </TableRow>
 
 

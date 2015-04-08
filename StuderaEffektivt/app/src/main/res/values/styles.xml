@@ -79,4 +79,9 @@
         <item name="dropDownListViewStyle">@style/DropDownListView.Pluggapp</item>
     </style>
 
+
+    <style name="Theme.YourTheme.Styled.ActionBar.TitleTextStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">15sp</item>
+    </style>
+
 </resources>
