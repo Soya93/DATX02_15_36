@@ -64,13 +64,6 @@ public class CalendarUtils {
     public static final int HOUR = cal.get(Calendar.HOUR_OF_DAY);
     public static final int MINUTE = cal.get(Calendar.MINUTE);
     public static final long TODAY_IN_MILLIS = cal.getTimeInMillis();
-<<<<<<< HEAD
-=======
-
-
-
-
-
 
 
     public static final String[] CALENDAR_CC_PROJECTION = {CalendarContract.Calendars._ID,
@@ -83,5 +76,5 @@ public class CalendarUtils {
 
     public static final int C_CALENDAR_ID = 0;
     public static final int C_CALENDAR_COLOR =4;
->>>>>>> origin/develop
+
 }
