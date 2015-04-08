@@ -445,6 +445,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     public void changeNbrOfDaysDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final String [] choices = {"1", "3", "5"};
+        final int previousNumberOfVisibleDays = numberOfVisibleDays;
         numberOfVisibleDays = mWeekView.getNumberOfVisibleDays();
         int index = getIndexOfVisibleDays();
 
@@ -458,8 +459,26 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
+                Calendar newDate = mWeekView.getFirstVisibleDay();
                 mWeekView.setNumberOfVisibleDays(numberOfVisibleDays);
-                mWeekView.goToHour(CalendarUtils.HOUR > 16? 16: CalendarUtils.HOUR);
+
+
+                mWeekView.goToHour(CalendarUtils.HOUR > 16? 16: CalendarUtils.HOUR-1);
+
+
+                /*)  if(previousNumberOfVisibleDays == 5 && numberOfVisibleDays == 3) {
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - 2);
+
+                } else if (previousNumberOfVisibleDays == 3 && numberOfVisibleDays == 5){
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - 2);
+                } else {
+                    /*if prev = 5 and cur = 1, prev = 5 and cur = 5, prev = 3 and cur = 5,
+                    * prev = 3 and cur = 1, prev = 3 and cur = 3, prev = 1
+                    * then we want to set the date as the prev first one
+
+                }*/
+                mWeekView.goToDate(newDate);
+
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
             }
@@ -510,7 +529,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     private void onTodayClick() {
         mWeekView.goToToday();
-        mWeekView.goToHour(CalendarUtils.HOUR-1);
+        mWeekView.goToHour(CalendarUtils.HOUR > 16? 16: CalendarUtils.HOUR-1);
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
     }

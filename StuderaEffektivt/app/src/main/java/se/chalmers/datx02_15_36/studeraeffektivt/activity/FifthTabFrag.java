@@ -1,6 +1,5 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,6 +38,7 @@ public class FifthTabFrag extends Fragment {
 
     private ViewGroup container;
     private View view;
+    private boolean hasInit = false;
 
 
     private Fragment currentlyShown = this;
@@ -94,10 +94,9 @@ public class FifthTabFrag extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_fifth_tab, container, false);
         this.view = rootView;
         this.container = container;
-        //currentlyShown = this;
+        currentlyShown = this;
         Log.d("FifthTabFrag ", "currentlyshown = fifthtabfragment");
         initComponents();
-
         return rootView;
     }
 
@@ -145,7 +144,8 @@ public class FifthTabFrag extends Fragment {
         tipButton.setOnClickListener(myOnlyhandler);
         courseButton = (Button) view.findViewById(R.id.button11);
         courseButton.setOnClickListener(myOnlyhandler);
-
+        settingsButton = (Button) view.findViewById(R.id.button12);
+        settingsButton.setOnClickListener(myOnlyhandler);
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
@@ -174,14 +174,21 @@ public class FifthTabFrag extends Fragment {
 
                 fragment = new TipFrag();
                 fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 currentlyShown = fragment;
                 break;
             case "Kurser":
                 fragment = new CourseFrag();
                 fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "coursefragment");
+                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
+                currentlyShown = fragment;
+                break;
+            case "Inställningar":
+                fragment = new MyProfileFrag();
+                fragment.setArguments(bundle);
+                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "myprofilefrag");
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 currentlyShown = fragment;
                 break;
@@ -192,12 +199,12 @@ public class FifthTabFrag extends Fragment {
         fragmentTransaction.commit();
     }
 
-    public FifthTabFrag getCurrentlyShown() {
-        return (FifthTabFrag) currentlyShown;
+    public Fragment getCurrentlyShown() {
+        return currentlyShown;
     }
 
-    public void setCurrentlyShown() {
-
+    public boolean hasInit(){
+        return hasInit;
     }
 
 }

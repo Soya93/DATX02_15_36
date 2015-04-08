@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="se.chalmers.datx02_15_36.studeraeffektivt" >
 
+    <uses-sdk android:minSdkVersion="18" />
+
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-sdk android:minSdkVersion="18" />
 
     <!-- To access Google+ APIs: -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -18,7 +19,6 @@
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <supports-screens
@@ -27,6 +27,12 @@
         android:normalScreens="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <!-- -http://developer.android.com/training/multiscreen/screensizes.html -->
     <application
@@ -49,29 +55,35 @@
             android:screenOrientation="portrait" />
 
         <fragment
-            android:name=".activity.TimerActivity"
-            android:label="TimerActivity" />
+            android:name=".activity.TimerFrag"
+            android:label="TimerFrag" />
         <fragment
-            android:name=".activity.CalendarActivity"
-            android:label="@string/title_activity_calendar" />
-
+            android:name=".activity.CalendarFrag"
+            android:label="CalendarFrag" />
         <fragment
-            android:name=".activity.TipActivity"
-            android:label="@string/title_activity_tips" />
+            android:name=".activity.TipFrag"
+            android:label="TipFrag" />
         <fragment
-            android:name=".activity.TipDetailedInfoActivity"
-            android:label="@string/title_activity_tip_view" />
+            android:name=".activity.TipDetailedInfoFrag"
+            android:label="TipDetailedInfoFrag" />
         <fragment
             android:name=".activity.Statistics"
-            android:label="@string/title_activity_statistics" />
+            android:label="StatsFrag" />
         <fragment
-            android:name=".HomeActivity"
-            android:label="Home" >
+            android:name="activity.HomeFrag"
+            android:label="HomeFrag" />
+        <fragment
+            android:name=".activity.MyProfileFrag"
+            android:label="@string/title_activity_activity_my_profile" >
         </fragment>
 
         <service android:name=".activity.MyCountDownTimer" >
         </service>
 
+        <activity
+            android:name=".activity.StudyTaskActivity"
+            android:label="@string/title_activity_study_task" >
+        </activity>
         <activity
             android:name=".activity.EventActivity"
             android:label="@string/title_activity_event" >
@@ -80,6 +92,23 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".activity.TechniquesActivity"
+            android:label="@string/title_activity_techniques" >
+        </activity>
+        <activity
+            android:name=".activity.DetailedInfoActivity"
+            android:label="@string/title_activity_detailed_info" >
+        </activity>
+        <activity
+            android:name=".activity.TipsActivity"
+            android:label="@string/title_activity_tips" >
+        </activity>
+        <activity
+            android:name=".activity.TechsNTipsActivity"
+            android:label="@string/title_activity_techs_ntips" >
+        </activity>
     </application>
 
 </manifest>

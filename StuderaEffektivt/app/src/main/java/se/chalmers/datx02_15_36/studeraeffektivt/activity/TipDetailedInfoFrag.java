@@ -22,8 +22,6 @@ public class TipDetailedInfoFrag extends Fragment {
     private String tipName;
     private TipHandler tipHandler;
 
-    public boolean isActive;
-
     /**
      * Instansiates the view with the name of the tip as a header and
      * invokes a method for getting the text for the tip
@@ -42,8 +40,6 @@ public class TipDetailedInfoFrag extends Fragment {
         tipHandler = new TipHandler(this.getActivity().getApplicationContext());
 
         tipViewInfoText.setText(getTipInfoText(tipName));
-
-        isActive = true;
 
         return rootView;
     }

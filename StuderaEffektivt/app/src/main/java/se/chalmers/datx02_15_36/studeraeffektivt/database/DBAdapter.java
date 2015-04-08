@@ -74,11 +74,32 @@ public class DBAdapter {
         }
     }
 
+    public long insertAssignment(String courseCode,int id, int chapter, String assNr,
+                                 int startPage, int stopPage, AssignmentType type, AssignmentStatus status) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        try {
+            cv.put(dbHelper.ASSIGNMENTS_ccode, courseCode);
+            cv.put(dbHelper.ASSIGNMENTS_chapter, chapter);
+            cv.put(dbHelper.ASSIGNMENTS_assNr, assNr);
+            cv.put(dbHelper.ASSIGNMENTS_startPage, startPage);
+            cv.put(dbHelper.ASSIGNMENTS_stopPage, stopPage);
+            cv.put(dbHelper.ASSIGNMENTS_type, type.toString());
+            cv.put(dbHelper.ASSIGNMENTS_status, status.toString());
+            cv.put(dbHelper.ASSIGNMENTS__id, id);
+
+            return db.insert(dbHelper.TABLE_ASSIGNMENTS, null, cv);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
     public long deleteAssignment(int id){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         try{
-            return db.delete(dbHelper.TABLE_ASSIGNMENTS, ""+id, null);
+            return db.delete(dbHelper.TABLE_ASSIGNMENTS, dbHelper.ASSIGNMENTS__id+" = "+id, null);
         }catch (Exception e){
             return -1;
         }

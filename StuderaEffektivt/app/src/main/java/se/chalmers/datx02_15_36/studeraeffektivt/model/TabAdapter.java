@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.CalendarFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.FifthTabFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.HomeFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.MyProfileFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.StatsFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerFrag;
 
@@ -19,6 +20,7 @@ public class TabAdapter extends FragmentPagerAdapter {
     HomeFrag homeFrag = new HomeFrag();
     CalendarFrag calendarFrag = new CalendarFrag();
     TimerFrag timerFrag = new TimerFrag();
+    StatsFrag statsFrag = new StatsFrag();
 
     public TabAdapter(FragmentManager fm) {
         super(fm);
@@ -39,10 +41,10 @@ public class TabAdapter extends FragmentPagerAdapter {
                 return timerFrag;
             case 3:
                 //Statistics fragment activity
-                return new StatsFrag();
+                return statsFrag;
             case 4:
                 //FifthTab fragment activity
-                return new FifthTabFrag();
+                return new MyProfileFrag();
         }
 
         return null;
