@@ -15,7 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.shamanland.fab.FloatingActionButton;
+
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,8 +69,7 @@ public class HomeFrag extends Fragment {
         homeFAB = (FloatingActionButton) view.findViewById(R.id.home_fab);
         homeFAB.setTag(1);
         homeFAB.setOnClickListener(myButtonHandler);
-        homeFAB.setSize(FloatingActionButton.SIZE_NORMAL);
-
+        homeFAB.setType(FloatingActionButton.TYPE_NORMAL);
     }
 
     public void setContentResolver(ContentResolver cr) {
@@ -92,6 +92,7 @@ public class HomeFrag extends Fragment {
         HomeAdapter adapter = new HomeAdapter(context, eventsList);
 
         listView = (ListView) rootView.findViewById(R.id.home_list);
+        homeFAB.attachToListView(listView);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
