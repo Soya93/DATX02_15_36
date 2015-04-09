@@ -2,6 +2,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,12 +18,14 @@ import android.widget.TextView;
 import com.shamanland.fab.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeEventItem;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 
 public class HomeFrag extends Fragment {
@@ -54,7 +57,6 @@ public class HomeFrag extends Fragment {
         hasInit = true;
 
 
-
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v.getTag() == homeFAB.getTag()) {
@@ -70,7 +72,7 @@ public class HomeFrag extends Fragment {
 
     }
 
-    public void setContentResolver(ContentResolver cr){
+    public void setContentResolver(ContentResolver cr) {
         this.cr = cr;
     }
 
@@ -95,14 +97,32 @@ public class HomeFrag extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO när man klickar på en händelse
+                HomeEventItem hei = (HomeEventItem) parent.getAdapter().getItem(position);
+                openViewEventInfo(hei.getId(), hei.getStartTime(), hei.getEndTime());
             }
         });
     }
 
 
+    public void openViewEventInfo(long eventId, long startTime, long endTime) {
 
-    public void setContext(Context context) {
-        this.context = context;
+        //Get a cursor for the detailed information of the event
+        Cursor cur = calModel.getEventDetailedInfo(cr, startTime, endTime, eventId);
+
+        //Fetch information from the cursor
+        String title = cur.getString(CalendarUtils.TITLE);
+        String location = cur.getString(CalendarUtils.LOCATION);
+        String description = cur.getString(CalendarUtils.DESCRIPTION);
+        String calendar = cur.getString(CalendarUtils.CALENDAR_NAME);
+        long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
+        int allDay = cur.getInt(CalendarUtils.ALL_DAY);
+        cur.close();
+        final int notification = calModel.getNotificationTime(cr, startTime,endTime,eventId);
+
+        calendarFrag.openViewEventInfo(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay);
+    }
+
+    public void setContext(Context c){
+        this.context = c;
     }
 }

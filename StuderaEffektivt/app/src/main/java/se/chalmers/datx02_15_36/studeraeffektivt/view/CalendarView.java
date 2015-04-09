@@ -72,8 +72,7 @@ public class CalendarView {
         return startFormat.format(new Date(startDateInMillis)) + "-" + endFormat.format(new Date(endDateInMillis));
     }
 
-    public static String formatTimeToEvent(long timeNow, long eventStart){
-        long diff = eventStart - timeNow;
+    public static String formatTimeToEvent(long diff){
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(diff);
 
@@ -86,6 +85,8 @@ public class CalendarView {
         }
 
     }
+
+
 
 }
 

@@ -61,7 +61,7 @@ public class EventActivity extends ActionBarActivity {
     private long startTimeMillis;
     private long endTimeMillis;
     private CalendarFrag calendarFrag;
-    private long curEventID;
+    private long eventID;
     private boolean isInAddMode;
 
     //Setting variables for the time/datepicker
@@ -89,7 +89,7 @@ public class EventActivity extends ActionBarActivity {
         setContentView(R.layout.activity_event);
         calendarFrag = new CalendarFrag();
         isInAddMode = getIntent().getBooleanExtra("isInAddMode", true);
-        curEventID = getIntent().getLongExtra("eventID", 0L);
+        eventID = getIntent().getLongExtra("eventID", 0L);
         startTimeMillis = getIntent().getLongExtra("startTime", 0L);
         endTimeMillis = getIntent().getLongExtra("endTime", 0L);
         title = getIntent().getStringExtra("title");
@@ -140,7 +140,7 @@ public class EventActivity extends ActionBarActivity {
            this.finish();
            return true;
         } else if (id == R.id.delete_event) {
-            deleteEvent(calendarID, title, getContentResolver());
+            deleteEvent(eventID, title, getContentResolver());
             return true;
         }
 
@@ -249,8 +249,9 @@ public class EventActivity extends ActionBarActivity {
         endTime.setText(endFormat.format(new Date(endTimeMillis)));
 
         calStart = Calendar.getInstance();
+        calStart.setTimeInMillis(startTimeMillis);
         calEnd = Calendar.getInstance();
-        calEnd.set(Calendar.HOUR_OF_DAY, endHour);
+        calEnd.setTimeInMillis(endTimeMillis);
     }
 
     private void setNotificationMapValues(){
@@ -469,7 +470,7 @@ public class EventActivity extends ActionBarActivity {
             Toast toast = Toast.makeText(getApplicationContext(), text, duration);
             toast.show();
         } else {
-            calendarFrag.getCalendarModel().editEventAuto(getContentResolver(),title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, calendarID, curEventID, notification, isAllDayEvent);
+            calendarFrag.getCalendarModel().editEventAuto(getContentResolver(),title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, calendarID, eventID, notification, isAllDayEvent);
             onBackPressed();
             CharSequence text = "Händelsen " + title + " har redigerats";
             int duration = Toast.LENGTH_SHORT;

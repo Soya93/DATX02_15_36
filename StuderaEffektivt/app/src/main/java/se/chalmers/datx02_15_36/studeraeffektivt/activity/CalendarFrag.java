@@ -148,7 +148,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
 
         // set the time for which hour that are shown
-        mWeekView.goToHour(CalendarUtils.HOUR -1);
+        mWeekView.goToHour(CalendarUtils.HOUR == 0? CalendarUtils.HOUR: CalendarUtils.HOUR -1);
 
         //Disable horizontal scroll in calendar view
         mWeekView.setHorizontalScrollBarEnabled(false); // doesn't work... :(
@@ -169,18 +169,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.notifyDatasetChanged();
     }
 
-    //TODO remove this??
-    //Reads all todays events, used in homescreen
-    public ArrayList<HomeEventItem> getTodaysEvents() {
-        return calendarModel.readEventsToday(cr);
-    }
-
     @Override
     public void onEventClick(final WeekViewEvent weekViewEvent, RectF rectF) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
-
         final String title = weekViewEvent.getName();
         final long eventId = weekViewEvent.getId();
 
@@ -199,7 +189,15 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         final int notification = calendarModel.getNotificationTime(cr, startTime,endTime,eventId);
 
-        calendarView.updateEventInfoView(dialogView, title, startTime, endTime, location, description, calendar);
+        openViewEventInfo(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay);
+    }
+
+    public void openViewEventInfo(final long eventId, final String eventTitle, final long startTime, final long endTime, final String location, final String description, final String calendar, final long calID, final int notification, final int allDay){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
+
+        calendarView.updateEventInfoView(dialogView, eventTitle, startTime, endTime, location, description, calendar);
         builder.setView(dialogView);
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -211,7 +209,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                openEditEvent(eventId, startTime, endTime, title, location, description, calID, calendar, notification, allDay);
+                openEditEvent(eventId, startTime, endTime, eventTitle, location, description, calID, calendar, notification, allDay);
             }
         });
 

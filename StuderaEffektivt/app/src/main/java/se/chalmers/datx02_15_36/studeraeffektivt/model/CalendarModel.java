@@ -47,12 +47,8 @@ public class CalendarModel {
 
         //TODO fixa så pågående event kommer med
 
-        // sätt start tid till dagens början
         // filtera bort de som har passerat
         // kolla så event som sträcker sig över flera dagar kommer med...
-
-        Calendar cal = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
 
 
 /*
@@ -65,16 +61,25 @@ public class CalendarModel {
         long endInterval = cal2.getTimeInMillis();
 */
 
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        long startInterval = cal.getTimeInMillis();
 
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        long endInterval = cal.getTimeInMillis();
+
+/*
         long startInterval = 0L;
-        long endInterval = 0L;
+        long endInterval = 0L;*/
 
 
 
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
-        startInterval = checkStartInterval(startInterval);
-        endInterval = checkEndInterval(endInterval);
+        //startInterval = checkStartInterval(startInterval);
+        //endInterval = checkEndInterval(endInterval);
         ContentUris.appendId(eventsUriBuilder, startInterval);
         ContentUris.appendId(eventsUriBuilder, endInterval);
         Uri eventsUri = eventsUriBuilder.build();
@@ -86,6 +91,12 @@ public class CalendarModel {
         //Prints out all the events in the given interval
         while (cur.moveToNext()) {
             HomeEventItem item = new HomeEventItem();
+            item.setId(cur.getLong(CalendarUtils.EVENT_ID));
+            long startTime = cur.getLong(CalendarUtils.EVENT_BEGIN);
+            long endTime = cur.getLong(CalendarUtils.EVENT_END);
+            item.setStartTime(startTime);
+            item.setEndTime(endTime);
+
             // set the title
             item.setTitleS(cur.getString(CalendarUtils.TITLE));
 
@@ -93,18 +104,101 @@ public class CalendarModel {
                 item.setTimeS("Heldag");
             } else {
                 //set the time for the event
-                item.setTimeS(CalendarView.formatTime(cur.getLong(CalendarUtils.EVENT_BEGIN), cur.getLong(CalendarUtils.EVENT_END)));
+                item.setTimeS(CalendarView.formatTime(startTime, cur.getLong(CalendarUtils.EVENT_END)));
 
                 //set the time to the start of the event
-                item.setTimeToStartS(CalendarView.formatTimeToEvent(Calendar.getInstance().getTimeInMillis(), cur.getLong(CalendarUtils.EVENT_BEGIN)));
+                item.setTimeToStartS(CalendarView.formatTimeToEvent(getTimeToEventStart(startTime)));
             }
-
             item.setLocationS(cur.getString(CalendarUtils.LOCATION));
 
-            eventsToday.add(item);
+
+            //Debug logs
+            cal.setTimeInMillis(getTimeUntilTomorrow());
+            Log.i("Tid till imorgon ", cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
+            cal.setTimeInMillis(getTimeToEventStart(startTime));
+            Log.i("Tid till " + cur.getString(CalendarUtils.TITLE), cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
+            cal.setTimeInMillis(startTime);
+            Log.i("Starttid för  " + cur.getString(CalendarUtils.TITLE), cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
+            cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
+            Log.i("Tid just nu ", cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) );
+            Log.i("starTimeHasPassed " + cur.getString(CalendarUtils.TITLE), startTimeHasPassed(startTime) + "");
+            Log.i("Intervall innan imorgon", isBeforeTomorrow(startTime) + "");
+
+
+            if(cur.getInt(CalendarUtils.ALL_DAY) == 1){
+                eventsToday.add(item);
+            }
+            else if(!startTimeHasPassed(startTime) && isBeforeTomorrow(startTime)) {
+                eventsToday.add(item);
+            }
         }
         cur.close();
         return eventsToday;
+    }
+
+    private long getTimeToEventStart(long eventStart) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(eventStart);
+        int eventH = cal.get(Calendar.HOUR_OF_DAY);
+        int eventM = cal.get(Calendar.MINUTE);
+
+        cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
+        int todayH = cal.get(Calendar.HOUR_OF_DAY);
+        int todayM = cal.get(Calendar.MINUTE);
+        cal.set(Calendar.HOUR_OF_DAY, eventH - todayH);
+        cal.set(Calendar.MINUTE, eventM - todayM);
+
+        return  cal.getTimeInMillis();
+        // return   eventStart - CalendarUtils.TODAY_IN_MILLIS;
+    }
+
+    private long getTimeUntilTomorrow(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(futureDate(1).getTime());
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        int tomorrowH = cal.get(Calendar.HOUR_OF_DAY);
+        int tomorrowM = cal.get(Calendar.MINUTE);
+
+        cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
+        int todayH = cal.get(Calendar.HOUR_OF_DAY);
+        int todayM = cal.get(Calendar.MINUTE);
+        cal.set(Calendar.HOUR_OF_DAY, tomorrowH - todayH);
+        cal.set(Calendar.MINUTE, tomorrowM - todayM);
+
+        return cal.getTimeInMillis();
+
+        /*Calendar getTimeTomorrow = Calendar.getInstance();
+        getTimeTomorrow.set(Calendar.HOUR_OF_DAY, 0);
+        getTimeTomorrow.set(Calendar.MINUTE, 0);
+        return getTimeTomorrow.getTimeInMillis() - CalendarUtils.TODAY_IN_MILLIS;*/
+    }
+
+    private boolean startTimeHasPassed(long eventStart){
+        Calendar cal = Calendar.getInstance();
+        int eventH = cal.get(Calendar.HOUR_OF_DAY);
+        cal.setTimeInMillis(eventStart); cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
+        int todayH = cal.get(Calendar.HOUR_OF_DAY);
+
+        Log.i("startTimeHasPassed", "eventH: " + eventH+ "todayH: " + todayH + "" );
+        return eventH < todayH;
+    }
+
+    private boolean isBeforeTomorrow(long eventStart){
+        Calendar timeToEventStart = Calendar.getInstance();
+        timeToEventStart.setTimeInMillis(getTimeToEventStart(eventStart));
+        int timeToEventH = timeToEventStart.get(Calendar.HOUR_OF_DAY);
+        int timeToEventM = timeToEventStart.get(Calendar.MINUTE);
+        int timeInMin = (timeToEventH*60) + 60;
+
+        Calendar timeToTomorrow = Calendar.getInstance();
+        timeToTomorrow.setTimeInMillis(getTimeUntilTomorrow());
+        int tomorrowH = timeToTomorrow.get(Calendar.HOUR_OF_DAY);
+        int tomorrowM = timeToTomorrow.get(Calendar.MINUTE);
+        int tomorrowInMin = (tomorrowH*60) + 60;
+
+        Log.i("isB4Tomorrw", timeToEventH + ":" + timeToEventM + " " + tomorrowH + ":" + tomorrowM);
+        return tomorrowInMin > timeInMin;
     }
 
     /**
@@ -388,7 +482,10 @@ public class CalendarModel {
 
         // get the event ID that is the last element in the Uri
         long eventID = Long.parseLong(uri.getLastPathSegment());
-        addNotification(cr, eventID, notification, startMillis, endMillis);
+
+        if(notification != -1) {
+            addNotification(cr, eventID, notification, startMillis, endMillis);
+        }
         //
         // ... do something with event ID
         return eventID;
@@ -397,6 +494,7 @@ public class CalendarModel {
     public void editEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, long eventID, int notification, boolean isAllDay) {
         deleteEvent(cr, eventID);
         addEventAuto(cr, title, startMillis, endMillis, location, description, calID, notification, isAllDay);
+        //TODO remove notification if it is -1
     }
 
     //Builds a static Uri used for synchronizing

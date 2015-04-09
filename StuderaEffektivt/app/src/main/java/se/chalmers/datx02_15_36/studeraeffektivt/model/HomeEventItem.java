@@ -1,24 +1,17 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.model;
 
-import android.content.Context;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-
-import se.chalmers.datx02_15_36.studeraeffektivt.R;
-
 /**
  * Created by emmawestman on 15-04-04.
  */
 public class HomeEventItem{
 
-    private View view;
-
-
     private String titleS;
     private String timeS;
     private String locationS;
     private String timeToStartS;
+    private long id;
+    private long startTime;
+    private long endTime;
 
 
 
@@ -62,5 +55,29 @@ public class HomeEventItem{
 
     public void setTimeToStartS(String timeToStartS) {
         this.timeToStartS = timeToStartS;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
     }
 }
