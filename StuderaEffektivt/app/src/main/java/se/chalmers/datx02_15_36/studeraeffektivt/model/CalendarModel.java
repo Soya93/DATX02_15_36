@@ -44,23 +44,6 @@ public class CalendarModel {
 
         ArrayList <HomeEventItem> eventsToday = new ArrayList<>();
 
-
-        //TODO fixa så pågående event kommer med
-
-        // filtera bort de som har passerat
-        // kolla så event som sträcker sig över flera dagar kommer med...
-
-
-/*
-        long startInterval = cal.getTimeInMillis();
-
-        cal2.set(Calendar.HOUR_OF_DAY, 23);
-        cal2.set(Calendar.MINUTE, 59);
-        cal2.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH));
-
-        long endInterval = cal2.getTimeInMillis();
-*/
-
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
@@ -70,22 +53,11 @@ public class CalendarModel {
         cal.set(Calendar.MINUTE, 59);
         long endInterval = cal.getTimeInMillis();
 
-/*
-        long startInterval = 0L;
-        long endInterval = 0L;*/
-
-
-
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
-        //startInterval = checkStartInterval(startInterval);
-        //endInterval = checkEndInterval(endInterval);
         ContentUris.appendId(eventsUriBuilder, startInterval);
         ContentUris.appendId(eventsUriBuilder, endInterval);
         Uri eventsUri = eventsUriBuilder.build();
-
-       // String selection = "((dtstart >= "+c_start.getTimeInMillis()+") AND (dtend <= "+c_end.getTimeInMillis()+"))";
-
         cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
 
         //Prints out all the events in the given interval
@@ -96,6 +68,10 @@ public class CalendarModel {
             long endTime = cur.getLong(CalendarUtils.EVENT_END);
             item.setStartTime(startTime);
             item.setEndTime(endTime);
+
+            int color = cur.getInt(CalendarUtils.EVENT_COLOR);
+            color = color == 0? cur.getInt(CalendarUtils.CALENDAR_COLOR): color;
+            item.setColor(color);
 
             // set the title
             item.setTitleS(cur.getString(CalendarUtils.TITLE));
@@ -149,7 +125,6 @@ public class CalendarModel {
         cal.set(Calendar.MINUTE, eventM - todayM);
 
         return  cal.getTimeInMillis();
-        // return   eventStart - CalendarUtils.TODAY_IN_MILLIS;
     }
 
     private long getTimeUntilTomorrow(){
@@ -167,11 +142,6 @@ public class CalendarModel {
         cal.set(Calendar.MINUTE, tomorrowM - todayM);
 
         return cal.getTimeInMillis();
-
-        /*Calendar getTimeTomorrow = Calendar.getInstance();
-        getTimeTomorrow.set(Calendar.HOUR_OF_DAY, 0);
-        getTimeTomorrow.set(Calendar.MINUTE, 0);
-        return getTimeTomorrow.getTimeInMillis() - CalendarUtils.TODAY_IN_MILLIS;*/
     }
 
     private boolean startTimeHasPassed(long eventStart){
@@ -179,8 +149,6 @@ public class CalendarModel {
         int eventH = cal.get(Calendar.HOUR_OF_DAY);
         cal.setTimeInMillis(eventStart); cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
         int todayH = cal.get(Calendar.HOUR_OF_DAY);
-
-        Log.i("startTimeHasPassed", "eventH: " + eventH+ "todayH: " + todayH + "" );
         return eventH < todayH;
     }
 
@@ -199,34 +167,6 @@ public class CalendarModel {
 
         Log.i("isB4Tomorrw", timeToEventH + ":" + timeToEventM + " " + tomorrowH + ":" + tomorrowM);
         return tomorrowInMin > timeInMin;
-    }
-
-    /**
-     * Method which reads the events from a given start- and endinterval
-     *
-     * @param cr
-     * @param startInterval
-     * @param endInterval
-     */
-    public List<String> readEvents(ContentResolver cr, Long startInterval, Long endInterval) {
-        List<String> eventTitles = new ArrayList<String>();
-
-        Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
-                .buildUpon();
-        startInterval = checkStartInterval(startInterval);
-        endInterval = checkEndInterval(endInterval);
-        ContentUris.appendId(eventsUriBuilder, startInterval);
-        ContentUris.appendId(eventsUriBuilder, endInterval);
-        Uri eventsUri = eventsUriBuilder.build();
-
-        cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
-
-        //Prints out all the events in the given interval
-        while (cur.moveToNext()) {
-            eventTitles.add(cur.getString(CalendarUtils.TITLE));
-        }
-        cur.close();
-        return eventTitles;
     }
 
     //Gets all the events in a certain timeframe (used in calendar for the view)

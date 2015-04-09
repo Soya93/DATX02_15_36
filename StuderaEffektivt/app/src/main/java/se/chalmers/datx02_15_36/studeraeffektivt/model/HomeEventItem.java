@@ -12,6 +12,7 @@ public class HomeEventItem{
     private long id;
     private long startTime;
     private long endTime;
+    private int color;
 
 
 
@@ -80,4 +81,13 @@ public class HomeEventItem{
     public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
 }
