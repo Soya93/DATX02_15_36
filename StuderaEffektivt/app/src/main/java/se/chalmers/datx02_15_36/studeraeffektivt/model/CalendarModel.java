@@ -24,10 +24,10 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
  */
 public class CalendarModel {
 
-    private Intent calIntent;
     private Calendar cal;
     private Calendar endDay;
     private Cursor cur;
+    private ArrayList<CalendarChoiceItem> calendarChoiceItems;
 
     public CalendarModel() {
         cal = Calendar.getInstance();
@@ -35,13 +35,12 @@ public class CalendarModel {
         //set end DAY
         endDay = Calendar.getInstance();
         endDay.setTime(futureDate(1));
+        calendarChoiceItems = new ArrayList<>();
 
         cur = null;
     }
 
     public ArrayList<HomeEventItem> readEventsToday(ContentResolver cr) {
-        Log.i("calModel", "readEventsToday");
-
         ArrayList <HomeEventItem> eventsToday = new ArrayList<>();
 
         Calendar cal = Calendar.getInstance();
@@ -83,28 +82,28 @@ public class CalendarModel {
                 item.setTimeS(CalendarView.formatTime(startTime, cur.getLong(CalendarUtils.EVENT_END)));
 
                 //set the time to the start of the event
-                item.setTimeToStartS(CalendarView.formatTimeToEvent(getTimeToEventStart(startTime)));
+                item.setTimeToStartS(CalendarView.formatTimeToEvent(CalendarUtils.getTimeToEventStart(startTime)));
             }
             item.setLocationS(cur.getString(CalendarUtils.LOCATION));
 
 
             //Debug logs
-            cal.setTimeInMillis(getTimeUntilTomorrow());
+            cal.setTimeInMillis(CalendarUtils.getTimeUntilTomorrow(futureDate(1).getTime()));
             Log.i("Tid till imorgon ", cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
-            cal.setTimeInMillis(getTimeToEventStart(startTime));
+            cal.setTimeInMillis(CalendarUtils.getTimeToEventStart(startTime));
             Log.i("Tid till " + cur.getString(CalendarUtils.TITLE), cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
             cal.setTimeInMillis(startTime);
             Log.i("Starttid för  " + cur.getString(CalendarUtils.TITLE), cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
             cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
             Log.i("Tid just nu ", cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) );
-            Log.i("starTimeHasPassed " + cur.getString(CalendarUtils.TITLE), startTimeHasPassed(startTime) + "");
-            Log.i("Intervall innan imorgon", isBeforeTomorrow(startTime) + "");
+            Log.i("starTimeHasPassed " + cur.getString(CalendarUtils.TITLE), CalendarUtils.startTimeHasPassed(startTime) + "");
+            Log.i("Intervall innan imorgon", CalendarUtils.isBeforeTomorrow(startTime, futureDate(1).getTime()) + "");
 
 
             if(cur.getInt(CalendarUtils.ALL_DAY) == 1){
                 eventsToday.add(item);
             }
-            else if(!startTimeHasPassed(startTime) && isBeforeTomorrow(startTime)) {
+            else if(!CalendarUtils.startTimeHasPassed(startTime) && CalendarUtils.isBeforeTomorrow(startTime, futureDate(1).getTime())) {
                 eventsToday.add(item);
             }
         }
@@ -112,62 +111,6 @@ public class CalendarModel {
         return eventsToday;
     }
 
-    private long getTimeToEventStart(long eventStart) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(eventStart);
-        int eventH = cal.get(Calendar.HOUR_OF_DAY);
-        int eventM = cal.get(Calendar.MINUTE);
-
-        cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
-        int todayH = cal.get(Calendar.HOUR_OF_DAY);
-        int todayM = cal.get(Calendar.MINUTE);
-        cal.set(Calendar.HOUR_OF_DAY, eventH - todayH);
-        cal.set(Calendar.MINUTE, eventM - todayM);
-
-        return  cal.getTimeInMillis();
-    }
-
-    private long getTimeUntilTomorrow(){
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(futureDate(1).getTime());
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        int tomorrowH = cal.get(Calendar.HOUR_OF_DAY);
-        int tomorrowM = cal.get(Calendar.MINUTE);
-
-        cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
-        int todayH = cal.get(Calendar.HOUR_OF_DAY);
-        int todayM = cal.get(Calendar.MINUTE);
-        cal.set(Calendar.HOUR_OF_DAY, tomorrowH - todayH);
-        cal.set(Calendar.MINUTE, tomorrowM - todayM);
-
-        return cal.getTimeInMillis();
-    }
-
-    private boolean startTimeHasPassed(long eventStart){
-        Calendar cal = Calendar.getInstance();
-        int eventH = cal.get(Calendar.HOUR_OF_DAY);
-        cal.setTimeInMillis(eventStart); cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
-        int todayH = cal.get(Calendar.HOUR_OF_DAY);
-        return eventH < todayH;
-    }
-
-    private boolean isBeforeTomorrow(long eventStart){
-        Calendar timeToEventStart = Calendar.getInstance();
-        timeToEventStart.setTimeInMillis(getTimeToEventStart(eventStart));
-        int timeToEventH = timeToEventStart.get(Calendar.HOUR_OF_DAY);
-        int timeToEventM = timeToEventStart.get(Calendar.MINUTE);
-        int timeInMin = (timeToEventH*60) + 60;
-
-        Calendar timeToTomorrow = Calendar.getInstance();
-        timeToTomorrow.setTimeInMillis(getTimeUntilTomorrow());
-        int tomorrowH = timeToTomorrow.get(Calendar.HOUR_OF_DAY);
-        int tomorrowM = timeToTomorrow.get(Calendar.MINUTE);
-        int tomorrowInMin = (tomorrowH*60) + 60;
-
-        Log.i("isB4Tomorrw", timeToEventH + ":" + timeToEventM + " " + tomorrowH + ":" + tomorrowM);
-        return tomorrowInMin > timeInMin;
-    }
 
     //Gets all the events in a certain timeframe (used in calendar for the view)
     public Cursor getEventsCursor(ContentResolver cr, Long startInterval, Long endInterval) {
@@ -223,44 +166,24 @@ public class CalendarModel {
         return -1;
     }
 
-    public int getNotificationID (ContentResolver cr, Long startInterval, Long endInterval, Long eventID){
-        Uri.Builder eventsUriBuilder = CalendarContract.Reminders.CONTENT_URI.buildUpon();
-        ContentUris.appendId(eventsUriBuilder, startInterval);
-        ContentUris.appendId(eventsUriBuilder, endInterval);
-        cur =  CalendarContract.Reminders.query(cr, eventID, CalendarUtils.NOTIFICATION_PROJECTION);
 
-        //Prints out all the events in the given interval
-        while (cur.moveToNext()) {
-            if(cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) == eventID) {
-                Log.i("getNotTIme", "eventid: " + cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) + " time: " + cur.getInt(CalendarUtils.NOTIFICATION_ID));
-                return cur.getInt(CalendarUtils.NOTIFICATION_ID);
-            }
-        }
-        cur.close();
-
-        return -1;
-    }
-
-        /**
-         * Checks if the startdate is zero, if so it is set to a good default
-         *
-         * @param startDate
-         */
     private Long checkStartInterval(Long startDate) {
         return startDate == 0L ? CalendarUtils.TODAY_IN_MILLIS : startDate;
     }
 
-    /**
-     * Checks if the endDate is zero, if so it is set to a good default
-     *
-     * @param endDate
-     */
     private Long checkEndInterval(Long endDate) {
          return endDate == 0L ?  endDay.getTimeInMillis() : endDate;
     }
 
+    public ArrayList<CalendarChoiceItem> getCalendars() {
+        return calendarChoiceItems;
+    }
+
+
     public Map<Long, String> getCalendarInfo(ContentResolver cr) {
         Map<Long, String> calendarNames = new LinkedHashMap<>();
+        calendarChoiceItems = new ArrayList<>();
+
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
                 .buildUpon();
 
@@ -279,15 +202,21 @@ public class CalendarModel {
         Cursor c = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
 
         while(c.moveToNext()) {
-            // the cursor, c, contains all the projection data items
-            // access the cursor’s contents by array index as declared in
-            // your projection
+            CalendarChoiceItem item = new CalendarChoiceItem();
             Long id = c.getLong(CalendarUtils.CALENDAR_ID);
             String name = c.getString(CalendarUtils.CALENDAR_NAME);
-
             int isVisible = c.getInt(CalendarUtils.VISIBLE);
-            if(!calendarNames.containsKey(id) && isVisible == 1)
-                calendarNames.put(id,name);
+
+            if(!calendarNames.containsKey(id) && !calendarNames.containsValue(name) && isVisible == 1) {
+                item.setTitle(name);
+                Log.i("Title", name);
+                int color = c.getInt(CalendarUtils.EVENT_COLOR);
+                color = color == 0 ? c.getInt(CalendarUtils.CALENDAR_COLOR) : color;
+                item.setColor(color);
+                item.setChecked(true);
+                calendarNames.put(id, name);
+                calendarChoiceItems.add(item);
+            }
         }
         c.close();
         return calendarNames;
@@ -358,16 +287,6 @@ public class CalendarModel {
         }
         c.close();
         return calendarIDs;
-    }
-
-    public List<String> filter(List<String> events, String filterOn) {
-        List<String> filteredList = new ArrayList<String>();
-        for (String e : events) {
-            if (e == filterOn) {
-                filteredList.add(e);
-            }
-        }
-        return filteredList;
     }
 
     /**
@@ -464,6 +383,25 @@ public class CalendarModel {
                 Log.i("addNOt", CalendarUtils.NOTIFICATION_DEFAULT + "");
                 //removeNotification(cr,  getNotificationID(cr, start, end, eventID));
             }
+    }
+
+
+    public int getNotificationID (ContentResolver cr, Long startInterval, Long endInterval, Long eventID){
+        Uri.Builder eventsUriBuilder = CalendarContract.Reminders.CONTENT_URI.buildUpon();
+        ContentUris.appendId(eventsUriBuilder, startInterval);
+        ContentUris.appendId(eventsUriBuilder, endInterval);
+        cur =  CalendarContract.Reminders.query(cr, eventID, CalendarUtils.NOTIFICATION_PROJECTION);
+
+        //Prints out all the events in the given interval
+        while (cur.moveToNext()) {
+            if(cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) == eventID) {
+                Log.i("getNotTIme", "eventid: " + cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) + " time: " + cur.getInt(CalendarUtils.NOTIFICATION_ID));
+                return cur.getInt(CalendarUtils.NOTIFICATION_ID);
+            }
+        }
+        cur.close();
+
+        return -1;
     }
 
     private void removeNotification(ContentResolver cr, long reminderID){

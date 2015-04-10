@@ -11,10 +11,16 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CheckedTextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alamkanak.weekview.WeekView;
@@ -23,11 +29,15 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarChoiceAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarChoiceItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeEventItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
@@ -57,6 +67,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private Button goToTodayButton;
     int numberOfVisibleDays;
     private View.OnClickListener fabHandler;
+    private AlertDialog alertDialog;
+    private ArrayList<CalendarChoiceItem> calendarsList;
+
 
     public CalendarModel getCalendarModel() {
         return calendarModel;
@@ -72,7 +85,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         numberOfVisibleDays = 5;
 
-        visibleCalendars = calendarModel.getCalendarIDsInstances(cr);
+        Map<Long,String> cals = calendarModel.getCalendarInfo(cr);
+        visibleCalendars =  new LinkedList<>(cals.keySet());
+        calendarsList = calendarModel.getCalendars();
 
         this.initComponents();
         return view;
@@ -385,13 +400,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                         String tasks = "";
                         int studyWeek = which + 1;
                         openAddRepetition(studyWeek);
-
-
-                        //calendarModel.addEventAuto(cr, "Repititonspass för LV" + studyWeek, 0L, 0L,null)
-                        //startActivity(calendarModel.addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " + tasks));
-
-                        // The 'which' argument contains the index position
-                        // of the selected item
                     }
                 });
 
@@ -399,50 +407,54 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         alertDialog.show();
     }
 
-    public void changeVisibleCalendars() {
-        final List<String> calNames = getCalendarModel().getCalendarNamesInstances(cr);
-        final List<Long> calIDs = getCalendarModel().getCalendarIDsInstances(cr);
-        final String[] calendars = calNames.toArray(new String[calNames.size()]);
-        final boolean [] checkedArray = new boolean [calIDs.size()];
-
-        int i = 0;
-        for(long id: calIDs){
-            checkedArray[i] = (visibleCalendars.contains(id));
-            i ++;
-        }
+    public void changeVisibleCalendars(){
+        final List<Long> calIDs =  new LinkedList<>(calendarModel.getCalendarInfo(cr).keySet());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Välj kalender")
-                .setMultiChoiceItems(calendars, checkedArray,  new DialogInterface.OnMultiChoiceClickListener() {
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        if (isChecked) {
-                            if(!visibleCalendars.contains(which)) {
-                                visibleCalendars.add(calIDs.get(which));
-                                //visibleCalendars.add(which, calIDs.get(which));
-                            }
-                        } else {
-                            visibleCalendars.remove(which);
-                            //visibleCalendars.set(which, null);
-                        }
-                    }
-                });
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        LayoutInflater li = LayoutInflater.from(getActivity());
+        View view= li.inflate(R.layout.calendarchoiceslistview, null);
+
+        final ListView listView = (ListView) view.findViewById(R.id.calendar_listview);
+        CalendarChoiceAdapter ad = new CalendarChoiceAdapter(getActivity().getApplicationContext(),R.layout.calendar_choice_item, R.id.calendar_text, calendarsList);
+        listView.setAdapter(ad);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listView.setDivider(null);
+
+
+        Button okButton = (Button) view.findViewById(R.id.calendar_ok_button);
+        Button cancelButton = (Button) view.findViewById(R.id.calendar_cancel_button);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
+            public void onClick(View v) {
+                for(int i = 0; i < calendarsList.size(); i++){
+                    if(calendarsList.get(i).isChecked()){
+                        if(!visibleCalendars.contains(calIDs.get(i))) {
+                            visibleCalendars.add(calIDs.get(i));
+                        }
+                    } else {
+                        visibleCalendars.remove(calIDs.get(i));
+                    }
+                }
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
+                alertDialog.dismiss();
             }
         });
 
-        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+        cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
+            public void onClick(View v) {
+                alertDialog.cancel();
             }
         });
-        AlertDialog alertDialog = builder.create();
+
+        builder.setView(view);
+        builder.setTitle("Välj kalender");
+        builder.create();
+        alertDialog = builder.create();
         alertDialog.show();
     }
-
 
     public void changeNbrOfDaysDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -535,5 +547,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
     }
+
 
 }

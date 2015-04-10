@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
@@ -36,8 +37,6 @@ public class HomeAdapter extends ArrayAdapter<HomeEventItem> {
         super(context, 0, itemsArrayList);
         this.context = context;
         this.itemsArrayList = itemsArrayList;
-
-
     }
 
     @Override
@@ -91,4 +90,6 @@ public class HomeAdapter extends ArrayAdapter<HomeEventItem> {
         // 6. retrn convertView
         return convertView;
     }
+
+
 }
