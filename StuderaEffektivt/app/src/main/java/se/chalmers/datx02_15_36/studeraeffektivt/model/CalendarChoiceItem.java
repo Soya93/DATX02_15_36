@@ -12,6 +12,7 @@ public class CalendarChoiceItem {
     public CalendarChoiceItem() {
         color = 0;
         title = "";
+        isChecked = true;
     }
 
     public int getColor() {

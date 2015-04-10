@@ -13,6 +13,7 @@ public class HomeEventItem{
     private long startTime;
     private long endTime;
     private int color;
+    private long calId;
 
 
 
@@ -88,6 +89,14 @@ public class HomeEventItem{
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    public long getCalId() {
+        return calId;
+    }
+
+    public void setCalId(long calId) {
+        this.calId = calId;
     }
 
 

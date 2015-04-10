@@ -70,11 +70,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private AlertDialog alertDialog;
     private ArrayList<CalendarChoiceItem> calendarsList;
 
-
-    public CalendarModel getCalendarModel() {
-        return calendarModel;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -477,7 +472,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 mWeekView.setNumberOfVisibleDays(numberOfVisibleDays);
 
 
-                mWeekView.goToHour(CalendarUtils.HOUR > 16? 16: CalendarUtils.HOUR-1);
+                mWeekView.goToHour(CalendarUtils.HOUR > 16 ? 16 : CalendarUtils.HOUR - 1);
 
 
                 /*)  if(previousNumberOfVisibleDays == 5 && numberOfVisibleDays == 3) {
@@ -547,6 +542,15 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
     }
+
+    public List<Long> getVisibleCalendars() {
+        return visibleCalendars;
+    }
+    public CalendarModel getCalendarModel() {
+        return calendarModel;
+    }
+
+
 
 
 }

@@ -62,6 +62,8 @@ public class CalendarModel {
         //Prints out all the events in the given interval
         while (cur.moveToNext()) {
             HomeEventItem item = new HomeEventItem();
+
+            //Set the time color and title
             item.setId(cur.getLong(CalendarUtils.EVENT_ID));
             long startTime = cur.getLong(CalendarUtils.EVENT_BEGIN);
             long endTime = cur.getLong(CalendarUtils.EVENT_END);
@@ -71,10 +73,11 @@ public class CalendarModel {
             int color = cur.getInt(CalendarUtils.EVENT_COLOR);
             color = color == 0? cur.getInt(CalendarUtils.CALENDAR_COLOR): color;
             item.setColor(color);
+            item.setCalId(cur.getLong(CalendarUtils.CALENDAR_ID));
 
-            // set the title
             item.setTitleS(cur.getString(CalendarUtils.TITLE));
 
+            // set the time according to which type of event it is
             if (cur.getInt(CalendarUtils.ALL_DAY) == 1) {
                 item.setTimeS("Heldag");
             } else {
@@ -83,29 +86,24 @@ public class CalendarModel {
 
                 //set the time to the start of the event
                 item.setTimeToStartS(CalendarView.formatTimeToEvent(CalendarUtils.getTimeToEventStart(startTime)));
+                CalendarUtils.isOnGoing(startTime, endTime);
+                if(CalendarUtils.isOnGoing(startTime, endTime)){
+                    item.setTimeToStartS("Nu");
+                }
+
             }
             item.setLocationS(cur.getString(CalendarUtils.LOCATION));
-
-
-            //Debug logs
-            cal.setTimeInMillis(CalendarUtils.getTimeUntilTomorrow(futureDate(1).getTime()));
-            Log.i("Tid till imorgon ", cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
-            cal.setTimeInMillis(CalendarUtils.getTimeToEventStart(startTime));
-            Log.i("Tid till " + cur.getString(CalendarUtils.TITLE), cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
-            cal.setTimeInMillis(startTime);
-            Log.i("Starttid för  " + cur.getString(CalendarUtils.TITLE), cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
-            cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
-            Log.i("Tid just nu ", cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) );
-            Log.i("starTimeHasPassed " + cur.getString(CalendarUtils.TITLE), CalendarUtils.startTimeHasPassed(startTime) + "");
-            Log.i("Intervall innan imorgon", CalendarUtils.isBeforeTomorrow(startTime, futureDate(1).getTime()) + "");
-
 
             if(cur.getInt(CalendarUtils.ALL_DAY) == 1){
                 eventsToday.add(item);
             }
-            else if(!CalendarUtils.startTimeHasPassed(startTime) && CalendarUtils.isBeforeTomorrow(startTime, futureDate(1).getTime())) {
+            else if(!CalendarUtils.startTimeHasPassed(startTime)) {
+                eventsToday.add(item);
+
+            } else if (item.getTimeToStartS().equals("Nu")){
                 eventsToday.add(item);
             }
+
         }
         cur.close();
         return eventsToday;
@@ -213,7 +211,6 @@ public class CalendarModel {
                 int color = c.getInt(CalendarUtils.EVENT_COLOR);
                 color = color == 0 ? c.getInt(CalendarUtils.CALENDAR_COLOR) : color;
                 item.setColor(color);
-                item.setChecked(true);
                 calendarNames.put(id, name);
                 calendarChoiceItems.add(item);
             }

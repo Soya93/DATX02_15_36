@@ -86,6 +86,7 @@ public class MainActivity extends ActionBarActivity {
 
         homeFrag = (HomeFrag) mAdapter.getItem(0);
         homeFrag.setContentResolver(this.getContentResolver());
+        homeFrag.setCalendarFrag(calendarFrag);
 
 
         // listener for FAB menu

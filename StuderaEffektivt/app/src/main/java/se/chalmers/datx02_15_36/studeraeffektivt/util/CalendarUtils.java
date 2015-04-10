@@ -114,26 +114,37 @@ public class CalendarUtils {
 
     public static boolean startTimeHasPassed(long eventStart){
         Calendar cal = Calendar.getInstance();
-        int eventH = cal.get(Calendar.HOUR_OF_DAY);
-        cal.setTimeInMillis(eventStart); cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
-        int todayH = cal.get(Calendar.HOUR_OF_DAY);
-        return eventH < todayH;
+        cal.setTimeInMillis(eventStart);
+        int eventTimeInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+
+        cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
+        int todayTimeInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+
+        return eventTimeInMin < todayTimeInMin;
     }
 
     public static boolean isBeforeTomorrow(long eventStart, long tomorrowMillis){
-        Calendar timeToEventStart = Calendar.getInstance();
-        timeToEventStart.setTimeInMillis(getTimeToEventStart(eventStart));
-        int timeToEventH = timeToEventStart.get(Calendar.HOUR_OF_DAY);
-        int timeToEventM = timeToEventStart.get(Calendar.MINUTE);
-        int timeInMin = (timeToEventH*60) + 60;
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(getTimeToEventStart(eventStart));
+        int timeInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
 
-        Calendar timeToTomorrow = Calendar.getInstance();
-        timeToTomorrow.setTimeInMillis(getTimeUntilTomorrow(tomorrowMillis));
-        int tomorrowH = timeToTomorrow.get(Calendar.HOUR_OF_DAY);
-        int tomorrowM = timeToTomorrow.get(Calendar.MINUTE);
-        int tomorrowInMin = (tomorrowH*60) + 60;
+        cal.setTimeInMillis(getTimeUntilTomorrow(tomorrowMillis));
+        int tomorrowInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
 
-        Log.i("isB4Tomorrw", timeToEventH + ":" + timeToEventM + " " + tomorrowH + ":" + tomorrowM);
         return tomorrowInMin > timeInMin;
+    }
+
+    public static boolean isOnGoing(long eventStart, long eventEnd){
+        cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
+        int nowInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+        int leftMinutes = (24*60) - ((cal.get(Calendar.HOUR_OF_DAY)*60) + cal.get(Calendar.MINUTE));
+
+        cal.setTimeInMillis(eventEnd);
+        int endTimeInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+
+        cal.setTimeInMillis(getTimeToEventStart(eventStart));
+        int toEventStartMinutes = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+
+        return toEventStartMinutes > leftMinutes && endTimeInMin > nowInMin;
     }
 }

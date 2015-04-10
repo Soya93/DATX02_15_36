@@ -31,17 +31,15 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 public class HomeFrag extends Fragment {
 
-
-    private List<String> events;
     private View rootView;
     private Context context;
     private CalendarFrag calendarFrag;
     private boolean hasInit = false;
     private FloatingActionButton homeFAB;
     private List<String> todaysEventsTitles;
-    private CalendarModel calModel;
     private ContentResolver cr;
     private ListView listView;
+    private ArrayList<HomeEventItem> eventsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,14 +47,12 @@ public class HomeFrag extends Fragment {
         rootView = inflater.inflate(R.layout.activity_home, container, false);
 
         initComponents(rootView);
-        calModel = new CalendarModel();
+        eventsList = getEvents();
         return rootView;
     }
 
     private void initComponents(View view) {
-        events = new ArrayList<String>();
         hasInit = true;
-
 
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
@@ -81,15 +77,21 @@ public class HomeFrag extends Fragment {
     }
 
     private ArrayList<HomeEventItem> getEvents() {
-        return calModel.readEventsToday(cr);
+        return calendarFrag.getCalendarModel().readEventsToday(cr);
     }
 
     public void setTodaysEvents() {
-        ArrayList<HomeEventItem> eventsList;
-
+        ArrayList<HomeEventItem> visibleEventList = new ArrayList<>();
         eventsList = getEvents();
+        List<Long> visibleCalendars = calendarFrag.getVisibleCalendars();
 
-        HomeAdapter adapter = new HomeAdapter(context, eventsList);
+        for(int i = 0; i < eventsList.size(); i++) {
+            if (visibleCalendars.contains(eventsList.get(i).getCalId())) {
+                visibleEventList.add(eventsList.get(i));
+            }
+        }
+
+        HomeAdapter adapter = new HomeAdapter(context, visibleEventList);
 
         listView = (ListView) rootView.findViewById(R.id.home_list);
         homeFAB.attachToListView(listView);
@@ -102,13 +104,12 @@ public class HomeFrag extends Fragment {
                 openViewEventInfo(hei.getId(), hei.getStartTime(), hei.getEndTime());
             }
         });
-    }
-
+    }F
 
     public void openViewEventInfo(long eventId, long startTime, long endTime) {
 
         //Get a cursor for the detailed information of the event
-        Cursor cur = calModel.getEventDetailedInfo(cr, startTime, endTime, eventId);
+        Cursor cur = calendarFrag.getCalendarModel().getEventDetailedInfo(cr, startTime, endTime, eventId);
 
         //Fetch information from the cursor
         String title = cur.getString(CalendarUtils.TITLE);
@@ -118,7 +119,7 @@ public class HomeFrag extends Fragment {
         long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
         int allDay = cur.getInt(CalendarUtils.ALL_DAY);
         cur.close();
-        final int notification = calModel.getNotificationTime(cr, startTime,endTime,eventId);
+        final int notification = calendarFrag.getCalendarModel().getNotificationTime(cr, startTime,endTime,eventId);
 
         calendarFrag.openViewEventInfo(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay);
     }
