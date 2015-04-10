@@ -3,11 +3,10 @@ package se.chalmers.datx02_15_36.studeraeffektivt.model;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
-import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,7 +26,9 @@ public class CalendarModel {
     private Calendar cal;
     private Calendar endDay;
     private Cursor cur;
+    private ArrayList<CalendarsFilterItem> calendarsFilterItems;
     private ArrayList<CalendarChoiceItem> calendarChoiceItems;
+
 
     public CalendarModel() {
         cal = Calendar.getInstance();
@@ -35,7 +36,7 @@ public class CalendarModel {
         //set end DAY
         endDay = Calendar.getInstance();
         endDay.setTime(futureDate(1));
-        calendarChoiceItems = new ArrayList<>();
+        calendarsFilterItems = new ArrayList<>();
 
         cur = null;
     }
@@ -155,7 +156,6 @@ public class CalendarModel {
         //Prints out all the events in the given interval
         while (cur.moveToNext()) {
             if(cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) == eventID) {
-                Log.i("getNotTIme", "eventid: " + cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) + " time: " + cur.getInt(CalendarUtils.NOTIFICATION_TIME));
                 return cur.getInt(CalendarUtils.NOTIFICATION_TIME);
             }
         }
@@ -173,13 +173,16 @@ public class CalendarModel {
          return endDate == 0L ?  endDay.getTimeInMillis() : endDate;
     }
 
-    public ArrayList<CalendarChoiceItem> getCalendars() {
-        return calendarChoiceItems;
+    public ArrayList<CalendarsFilterItem> getCalendarFilters() {
+        return calendarsFilterItems;
     }
 
-
+    public ArrayList<CalendarChoiceItem> getCalendarChoices() {
+        return calendarChoiceItems;
+    }
     public Map<Long, String> getCalendarInfo(ContentResolver cr) {
         Map<Long, String> calendarNames = new LinkedHashMap<>();
+        calendarsFilterItems = new ArrayList<>();
         calendarChoiceItems = new ArrayList<>();
 
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
@@ -200,19 +203,26 @@ public class CalendarModel {
         Cursor c = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
 
         while(c.moveToNext()) {
-            CalendarChoiceItem item = new CalendarChoiceItem();
+            CalendarsFilterItem filterItem = new CalendarsFilterItem();
+            CalendarChoiceItem choiceItem = new CalendarChoiceItem();
+
+
             Long id = c.getLong(CalendarUtils.CALENDAR_ID);
             String name = c.getString(CalendarUtils.CALENDAR_NAME);
             int isVisible = c.getInt(CalendarUtils.VISIBLE);
 
             if(!calendarNames.containsKey(id) && !calendarNames.containsValue(name) && isVisible == 1) {
-                item.setTitle(name);
-                Log.i("Title", name);
+                filterItem.setTitle(name);
+
                 int color = c.getInt(CalendarUtils.EVENT_COLOR);
                 color = color == 0 ? c.getInt(CalendarUtils.CALENDAR_COLOR) : color;
-                item.setColor(color);
+                filterItem.setColor(color);
+
+                choiceItem = filterItem;
                 calendarNames.put(id, name);
-                calendarChoiceItems.add(item);
+                calendarsFilterItems.add(filterItem);
+                calendarChoiceItems.add(choiceItem);
+
             }
         }
         c.close();
@@ -318,9 +328,6 @@ public class CalendarModel {
     }
 
         public Long addEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, int notification, boolean isAllDay) {
-
-        Log.i("String", cr.toString());
-
         startMillis = checkStartInterval(startMillis);
         endMillis = checkEndInterval(endMillis);
 
@@ -377,7 +384,6 @@ public class CalendarModel {
                 values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
                 cr.insert(CalendarContract.Reminders.CONTENT_URI, values);
             } else {
-                Log.i("addNOt", CalendarUtils.NOTIFICATION_DEFAULT + "");
                 //removeNotification(cr,  getNotificationID(cr, start, end, eventID));
             }
     }
@@ -392,7 +398,6 @@ public class CalendarModel {
         //Prints out all the events in the given interval
         while (cur.moveToNext()) {
             if(cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) == eventID) {
-                Log.i("getNotTIme", "eventid: " + cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) + " time: " + cur.getInt(CalendarUtils.NOTIFICATION_ID));
                 return cur.getInt(CalendarUtils.NOTIFICATION_ID);
             }
         }

@@ -9,7 +9,7 @@
         </statePointEntry>
         <statePointEntry>
             <state class="com.android.tools.idea.editors.navigation.model.ActivityState"
-                className="se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerActivity" />
+                className="se.chalmers.datx02_15_36.studeraeffektivt.fragment.TimerActivity" />
             <point x="500" y="100" />
         </statePointEntry>
         <statePointEntry>
@@ -19,7 +19,7 @@
         </statePointEntry>
         <statePointEntry>
             <state class="com.android.tools.idea.editors.navigation.model.ActivityState"
-                className="se.chalmers.datx02_15_36.studeraeffektivt.activity.CalendarActivity" />
+                className="se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarActivity" />
             <point x="500" y="1480" />
         </statePointEntry>
         <statePointEntry>
@@ -44,7 +44,7 @@
         </statePointEntry>
         <statePointEntry>
             <state class="com.android.tools.idea.editors.navigation.model.ActivityState"
-                className="se.chalmers.datx02_15_36.studeraeffektivt.activity.TipDetailedInfoFrag" />
+                className="se.chalmers.datx02_15_36.studeraeffektivt.fragment.TipDetailedInfoFrag" />
             <point x="500" y="4240" />
         </statePointEntry>
         <statePointEntry>
@@ -54,7 +54,7 @@
         </statePointEntry>
         <statePointEntry>
             <state class="com.android.tools.idea.editors.navigation.model.ActivityState"
-                className="se.chalmers.datx02_15_36.studeraeffektivt.activity.TipFrag" />
+                className="se.chalmers.datx02_15_36.studeraeffektivt.fragment.TipFrag" />
             <point x="500" y="7000" />
         </statePointEntry>
         <statePointEntry>

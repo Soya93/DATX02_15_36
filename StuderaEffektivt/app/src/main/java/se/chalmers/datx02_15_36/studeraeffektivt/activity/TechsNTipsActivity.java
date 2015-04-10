@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TechniquesFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TipFrag;
 
 public class TechsNTipsActivity extends ActionBarActivity {
 

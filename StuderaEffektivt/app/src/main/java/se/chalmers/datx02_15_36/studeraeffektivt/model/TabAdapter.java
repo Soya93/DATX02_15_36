@@ -5,12 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.CalendarFrag;
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.FifthTabFrag;
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.HomeFrag;
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.MyProfileFrag;
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.StatsFrag;
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.FifthTabFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.HomeFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.MyProfileFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.StatsFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TimerFrag;
 
 /**
  * Created by emmawestman on 15-02-27.

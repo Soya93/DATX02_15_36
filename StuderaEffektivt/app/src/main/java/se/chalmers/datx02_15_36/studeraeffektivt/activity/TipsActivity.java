@@ -1,12 +1,10 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TipDetailedInfoFrag;
 
 
 public class TipsActivity extends ActionBarActivity {

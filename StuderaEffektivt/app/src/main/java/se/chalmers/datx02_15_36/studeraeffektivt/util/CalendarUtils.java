@@ -28,7 +28,8 @@ public class CalendarUtils {
             CalendarContract.Instances.OWNER_ACCOUNT,    // 9
             CalendarContract.Instances.CALENDAR_COLOR,       //10
             CalendarContract.Instances.VISIBLE,              //11
-            CalendarContract.Instances.ALL_DAY              //12
+            CalendarContract.Instances.ALL_DAY             //12
+            //CalendarContract.Instances.CALENDAR_ACCESS_LEVEL //13
     };
 
     // The indices for the projection array above for the events in the calendar
@@ -45,6 +46,8 @@ public class CalendarUtils {
     public static final int CALENDAR_COLOR = 10;
     public static final int VISIBLE = 11;
     public static final int ALL_DAY = 12;
+    public static final int CAL_ACCESS_LVL = CalendarContract.Instances.CAL_ACCESS_EDITOR;
+
 
     public static final String[] NOTIFICATION_PROJECTION = new String[]{
             CalendarContract.Reminders._ID, //0

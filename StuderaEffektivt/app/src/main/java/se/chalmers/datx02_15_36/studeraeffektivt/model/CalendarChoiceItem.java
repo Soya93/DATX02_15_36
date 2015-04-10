@@ -1,18 +1,15 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.model;
 
 /**
- * Created by SoyaPanda on 15-04-09.
+ * Created by SoyaPanda on 15-04-10.
  */
 public class CalendarChoiceItem {
-
     private int color;
     private String title;
-    private boolean isChecked;
 
     public CalendarChoiceItem() {
         color = 0;
         title = "";
-        isChecked = true;
     }
 
     public int getColor() {
@@ -29,14 +26,6 @@ public class CalendarChoiceItem {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public boolean isChecked() {
-        return isChecked;
-    }
-
-    public void setChecked(boolean isChecked) {
-        this.isChecked = isChecked;
     }
 
 

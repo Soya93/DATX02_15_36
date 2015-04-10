@@ -10,11 +10,15 @@ import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -24,10 +28,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarChoiceAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarsFilterAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.adapter.HomeAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeEventItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 public class EventActivity extends ActionBarActivity {
@@ -51,6 +61,8 @@ public class EventActivity extends ActionBarActivity {
     private Bundle savedInstanceState;
     private boolean isAllDayEvent;
     private Switch allDaySwitch;
+    private AlertDialog alertDialog;
+
 
 
     Map<Integer, String> notificationAlternativesMap = new LinkedHashMap<>();
@@ -293,8 +305,8 @@ public class EventActivity extends ActionBarActivity {
                 break;
             case R.id.calendar_lable_input:
                 Log.i("click on text view", " calendar lable");
-                Dialog dialog = openCalendarPickerDialog();
-                dialog.show();
+                //openCalendarPickerDialog();
+                openChooseCalendar();
                 break;
             case R.id.notification_input:
                 Log.i("click on text view", " notification");
@@ -318,28 +330,36 @@ public class EventActivity extends ActionBarActivity {
         }
     }
 
-    public Dialog openCalendarPickerDialog() {
+    public void openChooseCalendar() {
 
-        final List<String> calNames = calendarFrag.getCalendarModel().getCalendarNamesInstances(getContentResolver());
-        final List<Long> calIDs = calendarFrag.getCalendarModel().getCalendarIDsInstances(getContentResolver());
-        final String[] calendars = new String[calNames.size()];
-        for (int i = 0; i < calNames.size(); i++) {
-            calendars[i] = calNames.get(i);
-        }
+        final List<String> calNames = new LinkedList<>(calendarFrag.getCalendarModel().getCalendarInfo(getContentResolver()).values());
+        final List<Long> calIDs = new LinkedList<>(calendarFrag.getCalendarModel().getCalendarInfo(getContentResolver()).keySet());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Välj kalender")
-                .setItems(calendars, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position
-                        // of the selected item
-                        calendarID = calIDs.get(which);
-                        calendarName = calendars[which];
-                        calendarView.setText(calendarName);
-                    }
-                });
-        return builder.create();
+        LayoutInflater li = LayoutInflater.from(this);
+        View view= li.inflate(R.layout.calendarchoiceslistview, null);
 
+        final ListView listView = (ListView) view.findViewById(R.id.listView);
+        CalendarChoiceAdapter ad = new CalendarChoiceAdapter(getApplicationContext(),R.layout.calendars_filter_item, R.id.calendar_text, calendarFrag.getCalendarModel().getCalendarChoices());
+        listView.setAdapter(ad);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setDivider(null);
+
+        builder.setView(view);
+        builder.setTitle("Välj kalender");
+        builder.create();
+        alertDialog = builder.create();
+        alertDialog.show();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                calendarID = calIDs.get(position);
+                calendarName = calNames.get(position);
+                calendarView.setText(calendarName);
+                alertDialog.dismiss();
+            }
+        });
     }
 
     public void openDatePickerDialog(final boolean isStart) {
