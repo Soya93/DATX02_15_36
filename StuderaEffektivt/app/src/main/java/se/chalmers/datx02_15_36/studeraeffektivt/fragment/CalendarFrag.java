@@ -10,6 +10,7 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alamkanak.weekview.WeekView;
-import com.alamkanak.weekview.WeekViewEvent;;
+import com.alamkanak.weekview.WeekViewEvent;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import java.util.ArrayList;
@@ -31,10 +32,12 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.EventActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarsFilterAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
+
+;
 
 /**
  * A class representing the controller of a calendar object
@@ -157,6 +160,14 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         //Disable horizontal scroll in calendar view
         mWeekView.setHorizontalScrollBarEnabled(false); // doesn't work... :(
 
+        // Lets change some dimensions to best fit the view.
+        mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
+        mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+        mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+        mWeekView.setEventPadding(20);
+        mWeekView.setHourSeparatorColor(20);
+        mWeekView.setEventMarginVertical(20);
+
 
         //actionButton.setOnClickListener(myButtonHandler);
         button1.setOnClickListener(fabHandler);
@@ -189,14 +200,15 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final String calendar = cur.getString(CalendarUtils.CALENDAR_NAME);
         final long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
         final int allDay = cur.getInt(CalendarUtils.ALL_DAY);
+        final int color = cur.getInt(CalendarUtils.EVENT_COLOR) == 0 ? cur.getInt(CalendarUtils.CALENDAR_COLOR) : cur.getInt(CalendarUtils.EVENT_COLOR);
         cur.close();
 
         final int notification = calendarModel.getNotificationTime(cr, startTime,endTime,eventId);
 
-        openViewEventInfo(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay);
+        openViewEventInfo(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay, color);
     }
 
-    public void openViewEventInfo(final long eventId, final String eventTitle, final long startTime, final long endTime, final String location, final String description, final String calendar, final long calID, final int notification, final int allDay){
+    public void openViewEventInfo(final long eventId, final String eventTitle, final long startTime, final long endTime, final String location, final String description, final String calendar, final long calID, final int notification, final int allDay, final int color) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
@@ -213,7 +225,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                openEditEvent(eventId, startTime, endTime, eventTitle, location, description, calID, calendar, notification, allDay);
+                openEditEvent(eventId, startTime, endTime, eventTitle, location, description, calID, calendar, notification, allDay, color);
             }
         });
 
@@ -228,13 +240,16 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         intent.putExtra("isInAddMode", true);
         intent.putExtra("calID", 1);        // 1 är hem kalender
-        String name = calendarModel.getCalendarNamesInstances(cr).get(0);        //hemkalenderns namn finns på position 0
+        List<String> calNames = new LinkedList<>(calendarModel.getCalendarInfo(cr).values());
+        String name = calNames.get(0);
+        //String name = calendarModel.getCalendarNamesInstances(cr).get(0);
         intent.putExtra("calName", name);
+        intent.putExtra("color", calendarModel.getCalendarColor(cr, name));
         startActivity(intent);
     }
 
     //Opens an dialog when pressing the buttom for adding a new event
-    private void openEditEvent(long eventID, long startTime, long endTime, String title, String location, String description, Long calID, String calName, int notification, int isAllDay) {
+    private void openEditEvent(long eventID, long startTime, long endTime, String title, String location, String description, Long calID, String calName, int notification, int isAllDay, int color) {
         eventActivity = new EventActivity();
         eventActivity.setCalendarFrag(this);
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
@@ -249,6 +264,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         intent.putExtra("calName", calName);
         intent.putExtra("notification", notification);
         intent.putExtra("isAllDay", isAllDay);
+        intent.putExtra("color", color);
         startActivity(intent);
     }
 
@@ -258,13 +274,12 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         intent.putExtra("isInAddMode", true);
         intent.putExtra("startTime", 0L);
-        intent.putExtra("endTime", 0l);
+        intent.putExtra("endTime", 0L);
         intent.putExtra("title", "Repititonspass för LV" + studyWeek);
         intent.putExtra("calID", 1);        // 1 är hem kalender
-        String name = calendarModel.getCalendarNamesInstances(cr).get(0);        //hemkalenderns namn finns på position 0
+        List<String> calNames = new LinkedList<>(calendarModel.getCalendarInfo(cr).values());
+        String name = calNames.get(0);
         intent.putExtra("calName", name);
-
-
         startActivity(intent);
     }
 

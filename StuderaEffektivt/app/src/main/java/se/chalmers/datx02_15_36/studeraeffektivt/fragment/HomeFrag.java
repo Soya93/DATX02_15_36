@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -99,7 +98,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         eventsList = getEvents();
         List<Long> visibleCalendars = calendarFrag.getVisibleCalendars();
 
-        for(int i = 0; i < eventsList.size(); i++) {
+        for (int i = 0; i < eventsList.size(); i++) {
             if (visibleCalendars.contains(eventsList.get(i).getCalId())) {
                 visibleEventList.add(eventsList.get(i));
             }
@@ -132,13 +131,14 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         String calendar = cur.getString(CalendarUtils.CALENDAR_NAME);
         long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
         int allDay = cur.getInt(CalendarUtils.ALL_DAY);
+        final int color = cur.getInt(CalendarUtils.EVENT_COLOR) == 0 ? cur.getInt(CalendarUtils.CALENDAR_COLOR) : cur.getInt(CalendarUtils.EVENT_COLOR);
         cur.close();
-        final int notification = calendarFrag.getCalendarModel().getNotificationTime(cr, startTime,endTime,eventId);
+        final int notification = calendarFrag.getCalendarModel().getNotificationTime(cr, startTime, endTime, eventId);
 
-        calendarFrag.openViewEventInfo(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay);
+        calendarFrag.openViewEventInfo(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay, color);
     }
 
-    public void setContext(Context c){
+    public void setContext(Context c) {
         this.context = c;
     }
 }
