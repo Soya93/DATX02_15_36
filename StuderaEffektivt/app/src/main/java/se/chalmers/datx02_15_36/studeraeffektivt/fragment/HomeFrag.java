@@ -4,7 +4,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +24,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.adapter.HomeAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeEventItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
-
-public class HomeFrag extends Fragment {
+public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private View rootView;
     private Context context;
@@ -34,6 +35,7 @@ public class HomeFrag extends Fragment {
     private ContentResolver cr;
     private ListView listView;
     private ArrayList<HomeEventItem> eventsList;
+    private SwipeRefreshLayout swipeLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,6 +44,7 @@ public class HomeFrag extends Fragment {
 
         initComponents(rootView);
         eventsList = getEvents();
+
         return rootView;
     }
 
@@ -60,6 +63,23 @@ public class HomeFrag extends Fragment {
         homeFAB.setTag(1);
         homeFAB.setOnClickListener(myButtonHandler);
         homeFAB.setType(FloatingActionButton.TYPE_NORMAL);
+
+
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_purple);
+    }
+
+
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeLayout.setRefreshing(false);
+                setTodaysEvents();
+            }
+        }, 5000);
     }
 
     public void setContentResolver(ContentResolver cr) {
