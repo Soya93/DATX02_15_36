@@ -132,11 +132,6 @@ public class FlowLayout extends ViewGroup {
         hashMapOfStudyTasks = new HashMap<>();
         hashMapOfReadingAssignments = new HashMap<>();
 
-       /* ArrayList<StudyTask> checkedArray = new ArrayList<>();
-        ArrayList<StudyTask> uncheckedArray = new ArrayList<>();*/
-
-        TextView kapitelText = new TextView(this.getContext());
-
         if (cursor != null) {
             while (cursor.moveToNext()) {
 
@@ -166,13 +161,6 @@ public class FlowLayout extends ViewGroup {
                             assignmentType,
                             assignmentStatus);
 
-
-                    //initCheckbox(studyTask);
-
-               /* if (studyTask.isChecked()) {
-                    checkedArray.add(studyTask);
-                } else
-                    uncheckedArray.add(studyTask);*/
                     if (studyTask.getType() == AssignmentType.OTHER) {
 
                         if (hashMapOfStudyTasks.containsKey(studyTask.getChapter())) {

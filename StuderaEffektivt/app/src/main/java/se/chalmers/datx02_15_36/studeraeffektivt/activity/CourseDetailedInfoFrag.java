@@ -32,13 +32,9 @@ public class CourseDetailedInfoFrag extends Fragment {
     private View view;
     private Bundle bundleFromPreviousFragment;
     private Button taskButton;
-    private ScrollView scrollViewOfTasks;
     private FlowLayout layoutWithinScrollViewOfTasks;
 
     private String courseCode;
-
-    private int containerId;
-    private ViewGroup container;
 
     private DBAdapter dbAdapter;
 
@@ -47,15 +43,13 @@ public class CourseDetailedInfoFrag extends Fragment {
 
         View rootView = inflater.inflate(R.layout.activity_course_details, container, false);
         this.view = rootView;
-        //this.container = container;
 
         initComponents();
 
         bundleFromPreviousFragment = this.getArguments();
-        //containerId = bundleFromPreviousFragment.getInt("containerId");
         selectedCourse = bundleFromPreviousFragment.getInt("kurs");
         courseCode = bundleFromPreviousFragment.getString("CourseCode");
-        Course course = (Course) CourseFrag.courseList.get(selectedCourse).get("Courses");
+        Course course = CourseFrag.courseList.get(selectedCourse).get("Courses");
 
         //Create the database access point but check if the context is null first.
         if (this != null) {
@@ -79,7 +73,6 @@ public class CourseDetailedInfoFrag extends Fragment {
 
         kursDetaljer = (TextView) view.findViewById(R.id.kursDetaljer);
 
-        scrollViewOfTasks = (ScrollView) view.findViewById(R.id.scrollViewOfTasks);
         layoutWithinScrollViewOfTasks = (FlowLayout) view.findViewById(R.id.layoutWithinScrollViewOfTasks);
 
     }
@@ -99,41 +92,4 @@ public class CourseDetailedInfoFrag extends Fragment {
         startActivity(i);
 
     }
-
-    /*public void addTasksFromDatabase(){
-
-        Cursor cursor = dbAdapter.getAssignments();
-
-        if(cursor!=null) {
-            while (cursor.moveToNext()) {
-
-                AssignmentStatus assignmentStatus;
-                AssignmentType assignmentType;
-                if(cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())){
-                    assignmentStatus = AssignmentStatus.DONE;
-                }
-                else{
-                    assignmentStatus = null;
-                }
-                if(cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ)){
-                    assignmentType = AssignmentType.READ;
-                }
-                else{
-                    assignmentType = AssignmentType.OTHER;
-                }
-                //TODO: Skall göra så att denna lägger in i olika listor baserat på om uppgiften är gjort eller inte och läggas upp efter det. Vill på något sätt även sortera detta.     Fixa
-                layoutWithinScrollViewOfTasks.addView(new StudyTask(
-                        getActivity(),
-                        1,
-                        cursor.getString(cursor.getColumnIndex("_ccode")),
-                        cursor.getInt(cursor.getColumnIndex("chapter")),
-                        cursor.getString(cursor.getColumnIndex("assNr")),
-                        Integer.parseInt(cursor.getString(cursor.getColumnIndex("startPage"))),
-                        Integer.parseInt(cursor.getString(cursor.getColumnIndex("stopPage"))),
-                        dbAdapter,
-                        assignmentType,
-                        assignmentStatus));                                             //TODO: sätta in rätt bool från databasen
-            }
-        }
-    }*/
 }
