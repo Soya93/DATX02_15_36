@@ -102,6 +102,18 @@ public class FlowLayout extends ViewGroup {
         }
     } // end onLayout()
 
+
+    public boolean contains(int chapter, String taskString){
+        for(int i = 0; i < this.getChildCount(); i++){
+            if(((StudyTask)getChildAt(i)).getChapter()==chapter){
+                if(((StudyTask)getChildAt(i)).getTaskString()==taskString){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void addMap(HashMap<Integer, ArrayList<StudyTask>> hashMap){
         for (Object value : hashMap.values()) {
             ArrayList<StudyTask> a = (ArrayList) value;

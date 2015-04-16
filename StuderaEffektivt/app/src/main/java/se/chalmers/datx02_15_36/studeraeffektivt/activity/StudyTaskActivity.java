@@ -63,8 +63,6 @@ public class StudyTaskActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_task);
 
-        courseCode = getIntent().getExtras().getString("CourseCode");
-
         //Create the database access point but check if the context is null first.
         if (this != null) {
             dbAdapter = new DBAdapter(this);
@@ -74,6 +72,8 @@ public class StudyTaskActivity extends ActionBarActivity {
         hashMapOfReadingAssignments = new HashMap<>();
 
         initComponents();
+
+
     }
 
     @Override
@@ -118,7 +118,11 @@ public class StudyTaskActivity extends ActionBarActivity {
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
         chapterSpinner.setAdapter(adapter);
 
+
         setCourses();
+
+        courseSpinner.setSelection(0);
+        setSelectedCourse();
 
         listOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
         listOfReadAssignments.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
@@ -240,20 +244,24 @@ public class StudyTaskActivity extends ActionBarActivity {
             for (int i = 1; i < separateTaskParts.length; i++) {       //För varje deluppgift
                 for (String s2 : stringList) {                         //För varje vihuv uppgift
                     elementToAdd = s2 + separateTaskParts[i];       //Sätt ihop dessa Huvuduppgift 1 och deluppgift a blir 1a
-                    int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, elementToAdd, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
-                    addToListOfTasks(studyTask);
-                    addToDatabase(studyTask);
+                    if(!listOfTasks.contains(chapter, elementToAdd)) {
+                        int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
+                        StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, elementToAdd, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
+                        addToListOfTasks(studyTask);
+                        addToDatabase(studyTask);
+                    }
                 }
             }
         }
         //lägger till huvuduppgifterna då deluppgifter inte finns
         else {
             for (String s : stringList) {         //För varje huvuduppgift
-                int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, s, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
-                addToListOfTasks(studyTask);
-                addToDatabase(studyTask);
+                if(!listOfTasks.contains(chapter, s)) {
+                    int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
+                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, s, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
+                    addToListOfTasks(studyTask);
+                    addToDatabase(studyTask);
+                }
             }
         }
     }

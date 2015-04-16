@@ -1,5 +1,6 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+    import android.content.Intent;
     import android.net.Uri;
     import android.os.Bundle;
     import android.support.v4.app.Fragment;
@@ -181,6 +182,9 @@ public class MyProfileFrag extends Fragment {
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 break;
             case R.id.addTask:
+                Intent i = new Intent(getActivity(), StudyTaskActivity.class);
+                //i.putExtra("CourseCode", courseCode);
+                startActivity(i);
                 /*fragment = new MyProfileFrag();
                 fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "myprofilefrag");
