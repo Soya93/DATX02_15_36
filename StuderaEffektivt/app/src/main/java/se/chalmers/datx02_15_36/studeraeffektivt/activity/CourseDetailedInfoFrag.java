@@ -62,7 +62,7 @@ public class CourseDetailedInfoFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
 
-        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode);
+        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
 
         fillActivity(course);
 

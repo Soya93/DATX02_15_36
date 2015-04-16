@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -49,6 +50,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     private FlowLayout listOfTasks;
     private FlowLayout listOfReadAssignments;
     private Spinner chapterSpinner;
+    private Spinner courseSpinner;
     private ToggleButton readOrTaskAssignment;
 
     private String courseCode;
@@ -112,18 +114,32 @@ public class StudyTaskActivity extends ActionBarActivity {
         listOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
         listOfReadAssignments = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfReadingAssignments);
         chapterSpinner = (Spinner) findViewById(R.id.chapterSpinner);
+        courseSpinner = (Spinner) findViewById(R.id.courseSpinner);
         readOrTaskAssignment = (ToggleButton) findViewById(R.id.readOrTaskAssignment);
 
         Integer[] items = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50};
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
         chapterSpinner.setAdapter(adapter);
 
-        listOfTasks.addTasksFromDatabase(dbAdapter, courseCode);
-        listOfReadAssignments.addTasksFromDatabase(dbAdapter, courseCode);
+        setCourses();
+
+        listOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
+        listOfReadAssignments.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
 
         addButton.setOnClickListener(myOnlyhandler);
 
+        courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setSelectedCourse();
 
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
@@ -148,6 +164,35 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         }
     };
+
+    private void setCourses() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        courseSpinner.setAdapter(adapter);
+        Cursor cursor = dbAdapter.getCourses();
+        int cnameColumn = cursor.getColumnIndex("cname");
+        int ccodeColumn = cursor.getColumnIndex("_ccode");
+        while (cursor.moveToNext()) {
+            String ccode = cursor.getString(ccodeColumn);
+            String cname = cursor.getString(cnameColumn);
+            adapter.add(ccode + "-" + cname);
+        }
+
+    }
+
+
+    public void setSelectedCourse() {
+        String temp = courseSpinner.getSelectedItem().toString();
+        String[] parts = temp.split("-");
+        this.courseCode = parts[0];
+        Log.d("selected course", courseCode);
+
+        listOfTasks.removeAllViews();
+        listOfReadAssignments.removeAllViews();
+        listOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
+        listOfReadAssignments.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+
+    }
 
     //Metod för att lägga till en uppgift
 

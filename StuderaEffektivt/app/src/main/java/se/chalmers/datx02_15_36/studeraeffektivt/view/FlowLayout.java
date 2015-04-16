@@ -125,9 +125,12 @@ public class FlowLayout extends ViewGroup {
         }
     }
 
-    public void addTasksFromDatabase(DBAdapter dbAdapter, String courseCode) {
+    public void addTasksFromDatabase(DBAdapter dbAdapter, String courseCode, AssignmentType assignmentType) {
 
         Cursor cursor = dbAdapter.getAssignments();
+
+        hashMapOfStudyTasks = new HashMap<>();
+        hashMapOfReadingAssignments = new HashMap<>();
 
        /* ArrayList<StudyTask> checkedArray = new ArrayList<>();
         ArrayList<StudyTask> uncheckedArray = new ArrayList<>();*/
@@ -137,63 +140,64 @@ public class FlowLayout extends ViewGroup {
         if (cursor != null) {
             while (cursor.moveToNext()) {
 
-                AssignmentStatus assignmentStatus;
-                AssignmentType assignmentType;
-                if(cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())){
-                    assignmentStatus = AssignmentStatus.DONE;
-                }
-                else{
-                    assignmentStatus = null;
-                }
-                if(cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ.toString())){
-                    assignmentType = AssignmentType.READ;
-                }
-                else{
-                    assignmentType = AssignmentType.OTHER;
-                }
+                if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode) && cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())) {
 
-                StudyTask studyTask = new StudyTask(
-                        this.getContext(),
-                        cursor.getInt(cursor.getColumnIndex("_id")),
-                        cursor.getString(cursor.getColumnIndex("_ccode")),
-                        cursor.getInt(cursor.getColumnIndex("chapter")),
-                        cursor.getString(cursor.getColumnIndex("assNr")),
-                        Integer.parseInt(cursor.getString(cursor.getColumnIndex("startPage"))),
-                        Integer.parseInt(cursor.getString(cursor.getColumnIndex("stopPage"))),
-                        dbAdapter,
-                        assignmentType,
-                        assignmentStatus);
+                    AssignmentStatus assignmentStatus;
+                    if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())) {
+                        assignmentStatus = AssignmentStatus.DONE;
+                    } else {
+                        assignmentStatus = null;
+                    }
+                    if (cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ.toString())) {
+                        assignmentType = AssignmentType.READ;
+                    } else {
+                        assignmentType = AssignmentType.OTHER;
+                    }
+
+                    StudyTask studyTask = new StudyTask(
+                            this.getContext(),
+                            cursor.getInt(cursor.getColumnIndex("_id")),
+                            cursor.getString(cursor.getColumnIndex("_ccode")),
+                            cursor.getInt(cursor.getColumnIndex("chapter")),
+                            cursor.getString(cursor.getColumnIndex("assNr")),
+                            Integer.parseInt(cursor.getString(cursor.getColumnIndex("startPage"))),
+                            Integer.parseInt(cursor.getString(cursor.getColumnIndex("stopPage"))),
+                            dbAdapter,
+                            assignmentType,
+                            assignmentStatus);
 
 
-                //initCheckbox(studyTask);
+                    //initCheckbox(studyTask);
 
                /* if (studyTask.isChecked()) {
                     checkedArray.add(studyTask);
                 } else
                     uncheckedArray.add(studyTask);*/
-                if(studyTask.getType() == AssignmentType.OTHER) {
+                    if (studyTask.getType() == AssignmentType.OTHER) {
 
-                    if (hashMapOfStudyTasks.containsKey(studyTask.getChapter())) {
-                        hashMapOfStudyTasks.get(studyTask.getChapter()).add(studyTask);
-                    } else {
-                        ArrayList<StudyTask> a = new ArrayList();
-                        a.add(studyTask);
-                        hashMapOfStudyTasks.put(studyTask.getChapter(), a);
-                    }
+                        if (hashMapOfStudyTasks.containsKey(studyTask.getChapter())) {
+                            hashMapOfStudyTasks.get(studyTask.getChapter()).add(studyTask);
+                        } else {
+                            ArrayList<StudyTask> a = new ArrayList();
+                            a.add(studyTask);
+                            hashMapOfStudyTasks.put(studyTask.getChapter(), a);
+                        }
 
-                }
-                else {
-                    if (hashMapOfReadingAssignments.containsKey(studyTask.getChapter())) {
-                        hashMapOfReadingAssignments.get(studyTask.getChapter()).add(studyTask);
                     } else {
-                        ArrayList<StudyTask> a = new ArrayList();
-                        a.add(studyTask);
-                        hashMapOfReadingAssignments.put(studyTask.getChapter(), a);
+                        if (hashMapOfReadingAssignments.containsKey(studyTask.getChapter())) {
+                            hashMapOfReadingAssignments.get(studyTask.getChapter()).add(studyTask);
+                        } else {
+                            ArrayList<StudyTask> a = new ArrayList();
+                            a.add(studyTask);
+                            hashMapOfReadingAssignments.put(studyTask.getChapter(), a);
+                        }
                     }
                 }
             }
 
+            if(hashMapOfStudyTasks!=null)
             addMap(hashMapOfStudyTasks);
+            if(hashMapOfReadingAssignments!=null)
             addMap(hashMapOfReadingAssignments);
 
         }
