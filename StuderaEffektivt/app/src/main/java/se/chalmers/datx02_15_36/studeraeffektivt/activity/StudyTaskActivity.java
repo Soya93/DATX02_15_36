@@ -52,9 +52,6 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     private String courseCode;
 
-    private HashMap<Integer, ArrayList<StudyTask>> hashMapOfStudyTasks;
-    private HashMap<Integer, ArrayList<StudyTask>> hashMapOfReadingAssignments;
-
     //The access point of the database.
     private DBAdapter dbAdapter;
 
@@ -68,9 +65,6 @@ public class StudyTaskActivity extends ActionBarActivity {
             dbAdapter = new DBAdapter(this);
         }
 
-        hashMapOfStudyTasks = new HashMap();
-        hashMapOfReadingAssignments = new HashMap<>();
-
         initComponents();
 
 
@@ -79,7 +73,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-       //finish();
+        finish();
     }
 
     @Override
@@ -120,7 +114,6 @@ public class StudyTaskActivity extends ActionBarActivity {
 
 
         setCourses();
-
         courseSpinner.setSelection(0);
         setSelectedCourse();
 
