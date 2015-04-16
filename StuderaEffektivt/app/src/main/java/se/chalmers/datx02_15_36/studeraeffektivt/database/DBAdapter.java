@@ -149,6 +149,11 @@ public class DBAdapter {
         return db.query(dbHelper.TABLE_SESSIONS, null, null, null, null, null, null);
     }
 
+    public Cursor getSessions(int week){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        return db.query(dbHelper.TABLE_SESSIONS, null, dbHelper.SESSION_week + " = '" + week + "'", null, null, null, null);
+    }
+
     public int getSpentTime(String ccode) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 

@@ -17,6 +17,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 */
 
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -52,6 +53,7 @@ public class StatsFrag extends Fragment {
 
     private PieChart pieHours;
     private PieChart pieAssignments;
+    private LineChart lineChart;
 
     private DBAdapter dbAdapter;
     private Utils utils;
@@ -67,8 +69,8 @@ public class StatsFrag extends Fragment {
 
         utils = new Utils();
 
-        insertTestDataToDB();
-        insertTestDataToDB2();
+        //insertTestDataToDB();
+        //insertTestDataToDB2();
         instantiateView();
 
         return rootView;
@@ -82,6 +84,16 @@ public class StatsFrag extends Fragment {
 
         instantiatePieHours();
         instantiatePieAssignments();
+        instantiateLineChart();
+    }
+
+    private void instantiateLineChart(){
+        lineChart = (LineChart) rootView.findViewById(R.id.line_hours);
+        lineChart.setNoDataTextDescription("Here a good graph will be.");
+
+        Cursor cursor = dbAdapter.getSessions(Utils.getCurrWeekNumber());
+
+
 
     }
 
