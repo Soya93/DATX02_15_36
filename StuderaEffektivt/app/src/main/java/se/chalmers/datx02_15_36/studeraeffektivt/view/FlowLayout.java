@@ -105,9 +105,11 @@ public class FlowLayout extends ViewGroup {
 
     public boolean contains(int chapter, String taskString){
         for(int i = 0; i < this.getChildCount(); i++){
-            if(((StudyTask)getChildAt(i)).getChapter()==chapter){
-                if(((StudyTask)getChildAt(i)).getTaskString()==taskString){
-                    return true;
+            if(!(getChildAt(i) instanceof TextView)){
+                if (((StudyTask) getChildAt(i)).getChapter() == chapter) {
+                    if (((StudyTask) getChildAt(i)).getTaskString() == taskString) {
+                        return true;
+                    }
                 }
             }
         }
@@ -146,6 +148,8 @@ public class FlowLayout extends ViewGroup {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
+
+                Log.d("Början av while för cursor: ", "");
 
                 if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode) && cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())) {
 
