@@ -4,9 +4,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 Saker att fixa är:
 
 Uppdatera då man kryssar av en ruta, någon sortering
-göra så att något händer då man kryssar i en ruta. dI databas och för den specifika studytasken
-Fixa så att man kan klicka "lägg till" utan att man skrivit något, nu krachar det
-databasen töms då man tar bort en uppgift
  */
 
 import android.database.Cursor;

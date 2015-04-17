@@ -105,13 +105,14 @@ public class FlowLayout extends ViewGroup {
 
     public boolean contains(int chapter, String taskString){
         for(int i = 0; i < this.getChildCount(); i++){
-            if(!(getChildAt(i) instanceof TextView)){
-                if (((StudyTask) getChildAt(i)).getChapter() == chapter) {
-                    if (((StudyTask) getChildAt(i)).getTaskString() == taskString) {
+            if(
+                    !(getChildAt(i).getClass().equals(TextView.class)) &&
+                    ((StudyTask) getChildAt(i)).getChapter() == chapter &&
+                    ((StudyTask) getChildAt(i)).getTaskString().equals(taskString)){
+
                         return true;
-                    }
-                }
             }
+
         }
         return false;
     }
