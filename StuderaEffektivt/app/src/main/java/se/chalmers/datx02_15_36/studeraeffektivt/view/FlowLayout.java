@@ -117,6 +117,21 @@ public class FlowLayout extends ViewGroup {
         return false;
     }
 
+    public boolean contains(int chapter, int startPage, int endPage){
+        for(int i = 0; i < this.getChildCount(); i++){
+            if(
+                    !(getChildAt(i).getClass().equals(TextView.class)) &&
+                    ((StudyTask) getChildAt(i)).getChapter() == chapter &&
+                    ((StudyTask) getChildAt(i)).getStartPage() == startPage &&
+                    ((StudyTask) getChildAt(i)).getEndPage() == endPage){
+
+                return true;
+            }
+
+        }
+        return false;
+    }
+
     public void addMap(HashMap<Integer, ArrayList<StudyTask>> hashMap){
         for (Object value : hashMap.values()) {
             ArrayList<StudyTask> a = (ArrayList) value;

@@ -272,17 +272,21 @@ public class StudyTaskActivity extends ActionBarActivity {
             start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
             end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
-            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
+            if(!(listOfReadAssignments.contains(chapter, start, end))) {
+                StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
-            addToDatabase(studyTask);
-            addToListOfTasks(studyTask);
+                addToDatabase(studyTask);
+                addToListOfTasks(studyTask);
+            }
 
         } else {
+            if(!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
+                
+                StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
-            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
-
-            addToDatabase(studyTask);
-            addToListOfTasks(studyTask);
+                addToDatabase(studyTask);
+                addToListOfTasks(studyTask);
+            }
         }
 
     }
