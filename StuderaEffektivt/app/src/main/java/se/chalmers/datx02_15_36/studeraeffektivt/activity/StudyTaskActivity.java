@@ -281,7 +281,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         } else {
             if(!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
-                
+
                 StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
                 addToDatabase(studyTask);

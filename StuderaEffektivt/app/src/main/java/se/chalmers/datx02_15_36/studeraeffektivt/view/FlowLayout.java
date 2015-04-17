@@ -14,6 +14,8 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
 
         import java.util.ArrayList;
         import java.util.HashMap;
+        import java.util.Map;
+        import java.util.TreeMap;
 
         import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
         import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
@@ -133,10 +135,14 @@ public class FlowLayout extends ViewGroup {
     }
 
     public void addMap(HashMap<Integer, ArrayList<StudyTask>> hashMap){
-        for (Object value : hashMap.values()) {
+        Map<Integer, ArrayList> treeMap;
+        treeMap = new TreeMap<Integer, ArrayList>(hashMap);
+        for (Object value : treeMap.values()) {
             ArrayList<StudyTask> a = (ArrayList) value;
             kapitelText = new TextView(this.getContext());
             kapitelText.setText("KAPITEL " + a.get(0).getChapter());
+            int width = this.getWidth();
+            kapitelText.setWidth(width);
             this.addView(kapitelText);
             int counter = this.getChildCount();
             for(int i = 0; i < a.size(); i++){
