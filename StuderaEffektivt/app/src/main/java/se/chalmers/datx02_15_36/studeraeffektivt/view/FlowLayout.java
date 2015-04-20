@@ -18,7 +18,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
         import java.util.TreeMap;
 
         import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
-        import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
         import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
         import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
         import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -28,7 +27,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
  * A view container with layout behavior like that of the Swing FlowLayout.
  * Originally from http://nishantvnair.wordpress.com/2010/09/28/flowlayout-in-android/
  *
- * @author Melinda Green
  */
 public class FlowLayout extends ViewGroup {
     private final static int PAD_H = 2, PAD_V = 2; // Space between child views.
