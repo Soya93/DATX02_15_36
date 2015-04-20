@@ -1,4 +1,4 @@
-package se.chalmers.datx02_15_36.studeraeffektivt.activity;
+package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,12 @@ import java.util.List;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 
 /**
- * A class displaying the available tip of studytechniques or studytips depending on what is chosen.
+ * A class displaying the available tip of studytips depending on what is chosen.
  */
 public class TipFrag extends Fragment {
 
     private List<Button> buttonList;
+    private TextView header;
 
     private View view;
     private ViewGroup container;
@@ -36,8 +38,10 @@ public class TipFrag extends Fragment {
         this.container = container;
 
         initComponentsList();
-        bundleFromPreviousFragment = this.getArguments();
-        containerId = bundleFromPreviousFragment.getInt("containerId");
+        /*bundleFromPreviousFragment = this.getArguments();
+        containerId = bundleFromPreviousFragment.getInt("containerId");*/
+        containerId = getActivity().getWindow().getDecorView().findViewById(android.R.id.content).getId();
+
         return rootView;
     }
 
@@ -55,14 +59,6 @@ public class TipFrag extends Fragment {
         buttonList.add((Button) view.findViewById(R.id.button8));
         buttonList.add((Button) view.findViewById(R.id.button9));
         buttonList.add((Button) view.findViewById(R.id.button10));
-        buttonList.add((Button) view.findViewById(R.id.button11));
-        buttonList.add((Button) view.findViewById(R.id.button12));
-        buttonList.add((Button) view.findViewById(R.id.button13));
-        buttonList.add((Button) view.findViewById(R.id.button14));
-        buttonList.add((Button) view.findViewById(R.id.button15));
-        buttonList.add((Button) view.findViewById(R.id.button16));
-        buttonList.add((Button) view.findViewById(R.id.button17));
-        buttonList.add((Button) view.findViewById(R.id.button18));
 
         for (Button b : buttonList) {
             b.setOnClickListener(myOnlyhandler);
@@ -94,5 +90,12 @@ public class TipFrag extends Fragment {
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onDetach()
+    {
+        super.onDetach();
+        getActivity().finish();
     }
 }

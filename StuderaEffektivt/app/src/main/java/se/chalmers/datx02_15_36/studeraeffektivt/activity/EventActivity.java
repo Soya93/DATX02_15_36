@@ -2,18 +2,23 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -22,12 +27,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarChoiceAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarChoiceItem;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 public class EventActivity extends ActionBarActivity {
@@ -50,7 +59,9 @@ public class EventActivity extends ActionBarActivity {
     private Long calendarID;
     private Bundle savedInstanceState;
     private boolean isAllDayEvent;
-    private CheckBox checkBox;
+    private Switch allDaySwitch;
+    private AlertDialog alertDialog;
+
 
     Map<Integer, String> notificationAlternativesMap = new LinkedHashMap<>();
 
@@ -60,7 +71,7 @@ public class EventActivity extends ActionBarActivity {
     private long startTimeMillis;
     private long endTimeMillis;
     private CalendarFrag calendarFrag;
-    private long curEventID;
+    private long eventID;
     private boolean isInAddMode;
 
     //Setting variables for the time/datepicker
@@ -69,6 +80,11 @@ public class EventActivity extends ActionBarActivity {
     private int startDay;
     private int startHour;
     private int startMinute;
+
+    private String startWeekday;
+    private String endWeekday;
+    private String startMonthS;
+    private String endMonthS;
 
 
     private int endYear;
@@ -83,7 +99,7 @@ public class EventActivity extends ActionBarActivity {
         setContentView(R.layout.activity_event);
         calendarFrag = new CalendarFrag();
         isInAddMode = getIntent().getBooleanExtra("isInAddMode", true);
-        curEventID = getIntent().getLongExtra("eventID", 0L);
+        eventID = getIntent().getLongExtra("eventID", 0L);
         startTimeMillis = getIntent().getLongExtra("startTime", 0L);
         endTimeMillis = getIntent().getLongExtra("endTime", 0L);
         title = getIntent().getStringExtra("title");
@@ -93,14 +109,20 @@ public class EventActivity extends ActionBarActivity {
         calendarName = getIntent().getStringExtra("calName");
         notification = getIntent().getIntExtra("notification", -1);
         isAllDayEvent = getIntent().getIntExtra("isAllDay", 0) == 1;
-        /*
-        int index = calendarFrag.getCalendarModel().getCalendarIDs(getContentResolver()).indexOf(calendarID);
-        Log.i("oncreate event avtivity: ", calendarID +" " + index);
-        calendarName = calendarFrag.getCalendarModel().getCalendarNames(getContentResolver()).get(index);
-        Log.i("oncreate event avtivity: ", calendarName);
-        */
+
 
         initComponents();
+
+        String title;
+        if (isInAddMode) {
+            title = "Ny händelse";
+        } else {
+            title = "Redigera händelse";
+        }
+
+        this.setTitle(title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setActionBarColor(getIntent().getIntExtra("color", 0));
     }
 
 
@@ -119,7 +141,14 @@ public class EventActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.save_event) {
+            onOKButtonClicked();
+            return true;
+        } else if (id == android.R.id.home) {
+            this.finish();
+            return true;
+        } else if (id == R.id.delete_event) {
+            deleteEvent(eventID, title, getContentResolver());
             return true;
         }
 
@@ -131,7 +160,6 @@ public class EventActivity extends ActionBarActivity {
 
         View.OnClickListener myTextViewHandler = new View.OnClickListener() {
             public void onClick(View v) {
-                Log.i("onClick", "");
                 goToTextView((TextView) v);
             }
         };
@@ -167,9 +195,10 @@ public class EventActivity extends ActionBarActivity {
         setNotificationMapValues();
         notificationView.setText(notificationAlternativesMap.get(notification));
 
-        checkBox = (CheckBox) findViewById(R.id.checkBox);
-        checkBox.setChecked(isAllDayEvent);
-        checkBox.setOnClickListener(myTextViewHandler);
+        allDaySwitch = (Switch) findViewById(R.id.all_day_switch);
+        allDaySwitch.setChecked(isAllDayEvent);
+        allDaySwitch.setOnClickListener(myTextViewHandler);
+
 
         if (isInAddMode) {
             startTimeMillis = CalendarUtils.TODAY_IN_MILLIS;
@@ -179,6 +208,7 @@ public class EventActivity extends ActionBarActivity {
             startDay = CalendarUtils.DAY;
             startHour = CalendarUtils.HOUR;
             startMinute = CalendarUtils.MINUTE;
+
 
             endYear = CalendarUtils.YEAR;
             endMonth = CalendarUtils.MONTH + 1;
@@ -190,15 +220,18 @@ public class EventActivity extends ActionBarActivity {
             endTimeMillis = CalendarUtils.cal.getTimeInMillis();
 
         } else {
+
+
             Calendar c = Calendar.getInstance();
 
             //Convert start time from millis
             c.setTimeInMillis(startTimeMillis);
             startYear = c.get(Calendar.YEAR);
-            startMonth = c.get(Calendar.MONTH) +1;
+            startMonth = c.get(Calendar.MONTH) + 1;
             startDay = c.get(Calendar.DAY_OF_MONTH);
             startHour = c.get(Calendar.HOUR_OF_DAY);
             startMinute = c.get(Calendar.MINUTE);
+
 
             //Convert end time from millis
             c.setTimeInMillis(endTimeMillis);
@@ -207,25 +240,28 @@ public class EventActivity extends ActionBarActivity {
             endDay = c.get(Calendar.DAY_OF_MONTH);
             endHour = c.get(Calendar.HOUR_OF_DAY);
             endMinute = c.get(Calendar.MINUTE);
+
         }
 
-        //Set the text of the labels accordingly
-        startDate.setText(startDay + "/" + startMonth + "/"
-                + startYear);
-        endDate.setText(endDay + "/" + endMonth + "/"
-                + endYear);
 
+        SimpleDateFormat startDateFormat = new SimpleDateFormat("E d MMM yyyy");
+        SimpleDateFormat endDateFormat = new SimpleDateFormat("E d MMM yyyy");
+        startDate.setText(startDateFormat.format((new Date(startTimeMillis))));
+        endDate.setText(endDateFormat.format((new Date(endTimeMillis))));
+
+        // Set format on the time
         SimpleDateFormat startFormat = new SimpleDateFormat("HH:mm");
         SimpleDateFormat endFormat = new SimpleDateFormat("HH:mm");
         startTime.setText(startFormat.format(new Date(startTimeMillis)));
         endTime.setText(endFormat.format(new Date(endTimeMillis)));
 
         calStart = Calendar.getInstance();
+        calStart.setTimeInMillis(startTimeMillis);
         calEnd = Calendar.getInstance();
-        calEnd.set(Calendar.HOUR_OF_DAY, endHour);
+        calEnd.setTimeInMillis(endTimeMillis);
     }
 
-    private void setNotificationMapValues(){
+    private void setNotificationMapValues() {
         notificationAlternativesMap.put(-1, "Ingen");
         notificationAlternativesMap.put(0, "Vid start");
         notificationAlternativesMap.put(1, "1 minut");
@@ -264,23 +300,23 @@ public class EventActivity extends ActionBarActivity {
                 break;
             case R.id.calendar_lable_input:
                 Log.i("click on text view", " calendar lable");
-                Dialog dialog = openCalendarPickerDialog();
-                dialog.show();
+                //openCalendarPickerDialog();
+                openChooseCalendar();
                 break;
             case R.id.notification_input:
                 Log.i("click on text view", " notification");
                 chooseNotification();
                 break;
-            case R.id.checkBox:
-                checkBox.setChecked(checkBox.isChecked());
-                isAllDayEvent = checkBox.isChecked();
+            case R.id.all_day_switch:
+                allDaySwitch.setChecked(allDaySwitch.isChecked());
+                isAllDayEvent = allDaySwitch.isChecked();
                 hideTimeLabels(isAllDayEvent);
                 break;
         }
     }
 
-    private void hideTimeLabels(boolean hide){
-        if(hide){
+    private void hideTimeLabels(boolean hide) {
+        if (hide) {
             startTime.setVisibility(View.INVISIBLE);
             endTime.setVisibility(View.INVISIBLE);
         } else {
@@ -289,44 +325,45 @@ public class EventActivity extends ActionBarActivity {
         }
     }
 
-    public Dialog openCalendarPickerDialog() {
+    public void openChooseCalendar() {
 
-        final List<String> calNames = calendarFrag.getCalendarModel().getCalendarNames(getContentResolver());
-        final List<Long> calIDs = calendarFrag.getCalendarModel().getCalendarIDs(getContentResolver());
-        final String[] calendars = new String[calNames.size()];
-        for (int i = 0; i < calNames.size(); i++) {
-            calendars[i] = calNames.get(i);
-        }
+        final List<String> calNames = new LinkedList<>(calendarFrag.getCalendarModel().getCalendarInfo(getContentResolver()).values());
+        final List<Long> calIDs = new LinkedList<>(calendarFrag.getCalendarModel().getCalendarInfo(getContentResolver()).keySet());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Välj kalender")
-                .setItems(calendars, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position
-                        // of the selected item
-                        calendarID = calIDs.get(which);
-                        calendarName = calendars[which];
-                        calendarView.setText(calendarName);
-                    }
-                });
-        return builder.create();
+        LayoutInflater li = LayoutInflater.from(this);
+        View view = li.inflate(R.layout.calendarchoiceslistview, null);
 
+        final ListView listView = (ListView) view.findViewById(R.id.listView);
+        CalendarChoiceAdapter ad = new CalendarChoiceAdapter(getApplicationContext(), R.layout.calendars_filter_item, R.id.calendar_text, calendarFrag.getCalendarModel().getCalendarChoices());
+        listView.setAdapter(ad);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setDivider(null);
 
-
-        /*
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.calendar_picker_dialog, null);
-        builder.setView(dialogView);
-
-        ListView calendarList = (ListView) findViewById(R.id.calendar_list);
-
-
-
-        AlertDialog alertDialog = builder.create();
+        builder.setView(view);
+        builder.setTitle("Välj kalender");
+        builder.create();
+        alertDialog = builder.create();
         alertDialog.show();
-        */
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                calendarID = calIDs.get(position);
+                calendarName = calNames.get(position);
+                calendarView.setText(calendarName);
+                CalendarChoiceItem cci = (CalendarChoiceItem) listView.getAdapter().getItem(position);
+                setActionBarColor(cci.getColor());
+                alertDialog.dismiss();
+            }
+        });
     }
+
+    private void setActionBarColor(int color) {
+        android.support.v7.app.ActionBar bar = getSupportActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(color));
+    }
+
 
     public void openDatePickerDialog(final boolean isStart) {
 
@@ -341,25 +378,37 @@ public class EventActivity extends ActionBarActivity {
                     startMonth = selectedMonth + 1;
                     startDay = selectedDay;
                     calStart.set(startYear, startMonth, startDay);
-                    startDate.setText(startDay + "/" + startMonth + "/" + startYear);
-                    if(endDay <= startDay && endMonth == startMonth && endYear == startYear || startMonth > endMonth || startYear > endYear){
+
+                    SimpleDateFormat startDateFormat = new SimpleDateFormat("E d MMM yyyy");
+
+                    startDate.setText(startDateFormat.format((new Date(calStart.getTimeInMillis()))));
+
+
+                    //startDate.setText(startDay + "/" + startMonth + "/" + startYear);
+                    if (endDay <= startDay && endMonth == startMonth && endYear == startYear || startMonth > endMonth || startYear > endYear) {
                         endDay = startDay;
                         endMonth = startMonth;
                         endYear = startYear;
                         calEnd.set(endYear, endMonth, endDay);
-                        endDate.setText(endDay + "/" + endMonth + "/" + endYear);
+
+                        SimpleDateFormat endDateFormat = new SimpleDateFormat("E d MMM yyyy");
+                        endDate.setText(endDateFormat.format((new Date(calEnd.getTimeInMillis()))));
+                        //endDate.setText(endDay + "/" + endMonth + "/" + endYear);
                     }
                 } else {
                     endYear = selectedYear;
                     endMonth = selectedMonth + 1;
                     endDay = selectedDay;
-                    if(endDay <= startDay && endMonth == startMonth && endYear == startYear || startMonth > endMonth || startYear > endYear){
+                    if (endDay <= startDay && endMonth == startMonth && endYear == startYear || startMonth > endMonth || startYear > endYear) {
                         endDay = startDay;
                         endMonth = startMonth;
                         endYear = startYear;
                     }
                     calEnd.set(endYear, endMonth, endDay);
-                    endDate.setText(endDay + "/" + endMonth + "/" + endYear);
+
+                    SimpleDateFormat endDateFormat = new SimpleDateFormat("E d MMM yyyy");
+                    endDate.setText(endDateFormat.format((new Date(calEnd.getTimeInMillis()))));
+                    //endDate.setText(endDay + "/" + endMonth + "/" + endYear);
                 }
             }
         };
@@ -395,7 +444,7 @@ public class EventActivity extends ActionBarActivity {
                     String start = startHour + "";
 
                     boolean startsWithZero = start.length() == 1;
-                    if(endHour <= startHour ||  startsWithZero && endHour >= startHour ){
+                    if (endHour <= startHour || startsWithZero && endHour >= startHour) {
                         endHour = startHour + 1;
                         calEnd.set(Calendar.HOUR_OF_DAY, endHour);
                         calEnd.set(Calendar.MINUTE, endMinute);
@@ -403,7 +452,7 @@ public class EventActivity extends ActionBarActivity {
                     }
                 } else {
                     endHour = hourOfDay;
-                    if(endHour <= startHour){
+                    if (endHour <= startHour) {
                         endHour = startHour + 1;
                     }
                     endMinute = minute;
@@ -417,32 +466,34 @@ public class EventActivity extends ActionBarActivity {
         TimePickerDialog timePickerDialog;
         if (isStart) {
             timePickerDialog = new TimePickerDialog(EventActivity.this,
-                    R.style.Theme_IAPTheme, timePickerListener, startHour,
+                    R.style.Base_Theme_AppCompat_Light_Dialog, timePickerListener, startHour,
                     startMinute, true);
         } else {
             timePickerDialog = new TimePickerDialog(EventActivity.this,
-                    R.style.Theme_IAPTheme, timePickerListener, endHour,
+                    R.style.Base_Theme_AppCompat_Light_Dialog, timePickerListener, endHour,
                     endMinute, true);
+
         }
+
 
         timePickerDialog.show();
         timePickerDialog.setCancelable(true);
     }
 
-    public void onOKButtonClicked(View v) {
+    public void onOKButtonClicked() {
         title = ((EditText) findViewById(R.id.title_input)).getText().toString();
         location = ((EditText) findViewById(R.id.location_input)).getText().toString();
         description = ((EditText) findViewById(R.id.description_input)).getText().toString();
 
         if (isInAddMode) {
-            calendarFrag.getCalendarModel().addEventAuto(getContentResolver(),title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, calendarID, notification, isAllDayEvent);
+            calendarFrag.getCalendarModel().addEventAuto(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, calendarID, notification, isAllDayEvent);
             onBackPressed();
             CharSequence text = "Händelsen " + title + " har skapats";
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(getApplicationContext(), text, duration);
             toast.show();
         } else {
-            calendarFrag.getCalendarModel().editEventAuto(getContentResolver(),title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, calendarID, curEventID, notification, isAllDayEvent);
+            calendarFrag.getCalendarModel().editEventAuto(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, calendarID, eventID, notification, isAllDayEvent);
             onBackPressed();
             CharSequence text = "Händelsen " + title + " har redigerats";
             int duration = Toast.LENGTH_SHORT;
@@ -453,13 +504,15 @@ public class EventActivity extends ActionBarActivity {
 
     public void chooseNotification() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final List <String> alternatives = new ArrayList <> (notificationAlternativesMap.values());
+        final List<String> alternatives = new ArrayList<>(notificationAlternativesMap.values());
+        final List<Integer> times = new ArrayList<>(notificationAlternativesMap.keySet());
 
 
         builder.setItems(alternatives.toArray(new String[0]), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                notification = alternatives.indexOf(alternatives.get(which));
+                notification = times.get(which);
                 notificationView.setText(alternatives.get(which));
+                Log.i("notificationname ", alternatives.get(which) + "time " + notification);
             }
         });
 
@@ -467,11 +520,21 @@ public class EventActivity extends ActionBarActivity {
         alertDialog.show();
     }
 
-    public void onCancelButtonClicked(View v) {
-        onBackPressed();
-    }
 
     public void setCalendarFrag(CalendarFrag calendarFrag) {
         this.calendarFrag = calendarFrag;
+    }
+
+    private void deleteEvent(long id, String title, ContentResolver cr) {
+        CalendarModel calendarModel = calendarFrag.getCalendarModel();
+        calendarModel.deleteEvent(cr, id);
+
+        this.finish();
+
+        Context context = getApplicationContext();
+        CharSequence text = "Händelsen " + title + " har tagits bort";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 }

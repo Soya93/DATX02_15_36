@@ -1,16 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
-import android.app.ActivityManager;
-import android.app.AlertDialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -24,6 +15,10 @@ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.HomeFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.StatsFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TimerFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.TabAdapter;
 
 
@@ -82,6 +77,11 @@ public class MainActivity extends ActionBarActivity {
         calendarFrag.setContentResolver(this.getContentResolver());
 
 
+        homeFrag = (HomeFrag) mAdapter.getItem(0);
+        homeFrag.setContentResolver(this.getContentResolver());
+        homeFrag.setCalendarFrag(calendarFrag);
+
+
         // listener for FAB menu
         FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
             @Override
@@ -99,6 +99,7 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView icon = new ImageView(this); // Create an icon
         icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+
 
 
 
@@ -131,9 +132,6 @@ public class MainActivity extends ActionBarActivity {
         button4 = itemBuilder.setContentView(itemIcon4).build();
         button4.setTag(4);
         button4.setOnClickListener(fabHandler);
-
-        Log.i("main: ", " button1 id:  " + button1.getId() + " button2 id : " + button2.getId()
-                + " button3 id: " + button3.getId());
 
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
                 .addSubActionView(button4)
@@ -169,13 +167,20 @@ public class MainActivity extends ActionBarActivity {
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
 
-
-                if (tab.getPosition() == 1) {
+                if(tab.getPosition() == 0) {
+                    actionButton.setVisibility(View.GONE);
+                    button1.setVisibility(View.GONE);
+                    button2.setVisibility(View.GONE);
+                    button3.setVisibility(View.GONE);
+                    button4.setVisibility(View.GONE);
+                    //homeActionButton.setVisibility(View.VISIBLE);
+                }else if (tab.getPosition() == 1) {
                     actionButton.setVisibility(View.VISIBLE);
                     button1.setVisibility(View.VISIBLE);
                     button2.setVisibility(View.VISIBLE);
                     button3.setVisibility(View.VISIBLE);
                     button4.setVisibility(View.VISIBLE);
+                    //homeActionButton.setVisibility(View.GONE);
                 } else {
                     actionButton.setVisibility(View.GONE);
                     button1.setVisibility(View.GONE);
@@ -233,6 +238,12 @@ public class MainActivity extends ActionBarActivity {
                 // on changing the page§    §
                 // make respected tab selected
                 actionBar.setSelectedNavigationItem(position);
+
+                //When home page is selected
+                if(position == 0) {
+                    Log.i("Main:", "on home frag selected");
+                    homeFrag.setTodaysEvents();
+                }
             }
 
             @Override

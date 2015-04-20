@@ -79,6 +79,12 @@
         <item name="dropDownListViewStyle">@style/DropDownListView.Pluggapp</item>
     </style>
 
+
+
+    <style name="Theme.YourTheme.Styled.ActionBar.TitleTextStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <style name="AppTheme" parent="android:Theme.Holo.Light">
         <!-- Default style for ImageButtons -->
         <item name="android:imageButtonStyle">?android:borderlessButtonStyle</item>

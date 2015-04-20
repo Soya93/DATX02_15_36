@@ -2,8 +2,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt;
 
 import junit.framework.TestCase;
 
-import se.chalmers.datx02_15_36.studeraeffektivt.model.AddNumbers;
-
 /**
  * Created by emmawestman on 15-01-30.
  */

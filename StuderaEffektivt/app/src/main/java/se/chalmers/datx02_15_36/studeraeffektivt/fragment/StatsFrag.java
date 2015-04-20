@@ -1,4 +1,4 @@
-package se.chalmers.datx02_15_36.studeraeffektivt.activity;
+package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,8 +16,6 @@ import android.widget.Toast;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 */
-
-import org.w3c.dom.Text;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;

@@ -1,7 +1,6 @@
-package se.chalmers.datx02_15_36.studeraeffektivt.activity;
+package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,27 +8,36 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alamkanak.weekview.WeekView;
-import com.alamkanak.weekview.WeekViewEvent;;
+import com.alamkanak.weekview.WeekViewEvent;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.EventActivity;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
+import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarsFilterAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
+
+;
 
 /**
  * A class representing the controller of a calendar object
@@ -47,17 +55,17 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     private List<WeekViewEvent> eventList;
     private List<Long> visibleCalendars;
-    private Map <Long, Integer> calendarColors;
     private SubActionButton button1;
     private SubActionButton button2;
     private SubActionButton button3;
     private SubActionButton button4;
+    private Button backButton;
+    private Button forwradButton;
+    private Button goToTodayButton;
     int numberOfVisibleDays;
     private View.OnClickListener fabHandler;
-
-    public CalendarModel getCalendarModel() {
-        return calendarModel;
-    }
+    private AlertDialog alertDialog;
+    private ArrayList<CalendarsFilterItem> calendarsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,11 +74,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         this.view = inflater.inflate(R.layout.activity_calendar, container, false);
         calendarModel = new CalendarModel();
 
-        visibleCalendars = calendarModel.getCalendarIDs(cr);
-        for(int i=0; i<visibleCalendars.size(); i++){
-            Log.i("onCreate calfrag", visibleCalendars.get(i)+"");
-        }
-        //calendarColors();
+
+        numberOfVisibleDays = 5;
+
+        Map<Long,String> cals = calendarModel.getCalendarInfo(cr);
+        visibleCalendars =  new LinkedList<>(cals.keySet());
+        calendarsList = calendarModel.getCalendarFilters();
+
         this.initComponents();
         return view;
     }
@@ -82,24 +92,37 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         button3 = MainActivity.button3;
         button4 = MainActivity.button4;
 
+        backButton = (Button) view.findViewById(R.id.cal_back_button);
+        forwradButton = (Button) view.findViewById(R.id.cal_forward_button);
+        goToTodayButton = (Button) view.findViewById(R.id.go_to_today_button);
+
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
-                openAddEvent();
+                if (v.getId() == backButton.getId()) {
+                    onBackClick();
+                }else if (v.getId() == forwradButton.getId()) {
+                    onForwardCLick();
+                } else {
+                    onTodayClick();
+                }
+
             }
         };
 
-        Log.i("calendar: ", " button1 id:  " + button1.getId() + " button2 id : " + button2.getId()
-                + " button3 id: " + button3.getId());
+        backButton.setOnClickListener(myButtonHandler);
+        forwradButton.setOnClickListener(myButtonHandler);
+        goToTodayButton.setOnClickListener(myButtonHandler);
+
+
+
 
         fabHandler = new View.OnClickListener() {
 
             public void onClick(View v) {
                 if (v.getTag() == button1.getTag()) {
                     openAddEvent();
-                    Log.i("main:", "1 studiepass");
                 }else if (v.getTag() == button2.getTag()) {
                     addRepetitionSession();
-                    Log.i("main:", " 2 repetition");
                 }else if (v.getTag() == button3.getTag()) {
                     //Instälningar - antal dagar
                     changeNbrOfDaysDialog();
@@ -126,9 +149,24 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.setEventLongPressListener(this);
 
         // Set number of visible days in the calendar view
+
         mWeekView.setNumberOfVisibleDays(5);
         hasOnMonthChange = false;
-        mWeekView.goToHour(8.0);
+
+
+        // set the time for which hour that are shown
+        mWeekView.goToHour(CalendarUtils.HOUR == 0? CalendarUtils.HOUR: CalendarUtils.HOUR -1);
+
+        //Disable horizontal scroll in calendar view
+        mWeekView.setHorizontalScrollBarEnabled(false); // doesn't work... :(
+
+        // Lets change some dimensions to best fit the view.
+        mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
+        mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+        mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+        mWeekView.setEventPadding(20);
+        mWeekView.setHourSeparatorColor(20);
+        mWeekView.setEventMarginVertical(20);
 
 
         //actionButton.setOnClickListener(myButtonHandler);
@@ -140,24 +178,16 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     @Override
     public void onResume() {
+        Log.i("calFrag: ", "onResume");
         super.onResume();
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
     }
 
-
-    //Reads all todays events, used in homescreen
-    public List<String> getTodaysEvents() {
-        return calendarModel.readEventsToday(cr);
-    }
-
     @Override
     public void onEventClick(final WeekViewEvent weekViewEvent, RectF rectF) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
-
         final String title = weekViewEvent.getName();
+        final long eventId = weekViewEvent.getId();
 
         //Get a cursor for the detailed information of the event
         final long startTime = weekViewEvent.getStartTime().getTimeInMillis();
@@ -170,14 +200,20 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         final String calendar = cur.getString(CalendarUtils.CALENDAR_NAME);
         final long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
         final int allDay = cur.getInt(CalendarUtils.ALL_DAY);
+        final int color = cur.getInt(CalendarUtils.EVENT_COLOR) == 0 ? cur.getInt(CalendarUtils.CALENDAR_COLOR) : cur.getInt(CalendarUtils.EVENT_COLOR);
         cur.close();
-        final int notification = -1;
 
-        //Notification cursor
-        //Cursor curNot = calendarModel.getNotificationCursor(cr, startTime, endTime, weekViewEvent.getId());
-        //final int notification = curNot == null? -1: curNot.getInt(0);
+        final int notification = calendarModel.getNotificationTime(cr, startTime,endTime,eventId);
 
-        calendarView.updateEventInfoView(dialogView, title, startTime, endTime, location, description, calendar);
+        openViewEventInfo(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay, color);
+    }
+
+    public void openViewEventInfo(final long eventId, final String eventTitle, final long startTime, final long endTime, final String location, final String description, final String calendar, final long calID, final int notification, final int allDay, final int color) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
+
+        calendarView.updateEventInfoView(dialogView, eventTitle, startTime, endTime, location, description, calendar);
         builder.setView(dialogView);
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -189,7 +225,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                openEditEvent(weekViewEvent.getId(), startTime, endTime, title, location, description, calID, calendar, notification, allDay);
+                openEditEvent(eventId, startTime, endTime, eventTitle, location, description, calID, calendar, notification, allDay, color);
             }
         });
 
@@ -204,13 +240,16 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         intent.putExtra("isInAddMode", true);
         intent.putExtra("calID", 1);        // 1 är hem kalender
-        String name = calendarModel.getCalendarNames(cr).get(0);        //hemkalenderns namn finns på position 0
+        List<String> calNames = new LinkedList<>(calendarModel.getCalendarInfo(cr).values());
+        String name = calNames.get(0);
+        //String name = calendarModel.getCalendarNamesInstances(cr).get(0);
         intent.putExtra("calName", name);
+        intent.putExtra("color", calendarModel.getCalendarColor(cr, name));
         startActivity(intent);
     }
 
     //Opens an dialog when pressing the buttom for adding a new event
-    private void openEditEvent(long eventID, long startTime, long endTime, String title, String location, String description, Long calID, String calName, int notification, int isAllDay) {
+    private void openEditEvent(long eventID, long startTime, long endTime, String title, String location, String description, Long calID, String calName, int notification, int isAllDay, int color) {
         eventActivity = new EventActivity();
         eventActivity.setCalendarFrag(this);
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
@@ -225,6 +264,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         intent.putExtra("calName", calName);
         intent.putExtra("notification", notification);
         intent.putExtra("isAllDay", isAllDay);
+        intent.putExtra("color", color);
         startActivity(intent);
     }
 
@@ -234,13 +274,12 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         intent.putExtra("isInAddMode", true);
         intent.putExtra("startTime", 0L);
-        intent.putExtra("endTime", 0l);
+        intent.putExtra("endTime", 0L);
         intent.putExtra("title", "Repititonspass för LV" + studyWeek);
         intent.putExtra("calID", 1);        // 1 är hem kalender
-        String name = calendarModel.getCalendarNames(cr).get(0);        //hemkalenderns namn finns på position 0
+        List<String> calNames = new LinkedList<>(calendarModel.getCalendarInfo(cr).values());
+        String name = calNames.get(0);
         intent.putExtra("calName", name);
-
-
         startActivity(intent);
     }
 
@@ -311,16 +350,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         while (cur.moveToNext()) {
             long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
 
-            String eventName = cur.getString(CalendarUtils.TITLE);
 
             //Checks so the events belongs to an calendar that should be visible
-            //Log.i("readEvents: contains cal? ", visibleCalendars.contains(calID)+"");
-           // Log.i("readEvents: calID " + calID+"", "event name: " +eventName);
            if(visibleCalendars.contains(calID)) {
 
                 long id = cur.getLong(CalendarUtils.EVENT_ID);
 
-               //event name ska vara här!!
+                String eventName = cur.getString(CalendarUtils.TITLE);
                 Calendar startTime = Calendar.getInstance();
                 startTime.setTimeInMillis(cur.getLong(CalendarUtils.EVENT_BEGIN));
 
@@ -328,7 +364,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 Calendar endTime = Calendar.getInstance();
                 endTime.setTimeInMillis(cur.getLong(CalendarUtils.EVENT_END));
 
-               Log.i("name ", eventName + "all day? " + (cur.getInt(CalendarUtils.ALL_DAY) == 1));
 
               if(cur.getInt(CalendarUtils.ALL_DAY) == 1){
                    startTime.set(Calendar.HOUR_OF_DAY, 0);
@@ -344,6 +379,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
                 WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
                 event.setColor(color);
+
+
 
                 eventList.add(event);
             }
@@ -367,13 +404,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                         String tasks = "";
                         int studyWeek = which + 1;
                         openAddRepetition(studyWeek);
-
-
-                        //calendarModel.addEventAuto(cr, "Repititonspass för LV" + studyWeek, 0L, 0L,null)
-                        //startActivity(calendarModel.addEventManually(0L, 0L, true, "Repititonspass för LV" + studyWeek, null, "Repetera " + tasks));
-
-                        // The 'which' argument contains the index position
-                        // of the selected item
                     }
                 });
 
@@ -381,37 +411,59 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         alertDialog.show();
     }
 
-    public Dialog changeVisibleCalendars() {
-
-        final List<String> calNames = getCalendarModel().getCalendarNames(cr);
-        final List<Long> calIDs = getCalendarModel().getCalendarIDs(cr);
-        final String[] calendars = new String[calNames.size()];
-        for (int i = 0; i < calNames.size(); i++) {
-            calendars[i] = calNames.get(i);
-        }
+    public void changeVisibleCalendars(){
+        final List<Long> calIDs =  new LinkedList<>(calendarModel.getCalendarInfo(cr).keySet());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Välj kalender")
-                .setMultiChoiceItems(calendars,null,  new DialogInterface.OnMultiChoiceClickListener() {
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        if (isChecked) {
-                            visibleCalendars.add(calIDs.get(which));
+        LayoutInflater li = LayoutInflater.from(getActivity());
+        View view= li.inflate(R.layout.calendarsfilterlistview, null);
 
-                        } else if (visibleCalendars.contains(calIDs.get(which))) {
-                            visibleCalendars.remove(calIDs.get(which));
+        final ListView listView = (ListView) view.findViewById(R.id.calendar_listview);
+        CalendarsFilterAdapter ad = new CalendarsFilterAdapter(getActivity().getApplicationContext(),R.layout.calendars_filter_item, R.id.calendar_text, calendarsList);
+        listView.setAdapter(ad);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listView.setDivider(null);
+
+
+        Button okButton = (Button) view.findViewById(R.id.calendar_ok_button);
+        Button cancelButton = (Button) view.findViewById(R.id.calendar_cancel_button);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for(int i = 0; i < calendarsList.size(); i++){
+                    if(calendarsList.get(i).isChecked()){
+                        if(!visibleCalendars.contains(calIDs.get(i))) {
+                            visibleCalendars.add(calIDs.get(i));
                         }
+                    } else {
+                        visibleCalendars.remove(calIDs.get(i));
                     }
-                });
-        mWeekView.notifyDatasetChanged();
+                }
+                hasOnMonthChange = false;
+                mWeekView.notifyDatasetChanged();
+                alertDialog.dismiss();
+            }
+        });
 
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+            }
+        });
 
-        return builder.create();
+        builder.setView(view);
+        builder.setTitle("Välj kalender");
+        builder.create();
+        alertDialog = builder.create();
+        alertDialog.show();
     }
-
 
     public void changeNbrOfDaysDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final String [] choices = {"1", "3", "5"};
+        final int previousNumberOfVisibleDays = numberOfVisibleDays;
         numberOfVisibleDays = mWeekView.getNumberOfVisibleDays();
         int index = getIndexOfVisibleDays();
 
@@ -422,13 +474,29 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                    numberOfVisibleDays = Integer.parseInt((choices[selected]));
            }
        });
-
-
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
+                Calendar newDate = mWeekView.getFirstVisibleDay();
                 mWeekView.setNumberOfVisibleDays(numberOfVisibleDays);
-                mWeekView.goToHour(8.0);
+
+
+                mWeekView.goToHour(CalendarUtils.HOUR > 16 ? 16 : CalendarUtils.HOUR - 1);
+
+
+                /*)  if(previousNumberOfVisibleDays == 5 && numberOfVisibleDays == 3) {
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - 2);
+
+                } else if (previousNumberOfVisibleDays == 3 && numberOfVisibleDays == 5){
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - 2);
+                } else {
+                    /*if prev = 5 and cur = 1, prev = 5 and cur = 5, prev = 3 and cur = 5,
+                    * prev = 3 and cur = 1, prev = 3 and cur = 3, prev = 1
+                    * then we want to set the date as the prev first one
+
+                }*/
+                mWeekView.goToDate(newDate);
+
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
             }
@@ -449,20 +517,49 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         return numberOfVisibleDays == 1? numberOfVisibleDays-1: i;
     }
 
-    private void calendarColors() {
-        Cursor c = cr.query(CalendarContract.Calendars.CONTENT_URI,
-                CalendarUtils.CALENDAR_CC_PROJECTION,
-                null,
-                null, null);
-        while(c.moveToNext()) {
-            // the cursor, c, contains all the projection data items
-            // access the cursor’s contents by array index as declared in
-            // your projection
-            long id = c.getLong(0);
-            int  color = c.getInt(4);
-            calendarColors.put(id, color);
 
+
+    private void onForwardCLick() {
+        Calendar newDate = mWeekView.getFirstVisibleDay();
+        if (numberOfVisibleDays == 1) {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + 1);
+        } else {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays - 1);
         }
-        c.close();
+
+        mWeekView.goToDate(newDate);
+        hasOnMonthChange = false;
+        mWeekView.notifyDatasetChanged();
     }
+
+    private void onBackClick() {
+        Calendar newDate = mWeekView.getFirstVisibleDay();
+        if (numberOfVisibleDays == 1) {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) -1);
+        } else {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays + 1);
+        }
+
+        mWeekView.goToDate(newDate);
+        hasOnMonthChange = false;
+        mWeekView.notifyDatasetChanged();
+    }
+
+    private void onTodayClick() {
+        mWeekView.goToToday();
+        mWeekView.goToHour(CalendarUtils.HOUR > 16? 16: CalendarUtils.HOUR-1);
+        hasOnMonthChange = false;
+        mWeekView.notifyDatasetChanged();
+    }
+
+    public List<Long> getVisibleCalendars() {
+        return visibleCalendars;
+    }
+    public CalendarModel getCalendarModel() {
+        return calendarModel;
+    }
+
+
+
+
 }

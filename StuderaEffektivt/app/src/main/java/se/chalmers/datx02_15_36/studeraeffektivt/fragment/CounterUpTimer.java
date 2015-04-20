@@ -1,4 +1,4 @@
-package se.chalmers.datx02_15_36.studeraeffektivt.activity;
+package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 
 import android.app.Activity;

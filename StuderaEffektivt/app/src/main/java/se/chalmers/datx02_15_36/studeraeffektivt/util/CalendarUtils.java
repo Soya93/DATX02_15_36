@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.util;
 
 import android.provider.CalendarContract;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,8 +28,8 @@ public class CalendarUtils {
             CalendarContract.Instances.OWNER_ACCOUNT,    // 9
             CalendarContract.Instances.CALENDAR_COLOR,       //10
             CalendarContract.Instances.VISIBLE,              //11
-            CalendarContract.Instances.ALL_DAY              //12
-
+            CalendarContract.Instances.ALL_DAY             //12
+            //CalendarContract.Instances.CALENDAR_ACCESS_LEVEL //13
     };
 
     // The indices for the projection array above for the events in the calendar
@@ -45,17 +46,20 @@ public class CalendarUtils {
     public static final int CALENDAR_COLOR = 10;
     public static final int VISIBLE = 11;
     public static final int ALL_DAY = 12;
+    public static final int CAL_ACCESS_LVL = CalendarContract.Instances.CAL_ACCESS_EDITOR;
+
 
     public static final String[] NOTIFICATION_PROJECTION = new String[]{
-            CalendarContract.Reminders.MINUTES //0
+            CalendarContract.Reminders._ID, //0
+            CalendarContract.Reminders.EVENT_ID, // 1
+            CalendarContract.Reminders.MINUTES, //2
     };
-    public static final int EVENT_INFO_NOTIFICATION = 0;
-
-
+    public static final int NOTIFICATION_ID = 0;
+    public static final int NOTIFICATION_EVENT_ID = 1;
+    public static final int NOTIFICATION_TIME = 2;
+    public static final int NOTIFICATION_DEFAULT = CalendarContract.Reminders.MINUTES_DEFAULT;
 
     public static final Calendar cal = Calendar.getInstance();
-
-
 
     //get todays date
     public static final int YEAR = cal.get(Calendar.YEAR);
@@ -64,8 +68,6 @@ public class CalendarUtils {
     public static final int HOUR = cal.get(Calendar.HOUR_OF_DAY);
     public static final int MINUTE = cal.get(Calendar.MINUTE);
     public static final long TODAY_IN_MILLIS = cal.getTimeInMillis();
-
-
 
 
     public static final String[] CALENDAR_CC_PROJECTION = {CalendarContract.Calendars._ID,
@@ -78,4 +80,74 @@ public class CalendarUtils {
 
     public static final int C_CALENDAR_ID = 0;
     public static final int C_CALENDAR_COLOR =4;
+
+
+
+    public static long getTimeToEventStart(long eventStart) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(eventStart);
+        int eventH = cal.get(Calendar.HOUR_OF_DAY);
+        int eventM = cal.get(Calendar.MINUTE);
+
+        cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
+        int todayH = cal.get(Calendar.HOUR_OF_DAY);
+        int todayM = cal.get(Calendar.MINUTE);
+        cal.set(Calendar.HOUR_OF_DAY, eventH - todayH);
+        cal.set(Calendar.MINUTE, eventM - todayM);
+
+        return  cal.getTimeInMillis();
+    }
+
+    public static long getTimeUntilTomorrow(long tomorrowMillis){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(tomorrowMillis);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        int tomorrowH = cal.get(Calendar.HOUR_OF_DAY);
+        int tomorrowM = cal.get(Calendar.MINUTE);
+
+        cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
+        int todayH = cal.get(Calendar.HOUR_OF_DAY);
+        int todayM = cal.get(Calendar.MINUTE);
+        cal.set(Calendar.HOUR_OF_DAY, tomorrowH - todayH);
+        cal.set(Calendar.MINUTE, tomorrowM - todayM);
+
+        return cal.getTimeInMillis();
+    }
+
+    public static boolean startTimeHasPassed(long eventStart){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(eventStart);
+        int eventTimeInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+
+        cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
+        int todayTimeInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+
+        return eventTimeInMin < todayTimeInMin;
+    }
+
+    public static boolean isBeforeTomorrow(long eventStart, long tomorrowMillis){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(getTimeToEventStart(eventStart));
+        int timeInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+
+        cal.setTimeInMillis(getTimeUntilTomorrow(tomorrowMillis));
+        int tomorrowInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+
+        return tomorrowInMin > timeInMin;
+    }
+
+    public static boolean isOnGoing(long eventStart, long eventEnd){
+        cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
+        int nowInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+        int leftMinutes = (24*60) - ((cal.get(Calendar.HOUR_OF_DAY)*60) + cal.get(Calendar.MINUTE));
+
+        cal.setTimeInMillis(eventEnd);
+        int endTimeInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+
+        cal.setTimeInMillis(getTimeToEventStart(eventStart));
+        int toEventStartMinutes = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+
+        return toEventStartMinutes > leftMinutes && endTimeInMin > nowInMin;
+    }
 }
