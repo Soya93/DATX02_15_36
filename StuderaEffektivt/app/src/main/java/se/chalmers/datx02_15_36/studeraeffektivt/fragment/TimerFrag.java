@@ -27,10 +27,12 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 
 public class TimerFrag extends Fragment {
@@ -75,6 +77,7 @@ public class TimerFrag extends Fragment {
     private SharedPreferences sharedPref;
     private String prefName = "ButtonPref";
 
+    private Utils utils;
 
     private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
@@ -205,7 +208,6 @@ public class TimerFrag extends Fragment {
 
     }
 
-
     public void setSelectedCourse() {
         String temp = spinner.getSelectedItem().toString();
         String[] parts = temp.split("-");
@@ -213,7 +215,6 @@ public class TimerFrag extends Fragment {
         Log.d("selected course", ccode);
 
     }
-
 
     private long minToMilliSeconds(int parsedTime) {
         return ((long) parsedTime * 60 * 1000);
@@ -223,18 +224,22 @@ public class TimerFrag extends Fragment {
         return ((int) milliSeconds / 1000 / 60);
     }
 
-
-    /**
-     * Set the timer.
-     */
-
-
+    private void insertIntoDataBase() {
+        long inserted = dbAdapter.insertSession(ccode, Utils.getCurrWeekNumber(), milliSecondsToMin(default_StudyTime));
+        if (inserted > 0 && getActivity() != null) {
+            Toast toast = Toast.makeText(getActivity(), "Session:" + milliSecondsToMin(default_StudyTime)
+                    + "minutes added to " + ccode, Toast.LENGTH_SHORT);
+            toast.show();
+        } else if (getActivity() != null) {
+            Toast toast = Toast.makeText(getActivity(), "Failed to add a Session", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
 
     private void setProgressColor(int c) {
         progressBar.getProgressDrawable().setColorFilter(c, PorterDuff.Mode.SRC_IN);
         progressBar.setProgress(0);
     }
-
 
     public void startTimer() {
         if (buttonId == R.drawable.ic_start && !hasBeenPaused) {
@@ -256,7 +261,6 @@ public class TimerFrag extends Fragment {
 
     }
 
-
     private void sendDataToService () {
         Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
         i.putExtra("CCODE",ccode);
@@ -268,10 +272,9 @@ public class TimerFrag extends Fragment {
 
     }
 
-
     public void setTimerView(long secUntilFinished) {
         String sec = String.format("%02d", (secUntilFinished)/1000 % 60);
-        String min = String.format("%02d", (secUntilFinished) /1000/ 60);
+        String min = String.format("%02d", (secUntilFinished) / 1000 / 60);
         textViewText = (min + ":" + sec);
         textView.setText(textViewText);
         progressBar.setProgress((int)(secUntilFinished * 1000 / default_StudyTime));
@@ -282,10 +285,7 @@ public class TimerFrag extends Fragment {
         buttonId = R.drawable.ic_start;
         hasBeenPaused = false;
         startButton.setImageResource(buttonId);
-
-
     }
-
 
     public void settingsTimer() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
