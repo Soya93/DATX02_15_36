@@ -169,8 +169,6 @@ public class FlowLayout extends ViewGroup {
         if (cursor != null) {
             while (cursor.moveToNext()) {
 
-                Log.d("Början av while för cursor: ", "");
-
                 if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode) && cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())) {
 
                     AssignmentStatus assignmentStatus;
@@ -238,11 +236,9 @@ public class FlowLayout extends ViewGroup {
         if (cursor != null) {
             while (cursor.moveToNext()) {
 
-                Log.d("Början av while för cursor: ", "");
-
                 if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode)
                                     && cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())
-                                    && Integer.parseInt(cursor.getString(cursor.getColumnIndex("week"))) == week) {
+                                    && cursor.getInt(cursor.getColumnIndex("week")) == week) {
 
                     AssignmentStatus assignmentStatus;
                     if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())) {

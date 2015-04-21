@@ -203,7 +203,6 @@ public class StudyTaskActivity extends ActionBarActivity {
         listOfReadAssignments.removeAllViews();
         listOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
         listOfReadAssignments.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
-
     }
 
     //Metod för att lägga till en uppgift
@@ -216,12 +215,10 @@ public class StudyTaskActivity extends ActionBarActivity {
         String[] separateTaskParts;
         separateTaskParts = taskParts.split("");
 
-
         taskString.replaceAll("\\s+", "");
 
         int start;
         int end;
-
 
         //Kollar om det finns kommatecken i input för uppgifter och separerar i så fall stringen så att alla element hamnar separat
         if (taskString.contains(",")) {
