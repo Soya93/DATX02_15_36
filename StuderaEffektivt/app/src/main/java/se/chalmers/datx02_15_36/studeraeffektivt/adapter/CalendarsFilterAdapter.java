@@ -2,12 +2,16 @@ package se.chalmers.datx02_15_36.studeraeffektivt.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,6 +26,7 @@ public class CalendarsFilterAdapter extends ArrayAdapter<CalendarsFilterItem> {
 
     private Context context;
     private ArrayList<CalendarsFilterItem> itemsArrayList;
+    private ImageView colorView;
 
     public CalendarsFilterAdapter(Context context, int resource, int textViewResourceId, ArrayList<CalendarsFilterItem> itemsArrayList) {
 
@@ -59,28 +64,39 @@ public class CalendarsFilterAdapter extends ArrayAdapter<CalendarsFilterItem> {
         }
 
         // 3. Get the two text view from the convertView
-        CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.calendar_checkBox);
+
+        // CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.calendar_checkBox);
         TextView textView = (TextView) convertView.findViewById(R.id.calendar_text);
+        colorView = (ImageView) convertView.findViewById(R.id.calendar_color_image);
 
         // 4. Set the text for textView
         textView.setText(" " + itemsArrayList.get(position).getTitle());
         textView.setTextColor(Color.BLACK);
-        checkBox.setBackgroundColor(itemsArrayList.get(position).getColor());
-        addClickHandlerToCheckBox(checkBox, position);
-        checkBox.setChecked(itemsArrayList.get(position).isChecked());
+
+        if(itemsArrayList.get(position).isChecked()) {
+            colorView.setImageDrawable(context.getDrawable(R.drawable.ic_square));
+            colorView.setColorFilter(itemsArrayList.get(position).getColor());
+        }else {
+            colorView.setImageDrawable(context.getDrawable(R.drawable.ic_square_frame));
+            colorView.setColorFilter(itemsArrayList.get(position).getColor());
+        }
+
 
         // 6. retrn convertView
         return convertView;
     }
 
-    private void addClickHandlerToCheckBox(CheckBox checkbox, final int position) {
-        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                                public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-                                                    CheckBox checkbox = (CheckBox) arg0;
-                                                    boolean isChecked = checkbox.isChecked();
-                                                    itemsArrayList.get(position).setChecked(isChecked);
-                                                }
-                                            }
-        );
+
+
+
+
+    public void setColor(int color) {
+        this.colorView.setColorFilter(color);
     }
+
+    public ArrayList<CalendarsFilterItem> getItemsArrayList() {
+        return this.itemsArrayList;
+    }
+
+
 }

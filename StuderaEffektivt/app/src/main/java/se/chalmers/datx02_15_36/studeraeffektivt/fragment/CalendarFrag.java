@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +15,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -32,6 +34,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.EventActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarsFilterAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarChoiceItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -66,6 +69,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private View.OnClickListener fabHandler;
     private AlertDialog alertDialog;
     private ArrayList<CalendarsFilterItem> calendarsList;
+    private CalendarsFilterAdapter ad;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -416,21 +420,15 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater li = LayoutInflater.from(getActivity());
-        View view= li.inflate(R.layout.calendarsfilterlistview, null);
+        View view = li.inflate(R.layout.calendarsfilterlistview, null);
 
         final ListView listView = (ListView) view.findViewById(R.id.calendar_listview);
-        CalendarsFilterAdapter ad = new CalendarsFilterAdapter(getActivity().getApplicationContext(),R.layout.calendars_filter_item, R.id.calendar_text, calendarsList);
+        ad = new CalendarsFilterAdapter(getActivity().getApplicationContext(),R.layout.calendars_filter_item, R.id.calendar_text, calendarsList);
         listView.setAdapter(ad);
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setDivider(null);
 
-
-        Button okButton = (Button) view.findViewById(R.id.calendar_ok_button);
-        Button cancelButton = (Button) view.findViewById(R.id.calendar_cancel_button);
-
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 for(int i = 0; i < calendarsList.size(); i++){
                     if(calendarsList.get(i).isChecked()){
                         if(!visibleCalendars.contains(calIDs.get(i))) {
@@ -446,9 +444,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             }
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+        builder.setNegativeButton("Avbryt",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 alertDialog.cancel();
             }
         });
@@ -458,6 +456,16 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.create();
         alertDialog = builder.create();
         alertDialog.show();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                ad.getItemsArrayList().get(position).setChecked(! ad.getItemsArrayList().get(position).isChecked());
+                ad.notifyDataSetChanged();
+            }
+        });
+
     }
 
     public void changeNbrOfDaysDialog(){
