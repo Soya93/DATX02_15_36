@@ -31,6 +31,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 public class StudyTaskActivity extends ActionBarActivity {
@@ -51,7 +52,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     //The access point of the database.
     private DBAdapter dbAdapter;
 
-    private int chosenWeek = Time.WEEK_NUM;
+    private int chosenWeek = Utils.getCurrWeekNumber();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,12 +114,12 @@ public class StudyTaskActivity extends ActionBarActivity {
         ArrayAdapter<Integer> chapterAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, chapterItems);
         chapterSpinner.setAdapter(chapterAdapter);
 
-        int currentWeek = Time.WEEK_NUM;
+        int currentWeek = Utils.getCurrWeekNumber();
         Integer[] weekItems = new Integer[]{currentWeek,currentWeek+1, currentWeek+2, currentWeek+3, currentWeek+4, currentWeek+5, currentWeek+6,
                                             currentWeek+7, currentWeek+8, currentWeek+9, currentWeek+10, currentWeek+11, currentWeek+12, currentWeek+13,
                                             currentWeek+14, currentWeek+15};
         ArrayAdapter<Integer> weekAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, weekItems);
-        chapterSpinner.setAdapter(weekAdapter);
+        weekSpinner.setAdapter(weekAdapter);
 
 
         setCourses();
