@@ -65,7 +65,7 @@ public class HomeAdapter extends ArrayAdapter<HomeEventItem> {
         // 2. Get rowView from inflater
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.home_event_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.home_event_item2, parent, false);
         }
 
 

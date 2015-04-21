@@ -24,6 +24,14 @@
                 android:id="@+id/home_fab"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Dra nedåt för att sykronisera"
+                android:id="@+id/synchronize_lable"
+                android:layout_gravity="center" />
         </FrameLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>
