@@ -109,6 +109,7 @@ public class MyCountDownTimer extends Service {
     private void sendMessage(long countDownTime) {
         Message msg = mHandler.obtainMessage();
         bundle.putLong("timePassed", countDownTime);
+        bundle.putInt("Phace",count);
         msg.setData(bundle);
         mHandler.sendMessage(msg);
     }
