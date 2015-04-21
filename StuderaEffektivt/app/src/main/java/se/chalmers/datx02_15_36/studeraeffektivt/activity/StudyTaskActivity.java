@@ -237,6 +237,9 @@ public class StudyTaskActivity extends ActionBarActivity {
                         addToListOfTasks(studyTask);
                         addToDatabase(studyTask);
                     }
+                    else{
+                        Toast.makeText(this,"Uppgift redan tillagd!",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
@@ -248,6 +251,9 @@ public class StudyTaskActivity extends ActionBarActivity {
                     StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, s, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
                     addToListOfTasks(studyTask);
                     addToDatabase(studyTask);
+                }
+                else{
+                    Toast.makeText(this,"Uppgift redan tillagd!",Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -275,6 +281,9 @@ public class StudyTaskActivity extends ActionBarActivity {
                 addToDatabase(studyTask);
                 addToListOfTasks(studyTask);
             }
+            else{
+                Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
+            }
 
         } else {
             if(!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
@@ -283,6 +292,9 @@ public class StudyTaskActivity extends ActionBarActivity {
 
                 addToDatabase(studyTask);
                 addToListOfTasks(studyTask);
+            }
+            else{
+                Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
             }
         }
 
