@@ -27,7 +27,7 @@
         android:layout_centerVertical="true"
         android:max="1000"
         android:progress="1000"
-        android:progressDrawable="@drawable/progressbarbg" />
+        android:progressDrawable="@drawable/progressbar_study" />
 
     <TextView
         android:id="@+id/textView"
