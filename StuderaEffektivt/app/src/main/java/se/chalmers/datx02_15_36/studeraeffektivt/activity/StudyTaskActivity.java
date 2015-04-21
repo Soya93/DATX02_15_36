@@ -114,10 +114,17 @@ public class StudyTaskActivity extends ActionBarActivity {
         ArrayAdapter<Integer> chapterAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, chapterItems);
         chapterSpinner.setAdapter(chapterAdapter);
 
-        int currentWeek = Utils.getCurrWeekNumber();
-        Integer[] weekItems = new Integer[]{currentWeek,currentWeek+1, currentWeek+2, currentWeek+3, currentWeek+4, currentWeek+5, currentWeek+6,
+        int week = Utils.getCurrWeekNumber();
+        Integer[] weekItems = new Integer[15];
+        for(int i = 0; i < weekItems.length; i++){
+            if(week > 52)
+                week = 1;
+            weekItems[i] = week;
+            week++;
+        }
+        /*Integer[] weekItems = new Integer[]{currentWeek,currentWeek+1, currentWeek+2, currentWeek+3, currentWeek+4, currentWeek+5, currentWeek+6,
                                             currentWeek+7, currentWeek+8, currentWeek+9, currentWeek+10, currentWeek+11, currentWeek+12, currentWeek+13,
-                                            currentWeek+14, currentWeek+15};
+                                            currentWeek+14, currentWeek+15};*/
         ArrayAdapter<Integer> weekAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, weekItems);
         weekSpinner.setAdapter(weekAdapter);
 
