@@ -21,6 +21,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
         import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
         import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
         import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+        import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 
 /**
@@ -32,7 +33,6 @@ public class FlowLayout extends ViewGroup {
     private final static int PAD_H = 2, PAD_V = 2; // Space between child views.
     private int mHeight;
 
-    private TextView kapitelText;
     private HashMap<Integer, ArrayList<StudyTask>> hashMapOfStudyTasks;
     private HashMap<Integer, ArrayList<StudyTask>> hashMapOfReadingAssignments;
 
@@ -137,7 +137,7 @@ public class FlowLayout extends ViewGroup {
         treeMap = new TreeMap<Integer, ArrayList>(hashMap);
         for (Object value : treeMap.values()) {
             ArrayList<StudyTask> a = (ArrayList) value;
-            kapitelText = new TextView(this.getContext());
+            TextView kapitelText = new TextView(this.getContext());
             kapitelText.setText("KAPITEL " + a.get(0).getChapter());
             int width = this.getWidth();
             kapitelText.setWidth(width);
@@ -224,6 +224,77 @@ public class FlowLayout extends ViewGroup {
             addMap(hashMapOfStudyTasks);
             if(hashMapOfReadingAssignments!=null)
             addMap(hashMapOfReadingAssignments);
+
+        }
+    }
+
+    public void addTasksFromDatabase(DBAdapter dbAdapter, String courseCode, AssignmentType assignmentType, int week) {
+
+        Cursor cursor = dbAdapter.getAssignments();
+
+        hashMapOfStudyTasks = new HashMap<>();
+        hashMapOfReadingAssignments = new HashMap<>();
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+
+                Log.d("Början av while för cursor: ", "");
+
+                if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode)
+                                    && cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())
+                                    && Integer.parseInt(cursor.getString(cursor.getColumnIndex("week"))) == week) {
+
+                    AssignmentStatus assignmentStatus;
+                    if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())) {
+                        assignmentStatus = AssignmentStatus.DONE;
+                    } else {
+                        assignmentStatus = null;
+                    }
+                    if (cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ.toString())) {
+                        assignmentType = AssignmentType.READ;
+                    } else {
+                        assignmentType = AssignmentType.OTHER;
+                    }
+
+                    StudyTask studyTask = new StudyTask(
+                            this.getContext(),
+                            cursor.getInt(cursor.getColumnIndex("_id")),
+                            cursor.getString(cursor.getColumnIndex("_ccode")),
+                            cursor.getInt(cursor.getColumnIndex("chapter")),
+                            cursor.getInt(cursor.getColumnIndex("week")),
+                            cursor.getString(cursor.getColumnIndex("assNr")),
+                            Integer.parseInt(cursor.getString(cursor.getColumnIndex("startPage"))),
+                            Integer.parseInt(cursor.getString(cursor.getColumnIndex("stopPage"))),
+                            dbAdapter,
+                            assignmentType,
+                            assignmentStatus);
+
+                    if (studyTask.getType() == AssignmentType.OTHER) {
+
+                        if (hashMapOfStudyTasks.containsKey(studyTask.getChapter())) {
+                            hashMapOfStudyTasks.get(studyTask.getChapter()).add(studyTask);
+                        } else {
+                            ArrayList<StudyTask> a = new ArrayList();
+                            a.add(studyTask);
+                            hashMapOfStudyTasks.put(studyTask.getChapter(), a);
+                        }
+
+                    } else {
+                        if (hashMapOfReadingAssignments.containsKey(studyTask.getChapter())) {
+                            hashMapOfReadingAssignments.get(studyTask.getChapter()).add(studyTask);
+                        } else {
+                            ArrayList<StudyTask> a = new ArrayList();
+                            a.add(studyTask);
+                            hashMapOfReadingAssignments.put(studyTask.getChapter(), a);
+                        }
+                    }
+                }
+            }
+
+            if(hashMapOfStudyTasks!=null)
+                addMap(hashMapOfStudyTasks);
+            if(hashMapOfReadingAssignments!=null)
+                addMap(hashMapOfReadingAssignments);
 
         }
     }
