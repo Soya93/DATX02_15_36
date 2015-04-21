@@ -313,7 +313,6 @@ public class StudyTaskActivity extends ActionBarActivity {
                 Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 
     public void addToListOfTasks(StudyTask studyTask) {
