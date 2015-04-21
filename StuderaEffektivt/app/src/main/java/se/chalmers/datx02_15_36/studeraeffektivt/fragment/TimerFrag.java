@@ -64,6 +64,7 @@ public class TimerFrag extends Fragment {
     private String pausLength;
     private String ccode;
     private String textViewText;
+    private int phaceInt;
 
     private Bundle b;
     private Spinner spinner;
@@ -83,15 +84,18 @@ public class TimerFrag extends Fragment {
                 case TIMER_1:
                     Bundle b = msg.getData();
                     serviceInt = b.getLong("timePassed", -1);
+                    phaceInt = b.getInt("Phace",-1);
                     setTimerView(serviceInt);
+
                     break;
                 case CHANGE_COLOR_0:
 
-                    setProgressColor(Color.GREEN);
+                    progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_pause));
                     break;
 
                 case CHANGE_COLOR_1:
-                    setProgressColor(Color.BLUE);
+
+                    progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
                     break;
             }
 
@@ -134,7 +138,6 @@ public class TimerFrag extends Fragment {
         if (b != null) {
             textView = (TextView) rootView.findViewById(R.id.textView);
             String textV = b.getString("textViewText");
-            setProgressColor(Color.BLUE);
             textView.setText(textV);
 
         }
@@ -152,7 +155,7 @@ public class TimerFrag extends Fragment {
 
         sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
 
-
+            phaceInt = sharedPref.getInt("Phace",-1);
         int buttonTemp = sharedPref.getInt("buttonImage", -1);
         if (buttonTemp > 0) {
             buttonId = buttonTemp;
@@ -160,8 +163,8 @@ public class TimerFrag extends Fragment {
         }
         hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
         if(hasBeenPaused){
-           long temp = sharedPref.getLong("timeLeft",-1);
-                     setTimerView(temp);
+            long temp = sharedPref.getLong("timeLeft",-1);
+            setTimerView(temp);
         }
 
 
@@ -274,7 +277,11 @@ public class TimerFrag extends Fragment {
         String min = String.format("%02d", (secUntilFinished) /1000/ 60);
         textViewText = (min + ":" + sec);
         textView.setText(textViewText);
-        progressBar.setProgress((int)(secUntilFinished * 1000 / default_StudyTime));
+        if(phaceInt == 0){
+            progressBar.setProgress((int)(secUntilFinished * 1000 / default_StudyTime));}
+        if(phaceInt == 1){
+            progressBar.setProgress((int)(secUntilFinished * 1000 / default_PauseTime));
+        }
     }
 
     public void resetTimer() {
@@ -318,7 +325,7 @@ public class TimerFrag extends Fragment {
     }
 
     private void nextDialog() {
-          resetTimer();
+        resetTimer();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -397,9 +404,7 @@ public class TimerFrag extends Fragment {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt("buttonImage", buttonId);
         editor.putBoolean("hasPaused", hasBeenPaused);
-        Log.d("buttonId", String.valueOf(buttonId));
-        Log.d("hasPaused",String.valueOf(hasBeenPaused));
-
+        editor.putInt("Phace",phaceInt);
 
 
 
@@ -408,7 +413,7 @@ public class TimerFrag extends Fragment {
         }
 
         Log.d("ONDESTROY", String.valueOf(sharedPref.getInt("buttonImage", -1)));
-         editor.apply();
+        editor.apply();
     }
 
 

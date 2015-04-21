@@ -32,9 +32,17 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/chapterSpinner"
-            android:layout_weight="0.20"
+            android:layout_weight="0.10"
             android:layout_alignParentBottom="true"
             android:layout_below="@+id/chapterLabel"/>
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/courseSpinner"
+                android:layout_weight="0.10"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/chapterSpinner"/>
 
         </LinearLayout>
 

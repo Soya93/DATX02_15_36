@@ -14,6 +14,7 @@ import android.os.Vibrator;
 import android.widget.Toast;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 /**
  * Created by alexandraback on 24/02/15.
@@ -40,6 +41,7 @@ public class MyCountDownTimer extends Service {
     private String ccode;
     private long studyTimePassed=0;
 
+    private Utils utils;
 
     private  Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
@@ -60,9 +62,6 @@ public class MyCountDownTimer extends Service {
         }
     };
 
-
-
-
     public class MCDTBinder extends Binder {
         MyCountDownTimer getService(){
             return  MyCountDownTimer.this;
@@ -79,6 +78,7 @@ public class MyCountDownTimer extends Service {
         totalTime = intent.getLongExtra("TOTAL_TIME", 100*1000);
         ccode= intent.getStringExtra("CCODE");
         dbAdapter = new DBAdapter(getBaseContext());
+        utils = new Utils();
         startCountDown();
         return START_NOT_STICKY;
     }
@@ -109,6 +109,7 @@ public class MyCountDownTimer extends Service {
     private void sendMessage(long countDownTime) {
         Message msg = mHandler.obtainMessage();
         bundle.putLong("timePassed", countDownTime);
+        bundle.putInt("Phace",count);
         msg.setData(bundle);
         mHandler.sendMessage(msg);
     }
@@ -176,7 +177,7 @@ public class MyCountDownTimer extends Service {
     }
 
     private void insertIntoDataBase(long millisPassed) {
-        long inserted = dbAdapter.insertSession(ccode, milliSecondsToMin(millisPassed));
+        long inserted = dbAdapter.insertSession(ccode, utils.getCurrWeekNumber(), milliSecondsToMin(millisPassed));
         if (inserted > 0 && getBaseContext() != null) {
             Toast toast = Toast.makeText(getBaseContext(), "Session:" + milliSecondsToMin(millisPassed)
                     + "minutes added to " + ccode, Toast.LENGTH_SHORT);
