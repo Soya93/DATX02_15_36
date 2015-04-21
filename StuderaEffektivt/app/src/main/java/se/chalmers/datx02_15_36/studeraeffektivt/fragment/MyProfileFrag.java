@@ -13,6 +13,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import android.widget.Button;
 
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
+    import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.TechsNTipsActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 
@@ -186,6 +187,9 @@ public class MyProfileFrag extends Fragment {
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 break;
             case R.id.addTask:
+                Intent i = new Intent(getActivity(), StudyTaskActivity.class);
+                //i.putExtra("CourseCode", courseCode);
+                startActivity(i);
                 /*fragment = new MyProfileFrag();
                 fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "myprofilefrag");

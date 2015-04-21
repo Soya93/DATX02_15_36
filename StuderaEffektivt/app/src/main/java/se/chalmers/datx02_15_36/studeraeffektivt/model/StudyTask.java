@@ -35,23 +35,6 @@ public class StudyTask extends CheckBox{
         return status;
     }
 
-   /* public StudyTask(Context context,String courseCode,int chapter, String taskString, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
-        super(context);
-        this.courseCode = courseCode;
-        this.chapter = chapter;
-        this.taskString = taskString;
-        this.status = status;
-        this.type = type;
-        this.dbAdapter = dbAdapter;
-
-        this.id = courseCode + chapter + taskString;
-
-        if(status==AssignmentStatus.DONE) {
-            this.setChecked(true);
-        }
-
-    }*/
-
     public StudyTask(Context context,int id, String courseCode,int chapter, String taskString, int startPage, int endPage, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
         super(context);
         this.id = id;
@@ -131,10 +114,6 @@ public class StudyTask extends CheckBox{
         return id;
     }
 
-    public void setIdNr(int id) {
-        this.id = id;
-    }
-
    public AssignmentType getType(){
         return type;
     }
@@ -143,40 +122,20 @@ public class StudyTask extends CheckBox{
         return chapter;
     }
 
-    public void setChapter(int chapter) {
-        this.chapter = chapter;
-    }
-
     public String getTaskString() {
         return taskString;
-    }
-
-    public void setTaskString(String taskString) {
-        this.taskString = taskString;
     }
 
     public String getCourseCode() {
         return courseCode;
     }
 
-    public void setCourseCode(String courseCode) {
-        this.courseCode = courseCode;
-    }
-
     public int getStartPage() {
         return startPage;
     }
 
-    public void setStartPage(int startPage) {
-        this.startPage = startPage;
-    }
-
     public int getEndPage() {
         return endPage;
-    }
-
-    public void setEndPage(int endPage) {
-        this.endPage = endPage;
     }
 
     public StudyTask getStudyTask(){ return this; }
