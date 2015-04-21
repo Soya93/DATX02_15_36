@@ -138,7 +138,6 @@ public class TimerFrag extends Fragment {
         if (b != null) {
             textView = (TextView) rootView.findViewById(R.id.textView);
             String textV = b.getString("textViewText");
-            setProgressColor(Color.BLUE);
             textView.setText(textV);
 
         }
@@ -156,7 +155,7 @@ public class TimerFrag extends Fragment {
 
         sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
 
-
+            phaceInt = sharedPref.getInt("Phace",-1);
         int buttonTemp = sharedPref.getInt("buttonImage", -1);
         if (buttonTemp > 0) {
             buttonId = buttonTemp;
@@ -405,9 +404,7 @@ public class TimerFrag extends Fragment {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt("buttonImage", buttonId);
         editor.putBoolean("hasPaused", hasBeenPaused);
-        Log.d("buttonId", String.valueOf(buttonId));
-        Log.d("hasPaused",String.valueOf(hasBeenPaused));
-
+        editor.putInt("Phace",phaceInt);
 
 
 
