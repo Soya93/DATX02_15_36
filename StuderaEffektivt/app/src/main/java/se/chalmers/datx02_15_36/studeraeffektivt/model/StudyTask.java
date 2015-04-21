@@ -20,6 +20,12 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 public class StudyTask extends CheckBox{
 
     public int chapter;
+    private int week;
+
+    public int getWeek() {
+        return week;
+    }
+
     public String taskString;
     public String courseCode;
     private int startPage;
@@ -40,6 +46,7 @@ public class StudyTask extends CheckBox{
         this.id = id;
         this.courseCode = courseCode;
         this.chapter = chapter;
+        this.week = week;
         this.taskString = taskString;
         this.startPage = startPage;
         this.endPage = endPage;

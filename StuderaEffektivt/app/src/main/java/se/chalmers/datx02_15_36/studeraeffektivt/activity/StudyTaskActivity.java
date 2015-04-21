@@ -331,6 +331,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 studyTask.getCourseCode(),
                 studyTask.getIdNr(),
                 studyTask.getChapter(),
+                studyTask.getWeek(),
                 studyTask.getTaskString(),
                 studyTask.getStartPage(),
                 studyTask.getEndPage(),

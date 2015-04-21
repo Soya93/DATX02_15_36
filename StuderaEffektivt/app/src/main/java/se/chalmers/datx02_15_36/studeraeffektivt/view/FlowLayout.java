@@ -190,6 +190,7 @@ public class FlowLayout extends ViewGroup {
                             cursor.getInt(cursor.getColumnIndex("_id")),
                             cursor.getString(cursor.getColumnIndex("_ccode")),
                             cursor.getInt(cursor.getColumnIndex("chapter")),
+                            cursor.getInt(cursor.getColumnIndex("week")),
                             cursor.getString(cursor.getColumnIndex("assNr")),
                             Integer.parseInt(cursor.getString(cursor.getColumnIndex("startPage"))),
                             Integer.parseInt(cursor.getString(cursor.getColumnIndex("stopPage"))),
