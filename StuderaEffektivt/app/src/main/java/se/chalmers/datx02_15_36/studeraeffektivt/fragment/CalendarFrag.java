@@ -89,7 +89,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         this.initComponents();
 
-        view.setBackgroundColor(Color.WHITE);
+        //view.setBackgroundColor(Color.WHITE);
         mWeekView.setBackgroundColor(Color.WHITE);
         mWeekView.setTextSize(30);
 

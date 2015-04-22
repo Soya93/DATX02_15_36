@@ -65,6 +65,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             public void onClick(View v) {
                 if (v.getTag() == homeFAB.getTag()) {
                     calendarFrag.changeVisibleCalendars();
+                    onRefresh();
                 }
             }
         };
