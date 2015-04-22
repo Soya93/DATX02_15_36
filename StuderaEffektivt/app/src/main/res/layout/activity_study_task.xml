@@ -13,6 +13,7 @@
 <LinearLayout
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:layout_weight="0.5"
     android:weightSum="1.0">
 
@@ -21,7 +22,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/courselabel"
             android:text="KURS"
-            android:textSize="20dp"
+            android:textSize="17dp"
             android:layout_weight="0.5"/>
 
         <Spinner
@@ -32,27 +33,51 @@
             android:layout_toRightOf="@+id/courselabel"/>
 
     </LinearLayout>
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Lägg till och ta bort uppgifter från denna kurs"
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:layout_weight="0.5"
             />
-
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/typeLayout"
+        android:layout_below="@+id/courseLayout">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="-------Typ och plats för uppgiften-------"
+            android:gravity="center"
+            android:textSize="17dp"
+            />
+
+        </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/firstLayout"
-        android:layout_below="@+id/courseLayout"
+        android:layout_below="@+id/typeLayout"
         android:weightSum="1.0">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="0.5"
+            android:layout_weight="0.5">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:orientation="horizontal"
             android:weightSum="1"
             android:layout_weight="0.5">
@@ -62,42 +87,74 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/chapterLabel"
                 android:text="KAPITEL"
-                android:textSize="20dp"
-                android:layout_weight="0.5"/>
+                android:textSize="17dp"
+                android:layout_weight="0.35"/>
 
-        <Spinner
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/chapterSpinner"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/chapterLabel"
+                android:layout_weight="0.65"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/chapterSpinner"
-            android:layout_weight="0.50"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/chapterLabel"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal"
-        android:layout_weight="0.5">
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            android:layout_weight="0.5">
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/weekLabel"
             android:text="VECKA"
-            android:textSize="20dp"
-            android:layout_weight="0.5"/>
+            android:textSize="17dp"
+            android:layout_weight="0.35"/>
 
         <Spinner
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/weekSpinner"
-            android:layout_weight="0.50"
-            android:layout_below="@+id/weekLabel"/>
+            android:layout_below="@+id/weekLabel"
+            android:layout_weight="0.65"/>
 
     </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.5">
+        <ToggleButton
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/readOrTaskAssignment"
+            android:textOff="Läsanvisningar"
+            android:textOn="Uppgifter"
+            android:layout_weight="0.5"
+            android:background="@android:drawable/btn_default"/>
+    </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/infoLyout"
+        android:layout_below="@+id/firstLayout">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="-------uppgiften-------"
+            android:gravity="center"
+            android:textSize="17dp"
+            />
+
     </LinearLayout>
 
     <LinearLayout
@@ -105,8 +162,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/secondLayout"
-        android:layout_below="@+id/firstLayout"
+        android:layout_below="@+id/infoLyout"
         android:weightSum="1.0">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.35">
 
             <EditText
             android:layout_width="fill_parent"
@@ -131,16 +194,18 @@
             android:layout_alignParentEnd="true"
             android:layout_weight="0.5"/>
 
-
     </LinearLayout>
+
+
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:id="@+id/thirdLayout"
         android:layout_below="@+id/secondLayout"
-        android:weightSum="1.0">
+        android:weightSum="1.0"
+        android:layout_weight="0.65">
 
         <Button
             android:layout_width="fill_parent"
@@ -152,26 +217,14 @@
             android:layout_alignParentRight="true"
             android:layout_weight="0.50"/>
 
-        <ToggleButton
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:text="New ToggleButton"
-            android:id="@+id/readOrTaskAssignment"
-            android:textOff="Läsanvisningar"
-            android:textOn="Uppgifter"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/taskParts"
-            android:layout_toStartOf="@+id/taskParts"
-            android:layout_weight="0.5"/>
-
     </LinearLayout>
-
+</LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/fourthLayout"
-        android:layout_below="@+id/thirdLayout"
+        android:layout_below="@+id/secondLayout"
         android:layout_centerHorizontal="true"
         android:weightSum="1">
 
