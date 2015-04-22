@@ -110,8 +110,13 @@ public class StudyTaskActivity extends ActionBarActivity {
         weekSpinner = (Spinner) findViewById(R.id.weekSpinner);
         readOrTaskAssignment = (ToggleButton) findViewById(R.id.readOrTaskAssignment);
 
-        Integer[] chapterItems = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50};
-        ArrayAdapter<Integer> chapterAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, chapterItems);
+        //Integer[] chapterItems = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50};
+        String[] chapterItems = new String[]{"Kap 1", "Kap 2", "Kap 3", "Kap 4", "Kap 5", "Kap 6", "Kap 7", "Kap 8", "Kap 9", "Kap 10",
+                "Kap 11", "Kap 12", "Kap 13", "Kap 14", "Kap 15", "Kap 16", "Kap 17", "Kap 18", "Kap 19", "Kap 20",
+                "Kap 21", "Kap 22", "Kap 23", "Kap 24", "Kap 25", "Kap 26", "Kap 27", "Kap 28", "Kap 29", "Kap 30",
+                "Kap 31", "Kap 32", "Kap 33", "Kap 34", "Kap 35", "Kap 36", "Kap 37", "Kap 38", "Kap 39", "Kap 40",
+                "Kap 41", "Kap 42", "Kap 43", "Kap 44", "Kap 45", "Kap 46", "Kap 47", "Kap 48", "Kap 49", "Kap 50"};
+        ArrayAdapter<String> chapterAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, chapterItems);
         chapterSpinner.setAdapter(chapterAdapter);
 
         int week = Utils.getCurrWeekNumber();
@@ -157,7 +162,9 @@ public class StudyTaskActivity extends ActionBarActivity {
         public void onClick(View v) {
 
             if ((v) == addButton) {
-                int chapter = Integer.parseInt(chapterSpinner.getSelectedItem().toString());
+                String[] chapSep = chapterSpinner.getSelectedItem().toString().split(" ");
+                int chapter = Integer.parseInt(chapSep[chapSep.length-1]);
+                //int chapter = Integer.parseInt(chapterSpinner.getSelectedItem().toString());
                 chosenWeek = Integer.parseInt(weekSpinner.getSelectedItem().toString());
                 if(!taskInput.getText().toString().equals("")) {
                     if (readOrTaskAssignment.isChecked()) {
