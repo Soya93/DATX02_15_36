@@ -4,72 +4,143 @@
     tools:context="se.chalmers.datx02_15_36.studeraeffektivt.fragment.StudyTaskFragment">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:id="@+id/firstLayout"
-        android:layout_alignParentTop="true"
-        android:weightSum="1.5">
+        android:layout_height="wrap_content"
+        android:id="@+id/courseLayout"
+        android:orientation="horizontal"
+        android:weightSum="1.0"
+        >
+<LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="0.5"
+    android:weightSum="1.0">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:weightSum="1"
-            android:id="@+id/chapterLayout"
-            android:layout_weight="0.5"
-            android:layout_toLeftOf="@+id/taskLayout">
-
-            <TextView
+        <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/chapterLabel"
-            android:layout_above="@+id/chapterSpinner"
-            android:layout_weight="0.80"
-            android:text="KAPITEL"/>
+            android:id="@+id/courselabel"
+            android:text="KURS"
+            android:textSize="20dp"
+            android:layout_weight="0.5"/>
 
-            <Spinner
+        <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/courseSpinner"
+            android:layout_weight="0.50"
+            android:layout_toRightOf="@+id/courselabel"/>
+
+    </LinearLayout>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Lägg till och ta bort uppgifter från denna kurs"
+            android:textSize="20dp"
+            android:layout_weight="0.5"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/firstLayout"
+        android:layout_below="@+id/courseLayout"
+        android:weightSum="1.0">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_weight="0.5">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/chapterLabel"
+                android:text="KAPITEL"
+                android:textSize="20dp"
+                android:layout_weight="0.5"/>
+
+        <Spinner
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/chapterSpinner"
-            android:layout_weight="0.10"
+            android:layout_weight="0.50"
             android:layout_alignParentBottom="true"
-            android:layout_below="@+id/chapterLabel"/>
+            android:layout_below="@+id/chapterLabel"
+            />
 
-            <Spinner
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/courseSpinner"
-                android:layout_weight="0.10"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@+id/chapterSpinner"/>
+    </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-        android:orientation="vertical"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/taskLayout"
-        android:layout_weight="0.5"
-        android:weightSum="1"
-        android:layout_toRightOf="@+id/chapterLayout">
+        android:orientation="horizontal"
+        android:layout_weight="0.5">
 
-            <TextView
+        <TextView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:text="UPPGIFT"
+            android:layout_height="wrap_content"
+            android:id="@+id/weekLabel"
+            android:text="VECKA"
+            android:textSize="20dp"
             android:layout_weight="0.5"/>
+
+        <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/weekSpinner"
+            android:layout_weight="0.50"
+            android:layout_below="@+id/weekLabel"/>
+
+    </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/secondLayout"
+        android:layout_below="@+id/firstLayout"
+        android:weightSum="1.0">
 
             <EditText
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:inputType="number"
+            android:hint="ex: 1-5 eller 1,2,3"
             android:digits="0123456789,-."
             android:id="@+id/taskInput"
             android:layout_weight="0.5"/>
-        </LinearLayout>
 
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="ex: abcd"
+            android:digits="abcdefghijklmnopqrstuvwxy"
+            android:id="@+id/taskParts"
+            android:layout_gravity="left|bottom"
+            android:layout_below="@+id/addButton"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_weight="0.5"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/thirdLayout"
+        android:layout_below="@+id/secondLayout"
+        android:weightSum="1.0">
 
         <Button
             android:layout_width="fill_parent"
@@ -79,57 +150,7 @@
             android:layout_toRightOf="@+id/taskLayout"
             android:layout_below="@+id/taskInput"
             android:layout_alignParentRight="true"
-            android:layout_weight="0.52"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/thirdLayout"
-        android:layout_below="@+id/firstLayout"
-        android:weightSum="1.5">
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:ems="10"
-            android:inputType="text"
-            android:digits="abcdefghijklmnopqrstuvwxy"
-            android:id="@+id/taskParts"
-            android:layout_gravity="left|bottom"
-            android:layout_below="@+id/addButton"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_weight="0.5"/>
-
-        <ToggleButton
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/readOrTaskAssignment2"
-            android:textOff="Läsanvisningar"
-            android:textOn="Uppgifter"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/taskParts"
-            android:layout_weight="0.5"/>
-
-        <Spinner
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/weekSpinner"
-            android:layout_weight="0.50"
-            android:layout_toRightOf="@+id/readOrTaskAssignment"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/forthLayout"
-        android:layout_below="@+id/thirdLayout"
-        android:weightSum="1">
+            android:layout_weight="0.50"/>
 
         <ToggleButton
             android:layout_width="fill_parent"
@@ -149,8 +170,8 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/fifthLayout"
-        android:layout_below="@+id/forthLayout"
+        android:id="@+id/fourthLayout"
+        android:layout_below="@+id/thirdLayout"
         android:layout_centerHorizontal="true"
         android:weightSum="1">
 
