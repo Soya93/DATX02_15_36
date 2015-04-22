@@ -175,7 +175,7 @@ public class FlowLayout extends ViewGroup {
                     if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())) {
                         assignmentStatus = AssignmentStatus.DONE;
                     } else {
-                        assignmentStatus = null;
+                        assignmentStatus = AssignmentStatus.UNDONE;
                     }
                     if (cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ.toString())) {
                         assignmentType = AssignmentType.READ;
@@ -244,7 +244,7 @@ public class FlowLayout extends ViewGroup {
                     if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())) {
                         assignmentStatus = AssignmentStatus.DONE;
                     } else {
-                        assignmentStatus = null;
+                        assignmentStatus = AssignmentStatus.UNDONE;
                     }
                     if (cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ.toString())) {
                         assignmentType = AssignmentType.READ;
