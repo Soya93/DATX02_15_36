@@ -40,6 +40,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarsFilterAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 
 ;
@@ -71,6 +72,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private View.OnClickListener fabHandler;
     private AlertDialog alertDialog;
     private ArrayList<CalendarsFilterItem> calendarsList;
+    private ArrayList<Long> writersPermissonCalendarList;
     private CalendarsFilterAdapter ad;
 
     @Override
@@ -86,6 +88,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         Map<Long,String> cals = calendarModel.getCalendarInfo(cr);
         visibleCalendars =  new LinkedList<>(cals.keySet());
         calendarsList = calendarModel.getCalendarFilters();
+        writersPermissonCalendarList = calendarModel.getCalendarWritersPermissionIds();
+
+        Log.i("calFrag:siza all: ", calendarsList.size() + "");
+
+        for(Long id : writersPermissonCalendarList) {
+            Log.i("calFrag: writers id ", id +"");
+        }
 
         this.initComponents();
 
@@ -189,6 +198,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         //Disable horizontal scroll in calendar view
         mWeekView.setHorizontalScrollBarEnabled(false); // doesn't work... :(
+
 
         // Lets change some dimensions to best fit the view.
         mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
@@ -298,14 +308,14 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         startActivity(intent);
     }
 
-    private void openAddRepetition(int studyWeek) {
+    private void openAddRepetition(String week) {
         eventActivity = new EventActivity();
         eventActivity.setCalendarFrag(this);
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         intent.putExtra("isInAddMode", true);
         intent.putExtra("startTime", 0L);
         intent.putExtra("endTime", 0L);
-        intent.putExtra("title", "Repititonspass för LV" + studyWeek);
+        intent.putExtra("title", "Repititonspass för " + week);
         intent.putExtra("calID", 1);        // 1 är hem kalender
         List<String> calNames = new LinkedList<>(calendarModel.getCalendarInfo(cr).values());
         String name = calNames.get(0);
@@ -426,14 +436,21 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     public void addRepetitionSession() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //the notificationAlternatives
-        String[] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
+       // String[] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
+        final String[] alternatives = new String [7];
+        int currentWeek = Utils.getCurrWeekNumber();
+        for(int i=0; i<alternatives.length; i++){
+            int newWeek = currentWeek+i;
+            alternatives[i] = "Vecka " + newWeek;
+        }
+
         builder.setTitle("Välj ett pass att repetera")
                 .setItems(alternatives, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //TODO hämta några random uppgifter
                         String tasks = "";
-                        int studyWeek = which + 1;
-                        openAddRepetition(studyWeek);
+                        String week = alternatives[which];
+                        openAddRepetition(week);
                     }
                 });
 
@@ -470,12 +487,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             }
         });
 
-
-        builder.setNegativeButton("Avbryt",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                alertDialog.cancel();
-            }
-        });
 
         builder.setView(view);
         builder.setTitle("Välj kalender");
