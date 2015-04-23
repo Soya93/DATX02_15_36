@@ -23,9 +23,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 
@@ -33,6 +36,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 
@@ -56,6 +60,9 @@ public class TimerFrag extends Fragment {
     private TextView pausLengthInput;
     private TextView nbrOfPausesInput;
     private FlowLayout taskList;
+    private Switch taskSwitch;
+    private Button previousWeek;
+    private Button nextWeek;
 
     public static final int TIMER_1 = 0;
     public static final int CHANGE_COLOR_0 = 1;
@@ -69,6 +76,8 @@ public class TimerFrag extends Fragment {
     private String ccode;
     private String textViewText;
     private int phaceInt;
+    private AssignmentType assignmentType;
+    private int week;
 
     private Bundle b;
     private Spinner spinner;
@@ -192,12 +201,20 @@ public class TimerFrag extends Fragment {
         spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         taskList = (FlowLayout) rootView.findViewById(R.id.taskList);
+        taskSwitch = (Switch) rootView.findViewById(R.id.taskSwitch);
+        previousWeek = (Button) rootView.findViewById(R.id.previousWeek);
+        nextWeek = (Button) rootView.findViewById(R.id.nextWeek);
         setCourses();
 
+        week = Utils.getCurrWeekNumber();
+
+
+        taskSwitch.setChecked(true);
+        assignmentType = AssignmentType.OTHER;
         spinner.setSelection(0);
         setSelectedCourse();
 
-        taskList.addTasksFromDatabase(dbAdapter, ccode, AssignmentType.OTHER, 17);
+        updateTaskList(assignmentType, week);
 
         setTimerView(default_StudyTime);
 
@@ -440,6 +457,43 @@ public class TimerFrag extends Fragment {
             }
         }
         return false;
+    }
+
+    public void updateTaskList(AssignmentType assignmentType, int week){
+
+        taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
+    }
+
+    public void initButtons(){
+
+        taskSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked){
+                    assignmentType = AssignmentType.OTHER;
+                    updateTaskList(assignmentType, week);
+                }
+                else{
+                    assignmentType = AssignmentType.READ;
+                    updateTaskList(assignmentType, week);
+                }
+            }
+        });
+
+        previousWeek.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                week++;
+                updateTaskList(assignmentType, week);
+            }
+        });
+
+        nextWeek.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                week--;
+                updateTaskList(assignmentType, week);
+            }
+        });
+
     }
 
 }
