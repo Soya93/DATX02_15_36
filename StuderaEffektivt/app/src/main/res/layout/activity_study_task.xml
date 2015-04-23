@@ -26,7 +26,7 @@
             android:layout_weight="0.5"/>
 
         <Spinner
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/courseSpinner"
             android:layout_weight="0.50"
@@ -34,28 +34,23 @@
 
     </LinearLayout>
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Lägg till och ta bort uppgifter från denna kurs"
-            android:textSize="15dp"
-            android:layout_weight="0.5"
-            />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:orientation="horizontal"
         android:id="@+id/typeLayout"
-        android:layout_below="@+id/courseLayout">
+        android:layout_below="@+id/courseLayout"
+        android:gravity="center">
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="-------Typ och plats för uppgiften-------"
+            android:text="Typ och plats för uppgiften"
             android:gravity="center"
             android:textSize="17dp"
+            style="?android:attr/listSeparatorTextViewStyle"
             />
 
         </LinearLayout>
@@ -142,17 +137,19 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:orientation="horizontal"
         android:id="@+id/infoLyout"
-        android:layout_below="@+id/firstLayout">
+        android:layout_below="@+id/firstLayout"
+        android:gravity="center">
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="-------uppgiften-------"
+            android:text="uppgiften"
             android:gravity="center"
             android:textSize="17dp"
+            style="?android:attr/listSeparatorTextViewStyle"
             />
 
     </LinearLayout>
@@ -175,7 +172,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:inputType="number"
-            android:hint="ex: 1-5 eller 1,2,3"
+            android:hint="Uppgiftsnr ex: 1-5 eller 1,2,3"
             android:digits="0123456789,-."
             android:id="@+id/taskInput"
             android:layout_weight="0.5"/>
@@ -185,7 +182,7 @@
             android:layout_height="fill_parent"
             android:ems="10"
             android:inputType="text"
-            android:hint="ex: abcd"
+            android:hint="Deluppgift(er) ex: abcd"
             android:digits="abcdefghijklmnopqrstuvwxy"
             android:id="@+id/taskParts"
             android:layout_gravity="left|bottom"
