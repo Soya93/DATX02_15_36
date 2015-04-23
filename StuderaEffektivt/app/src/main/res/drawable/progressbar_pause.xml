@@ -4,36 +4,27 @@
         <shape
             android:innerRadiusRatio="4"
             android:shape="ring"
-            android:thicknessRatio="20.0">
-
+            android:thicknessRatio="30.0"
+            android:useLevel="false">
             <gradient
-                android:startColor="#999999"
-                android:endColor="#999999"
-                android:centerColor="#999999"
+                android:startColor="#F5F5F5"
+                android:endColor="#9E9E9E"
+                android:centerColor="#B6B6B6"
                 android:type="sweep" />
+
         </shape>
     </item>
     <item android:id="@android:id/progress">
-        <rotate
-            android:fromDegrees="270"
-            android:pivotX="50%"
-            android:pivotY="50%"
-            android:toDegrees="270" >
-            <shape
-                android:innerRadiusRatio="4.225"
-                android:shape="ring"
-                android:thicknessRatio="30.0">
-                <rotate
-                    android:fromDegrees="360"
-                    android:toDegrees="0"
-                    android:pivotX="50%"
-                    android:pivotY="50%" />
-                <gradient
-                    android:startColor="#388E3C"
-                    android:endColor="#388E3C"
-                    android:centerColor="#58C44E"
-                    android:type="sweep" />
-            </shape>
-        </rotate>
+        <shape
+            android:innerRadiusRatio="4"
+            android:shape="ring"
+            android:thicknessRatio="30.0"
+            android:useLevel="true">
+            <gradient
+                android:startColor="#448AFF"
+                android:endColor="#448AFF"
+                android:centerColor="#BBDEFB"
+                android:type="sweep" />
+        </shape>
     </item>
 </layer-list>
