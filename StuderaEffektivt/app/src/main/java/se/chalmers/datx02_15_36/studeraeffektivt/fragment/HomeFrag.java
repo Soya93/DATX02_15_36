@@ -3,6 +3,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -38,6 +39,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private ArrayList<HomeEventItem> eventsList;
     private SwipeRefreshLayout swipeLayout;
     private TextView syncText;
+    private boolean hasSynced;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,8 +49,14 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         initComponents(rootView);
         eventsList = getEvents();
 
+        if(hasSynced) {
+            syncText.setVisibility(View.INVISIBLE);
+        }
+
         return rootView;
     }
+
+
 
     private void initComponents(View view) {
         hasInit = true;
@@ -57,6 +65,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             public void onClick(View v) {
                 if (v.getTag() == homeFAB.getTag()) {
                     calendarFrag.changeVisibleCalendars();
+                    onRefresh();
                 }
             }
         };
@@ -65,6 +74,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         homeFAB.setTag(1);
         homeFAB.setOnClickListener(myButtonHandler);
         homeFAB.setType(FloatingActionButton.TYPE_NORMAL);
+        homeFAB.setBackgroundColor(Color.parseColor("#33b5e5"));
 
 
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
@@ -82,6 +92,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             @Override
             public void run() {
                 syncText.setVisibility(View.INVISIBLE);
+                hasSynced = true;
                 swipeLayout.setRefreshing(false);
                 setTodaysEvents();
             }
@@ -101,6 +112,8 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     }
 
     public void setTodaysEvents() {
+        hasSynced = true;
+        syncText.setVisibility(View.INVISIBLE);
         ArrayList<HomeEventItem> visibleEventList = new ArrayList<>();
         eventsList = getEvents();
         List<Long> visibleCalendars = calendarFrag.getVisibleCalendars();

@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 
 
@@ -138,7 +139,6 @@ public class TimerFrag extends Fragment {
         if (b != null) {
             textView = (TextView) rootView.findViewById(R.id.textView);
             String textV = b.getString("textViewText");
-            setProgressColor(Color.BLUE);
             textView.setText(textV);
 
         }
@@ -156,7 +156,7 @@ public class TimerFrag extends Fragment {
 
         sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
 
-
+            phaceInt = sharedPref.getInt("Phace",-1);
         int buttonTemp = sharedPref.getInt("buttonImage", -1);
         if (buttonTemp > 0) {
             buttonId = buttonTemp;
@@ -296,6 +296,9 @@ public class TimerFrag extends Fragment {
 
 
     public void settingsTimer() {
+        Intent i = new Intent(getActivity(), TimerSettingsActivity.class);
+        startActivity(i);
+        /*
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.time_picker_dialog, null);
@@ -323,6 +326,7 @@ public class TimerFrag extends Fragment {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+        */
     }
 
     private void nextDialog() {
@@ -405,9 +409,7 @@ public class TimerFrag extends Fragment {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt("buttonImage", buttonId);
         editor.putBoolean("hasPaused", hasBeenPaused);
-        Log.d("buttonId", String.valueOf(buttonId));
-        Log.d("hasPaused",String.valueOf(hasBeenPaused));
-
+        editor.putInt("Phace",phaceInt);
 
 
 

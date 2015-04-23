@@ -1,5 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -98,9 +100,9 @@ public class MainActivity extends ActionBarActivity {
         };
 
         ImageView icon = new ImageView(this); // Create an icon
-        icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
-
-
+        Drawable moreIcon = getResources().getDrawable( R.drawable.ic_navigation_more_vert).mutate();
+        moreIcon.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP);
+        icon.setImageDrawable(moreIcon);
 
 
         actionButton = new FloatingActionButton.Builder(this)
@@ -110,25 +112,33 @@ public class MainActivity extends ActionBarActivity {
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
         // repeat many times:
         ImageView itemIcon1 = new ImageView(this);
-        itemIcon1.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+        Drawable plusIcon = getResources().getDrawable( R.drawable.ic_content_add).mutate();
+        plusIcon.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon1.setImageDrawable(plusIcon);
         button1 = itemBuilder.setContentView(itemIcon1).build();
         button1.setTag(1);
         button1.setOnClickListener(fabHandler);
 
         ImageView itemIcon2 = new ImageView(this);
-        itemIcon2.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+        Drawable editIcon = getResources().getDrawable( R.drawable.ic_content_create).mutate();
+        editIcon.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon2.setImageDrawable(editIcon);
         button2 = itemBuilder.setContentView(itemIcon2).build();
         button2.setTag(2);
         button2.setOnClickListener(fabHandler);
 
         ImageView itemIcon3 = new ImageView(this);
-        itemIcon3.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+        Drawable nbrOfVisibleDaysIcon = getResources().getDrawable( R.drawable.ic_image_filter).mutate();
+        nbrOfVisibleDaysIcon.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon3.setImageDrawable(nbrOfVisibleDaysIcon);
         button3 = itemBuilder.setContentView(itemIcon3).build();
         button3.setTag(3);
         button3.setOnClickListener(fabHandler);
 
         ImageView itemIcon4 = new ImageView(this);
-        itemIcon4.setImageDrawable(getResources().getDrawable(R.drawable.ic_medal));
+        Drawable calendarsIcon = getResources().getDrawable( R.drawable.ic_cal1).mutate();
+        calendarsIcon.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon4.setImageDrawable(calendarsIcon);
         button4 = itemBuilder.setContentView(itemIcon4).build();
         button4.setTag(4);
         button4.setOnClickListener(fabHandler);

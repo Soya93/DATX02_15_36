@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,7 +17,9 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -60,12 +65,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private SubActionButton button3;
     private SubActionButton button4;
     private Button backButton;
-    private Button forwradButton;
+    private Button forwardButton;
     private Button goToTodayButton;
     int numberOfVisibleDays;
     private View.OnClickListener fabHandler;
     private AlertDialog alertDialog;
     private ArrayList<CalendarsFilterItem> calendarsList;
+    private CalendarsFilterAdapter ad;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +88,19 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         calendarsList = calendarModel.getCalendarFilters();
 
         this.initComponents();
+
+        //view.setBackgroundColor(Color.WHITE);
+        mWeekView.setBackgroundColor(Color.WHITE);
+        mWeekView.setTextSize(30);
+
+        //None of these work, why??
+        mWeekView.setHeaderColumnTextColor(Color.BLUE);
+        mWeekView.setHeaderRowBackgroundColor(Color.RED);
+        mWeekView.setHeaderColumnBackgroundColor(Color.MAGENTA);
+        mWeekView.setHourSeparatorColor(Color.CYAN);
+        mWeekView.setHeaderRowBackgroundColor(Color.GREEN);
+
+
         return view;
     }
 
@@ -93,14 +112,25 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         button4 = MainActivity.button4;
 
         backButton = (Button) view.findViewById(R.id.cal_back_button);
-        forwradButton = (Button) view.findViewById(R.id.cal_forward_button);
+        Drawable backDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_left).mutate();
+        backDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        backButton.setBackground(backDrawable);
+
+        forwardButton = (Button) view.findViewById(R.id.cal_forward_button);
+        Drawable forwardDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_right).mutate();
+        forwardDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        forwardButton.setBackground(forwardDrawable);
+
         goToTodayButton = (Button) view.findViewById(R.id.go_to_today_button);
+        Drawable todayDrawable = getResources().getDrawable( R.drawable.ic_device_access_time).mutate();
+        todayDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        goToTodayButton.setBackground(todayDrawable);
 
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v.getId() == backButton.getId()) {
                     onBackClick();
-                }else if (v.getId() == forwradButton.getId()) {
+                }else if (v.getId() == forwardButton.getId()) {
                     onForwardCLick();
                 } else {
                     onTodayClick();
@@ -110,7 +140,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         };
 
         backButton.setOnClickListener(myButtonHandler);
-        forwradButton.setOnClickListener(myButtonHandler);
+        forwardButton.setOnClickListener(myButtonHandler);
         goToTodayButton.setOnClickListener(myButtonHandler);
 
 
@@ -416,21 +446,15 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater li = LayoutInflater.from(getActivity());
-        View view= li.inflate(R.layout.calendarsfilterlistview, null);
+        View view = li.inflate(R.layout.calendarsfilterlistview, null);
 
         final ListView listView = (ListView) view.findViewById(R.id.calendar_listview);
-        CalendarsFilterAdapter ad = new CalendarsFilterAdapter(getActivity().getApplicationContext(),R.layout.calendars_filter_item, R.id.calendar_text, calendarsList);
+        ad = new CalendarsFilterAdapter(getActivity().getApplicationContext(),R.layout.calendars_filter_item, R.id.calendar_text, calendarsList);
         listView.setAdapter(ad);
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setDivider(null);
 
-
-        Button okButton = (Button) view.findViewById(R.id.calendar_ok_button);
-        Button cancelButton = (Button) view.findViewById(R.id.calendar_cancel_button);
-
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 for(int i = 0; i < calendarsList.size(); i++){
                     if(calendarsList.get(i).isChecked()){
                         if(!visibleCalendars.contains(calIDs.get(i))) {
@@ -446,9 +470,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             }
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+        builder.setNegativeButton("Avbryt",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 alertDialog.cancel();
             }
         });
@@ -458,6 +482,16 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.create();
         alertDialog = builder.create();
         alertDialog.show();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                ad.getItemsArrayList().get(position).setChecked(! ad.getItemsArrayList().get(position).isChecked());
+                ad.notifyDataSetChanged();
+            }
+        });
+
     }
 
     public void changeNbrOfDaysDialog(){
