@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 
 
@@ -295,6 +296,10 @@ public class TimerFrag extends Fragment {
 
 
     public void settingsTimer() {
+        //hejehhje
+        Intent i = new Intent(getActivity(), TimerSettingsActivity.class);
+        startActivity(i);
+        /*
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.time_picker_dialog, null);
@@ -322,6 +327,7 @@ public class TimerFrag extends Fragment {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+        */
     }
 
     private void nextDialog() {

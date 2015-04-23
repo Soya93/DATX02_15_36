@@ -3,6 +3,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -269,7 +270,7 @@ public class StatsFrag extends Fragment {
         }
 
         //Insert Assignments
-        long idA1 = dbAdapter.insertAssignment("DDD111", 0, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        long idA1 = dbAdapter.insertAssignment("DDD111", 0, Time.WEEK_NUM, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
             Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for DD111", Toast.LENGTH_SHORT).show();
         } else {
@@ -306,7 +307,7 @@ public class StatsFrag extends Fragment {
         }
 
         //Insert Assignments
-        long idA1 = dbAdapter.insertAssignment("APA007", 0, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        long idA1 = dbAdapter.insertAssignment("APA007", 0, Time.WEEK_NUM, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
             Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for APA007", Toast.LENGTH_SHORT).show();
         } else {

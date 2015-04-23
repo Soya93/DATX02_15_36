@@ -63,5 +63,6 @@
     <string name="title_activity_techniques">TechniquesActivity</string>
     <string name="title_activity_detailed_info">DetailedInfoActivity</string>
     <string name="title_activity_techs_ntips">TechsNTipsActivity</string>
+    <string name="title_activity_timersettings">TimerSettings</string>
 
 </resources>

@@ -3,6 +3,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -64,6 +65,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             public void onClick(View v) {
                 if (v.getTag() == homeFAB.getTag()) {
                     calendarFrag.changeVisibleCalendars();
+                    onRefresh();
                 }
             }
         };
@@ -72,6 +74,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         homeFAB.setTag(1);
         homeFAB.setOnClickListener(myButtonHandler);
         homeFAB.setType(FloatingActionButton.TYPE_NORMAL);
+        homeFAB.setBackgroundColor(Color.parseColor("#33b5e5"));
 
 
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);

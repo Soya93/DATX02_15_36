@@ -1,13 +1,15 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,7 +37,6 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.EventActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarsFilterAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarChoiceItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -64,7 +66,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private SubActionButton button3;
     private SubActionButton button4;
     private Button backButton;
-    private Button forwradButton;
+    private Button forwardButton;
     private Button goToTodayButton;
     int numberOfVisibleDays;
     private View.OnClickListener fabHandler;
@@ -95,6 +97,19 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         }
 
         this.initComponents();
+
+        //view.setBackgroundColor(Color.WHITE);
+        mWeekView.setBackgroundColor(Color.WHITE);
+        mWeekView.setTextSize(30);
+
+        //None of these work, why??
+        mWeekView.setHeaderColumnTextColor(Color.BLUE);
+        mWeekView.setHeaderRowBackgroundColor(Color.RED);
+        mWeekView.setHeaderColumnBackgroundColor(Color.MAGENTA);
+        mWeekView.setHourSeparatorColor(Color.CYAN);
+        mWeekView.setHeaderRowBackgroundColor(Color.GREEN);
+
+
         return view;
     }
 
@@ -106,14 +121,25 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         button4 = MainActivity.button4;
 
         backButton = (Button) view.findViewById(R.id.cal_back_button);
-        forwradButton = (Button) view.findViewById(R.id.cal_forward_button);
+        Drawable backDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_left).mutate();
+        backDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        backButton.setBackground(backDrawable);
+
+        forwardButton = (Button) view.findViewById(R.id.cal_forward_button);
+        Drawable forwardDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_right).mutate();
+        forwardDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        forwardButton.setBackground(forwardDrawable);
+
         goToTodayButton = (Button) view.findViewById(R.id.go_to_today_button);
+        Drawable todayDrawable = getResources().getDrawable( R.drawable.ic_device_access_time).mutate();
+        todayDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        goToTodayButton.setBackground(todayDrawable);
 
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v.getId() == backButton.getId()) {
                     onBackClick();
-                }else if (v.getId() == forwradButton.getId()) {
+                }else if (v.getId() == forwardButton.getId()) {
                     onForwardCLick();
                 } else {
                     onTodayClick();
@@ -123,7 +149,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         };
 
         backButton.setOnClickListener(myButtonHandler);
-        forwradButton.setOnClickListener(myButtonHandler);
+        forwardButton.setOnClickListener(myButtonHandler);
         goToTodayButton.setOnClickListener(myButtonHandler);
 
 

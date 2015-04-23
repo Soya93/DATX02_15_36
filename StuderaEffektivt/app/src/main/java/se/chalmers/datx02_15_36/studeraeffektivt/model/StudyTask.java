@@ -20,6 +20,12 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 public class StudyTask extends CheckBox{
 
     public int chapter;
+    private int week;
+
+    public int getWeek() {
+        return week;
+    }
+
     public String taskString;
     public String courseCode;
     private int startPage;
@@ -35,11 +41,12 @@ public class StudyTask extends CheckBox{
         return status;
     }
 
-    public StudyTask(Context context,int id, String courseCode,int chapter, String taskString, int startPage, int endPage, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
+    public StudyTask(Context context,int id, String courseCode,int chapter, int week, String taskString, int startPage, int endPage, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
         super(context);
         this.id = id;
         this.courseCode = courseCode;
         this.chapter = chapter;
+        this.week = week;
         this.taskString = taskString;
         this.startPage = startPage;
         this.endPage = endPage;

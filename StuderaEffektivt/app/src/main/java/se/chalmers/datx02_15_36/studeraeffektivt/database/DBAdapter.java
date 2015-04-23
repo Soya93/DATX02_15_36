@@ -53,7 +53,7 @@ public class DBAdapter {
         }
     }
 
-    public long insertAssignment(String courseCode, int chapter, String assNr,
+    public long insertAssignment(String courseCode, int chapter, int week, String assNr,
                                  int startPage, int stopPage, AssignmentType type, AssignmentStatus status) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -61,6 +61,7 @@ public class DBAdapter {
         try {
             cv.put(dbHelper.ASSIGNMENTS_ccode, courseCode);
             cv.put(dbHelper.ASSIGNMENTS_chapter, chapter);
+            cv.put(dbHelper.ASSIGNMENTS_week, week);
             cv.put(dbHelper.ASSIGNMENTS_assNr, assNr);
             cv.put(dbHelper.ASSIGNMENTS_startPage, startPage);
             cv.put(dbHelper.ASSIGNMENTS_stopPage, stopPage);
@@ -73,7 +74,7 @@ public class DBAdapter {
         }
     }
 
-    public long insertAssignment(String courseCode,int id, int chapter, String assNr,
+    public long insertAssignment(String courseCode,int id, int chapter, int week, String assNr,
                                  int startPage, int stopPage, AssignmentType type, AssignmentStatus status) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -81,6 +82,7 @@ public class DBAdapter {
         try {
             cv.put(dbHelper.ASSIGNMENTS_ccode, courseCode);
             cv.put(dbHelper.ASSIGNMENTS_chapter, chapter);
+            cv.put(dbHelper.ASSIGNMENTS_week, week);
             cv.put(dbHelper.ASSIGNMENTS_assNr, assNr);
             cv.put(dbHelper.ASSIGNMENTS_startPage, startPage);
             cv.put(dbHelper.ASSIGNMENTS_stopPage, stopPage);
@@ -241,6 +243,7 @@ public class DBAdapter {
         private static final String ASSIGNMENTS__id = "_id";
         private static final String ASSIGNMENTS_ccode = COURSES__ccode;
         private static final String ASSIGNMENTS_chapter = "chapter";
+        private static final String ASSIGNMENTS_week = "week";
         private static final String ASSIGNMENTS_assNr = "assNr";
         private static final String ASSIGNMENTS_startPage = "startPage";
         private static final String ASSIGNMENTS_stopPage = "stopPage";
@@ -276,6 +279,7 @@ public class DBAdapter {
                     + ASSIGNMENTS__id + " PRIMARY KEY, "
                     + ASSIGNMENTS_ccode + " VARCHAR(50), "
                     + ASSIGNMENTS_chapter + " INT, "
+                    + ASSIGNMENTS_week + " INT, "
                     + ASSIGNMENTS_assNr +" VARCHAR(50), "
                     + ASSIGNMENTS_startPage + " INT, "
                     + ASSIGNMENTS_stopPage + " INT, "

@@ -98,6 +98,10 @@
             android:label="@string/title_activity_techniques" >
         </activity>
         <activity
+            android:name=".activity.TimerSettingsActivity"
+            android:label="@string/title_activity_timersettings" >
+        </activity>
+        <activity
             android:name=".activity.DetailedInfoActivity"
             android:label="@string/title_activity_detailed_info" >
         </activity>
