@@ -5,6 +5,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -13,19 +15,18 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
  * Created by alexandraback on 21/04/15.
  */
 public class TimerSettingsActivity extends ActionBarActivity {
-    private ListView listView;
+    private ExpandableListView listView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timersettings);
-        listView = (ListView)findViewById(R.id.listview);
-        String [] listValues = new String[] {
-                "Pluggfas","Vilofas"
+        listView = (ExpandableListView) findViewById(R.id.expandableListView);
+        String[] listValues = new String[]{
+                "Antal repetitioner", "Pluggfas", "Vilofas"
         };
 
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, listValues);
+        /*
+        ExpandableListAdapter adapter = new ExpandableListAdapter(this,listValues);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -40,9 +41,10 @@ public class TimerSettingsActivity extends ActionBarActivity {
                 // ListView Clicked item value
                 String  itemValue    = (String) listView.getItemAtPosition(position);
 
+                // Show Alert
 
             }
-        });
+        });*/
 
     }
 }
