@@ -2,12 +2,12 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,6 +29,9 @@ public class MainActivity extends ActionBarActivity {
     private HomeFrag homeFrag;
     private CalendarFrag calendarFrag;
     private TimerFrag timerFrag;
+    private StatsFrag statsFrag;
+
+    private String userName = "user_Name";
     private Drawable tabResetIcon;
     public static FloatingActionButton actionButton;
     public static SubActionButton button1;
@@ -36,9 +39,6 @@ public class MainActivity extends ActionBarActivity {
     public static SubActionButton button3;
     public static SubActionButton button4;
     private View.OnClickListener fabHandler;
-    private Drawable primaryColorDrawable;
-    private String primaryColorHex;
-    private String secondaryColorHex;
 
     /**
      * Called when the activity is first created.
@@ -47,6 +47,11 @@ public class MainActivity extends ActionBarActivity {
     private ViewPager viewPager;
     private TabAdapter mAdapter;
     private android.support.v7.app.ActionBar actionBar;
+    private View view;
+
+
+    // Tab titles
+    private String[] tabs = {"Hem", "Kalender", "Timer", "Statistik", "Tips"};
 
 
     @Override
@@ -56,18 +61,16 @@ public class MainActivity extends ActionBarActivity {
 
         // Initilization
         viewPager = (ViewPager) findViewById(R.id.pager);
+        Log.i("Main", viewPager.toString());
 
         actionBar = getSupportActionBar();
+
+
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setHomeButtonEnabled(false);
-        primaryColorHex = "#33b5e5";
-        secondaryColorHex = "#B3E5FC";
-        primaryColorDrawable = new ColorDrawable(Color.parseColor(primaryColorHex));
-        actionBar.setBackgroundDrawable(primaryColorDrawable);
-        actionBar.setSplitBackgroundDrawable(primaryColorDrawable);
-        actionBar.setStackedBackgroundDrawable(primaryColorDrawable);
+
 
         mAdapter = new TabAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mAdapter);
@@ -89,13 +92,16 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onMenuClosed(FloatingActionMenu floatingActionMenu) {
+
+
             }
+
+
         };
 
-        //Setting the buttons for the calendar menu
         ImageView icon = new ImageView(this); // Create an icon
         Drawable moreIcon = getResources().getDrawable( R.drawable.ic_navigation_more_vert).mutate();
-        moreIcon.setColorFilter(Color.parseColor(primaryColorHex), PorterDuff.Mode.SRC_ATOP);
+        moreIcon.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP);
         icon.setImageDrawable(moreIcon);
 
 
@@ -107,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
         // repeat many times:
         ImageView itemIcon1 = new ImageView(this);
         Drawable plusIcon = getResources().getDrawable( R.drawable.ic_content_add).mutate();
-        plusIcon.setColorFilter(Color.parseColor(primaryColorHex), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        plusIcon.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon1.setImageDrawable(plusIcon);
         button1 = itemBuilder.setContentView(itemIcon1).build();
         button1.setTag(1);
@@ -115,7 +121,7 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView itemIcon2 = new ImageView(this);
         Drawable editIcon = getResources().getDrawable( R.drawable.ic_content_create).mutate();
-        editIcon.setColorFilter(Color.parseColor(primaryColorHex), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        editIcon.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon2.setImageDrawable(editIcon);
         button2 = itemBuilder.setContentView(itemIcon2).build();
         button2.setTag(2);
@@ -123,7 +129,7 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView itemIcon3 = new ImageView(this);
         Drawable nbrOfVisibleDaysIcon = getResources().getDrawable( R.drawable.ic_image_filter).mutate();
-        nbrOfVisibleDaysIcon.setColorFilter(Color.parseColor(primaryColorHex), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        nbrOfVisibleDaysIcon.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon3.setImageDrawable(nbrOfVisibleDaysIcon);
         button3 = itemBuilder.setContentView(itemIcon3).build();
         button3.setTag(3);
@@ -131,7 +137,7 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView itemIcon4 = new ImageView(this);
         Drawable calendarsIcon = getResources().getDrawable( R.drawable.ic_cal1).mutate();
-        calendarsIcon.setColorFilter(Color.parseColor(primaryColorHex), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        calendarsIcon.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon4.setImageDrawable(calendarsIcon);
         button4 = itemBuilder.setContentView(itemIcon4).build();
         button4.setTag(4);
@@ -151,28 +157,18 @@ public class MainActivity extends ActionBarActivity {
         homeFrag.setCalendarFrag(calendarFrag);
         homeFrag.setContext(this.getApplicationContext());
 
+
         timerFrag = (TimerFrag) mAdapter.getItem(2);
+        statsFrag = (StatsFrag) mAdapter.getItem(3);
 
-        //Sets the unselected tab icons to a lighter blue color
-        Drawable homeUns = getResources().getDrawable( R.drawable.ic_home1).mutate();
-        homeUns.setColorFilter(Color.parseColor(secondaryColorHex), PorterDuff.Mode.SRC_ATOP);
-        Drawable calUns = getResources().getDrawable( R.drawable.ic_cal2).mutate();
-        calUns.setColorFilter(Color.parseColor(secondaryColorHex), PorterDuff.Mode.SRC_ATOP);
-        Drawable timerUns = getResources().getDrawable( R.drawable.ic_timer).mutate();
-        timerUns.setColorFilter(Color.parseColor(secondaryColorHex), PorterDuff.Mode.SRC_ATOP);
-        Drawable statsUns = getResources().getDrawable( R.drawable.ic_pilegraph).mutate();
-        statsUns.setColorFilter(Color.parseColor(secondaryColorHex), PorterDuff.Mode.SRC_ATOP);
-        Drawable myProfileUns = getResources().getDrawable(R.drawable.ic_social_person).mutate();
-        myProfileUns.setColorFilter(Color.parseColor("#B3E5FC"), PorterDuff.Mode.SRC_ATOP);
-
-
-        final Drawable[] ICONS = new Drawable[]{
-                homeUns,
-                calUns,
-                timerUns,
-                statsUns,
-                myProfileUns
+        final int[] ICONS = new int[]{
+                R.drawable.ic_home1_uns,
+                R.drawable.ic_cal2_uns,
+                R.drawable.ic_timer_uns,
+                R.drawable.ic_pilegraph_uns,
+                R.drawable.ic_social_person_uns
         };
+
 
 
         /** Defining tab listener */
@@ -205,34 +201,29 @@ public class MainActivity extends ActionBarActivity {
 
 
                 tabResetIcon = tab.getIcon();
-
                 int position = tab.getPosition();
-
 
                 switch(position){
                     case 0:
-                        Drawable icon = getResources().getDrawable( R.drawable.ic_home1).mutate();
-                        tab.setIcon(icon);
+                        tab.setIcon(R.drawable.ic_home1);
                         break;
                     case 1:
-                        icon = getResources().getDrawable( R.drawable.ic_cal2).mutate();
-                        tab.setIcon(icon);
+                        tab.setIcon(R.drawable.ic_cal2);
                         break;
                     case 2:
-                        icon = getResources().getDrawable( R.drawable.ic_timer).mutate();
-                        tab.setIcon(icon);
+                        tab.setIcon(R.drawable.ic_timer);
                         break;
                     case 3:
-                        icon = getResources().getDrawable( R.drawable.ic_pilegraph).mutate();
-                        tab.setIcon(icon);
+                        tab.setIcon(R.drawable.ic_pilegraph);
                         break;
                     case 4:
-                        icon = getResources().getDrawable( R.drawable.ic_social_person).mutate();
-                        tab.setIcon(icon);
+                        tab.setIcon(R.drawable.ic_social_person);
                         break;
                     default:
                         break;
                 }
+
+
             }
 
             @Override
@@ -260,6 +251,7 @@ public class MainActivity extends ActionBarActivity {
 
                 //When home page is selected
                 if(position == 0) {
+                    Log.i("Main:", "on home frag selected");
                     homeFrag.setTodaysEvents();
                 }
             }
@@ -274,8 +266,8 @@ public class MainActivity extends ActionBarActivity {
         });
 
         // Adding Tabs with the icons
-        for (Drawable tabIcon : ICONS) {
-            actionBar.addTab(actionBar.newTab().setIcon(tabIcon)
+        for (int tabIcon : ICONS) {
+            actionBar.addTab(actionBar.newTab().setIcon(this.getResources().getDrawable(tabIcon))
                     .setTabListener(tabListener));
         }
     }
@@ -298,6 +290,11 @@ public class MainActivity extends ActionBarActivity {
     public void settingsTimer(View view) {
         timerFrag.settingsTimer();
     }
+
+
+
+
+
 
 }
 
