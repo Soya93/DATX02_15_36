@@ -21,11 +21,9 @@
 
     <style name="Theme.Pluggapp" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarItemBackground">@drawable/selectable_background_pluggapp</item>
-        <item name="popupMenuStyle">@style/PopupMenu.Pluggapp</item>
         <item name="dropDownListViewStyle">@style/DropDownListView.Pluggapp</item>
         <item name="actionBarTabStyle">@style/ActionBarTabStyle.Pluggapp</item>
         <item name="actionDropDownStyle">@style/DropDownNav.Pluggapp</item>
-        <item name="actionBarStyle">@style/ActionBar.Solid.Pluggapp</item>
         <item name="actionModeBackground">@drawable/cab_background_top_pluggapp</item>
         <item name="actionModeSplitBackground">@drawable/cab_background_bottom_pluggapp</item>
         <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Pluggapp</item>
@@ -33,22 +31,6 @@
         <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.Pluggapp.Widget</item>
 
-    </style>
-
-    <style name="ActionBar.Solid.Pluggapp" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="background">@drawable/ab_solid_pluggapp</item>
-        <item name="backgroundStacked">@drawable/ab_stacked_solid_pluggapp</item>
-        <item name="backgroundSplit">@drawable/ab_bottom_solid_pluggapp</item>
-        <item name="progressBarStyle">@style/ProgressBar.Pluggapp</item>
-    </style>
-
-    <style name="ActionBar.Transparent.Pluggapp" parent="@style/Widget.AppCompat.ActionBar">
-        <item name="background">@drawable/ab_transparent_pluggapp</item>
-        <item name="progressBarStyle">@style/ProgressBar.Pluggapp</item>
-    </style>
-
-    <style name="PopupMenu.Pluggapp" parent="@style/Widget.AppCompat.PopupMenu">
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_pluggapp</item>
     </style>
 
     <style name="DropDownListView.Pluggapp" parent="@style/Widget.AppCompat.ListView.DropDown">
@@ -61,7 +43,6 @@
 
     <style name="DropDownNav.Pluggapp" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
         <item name="android:background">@drawable/spinner_background_ab_pluggapp</item>
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_pluggapp</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_pluggapp</item>
     </style>
 
@@ -75,7 +56,6 @@
 
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.Pluggapp.Widget" parent="@style/Theme.AppCompat">
-        <item name="popupMenuStyle">@style/PopupMenu.Pluggapp</item>
         <item name="dropDownListViewStyle">@style/DropDownListView.Pluggapp</item>
     </style>
 
