@@ -349,6 +349,12 @@ public class EventActivity extends ActionBarActivity {
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setDivider(null);
 
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
         builder.setView(view);
         builder.setTitle("Välj kalender");
         builder.create();

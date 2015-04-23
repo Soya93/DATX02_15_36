@@ -459,7 +459,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         View view = li.inflate(R.layout.calendarsfilterlistview, null);
 
         final ListView listView = (ListView) view.findViewById(R.id.calendar_listview);
-        ad = new CalendarsFilterAdapter(getActivity().getApplicationContext(),R.layout.calendars_filter_item, R.id.calendar_text, writersPermissonCalendarList);
+        ad = new CalendarsFilterAdapter(getActivity().getApplicationContext(),R.layout.calendars_filter_item, R.id.calendar_text, calendarsList);
         listView.setAdapter(ad);
         listView.setDivider(null);
 
