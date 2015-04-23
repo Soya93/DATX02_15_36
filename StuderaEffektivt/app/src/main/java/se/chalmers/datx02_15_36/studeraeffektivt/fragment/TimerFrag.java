@@ -296,6 +296,7 @@ public class TimerFrag extends Fragment {
 
 
     public void settingsTimer() {
+        //hejehhje
         Intent i = new Intent(getActivity(), TimerSettingsActivity.class);
         startActivity(i);
         /*
