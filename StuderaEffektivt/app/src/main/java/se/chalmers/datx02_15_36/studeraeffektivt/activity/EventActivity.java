@@ -37,7 +37,6 @@ import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarChoiceAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarChoiceItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 public class EventActivity extends ActionBarActivity {
@@ -336,24 +335,10 @@ public class EventActivity extends ActionBarActivity {
         View view = li.inflate(R.layout.calendarchoiceslistview, null);
 
         final ListView listView = (ListView) view.findViewById(R.id.listView);
-        ArrayList<CalendarChoiceItem> calendarsList = new ArrayList<CalendarChoiceItem>();
-        ArrayList<CalendarsFilterItem> filterItemsList = calendarFrag.getCalendarModel().getCalendarWritersPermissions();
-        for (CalendarsFilterItem item : filterItemsList) {
-            CalendarChoiceItem newItem = new CalendarChoiceItem();
-            newItem.setTitle(item.getTitle());
-            newItem.setColor(item.getColor());
-            calendarsList.add(newItem);
-        }
-        CalendarChoiceAdapter ad = new CalendarChoiceAdapter(getApplicationContext(), R.layout.calendars_filter_item, R.id.calendar_text, calendarsList);
+        CalendarChoiceAdapter ad = new CalendarChoiceAdapter(getApplicationContext(), R.layout.calendars_filter_item, R.id.calendar_text, calendarFrag.getCalendarModel().getCalendarChoices());
         listView.setAdapter(ad);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setDivider(null);
-
-        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        });
 
         builder.setView(view);
         builder.setTitle("Välj kalender");

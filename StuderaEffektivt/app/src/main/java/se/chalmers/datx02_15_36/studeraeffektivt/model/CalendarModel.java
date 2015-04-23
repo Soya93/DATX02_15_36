@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarsFilterAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 
@@ -27,7 +29,7 @@ public class CalendarModel {
     private Cursor cur;
     private ArrayList<CalendarsFilterItem> calendarsFilterItems;
     private ArrayList<CalendarChoiceItem> calendarChoiceItems;
-    private ArrayList<CalendarsFilterItem> calendarWritersPermissions;
+    private ArrayList<Long> calendarWritersPermissionIds;
 
 
     public CalendarModel() {
@@ -180,13 +182,13 @@ public class CalendarModel {
         return calendarChoiceItems;
     }
 
-    public ArrayList<CalendarsFilterItem> getCalendarWritersPermissions() { return calendarWritersPermissions; }
+    public ArrayList<Long> getCalendarWritersPermissionIds() { return calendarWritersPermissionIds; }
 
     public Map<Long, String> getCalendarInfo(ContentResolver cr) {
         Map<Long, String> calendars = new LinkedHashMap<>();
         calendarsFilterItems = new ArrayList<>();
         calendarChoiceItems = new ArrayList<>();
-        calendarWritersPermissions = new ArrayList<>();
+        calendarWritersPermissionIds = new ArrayList<>();
 
         Cursor c = getCalendarCursor(cr);
 
@@ -199,29 +201,25 @@ public class CalendarModel {
             Long id = c.getLong(CalendarUtils.CALENDAR_ID);
             String name = c.getString(CalendarUtils.CALENDAR_NAME);
             int isVisible = c.getInt(CalendarUtils.VISIBLE);
-            int hasWritersPermission = c.getInt(CalendarUtils.CALENDAR_ACCESS_LEVEL);
 
+/*
 
+            boolean hasWritersPermission1 = c.getInt(CalendarUtils.CAL_ACCESS_CONTRIBUTOR) == 1;
+            boolean hasWritersPermission2 = c.getInt(CalendarUtils.CAL_ACCESS_OWNER) == 1;
+            boolean hasWritersPermission3 = c.getInt(CalendarUtils.CAL_ACCESS_ROOT) == 1;
+            boolean hasWritersPermission4 = c.getInt(CalendarUtils.CAL_ACCESS_EDITOR) == 1;
 
-
+            if(hasWritersPermission1 || hasWritersPermission2 || hasWritersPermission3 || hasWritersPermission4) {
+                calendarWritersPermissionIds.add(id);
+                Log.i("CalendarModel: writers permission: " , id + "");
+            }
+            */
 
 
 
 
             if (!calendars.containsKey(id) && !calendars.containsValue(name) && isVisible == 1) {
                 filterItem.setTitle(name);
-
-                if(hasWritersPermission == 500 || hasWritersPermission == 700 || hasWritersPermission == 600 || hasWritersPermission == 800) {
-
-                    CalendarsFilterItem filterItemPermission = new CalendarsFilterItem();
-                    filterItemPermission.setTitle(name);
-
-                    int color = c.getInt(CalendarUtils.EVENT_COLOR);
-                    color = color == 0 ? c.getInt(CalendarUtils.CALENDAR_COLOR) : color;
-                    filterItemPermission.setColor(color);
-
-                    calendarWritersPermissions.add(filterItemPermission);
-                }
 
                 int color = c.getInt(CalendarUtils.EVENT_COLOR);
                 color = color == 0 ? c.getInt(CalendarUtils.CALENDAR_COLOR) : color;
