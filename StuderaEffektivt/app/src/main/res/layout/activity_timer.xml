@@ -2,48 +2,56 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    >
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
+    <RelativeLayout
+        android:id="@+id/progressBarContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:max="1000"
-        android:progress="1000"
-        android:progressDrawable="@drawable/progressbar_study"
-        android:layout_above="@+id/button_container"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp"
-        android:shadowDx="1.0"
-        android:shadowDy="2.0"
-        android:shadowRadius="3.0"
-        android:textSize="60sp" />
+        android:layout_above="@+id/button_container"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_timer"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="171dp"
+            android:layout_marginEnd="171dp" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90dp"
+            android:shadowDx="1.0"
+            android:shadowDy="2.0"
+            android:shadowRadius="3.0"
+            android:textSize="60sp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:max="1000"
+            android:progress="1000"
+            android:progressDrawable="@drawable/progressbar_study" />
+
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/button_container"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginBottom="207dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
-        <!-- Divider -->
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_margin="0dp"
-            android:layout_alignParentTop="true"
-            android:layout_above="@+id/button_start_timer"
-            android:padding="0dp"/>
 
         <ImageButton
             android:id="@+id/button_start_timer"
@@ -53,9 +61,9 @@
             android:onClick="startTimer"
             android:background="@drawable/roundcorner"
             android:src="@drawable/ic_start"
+            android:layout_gravity="center_horizontal"
             android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/button"
-            android:layout_marginEnd="41dp" />
+            android:layout_centerHorizontal="true" />
 
         <ImageButton
             style="?android:attr/buttonStyleSmall"
@@ -65,8 +73,10 @@
             android:layout_height="56dp"
             android:background="@drawable/roundcorner"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/button"
-            android:layout_marginStart="41dp" />
+            android:layout_toRightOf="@+id/button_start_timer"
+            android:layout_toEndOf="@+id/button_start_timer"
+            android:layout_marginLeft="37dp"
+            android:layout_marginStart="37dp" />
 
         <ImageButton
             style="?android:attr/buttonStyleSmall"
@@ -77,16 +87,23 @@
             android:layout_height="56dp"
             android:background="@drawable/roundcorner"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
+            android:layout_toLeftOf="@+id/button_start_timer"
+            android:layout_toStartOf="@+id/button_start_timer"
+            android:layout_marginRight="34dp"
+            android:layout_marginEnd="34dp" />
 
-    <Spinner
-        android:layout_width="wrap_content"
+    </RelativeLayout>
+    <LinearLayout
+        android:id ="@+id/fragment_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner_timer"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="171dp"
-        android:layout_marginEnd="171dp" />
+        android:layout_below="@+id/button_container"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>
