@@ -101,6 +101,23 @@
         android:orientation="vertical"
         android:layout_alignParentBottom="true">
 
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/taskScrollView"
+            android:layout_weight="0.5"
+            android:layout_alignParentLeft="true"
+
+            >
+
+            <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/taskList">
+            </se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 

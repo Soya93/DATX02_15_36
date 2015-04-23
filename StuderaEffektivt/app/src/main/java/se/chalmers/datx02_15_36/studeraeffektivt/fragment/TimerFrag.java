@@ -32,6 +32,8 @@ import android.widget.TextView;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 
 public class TimerFrag extends Fragment {
@@ -53,6 +55,7 @@ public class TimerFrag extends Fragment {
     private TextView inputText;
     private TextView pausLengthInput;
     private TextView nbrOfPausesInput;
+    private FlowLayout taskList;
 
     public static final int TIMER_1 = 0;
     public static final int CHANGE_COLOR_0 = 1;
@@ -188,7 +191,13 @@ public class TimerFrag extends Fragment {
         textView = (TextView) rootView.findViewById(R.id.textView);
         spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        taskList = (FlowLayout) rootView.findViewById(R.id.taskList);
         setCourses();
+
+        spinner.setSelection(0);
+        setSelectedCourse();
+
+        taskList.addTasksFromDatabase(dbAdapter, ccode, AssignmentType.OTHER, 17);
 
         setTimerView(default_StudyTime);
 
