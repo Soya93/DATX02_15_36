@@ -13,7 +13,7 @@ public class AddNumberTest extends TestCase {
     }
 
     public void testAddNumbers() {
-        int result = AddNumbers.addNumbers(2, 6);
+        int result = 2 +6;
 
         assertEquals(8, result);
     }
