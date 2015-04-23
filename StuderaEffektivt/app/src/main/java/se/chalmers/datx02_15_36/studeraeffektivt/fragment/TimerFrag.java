@@ -325,6 +325,7 @@ public class TimerFrag extends Fragment {
 
         Intent i = new Intent(getActivity(), TimerSettingsActivity.class);
         startActivity(i);
+
         /*
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -354,6 +355,7 @@ public class TimerFrag extends Fragment {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
         */
+
     }
 
     private void nextDialog() {
