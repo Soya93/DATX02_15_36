@@ -29,11 +29,8 @@ public class CalendarUtils {
             CalendarContract.Instances.CALENDAR_COLOR,       //10
             CalendarContract.Instances.VISIBLE,              //11
             CalendarContract.Instances.ALL_DAY,             //12
-           /* CalendarContract.Instances.CAL_ACCESS_EDITOR + "",      //13
-            CalendarContract.Instances.CAL_ACCESS_CONTRIBUTOR + "", //14
-            CalendarContract.Instances.CAL_ACCESS_OWNER + "",       //15
-            CalendarContract.Instances.CAL_ACCESS_ROOT + ""     //16
-            */
+            CalendarContract.Instances.CALENDAR_ACCESS_LEVEL //13
+
 
     };
 
@@ -51,11 +48,8 @@ public class CalendarUtils {
     public static final int CALENDAR_COLOR = 10;
     public static final int VISIBLE = 11;
     public static final int ALL_DAY = 12;
-    /*public static final int CAL_ACCESS_EDITOR = 13;
-    public static final int CAL_ACCESS_CONTRIBUTOR = 14;
-    public static final int CAL_ACCESS_OWNER = 15;
-    public static final int CAL_ACCESS_ROOT = 16;
-*/
+    public static final int CALENDAR_ACCESS_LEVEL = 13;
+
 
 
     public static final String[] NOTIFICATION_PROJECTION = new String[]{

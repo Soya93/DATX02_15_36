@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -72,7 +71,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private View.OnClickListener fabHandler;
     private AlertDialog alertDialog;
     private ArrayList<CalendarsFilterItem> calendarsList;
-    private ArrayList<Long> writersPermissonCalendarList;
+    private ArrayList<CalendarsFilterItem> writersPermissonCalendarList;
     private CalendarsFilterAdapter ad;
 
     @Override
@@ -88,13 +87,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         Map<Long,String> cals = calendarModel.getCalendarInfo(cr);
         visibleCalendars =  new LinkedList<>(cals.keySet());
         calendarsList = calendarModel.getCalendarFilters();
-        writersPermissonCalendarList = calendarModel.getCalendarWritersPermissionIds();
-
-        Log.i("calFrag:siza all: ", calendarsList.size() + "");
-
-        for(Long id : writersPermissonCalendarList) {
-            Log.i("calFrag: writers id ", id +"");
-        }
+        writersPermissonCalendarList = calendarModel.getCalendarWritersPermissions();
 
         this.initComponents();
 
@@ -484,6 +477,12 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
                 alertDialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
             }
         });
 

@@ -39,9 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/cal_forward_button"
-        android:layout_alignBottom="@+id/cal_back_button"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/weekView" />
 
     <Button
         android:layout_width="wrap_content"
