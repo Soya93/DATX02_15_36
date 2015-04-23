@@ -13,4 +13,11 @@
         android:paddingLeft="25dp"
         android:textSize="25dp" />
 
+    <TextView
+        android:id="@+id/group_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="25dp"
+        android:textSize="25dp" />
+
 </LinearLayout>
