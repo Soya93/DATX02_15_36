@@ -80,7 +80,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
-                android.R.color.holo_purple);
+                android.R.color.holo_blue_light);
 
         syncText = (TextView) view.findViewById(R.id.synchronize_lable);
 
