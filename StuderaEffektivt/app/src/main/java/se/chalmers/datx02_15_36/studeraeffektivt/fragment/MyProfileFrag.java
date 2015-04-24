@@ -35,7 +35,6 @@ public class MyProfileFrag extends Fragment {
     private ViewGroup container;
     private View view;
 
-    private Button addButtonInner;
     private EditText editTextCoursecode;
     private EditText editTextCoursename;
 
@@ -149,8 +148,6 @@ public class MyProfileFrag extends Fragment {
 
         //addButtonInner = (Button) view.findViewById(R.id.addButtonInner);
         //addButtonInner.setOnClickListener(myOnlyhandler);
-        editTextCoursecode = (EditText) view.findViewById(R.id.codeEditText);
-        editTextCoursename = (EditText) view.findViewById(R.id.nameEditText);
 
         seePrevCoursesButton= (Button) view.findViewById(R.id.prevCourses);
         seePrevCoursesButton.setOnClickListener(myOnlyhandler);
@@ -187,40 +184,7 @@ public class MyProfileFrag extends Fragment {
 
         switch (id) {
             case R.id.addCourse:
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                final View dialogView = inflater.inflate(R.layout.add_course_dialog, null);
-                builder.setView(dialogView);
-
-                builder.setPositiveButton("Lägg till", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        if(editTextCoursecode.getText().toString().trim().length() < 1 || editTextCoursename.getText().toString().trim().length() < 1){
-                            Toast toast = Toast.makeText(getActivity(), "Både kursnamn och kurskod måste fylls i!", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                        else {
-                            dbAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
-                            Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                    }
-                });
-
-                builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-
-                    }
-                });
-
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-
-                /*fragment = new CourseFrag();
-                fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "coursefragment");
-                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
+                initDialogToAddCourse();
                 break;
             case R.id.prevCourses:
                 fragment = new CourseFrag();
@@ -261,24 +225,56 @@ public class MyProfileFrag extends Fragment {
         }
     }
 
-    /*public void setAddButtonInner() {
-        addButtonInner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                long id = dbAdapter.insertCourse(codeEditText.getText().toString(), nameEditText.getText().toString());
-                if (id > 0 && getActivity() != null) {
-                    showCourseList();
+    public void initDialogToAddCourse(){
+        LayoutInflater inflater = getActivity().getLayoutInflater();
 
-                    Toast toast = Toast.makeText(getActivity(), codeEditText.getText().toString() + " succesfully added", Toast.LENGTH_SHORT);
-                    toast.show();
-                } else if (getActivity() != null) {
-                    Toast toast = Toast.makeText(getActivity(), "Failed to add course" + codeEditText.getText().toString(), Toast.LENGTH_SHORT);
-                    toast.show();
-                }
+        final AlertDialog d = new AlertDialog.Builder(getActivity())
+                .setView(inflater.inflate(R.layout.add_course_dialog, null))
+                .setTitle("Lägg till kurs")
+                .setPositiveButton("Lägg till", null) //Set to null. We override the onclick
+                .setNegativeButton("Avbryt", null)
+                .create();
+
+        d.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                Button positive = d.getButton(AlertDialog.BUTTON_POSITIVE);
+                positive.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        if(editTextCoursecode.getText().toString().trim().length() == 0 || editTextCoursename.getText().toString().trim().length() == 0){
+                            Toast toast = Toast.makeText(getActivity(), "Både kursnamn och kurskod måste fylls i!", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                        else {
+                            dbAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
+                            Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
+                            toast.show();
+                            d.dismiss();
+                        }
+
+                    }
+                });
+
+                Button negative = d.getButton(AlertDialog.BUTTON_NEGATIVE);
+                negative.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        d.dismiss();
+                    }
+                });
+
 
             }
-
         });
-    }*/
+
+        d.show();
+
+        editTextCoursecode = (EditText) d.findViewById(R.id.codeEditText);
+        editTextCoursename = (EditText) d.findViewById(R.id.nameEditText);
+    }
 
 }
