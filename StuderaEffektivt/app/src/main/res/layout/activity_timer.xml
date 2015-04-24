@@ -30,7 +30,7 @@
             android:shadowDx="1.0"
             android:shadowDy="2.0"
             android:shadowRadius="3.0"
-            android:textSize="60sp" />
+            android:textSize="30sp" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -73,6 +73,7 @@
             android:layout_height="56dp"
             android:background="@drawable/roundcorner"
             android:layout_alignParentTop="true"
+            android:src="@drawable/ic_stop"
             android:layout_toRightOf="@+id/button_start_timer"
             android:layout_toEndOf="@+id/button_start_timer"
             android:layout_marginLeft="37dp"

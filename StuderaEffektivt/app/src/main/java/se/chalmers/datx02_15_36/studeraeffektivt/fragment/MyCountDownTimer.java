@@ -134,7 +134,7 @@ public class MyCountDownTimer extends Service {
             public void onFinish() {
                 Vibrator vi = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-                vi.vibrate(1000);
+                vi.vibrate(2000);
                 sendMessage(0);
                 if(timePassed<totalTime) {
                     count = (count + 1) % 2;
