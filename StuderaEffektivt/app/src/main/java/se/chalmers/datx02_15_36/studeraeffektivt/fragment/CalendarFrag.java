@@ -90,19 +90,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         writersPermissonCalendarList = calendarModel.getCalendarWritersPermissions();
 
         this.initComponents();
-
-        //view.setBackgroundColor(Color.WHITE);
-        mWeekView.setBackgroundColor(Color.WHITE);
-        mWeekView.setTextSize(30);
-
-        //None of these work, why??
-        mWeekView.setHeaderColumnTextColor(Color.BLUE);
-        mWeekView.setHeaderRowBackgroundColor(Color.RED);
-        mWeekView.setHeaderColumnBackgroundColor(Color.MAGENTA);
-        mWeekView.setHourSeparatorColor(Color.CYAN);
-        mWeekView.setHeaderRowBackgroundColor(Color.GREEN);
-
-
         return view;
     }
 
@@ -115,17 +102,17 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         backButton = (Button) view.findViewById(R.id.cal_back_button);
         Drawable backDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_left).mutate();
-        backDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        backDrawable.setColorFilter(Color.parseColor("#B3E5FC"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         backButton.setBackground(backDrawable);
 
         forwardButton = (Button) view.findViewById(R.id.cal_forward_button);
         Drawable forwardDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_right).mutate();
-        forwardDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        forwardDrawable.setColorFilter(Color.parseColor("#B3E5FC"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         forwardButton.setBackground(forwardDrawable);
 
         goToTodayButton = (Button) view.findViewById(R.id.go_to_today_button);
         Drawable todayDrawable = getResources().getDrawable( R.drawable.ic_device_access_time).mutate();
-        todayDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        todayDrawable.setColorFilter(Color.parseColor("#B3E5FC"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         goToTodayButton.setBackground(todayDrawable);
 
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
@@ -200,6 +187,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.setEventPadding(20);
         mWeekView.setHourSeparatorColor(20);
         mWeekView.setEventMarginVertical(20);
+        mWeekView.setBackgroundColor(Color.WHITE);
+        mWeekView.setTodayHeaderTextColor(Color.parseColor("#33b5e5"));
+        mWeekView.setTodayBackgroundColor(Color.parseColor("#B3E5FC"));
 
 
         //actionButton.setOnClickListener(myButtonHandler);
