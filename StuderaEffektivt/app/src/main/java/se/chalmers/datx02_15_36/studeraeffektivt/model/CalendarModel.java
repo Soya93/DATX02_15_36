@@ -220,6 +220,8 @@ public class CalendarModel {
                     color = color == 0 ? c.getInt(CalendarUtils.CALENDAR_COLOR) : color;
                     filterItemPermission.setColor(color);
 
+                    filterItemPermission.setCalID(id);
+
                     calendarWritersPermissions.add(filterItemPermission);
                 }
 
