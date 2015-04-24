@@ -50,6 +50,7 @@
             android:text="Typ och plats för uppgiften"
             android:gravity="center"
             android:textSize="17dp"
+            android:textColor="#03A9F4"
             style="?android:attr/listSeparatorTextViewStyle"
             />
 
@@ -149,6 +150,7 @@
             android:text="uppgiften"
             android:gravity="center"
             android:textSize="17dp"
+            android:textColor="#03A9F4"
             style="?android:attr/listSeparatorTextViewStyle"
             />
 

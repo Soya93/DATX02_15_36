@@ -53,7 +53,6 @@ public class TimerFrag extends Fragment {
     private int buttonId = R.drawable.ic_start;
     private boolean hasBeenPaused = false;
 
-
     private TextView textView;
 
     private View rootView;
