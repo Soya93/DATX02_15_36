@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
     import android.app.AlertDialog;
+    import android.content.DialogInterface;
     import android.content.Intent;
     import android.net.Uri;
     import android.os.Bundle;
@@ -189,21 +190,37 @@ public class MyProfileFrag extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 final View dialogView = inflater.inflate(R.layout.add_course_dialog, null);
+                builder.setView(dialogView);
+
+                builder.setPositiveButton("Lägg till", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        if(editTextCoursecode.getText().toString().trim().length() < 1 || editTextCoursename.getText().toString().trim().length() < 1){
+                            Toast toast = Toast.makeText(getActivity(), "Både kursnamn och kurskod måste fylls i!", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                        else {
+                            dbAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
+                            Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
                 /*fragment = new CourseFrag();
                 fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "coursefragment");
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
-                break;
-            case R.id.addButtonInner:
-                if(editTextCoursecode.getText() == null || editTextCoursename.getText() == null){
-                    Toast toast = Toast.makeText(getActivity(), "Både kursnamn och kurskod måste fylls i!", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-                else {
-                    dbAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
-                    Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
                 break;
             case R.id.prevCourses:
                 fragment = new CourseFrag();
