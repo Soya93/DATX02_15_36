@@ -11,6 +11,9 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -61,8 +64,8 @@ public class TimerFrag extends Fragment {
     private TextView nbrOfPausesInput;
     private FlowLayout taskList;
     private Switch taskSwitch;
-    private Button previousWeek;
-    private Button nextWeek;
+    private ImageButton previousWeek;
+    private ImageButton nextWeek;
 
     public static final int TIMER_1 = 0;
     public static final int CHANGE_COLOR_0 = 1;
@@ -202,8 +205,8 @@ public class TimerFrag extends Fragment {
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         taskList = (FlowLayout) rootView.findViewById(R.id.taskList);
         taskSwitch = (Switch) rootView.findViewById(R.id.taskSwitch);
-        previousWeek = (Button) rootView.findViewById(R.id.previousWeek);
-        nextWeek = (Button) rootView.findViewById(R.id.nextWeek);
+        previousWeek = (ImageButton) rootView.findViewById(R.id.previousWeek);
+        nextWeek = (ImageButton) rootView.findViewById(R.id.nextWeek);
         setCourses();
 
         week = Utils.getCurrWeekNumber();
@@ -215,6 +218,8 @@ public class TimerFrag extends Fragment {
         setSelectedCourse();
 
         updateTaskList(assignmentType, week);
+
+        initButtons();
 
         setTimerView(default_StudyTime);
 
@@ -460,8 +465,14 @@ public class TimerFrag extends Fragment {
     }
 
     public void updateTaskList(AssignmentType assignmentType, int week){
-
+        taskList.removeAllViews();
         taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
+
+        if(taskList.isEmpty()){
+            TextView textView1 = new TextView(getActivity());
+            textView1.setText("Ingen uppgift av den här typen för den valda veckan");
+            taskList.addView(textView1);
+        }
     }
 
     public void initButtons(){
@@ -470,11 +481,11 @@ public class TimerFrag extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if(isChecked){
-                    assignmentType = AssignmentType.OTHER;
+                    assignmentType = AssignmentType.READ;
                     updateTaskList(assignmentType, week);
                 }
                 else{
-                    assignmentType = AssignmentType.READ;
+                    assignmentType = AssignmentType.OTHER;
                     updateTaskList(assignmentType, week);
                 }
             }
@@ -482,17 +493,32 @@ public class TimerFrag extends Fragment {
 
         previousWeek.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                week++;
+                week--;
                 updateTaskList(assignmentType, week);
             }
         });
 
         nextWeek.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                week--;
+                week++;
                 updateTaskList(assignmentType, week);
             }
         });
+
+        int colorOn = Color.parseColor("#33b5e5");
+        int colorOff = Color.parseColor("#33b5e5");
+        StateListDrawable thumbStates = new StateListDrawable();
+        thumbStates.addState(new int[]{android.R.attr.state_checked}, new ColorDrawable(colorOn));
+        thumbStates.addState(new int[]{}, new ColorDrawable(colorOff)); // this one has to come last
+        taskSwitch.setThumbDrawable(thumbStates);
+
+        Drawable backDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_left).mutate();
+        backDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        previousWeek.setBackground(backDrawable);
+
+        Drawable forwardDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_right).mutate();
+        forwardDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        nextWeek.setBackground(forwardDrawable);
 
     }
 

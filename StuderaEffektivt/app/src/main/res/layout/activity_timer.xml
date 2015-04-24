@@ -95,46 +95,29 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/switchLayout"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_below="@+id/button_container">
-
-        <Switch
-            android:id="@+id/taskSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textOn="Läsanvisningar"
-            android:textOff="Uppgifter"
-            />
-
-        </LinearLayout>
-
-    <LinearLayout
         android:id ="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/switchLayout"
+        android:layout_below="@+id/button_container"
+        android:layout_above="@+id/switchLayout"
         android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
         android:weightSum="3">
 
-        <Button
+        <ImageButton
             android:id="@+id/previousWeek"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1.35"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.29"
+            android:layout_gravity="center_vertical"
             />
 
         <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/taskScrollView"
-            android:layout_weight="0.3"
+            android:layout_weight="0.42"
             android:layout_alignParentLeft="true"
-
+            android:layout_marginTop="10dp"
             >
 
             <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
@@ -146,11 +129,34 @@
 
         </ScrollView>
 
-        <Button
+        <ImageButton
             android:id="@+id/nextWeek"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1.35"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="1.29"
+            android:layout_gravity="center_vertical"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/switchLayout"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        >
+
+        <Switch
+            android:id="@+id/taskSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOn="Läsanvisningar"
+            android:textOff="Uppgifter"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
 
     </LinearLayout>
 
