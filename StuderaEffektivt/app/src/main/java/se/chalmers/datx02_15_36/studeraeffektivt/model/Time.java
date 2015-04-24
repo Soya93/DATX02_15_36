@@ -34,4 +34,12 @@ public class Time {
         return hours + " h : " + minutes + " min";
     }
 
+    public long timeToMillisSeconds () {
+      return((long) this.min * 60 * 1000 + hour * 3600*1000);
+    }
+
+    public void setTimeFromMilliSeconds(long milliSeconds) {
+
+    }
+
 }

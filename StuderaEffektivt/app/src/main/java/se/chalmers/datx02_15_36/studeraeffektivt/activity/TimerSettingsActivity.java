@@ -39,7 +39,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
     private Time studyTime;
     private Time pauseTime;
     private SharedPreferences sharedPref;
-    private String prefName = "TimePref";
+    private String prefName = "ButtonPref";
     private Bundle b;
     private static Dialog dialog;
     private NumberPicker np;
@@ -77,7 +77,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
                 Log.d("Position", String.valueOf(position));
                 switch (position) {
                     case 0:
-                          show();
+                        show();
                         break;
                     case 1: {
                         new TimePickerDialog(TimerSettingsActivity.this,
@@ -120,63 +120,66 @@ public class TimerSettingsActivity extends ActionBarActivity {
     }
 
     protected void initDefaultValues() {
-        studyTime =new Time(0, 25);
-        pauseTime = new Time(0,5);
+        studyTime = new Time(0, 25);
+        pauseTime = new Time(0, 5);
         mapping.put(0, new Time(0, 2));
         mapping.put(1, studyTime);
         mapping.put(2, pauseTime);
     }
 
     protected void initFromSharedPref() {
-       sharedPref = getSharedPreferences(prefName, Context.MODE_PRIVATE);
-        int studyMin = sharedPref.getInt("studyMin",-1);
-        int studyHour =  sharedPref.getInt("studyHour",-1);
-        int pauseMin = sharedPref.getInt("pauseMin",-1);
-        int pauseHour = sharedPref.getInt("pauseHour",-1);
+        sharedPref = getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        int studyMin = sharedPref.getInt("studyMin", -1);
+        int studyHour = sharedPref.getInt("studyHour", -1);
+        int pauseMin = sharedPref.getInt("pauseMin", -1);
+        int pauseHour = sharedPref.getInt("pauseHour", -1);
 
-        if(studyMin != -1 && studyHour != -1 && pauseMin != -1 && pauseHour != -1){
-            studyTime =new Time(studyHour,studyMin);
-            pauseTime = new Time(pauseHour,pauseMin);
-         mapping.put(0, new Time(0, 2));
-         mapping.put(1, studyTime);
-         mapping.put(2, pauseTime);
-    }
-        else {
+        if (studyMin != -1 && studyHour != -1 && pauseMin != -1 && pauseHour != -1) {
+            studyTime = new Time(studyHour, studyMin);
+            pauseTime = new Time(pauseHour, pauseMin);
+            mapping.put(0, new Time(0, 2));
+            mapping.put(1, studyTime);
+            mapping.put(2, pauseTime);
+        } else {
             initDefaultValues();
         }
     }
 
 
-    public void show()
-    {
-       AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            LayoutInflater inflater = getLayoutInflater();
-                         final View dialogView = inflater.inflate(R.layout.dialog, null);
-                np = (NumberPicker) dialogView.findViewById(R.id.numberPicker1);
-                 np.setMaxValue(10);
-                 np.setMinValue(0);
-                np.setWrapSelectorWheel(false);
+    public void show() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog, null);
+        np = (NumberPicker) dialogView.findViewById(R.id.numberPicker1);
+        np.setMaxValue(10);
+        np.setMinValue(0);
+        np.setWrapSelectorWheel(false);
 
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
-                                         @Override
-                                         public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                                             mapping.put(0,new Time(0,newVal));
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                mapping.put(0, new Time(0, newVal));
 
-                                         }
-                                     });
+            }
+        });
 
-                builder.setView(dialogView);
-                 builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-        @Override
-                   public void onClick(DialogInterface dialog, int id) {
-            updateView();
+        builder.setView(dialogView);
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                updateView();
 
-                    }
+            }
 
-         } );
-         AlertDialog alertDialog = builder.create();
+        });
+        AlertDialog alertDialog = builder.create();
         alertDialog.show();
-        }
+    }
+
+    public HashMap<Integer,Time> getTimes() {
+        initFromSharedPref();
+
+    return this.mapping;}
 
 }

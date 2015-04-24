@@ -32,9 +32,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 
+import java.util.HashMap;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
@@ -42,6 +45,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 public class TimerFrag extends Fragment {
 
+    private static final int REQUEST_CODE = 1;
     private ImageButton startButton;
 
     private int buttonId = R.drawable.ic_start;
@@ -51,9 +55,6 @@ public class TimerFrag extends Fragment {
     private TextView textView;
 
     private View rootView;
-    private TextView inputText;
-    private TextView pausLengthInput;
-    private TextView nbrOfPausesInput;
     private FlowLayout taskList;
     private Switch taskSwitch;
     private Button previousWeek;
@@ -64,6 +65,11 @@ public class TimerFrag extends Fragment {
     public static final int CHANGE_COLOR_1 = 2;
 
     private long serviceInt;
+
+    private Time default_studyTime;
+    private Time default_pauseTime;
+    private Time studyTime;
+    private Time pauseTime;
 
     private String ccode;
     private String textViewText;
@@ -149,6 +155,23 @@ public class TimerFrag extends Fragment {
         }
     }
 
+    private void getTimeFromSettings() {
+        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        int studyMin = sharedPref.getInt("studyMin", -1);
+        int studyHour = sharedPref.getInt("studyHour", -1);
+        int pauseMin = sharedPref.getInt("pauseMin", -1);
+        int pauseHour = sharedPref.getInt("pauseHour", -1);
+
+        if (studyMin != -1 && studyHour != -1 && pauseMin != -1 && pauseHour != -1) {
+            studyTime = new Time(studyHour, studyMin);
+            pauseTime = new Time(pauseHour, pauseMin);
+        } else {
+            studyTime = new Time(0, 25);
+            pauseTime = new Time(0, 5);
+        }
+
+    }
+
 
     public void onStart() {
         super.onStart();
@@ -186,17 +209,26 @@ public class TimerFrag extends Fragment {
             }
         });
 
+        getTimeFromSettings();
+        setTimerView(0);
+
     }
 
+   private void instantiateButtons() {
+       startButton = (ImageButton) rootView.findViewById(R.id.button_start_timer);
+       previousWeek = (Button) rootView.findViewById(R.id.previousWeek);
+       nextWeek = (Button) rootView.findViewById(R.id.nextWeek);
+
+   }
+
     private void instantiate() {
-        startButton = (ImageButton) rootView.findViewById(R.id.button_start_timer);
+        instantiateButtons();
         textView = (TextView) rootView.findViewById(R.id.textView);
         spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         taskList = (FlowLayout) rootView.findViewById(R.id.taskList);
         taskSwitch = (Switch) rootView.findViewById(R.id.taskSwitch);
-        previousWeek = (Button) rootView.findViewById(R.id.previousWeek);
-        nextWeek = (Button) rootView.findViewById(R.id.nextWeek);
+
         setCourses();
 
         week = Utils.getCurrWeekNumber();
@@ -209,7 +241,6 @@ public class TimerFrag extends Fragment {
 
         updateTaskList(assignmentType, week);
 
-        //setTimerView(default_StudyTime);
 
     }
 
@@ -237,29 +268,21 @@ public class TimerFrag extends Fragment {
     }
 
 
-    private long minToMilliSeconds(int parsedTime) {
-        return ((long) parsedTime * 60 * 1000);
-    }
-
-    private int milliSecondsToMin(long milliSeconds) {
-        return ((int) milliSeconds / 1000 / 60);
-    }
-
 
 
     public void startTimer() {
-        if (buttonId == R.drawable.ic_start && !hasBeenPaused) {
+        if (hasBeenStarted()) {
             spinner.setEnabled(false);
             sendDataToService();
             buttonId = R.drawable.ic_pause;
             startButton.setImageResource(buttonId);
-        } else if (buttonId == R.drawable.ic_pause) {
+        } else if (hasBeenPaused()) {
             hasBeenPaused = true;
             serviceHandler.sendEmptyMessage(0);
             buttonId = R.drawable.ic_start;
             startButton.setImageResource(buttonId);
 
-        } else if (buttonId == R.drawable.ic_start && hasBeenPaused) {
+        } else if (hasBeenRestarted()) {
             serviceHandler.sendEmptyMessage(1);
             buttonId = R.drawable.ic_pause;
             startButton.setImageResource(buttonId);
@@ -271,22 +294,32 @@ public class TimerFrag extends Fragment {
     private void sendDataToService () {
         Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
         i.putExtra("CCODE",ccode);
-        //i.putExtra("TIME_STUDY", default_StudyTime);
-        //i.putExtra("TIME_PAUSE", default_PauseTime);
-        //i.putExtra("TOTAL_TIME", default_TotalTime);
+        i.putExtra("TIME_STUDY", studyTime.timeToMillisSeconds());
+        i.putExtra("TIME_PAUSE", pauseTime.timeToMillisSeconds());
         getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
         getActivity().startService(i);
 
     }
 
+    private boolean hasBeenStarted() {
+      return buttonId == R.drawable.ic_start && !hasBeenPaused;
+    }
+
+    private boolean hasBeenPaused(){
+     return buttonId == R.drawable.ic_pause;
+    }
+
+    private boolean hasBeenRestarted() {
+       return buttonId == R.drawable.ic_start && hasBeenPaused;
+
+    }
+
 
     public void setTimerView(long secUntilFinished) {
-        String sec = String.format("%02d", (secUntilFinished)/1000 % 60);
-        String min = String.format("%02d", (secUntilFinished) /1000/ 60);
-        textViewText = (min + ":" + sec);
-        textView.setText(textViewText);
+
+        textView.setText(studyTime.getString());
         if(phaceInt == 0){
-          //  progressBar.setProgress((int)(secUntilFinished * 1000 / default_StudyTime));
+           progressBar.setProgress((int)(secUntilFinished * 1000 / studyTime.timeToMillisSeconds()));
           }
         if(phaceInt == 1){
            // progressBar.setProgress((int)(secUntilFinished * 1000 / default_PauseTime));
@@ -304,22 +337,25 @@ public class TimerFrag extends Fragment {
 
 
     public void settingsTimer() {
-
         Intent i = new Intent(getActivity(), TimerSettingsActivity.class);
         startActivity(i);
-
     }
 
     public void onDestroyView() {
         super.onDestroyView();
         if(isMyServiceRunning(MyCountDownTimer.class)) {
             getActivity().unbindService(sc);
-            handler.removeMessages(0);
-            handler.removeMessages(1);
-            handler.removeMessages(2);
+            removeMessages();
         }
 
         saveFragmentState();
+    }
+
+    private void removeMessages() {
+        handler.removeMessages(0);
+        handler.removeMessages(1);
+        handler.removeMessages(2);
+
     }
 
     private void saveFragmentState() {
