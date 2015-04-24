@@ -1,5 +1,6 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
+    import android.app.AlertDialog;
     import android.content.Intent;
     import android.net.Uri;
     import android.os.Bundle;
@@ -11,6 +12,9 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import android.view.View;
     import android.view.ViewGroup;
     import android.widget.Button;
+    import android.widget.EditText;
+    import android.widget.LinearLayout;
+    import android.widget.Toast;
 
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
@@ -29,6 +33,11 @@ public class MyProfileFrag extends Fragment {
     private Button techniqueButton;
     private ViewGroup container;
     private View view;
+
+    private Button addButtonInner;
+    private EditText editTextCoursecode;
+    private EditText editTextCoursename;
+
 
     //The access point of the database.
     private DBAdapter dbAdapter;
@@ -137,6 +146,11 @@ public class MyProfileFrag extends Fragment {
         addCourseButton = (Button) view.findViewById(R.id.addCourse);
         addCourseButton.setOnClickListener(myOnlyhandler);
 
+        //addButtonInner = (Button) view.findViewById(R.id.addButtonInner);
+        //addButtonInner.setOnClickListener(myOnlyhandler);
+        editTextCoursecode = (EditText) view.findViewById(R.id.codeEditText);
+        editTextCoursename = (EditText) view.findViewById(R.id.nameEditText);
+
         seePrevCoursesButton= (Button) view.findViewById(R.id.prevCourses);
         seePrevCoursesButton.setOnClickListener(myOnlyhandler);
 
@@ -172,10 +186,24 @@ public class MyProfileFrag extends Fragment {
 
         switch (id) {
             case R.id.addCourse:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                final View dialogView = inflater.inflate(R.layout.add_course_dialog, null);
                 /*fragment = new CourseFrag();
                 fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "coursefragment");
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
+                break;
+            case R.id.addButtonInner:
+                if(editTextCoursecode.getText() == null || editTextCoursename.getText() == null){
+                    Toast toast = Toast.makeText(getActivity(), "Både kursnamn och kurskod måste fylls i!", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                else {
+                    dbAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
+                    Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
                 break;
             case R.id.prevCourses:
                 fragment = new CourseFrag();
@@ -215,5 +243,25 @@ public class MyProfileFrag extends Fragment {
                 break;
         }
     }
+
+    /*public void setAddButtonInner() {
+        addButtonInner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long id = dbAdapter.insertCourse(codeEditText.getText().toString(), nameEditText.getText().toString());
+                if (id > 0 && getActivity() != null) {
+                    showCourseList();
+
+                    Toast toast = Toast.makeText(getActivity(), codeEditText.getText().toString() + " succesfully added", Toast.LENGTH_SHORT);
+                    toast.show();
+                } else if (getActivity() != null) {
+                    Toast toast = Toast.makeText(getActivity(), "Failed to add course" + codeEditText.getText().toString(), Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
+            }
+
+        });
+    }*/
 
 }
