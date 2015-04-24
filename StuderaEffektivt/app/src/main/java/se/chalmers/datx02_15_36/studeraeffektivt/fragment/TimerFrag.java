@@ -48,11 +48,6 @@ public class TimerFrag extends Fragment {
     private boolean hasBeenPaused = false;
 
 
-    protected long default_TotalTime = (55 * 60*1000);
-    protected long default_StudyTime = (2 * 60*1000);
-    protected long default_PauseTime = (1 * 60*1000);
-    protected long default_NumberOfPauses = 1;
-
     private TextView textView;
 
     private View rootView;
@@ -70,9 +65,6 @@ public class TimerFrag extends Fragment {
 
     private long serviceInt;
 
-    private String inputTime;
-    private String nbrOfPauses;
-    private String pausLength;
     private String ccode;
     private String textViewText;
     private int phaceInt;
@@ -140,6 +132,7 @@ public class TimerFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
         instantiate();
+
 
 
         return rootView;
@@ -216,7 +209,7 @@ public class TimerFrag extends Fragment {
 
         updateTaskList(assignmentType, week);
 
-        setTimerView(default_StudyTime);
+        //setTimerView(default_StudyTime);
 
     }
 
@@ -253,17 +246,6 @@ public class TimerFrag extends Fragment {
     }
 
 
-    /**
-     * Set the timer.
-     */
-
-
-
-    private void setProgressColor(int c) {
-        progressBar.getProgressDrawable().setColorFilter(c, PorterDuff.Mode.SRC_IN);
-        progressBar.setProgress(0);
-    }
-
 
     public void startTimer() {
         if (buttonId == R.drawable.ic_start && !hasBeenPaused) {
@@ -289,9 +271,9 @@ public class TimerFrag extends Fragment {
     private void sendDataToService () {
         Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
         i.putExtra("CCODE",ccode);
-        i.putExtra("TIME_STUDY", default_StudyTime);
-        i.putExtra("TIME_PAUSE", default_PauseTime);
-        i.putExtra("TOTAL_TIME", default_TotalTime);
+        //i.putExtra("TIME_STUDY", default_StudyTime);
+        //i.putExtra("TIME_PAUSE", default_PauseTime);
+        //i.putExtra("TOTAL_TIME", default_TotalTime);
         getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
         getActivity().startService(i);
 
@@ -304,9 +286,10 @@ public class TimerFrag extends Fragment {
         textViewText = (min + ":" + sec);
         textView.setText(textViewText);
         if(phaceInt == 0){
-            progressBar.setProgress((int)(secUntilFinished * 1000 / default_StudyTime));}
+          //  progressBar.setProgress((int)(secUntilFinished * 1000 / default_StudyTime));
+          }
         if(phaceInt == 1){
-            progressBar.setProgress((int)(secUntilFinished * 1000 / default_PauseTime));
+           // progressBar.setProgress((int)(secUntilFinished * 1000 / default_PauseTime));
         }
     }
 
@@ -324,96 +307,6 @@ public class TimerFrag extends Fragment {
 
         Intent i = new Intent(getActivity(), TimerSettingsActivity.class);
         startActivity(i);
-
-        /*
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.time_picker_dialog, null);
-        builder.setView(dialogView);
-
-        builder.setPositiveButton("Nästa", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-
-
-                inputText = (TextView) dialogView.findViewById(R.id.inputTime);
-                inputTime = inputText.getText().toString();
-                nextDialog();
-
-            }
-        });
-
-        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // Do nothing
-            }
-        });
-
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-        */
-
-    }
-
-    private void nextDialog() {
-        resetTimer();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.time_picker_dialog2, null);
-        builder.setView(dialogView);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                nbrOfPausesInput = (TextView) dialogView.findViewById(R.id.nbrOfPausesInt);
-                nbrOfPauses = nbrOfPausesInput.getText().toString();
-
-                pausLengthInput = (TextView) dialogView.findViewById(R.id.pausLengthInt);
-                pausLength = pausLengthInput.getText().toString();
-                textView.setText(inputTime + ":00");
-                parseFromDialog();
-
-
-            }
-        });
-
-        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // Cancel
-            }
-        });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
-
-    public void parseFromDialog() {
-        try {
-            int timeFromDialog = Integer.parseInt(inputTime);
-            default_TotalTime = minToMilliSeconds(timeFromDialog);
-            int pauseFromDialog;
-            if (pausLength.equals("")) {
-                pauseFromDialog = 0;
-            } else {
-                pauseFromDialog = Integer.parseInt(pausLength);
-
-
-            }
-            default_PauseTime = minToMilliSeconds(pauseFromDialog);
-            int numberOfPauses = Integer.parseInt(nbrOfPauses);
-            default_NumberOfPauses = (long) numberOfPauses;
-            //calculateStudySession();
-
-
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-
 
     }
 
@@ -444,8 +337,6 @@ public class TimerFrag extends Fragment {
         if(hasBeenPaused){
             editor.putLong("timeLeft",serviceInt);
         }
-
-        Log.d("ONDESTROY", String.valueOf(sharedPref.getInt("buttonImage", -1)));
         editor.apply();
     }
 
