@@ -135,6 +135,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         setCourses();
         courseSpinner.setSelection(0);
         chapterSpinner.setSelection(0);
+        weekSpinner.setSelection(0);
         setSelectedCourse();
 
         listOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);

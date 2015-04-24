@@ -169,7 +169,8 @@ public class FlowLayout extends ViewGroup {
         if (cursor != null) {
             while (cursor.moveToNext()) {
 
-                if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode) && cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())) {
+                if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode) &&
+                   cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())) {
 
                     AssignmentStatus assignmentStatus;
                     if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())) {
@@ -235,6 +236,10 @@ public class FlowLayout extends ViewGroup {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
+
+                Log.d("", cursor.getString(cursor.getColumnIndex("_ccode")));
+                Log.d("", cursor.getString(cursor.getColumnIndex("type")));
+                Log.d("", "" + cursor.getInt(cursor.getColumnIndex("week")));
 
                 if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode)
                                     && cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())

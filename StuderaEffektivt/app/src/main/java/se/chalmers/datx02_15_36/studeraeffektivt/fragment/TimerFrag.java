@@ -23,9 +23,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 
@@ -33,6 +36,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 
@@ -44,11 +48,6 @@ public class TimerFrag extends Fragment {
     private boolean hasBeenPaused = false;
 
 
-    protected long default_TotalTime = (55 * 60*1000);
-    protected long default_StudyTime = (2 * 60*1000);
-    protected long default_PauseTime = (1 * 60*1000);
-    protected long default_NumberOfPauses = 1;
-
     private TextView textView;
 
     private View rootView;
@@ -56,6 +55,9 @@ public class TimerFrag extends Fragment {
     private TextView pausLengthInput;
     private TextView nbrOfPausesInput;
     private FlowLayout taskList;
+    private Switch taskSwitch;
+    private Button previousWeek;
+    private Button nextWeek;
 
     public static final int TIMER_1 = 0;
     public static final int CHANGE_COLOR_0 = 1;
@@ -63,12 +65,11 @@ public class TimerFrag extends Fragment {
 
     private long serviceInt;
 
-    private String inputTime;
-    private String nbrOfPauses;
-    private String pausLength;
     private String ccode;
     private String textViewText;
     private int phaceInt;
+    private AssignmentType assignmentType;
+    private int week;
 
     private Bundle b;
     private Spinner spinner;
@@ -133,6 +134,7 @@ public class TimerFrag extends Fragment {
         instantiate();
 
 
+
         return rootView;
     }
 
@@ -192,14 +194,22 @@ public class TimerFrag extends Fragment {
         spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         taskList = (FlowLayout) rootView.findViewById(R.id.taskList);
+        taskSwitch = (Switch) rootView.findViewById(R.id.taskSwitch);
+        previousWeek = (Button) rootView.findViewById(R.id.previousWeek);
+        nextWeek = (Button) rootView.findViewById(R.id.nextWeek);
         setCourses();
 
+        week = Utils.getCurrWeekNumber();
+
+
+        taskSwitch.setChecked(true);
+        assignmentType = AssignmentType.OTHER;
         spinner.setSelection(0);
         setSelectedCourse();
 
-        taskList.addTasksFromDatabase(dbAdapter, ccode, AssignmentType.OTHER, 17);
+        updateTaskList(assignmentType, week);
 
-        setTimerView(default_StudyTime);
+        //setTimerView(default_StudyTime);
 
     }
 
@@ -223,7 +233,6 @@ public class TimerFrag extends Fragment {
         String temp = spinner.getSelectedItem().toString();
         String[] parts = temp.split("-");
         this.ccode = parts[0];
-        Log.d("selected course", ccode);
 
     }
 
@@ -236,17 +245,6 @@ public class TimerFrag extends Fragment {
         return ((int) milliSeconds / 1000 / 60);
     }
 
-
-    /**
-     * Set the timer.
-     */
-
-
-
-    private void setProgressColor(int c) {
-        progressBar.getProgressDrawable().setColorFilter(c, PorterDuff.Mode.SRC_IN);
-        progressBar.setProgress(0);
-    }
 
 
     public void startTimer() {
@@ -273,9 +271,9 @@ public class TimerFrag extends Fragment {
     private void sendDataToService () {
         Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
         i.putExtra("CCODE",ccode);
-        i.putExtra("TIME_STUDY", default_StudyTime);
-        i.putExtra("TIME_PAUSE", default_PauseTime);
-        i.putExtra("TOTAL_TIME", default_TotalTime);
+        //i.putExtra("TIME_STUDY", default_StudyTime);
+        //i.putExtra("TIME_PAUSE", default_PauseTime);
+        //i.putExtra("TOTAL_TIME", default_TotalTime);
         getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
         getActivity().startService(i);
 
@@ -288,9 +286,10 @@ public class TimerFrag extends Fragment {
         textViewText = (min + ":" + sec);
         textView.setText(textViewText);
         if(phaceInt == 0){
-            progressBar.setProgress((int)(secUntilFinished * 1000 / default_StudyTime));}
+          //  progressBar.setProgress((int)(secUntilFinished * 1000 / default_StudyTime));
+          }
         if(phaceInt == 1){
-            progressBar.setProgress((int)(secUntilFinished * 1000 / default_PauseTime));
+           // progressBar.setProgress((int)(secUntilFinished * 1000 / default_PauseTime));
         }
     }
 
@@ -305,97 +304,9 @@ public class TimerFrag extends Fragment {
 
 
     public void settingsTimer() {
-        //hejehhje
+
         Intent i = new Intent(getActivity(), TimerSettingsActivity.class);
         startActivity(i);
-        /*
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.time_picker_dialog, null);
-        builder.setView(dialogView);
-
-        builder.setPositiveButton("Nästa", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-
-
-                inputText = (TextView) dialogView.findViewById(R.id.inputTime);
-                inputTime = inputText.getText().toString();
-                nextDialog();
-
-            }
-        });
-
-        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // Do nothing
-            }
-        });
-
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-        */
-    }
-
-    private void nextDialog() {
-        resetTimer();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.time_picker_dialog2, null);
-        builder.setView(dialogView);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                nbrOfPausesInput = (TextView) dialogView.findViewById(R.id.nbrOfPausesInt);
-                nbrOfPauses = nbrOfPausesInput.getText().toString();
-
-                pausLengthInput = (TextView) dialogView.findViewById(R.id.pausLengthInt);
-                pausLength = pausLengthInput.getText().toString();
-                textView.setText(inputTime + ":00");
-                parseFromDialog();
-
-
-            }
-        });
-
-        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // Cancel
-            }
-        });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
-
-    public void parseFromDialog() {
-        try {
-            int timeFromDialog = Integer.parseInt(inputTime);
-            default_TotalTime = minToMilliSeconds(timeFromDialog);
-            int pauseFromDialog;
-            if (pausLength.equals("")) {
-                pauseFromDialog = 0;
-            } else {
-                pauseFromDialog = Integer.parseInt(pausLength);
-
-
-            }
-            default_PauseTime = minToMilliSeconds(pauseFromDialog);
-            int numberOfPauses = Integer.parseInt(nbrOfPauses);
-            default_NumberOfPauses = (long) numberOfPauses;
-            //calculateStudySession();
-
-
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-
 
     }
 
@@ -426,8 +337,6 @@ public class TimerFrag extends Fragment {
         if(hasBeenPaused){
             editor.putLong("timeLeft",serviceInt);
         }
-
-        Log.d("ONDESTROY", String.valueOf(sharedPref.getInt("buttonImage", -1)));
         editor.apply();
     }
 
@@ -440,6 +349,43 @@ public class TimerFrag extends Fragment {
             }
         }
         return false;
+    }
+
+    public void updateTaskList(AssignmentType assignmentType, int week){
+
+        taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
+    }
+
+    public void initButtons(){
+
+        taskSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked){
+                    assignmentType = AssignmentType.OTHER;
+                    updateTaskList(assignmentType, week);
+                }
+                else{
+                    assignmentType = AssignmentType.READ;
+                    updateTaskList(assignmentType, week);
+                }
+            }
+        });
+
+        previousWeek.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                week++;
+                updateTaskList(assignmentType, week);
+            }
+        });
+
+        nextWeek.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                week--;
+                updateTaskList(assignmentType, week);
+            }
+        });
+
     }
 
 }
