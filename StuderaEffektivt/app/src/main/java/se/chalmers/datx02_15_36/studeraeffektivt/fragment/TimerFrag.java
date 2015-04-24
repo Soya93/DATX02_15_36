@@ -62,11 +62,13 @@ public class TimerFrag extends Fragment {
     public static final int TIMER_1 = 0;
     public static final int CHANGE_COLOR_0 = 1;
     public static final int CHANGE_COLOR_1 = 2;
+    public static final int TIMER_FINISHED = 3;
 
     private long serviceInt;
 
     private Time default_studyTime;
     private Time default_pauseTime;
+    private int reps;
     private String ccode;
     private int phaceInt;
 
@@ -102,6 +104,10 @@ public class TimerFrag extends Fragment {
                 case CHANGE_COLOR_1:
 
                     progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
+                    break;
+
+                case TIMER_FINISHED:
+                    resetTimer();
                     break;
             }
 
@@ -149,6 +155,8 @@ public class TimerFrag extends Fragment {
         int studyHour = sharedPref.getInt("studyHour", -1);
         int pauseMin = sharedPref.getInt("pauseMin", -1);
         int pauseHour = sharedPref.getInt("pauseHour", -1);
+        reps = sharedPref.getInt("REPS",1);
+
 
         default_studyTime = new Time(0, 25);
         default_pauseTime = new Time(0, 5);
@@ -289,6 +297,7 @@ public class TimerFrag extends Fragment {
         i.putExtra("CCODE", ccode);
         i.putExtra("TIME_STUDY", default_studyTime.timeToMillisSeconds());
         i.putExtra("TIME_PAUSE", default_pauseTime.timeToMillisSeconds());
+        i.putExtra("REPS",reps);
         getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
         getActivity().startService(i);
 
@@ -328,11 +337,12 @@ public class TimerFrag extends Fragment {
 
     public void resetTimer() {
         if(isMyServiceRunning(MyCountDownTimer.class)) {
-            serviceHandler.sendEmptyMessage(0);
+            serviceHandler.sendEmptyMessage(2);
             buttonId = R.drawable.ic_start;
             hasBeenPaused = false;
             progressBar.setProgress(1000);
             startButton.setImageResource(buttonId);
+            progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
             startSetTimerView();
         }
 
