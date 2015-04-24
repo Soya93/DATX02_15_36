@@ -57,13 +57,20 @@
         android:layout_below="@+id/addCourse"
         android:layout_alignParentStart="true" />
 
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/prevCourses"
+        android:layout_below="@+id/addCourse">
+
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/listView2"
+        android:id="@+id/listOfCourses"
         android:layout_alignStart="@+id/addCourse"
-        android:layout_above="@+id/prevCourses"
-        android:layout_below="@+id/addCourse" />
+         />
+
+    </ScrollView>
 
     <View
         android:layout_width="fill_parent"
