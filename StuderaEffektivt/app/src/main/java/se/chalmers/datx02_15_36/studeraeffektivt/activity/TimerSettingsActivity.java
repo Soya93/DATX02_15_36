@@ -40,7 +40,6 @@ public class TimerSettingsActivity extends ActionBarActivity {
     private Time pauseTime;
     private SharedPreferences sharedPref;
     private String prefName = "ButtonPref";
-    private Bundle b;
     private static Dialog dialog;
     private NumberPicker np;
 
@@ -114,7 +113,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
         editor.putInt("studyMin", studyTime.getMin());
         editor.putInt("pauseHour", pauseTime.getHour());
         editor.putInt("pauseMin", pauseTime.getMin());
-        //editor.putInt("",)
+        editor.putInt("reps",mapping.get(0).getMin());
         editor.apply();
 
     }
@@ -130,19 +129,26 @@ public class TimerSettingsActivity extends ActionBarActivity {
     protected void initFromSharedPref() {
         sharedPref = getSharedPreferences(prefName, Context.MODE_PRIVATE);
         int studyMin = sharedPref.getInt("studyMin", -1);
-        int studyHour = sharedPref.getInt("studyHour", -1);
+        int studyHour = sharedPref.getInt("studyHour", 0);
         int pauseMin = sharedPref.getInt("pauseMin", -1);
-        int pauseHour = sharedPref.getInt("pauseHour", -1);
+        int pauseHour = sharedPref.getInt("pauseHour", 0);
+        int reps = sharedPref.getInt("reps",-1);
+        initDefaultValues();
 
-        if (studyMin != -1 && studyHour != -1 && pauseMin != -1 && pauseHour != -1) {
+
+        if (studyMin != -1  ) {
             studyTime = new Time(studyHour, studyMin);
-            pauseTime = new Time(pauseHour, pauseMin);
-            mapping.put(0, new Time(0, 2));
-            mapping.put(1, studyTime);
-            mapping.put(2, pauseTime);
-        } else {
-            initDefaultValues();
-        }
+            mapping.put(1, studyTime);}
+
+        if(pauseMin != -1){
+                pauseTime = new Time(pauseHour, pauseMin);
+                mapping.put(2, pauseTime);
+            }
+         if(reps != -1) {
+             mapping.put(0, new Time(0, reps));
+         }
+
+
     }
 
 
@@ -177,9 +183,6 @@ public class TimerSettingsActivity extends ActionBarActivity {
         alertDialog.show();
     }
 
-    public HashMap<Integer,Time> getTimes() {
-        initFromSharedPref();
 
-    return this.mapping;}
 
 }

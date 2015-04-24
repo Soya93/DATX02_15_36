@@ -150,12 +150,14 @@ public class TimerFrag extends Fragment {
         int pauseMin = sharedPref.getInt("pauseMin", -1);
         int pauseHour = sharedPref.getInt("pauseHour", -1);
 
-        if (studyMin != -1 || studyHour != -1 || pauseMin != -1 || pauseHour != -1) {
+        default_studyTime = new Time(0, 25);
+        default_pauseTime = new Time(0, 5);
+
+        if (studyMin != -1 ) {
             default_studyTime = new Time(studyHour, studyMin);
+        }
+        if(pauseMin != -1) {
             default_pauseTime = new Time(pauseHour, pauseMin);
-        } else {
-            default_studyTime = new Time(0, 25);
-            default_pauseTime = new Time(0, 5);
         }
 
     }
