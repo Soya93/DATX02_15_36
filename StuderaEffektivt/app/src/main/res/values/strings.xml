@@ -2,9 +2,8 @@
 <resources>
 
     <!-- Main Activity -->
-    <string name="app_name">PluggApp</string>
-    <string name="title_home">PluggApp</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">StudieCoach</string>
+    <string name="title_home">StudieCoach</string>
     <string name="action_settings">Settings</string>
 
     <!-- Timer -->

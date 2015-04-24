@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
@@ -24,6 +25,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.LargeValueFormatter;
 
 import org.w3c.dom.Text;
 
@@ -35,6 +37,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.IntegerValueFormatter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 public class StatsFrag extends Fragment {
@@ -43,13 +46,6 @@ public class StatsFrag extends Fragment {
 
     private Spinner spinner;
     private String currCourse = "";
-
-    private TextView hoursSpent;
-    private TextView hoursLeft;
-    private TextView hoursTotal;
-
-    private TextView assDone;
-    private TextView assLeft;
 
     private PieChart pieHours;
     private PieChart pieAssignments;
@@ -111,13 +107,17 @@ public class StatsFrag extends Fragment {
         pieEntries.add(hoursDone);
         pieEntries.add(hoursLeft);
 
+        int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
+
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "Timmar");
-        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        pieDataSet.setColors(colors);
+        pieDataSet.setValueFormatter(new IntegerValueFormatter());
+
         ArrayList<PieDataSet> dataSets = new ArrayList<PieDataSet>();
         dataSets.add(pieDataSet);
         ArrayList<String> pieLabels = new ArrayList<String>();
-        pieLabels.add("Klara");
         pieLabels.add("Kvar");
+        pieLabels.add("Klara");
 
         PieData pieData = new PieData(pieLabels,pieDataSet);
         pieHours.setData(pieData);
@@ -127,6 +127,7 @@ public class StatsFrag extends Fragment {
         pieHours.setCenterText("Timmar");
         pieHours.setDrawHoleEnabled(true);
         pieHours.setHoleColorTransparent(true);
+        pieHours.getLegend().setEnabled(false);
 
         //Show pie chart data
         pieHours.invalidate();
@@ -146,15 +147,20 @@ public class StatsFrag extends Fragment {
         pieEntries.add(assesDone);
         pieEntries.add(assesLeft);
 
+        int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
+
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "Uppgifter");
-        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        pieDataSet.setColors(colors);
+        pieDataSet.setValueFormatter(new IntegerValueFormatter());
+
         ArrayList<PieDataSet> dataSets = new ArrayList<PieDataSet>();
         dataSets.add(pieDataSet);
         ArrayList<String> pieLabels = new ArrayList<String>();
-        pieLabels.add("Klara");
         pieLabels.add("Kvar");
+        pieLabels.add("Klara");
 
         PieData pieData = new PieData(pieLabels,pieDataSet);
+
         pieAssignments.setData(pieData);
 
         //Style pie chart data
@@ -162,23 +168,11 @@ public class StatsFrag extends Fragment {
         pieAssignments.setCenterText("Uppgifter");
         pieAssignments.setDrawHoleEnabled(true);
         pieAssignments.setHoleColorTransparent(true);
+        pieAssignments.getLegend().setEnabled(false);
 
         //Show pie chart data
         pieAssignments.invalidate();
     }
-
-    /*private void setTextViews(){
-        hoursSpent = (TextView) rootView.findViewById(R.id.hours_spent_show);
-        hoursSpent.setText(""+getHoursSpent());
-        hoursLeft = (TextView) rootView.findViewById(R.id.hours_left_show);
-        hoursLeft.setText(""+getHoursLeft());
-        hoursTotal = (TextView) rootView.findViewById(R.id.hours_total_show);
-        hoursTotal.setText(""+getHoursTotal());
-        assDone = (TextView) rootView.findViewById(R.id.ass_done_show);
-        assDone.setText(""+getAssDone());
-        assLeft = (TextView) rootView.findViewById(R.id.ass_left_show);
-        assLeft.setText(""+getAssLeft());
-    }*/
 
     private void setCourses() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
@@ -191,7 +185,7 @@ public class StatsFrag extends Fragment {
         while (cursor.moveToNext()) {
             String ccode = cursor.getString(ccodeColumn);
             String cname = cursor.getString(cnameColumn);
-            adapter.add(ccode + "-" + cname);
+            adapter.add(ccode + " " + cname);
         }
     }
 
@@ -199,7 +193,7 @@ public class StatsFrag extends Fragment {
         Log.i("DB", "spinner's selected item: " + spinner.getSelectedItem());
         if(spinner.getSelectedItem() != null){
             String temp = spinner.getSelectedItem().toString();
-            String[] parts = temp.split("-");
+            String[] parts = temp.split(" ");
             this.currCourse = parts[0];
         }
     }

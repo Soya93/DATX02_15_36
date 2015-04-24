@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Vibrator;
+import android.util.Log;
 import android.widget.Toast;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
@@ -28,9 +29,10 @@ public class MyCountDownTimer extends Service {
     private final int STOP = 2;
 
 
-    private long studyTime,totalTime,pauseTime;
+    private long studyTime,pauseTime;
+    private int reps;
     private long timeUntilFinished;
-    private int timePassed=0;
+    private int totalcount=0;
     private int count=0;
 
     private Bundle bundle = new Bundle();
@@ -75,7 +77,8 @@ public class MyCountDownTimer extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         studyTime = intent.getLongExtra("TIME_STUDY", 30*1000);
         pauseTime = intent.getLongExtra("TIME_PAUSE",15*1000);
-        totalTime = intent.getLongExtra("TOTAL_TIME", 100*1000);
+        reps= intent.getIntExtra("REPS",1);
+        Log.d("Values of reps ", String.valueOf(reps));
         ccode= intent.getStringExtra("CCODE");
         dbAdapter = new DBAdapter(getBaseContext());
         utils = new Utils();
@@ -90,7 +93,6 @@ public class MyCountDownTimer extends Service {
    public void startCountDown() {
        timerFunction(studyTime,100);
        studyTimer.start();
-
    }
 
     public Handler getServiceHandler () {
@@ -101,6 +103,8 @@ public class MyCountDownTimer extends Service {
         super.onDestroy();
         if(count==0 ){
             insertIntoDataBase(studyTimePassed);
+            Toast toast = Toast.makeText(getBaseContext(), "Studiepasset har lagts in i databasen", Toast.LENGTH_SHORT);
+            toast.show();
         }
         studyTimer.cancel();
 
@@ -114,32 +118,35 @@ public class MyCountDownTimer extends Service {
         mHandler.sendMessage(msg);
     }
 
-    public CountDownTimer timerFunction(long millisInFuture, long countDownInterval) {
+    public CountDownTimer timerFunction(final long millisInFuture, long countDownInterval) {
 
         studyTimer = new CountDownTimer(millisInFuture, countDownInterval) {
 
             public void onTick(long millisUntilFinished) {
-                timePassed+=100;
-                timeUntilFinished=millisUntilFinished;
+                timeUntilFinished=millisUntilFinished; // if user wants to pause timer;
                 sendMessage((int)millisUntilFinished);
                 if(count==0){
                     studyTimePassed+=100;
 
                 }
 
-
+                Log.d("Time utilfinished" , String.valueOf(millisUntilFinished/1000));
+                Log.d("Values of reps ", String.valueOf(reps));
             }
 
             @Override
             public void onFinish() {
+                Log.d("Values of totC", String.valueOf(totalcount));
+                Log.d("Value of reps", String.valueOf(reps));
                 Vibrator vi = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-                vi.vibrate(1000);
+                vi.vibrate(2000);
                 sendMessage(0);
-                if(timePassed<totalTime) {
+                if(totalcount<reps) {
                     count = (count + 1) % 2;
 
                     if (count == 1) {
+                        totalcount ++;
                         studyTimer = timerFunction(pauseTime, 100);
                         sendMessage(pauseTime);
                         mHandler.sendEmptyMessage(1);
@@ -147,8 +154,12 @@ public class MyCountDownTimer extends Service {
                         studyTimer = timerFunction(studyTime, 100);
                         sendMessage(studyTime);
                         mHandler.sendEmptyMessage(2);
+
                     }
                     studyTimer.start();
+                }
+                else {
+                    mHandler.sendEmptyMessage(3);
                 }
 
             }
@@ -179,9 +190,7 @@ public class MyCountDownTimer extends Service {
     private void insertIntoDataBase(long millisPassed) {
         long inserted = dbAdapter.insertSession(ccode, utils.getCurrWeekNumber(), milliSecondsToMin(millisPassed));
         if (inserted > 0 && getBaseContext() != null) {
-            Toast toast = Toast.makeText(getBaseContext(), "Session:" + milliSecondsToMin(millisPassed)
-                    + "minutes added to " + ccode, Toast.LENGTH_SHORT);
-            toast.show();
+
         } else if (getBaseContext() != null) {
             Toast toast = Toast.makeText(getBaseContext(), "Failed to add a Session", Toast.LENGTH_SHORT);
             toast.show();

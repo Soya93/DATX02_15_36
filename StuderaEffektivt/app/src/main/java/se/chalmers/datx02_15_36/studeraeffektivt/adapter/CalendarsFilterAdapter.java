@@ -74,10 +74,10 @@ public class CalendarsFilterAdapter extends ArrayAdapter<CalendarsFilterItem> {
         textView.setTextColor(Color.BLACK);
 
         if(itemsArrayList.get(position).isChecked()) {
-            colorView.setImageDrawable(context.getDrawable(R.drawable.ic_square));
+            colorView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_square));
             colorView.setColorFilter(itemsArrayList.get(position).getColor());
         }else {
-            colorView.setImageDrawable(context.getDrawable(R.drawable.ic_square_frame));
+            colorView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_square_frame));
             colorView.setColorFilter(itemsArrayList.get(position).getColor());
         }
 

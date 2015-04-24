@@ -22,6 +22,7 @@
                 android:layout_gravity="bottom|right"
                 android:src="@drawable/ic_cal1"
                 android:id="@+id/home_fab"
+                android:background="@drawable/roundcorner"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="20dp"/>
 
