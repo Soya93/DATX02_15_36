@@ -240,7 +240,6 @@ public class TimerFrag extends Fragment {
         String temp = spinner.getSelectedItem().toString();
         String[] parts = temp.split("-");
         this.ccode = parts[0];
-        Log.d("selected course", ccode);
 
     }
 

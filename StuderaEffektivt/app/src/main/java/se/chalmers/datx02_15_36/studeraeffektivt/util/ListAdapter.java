@@ -61,7 +61,11 @@ public class ListAdapter extends BaseAdapter {
         holder.forStringValues=(TextView) rowView.findViewById(R.id.settings_name);
         holder.forIntegerValues=(TextView) rowView.findViewById(R.id.time);
         holder.forStringValues.setText(values[position]);
-        holder.forIntegerValues.setText(String.valueOf(b.getHour()) + ":" +  String.valueOf(String.valueOf(b.getMin())));
+        if(position != 0){
+        holder.forIntegerValues.setText(b.getString());}
+        else{
+            holder.forIntegerValues.setText(String.valueOf(b.getMin()));
+        }
 
         return rowView;
     }

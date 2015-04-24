@@ -28,4 +28,10 @@ public class Time {
         return this.min;
     }
 
+    public String getString () {
+        String minutes= String.format("%02d", this.min);
+        String hours = String.format("%02d",this.hour);
+        return hours + " h : " + minutes + " min";
+    }
+
 }
