@@ -38,8 +38,9 @@ public class Time {
       return((long) this.min * 60 * 1000 + hour * 3600*1000);
     }
 
-    public void setTimeFromMilliSeconds(long milliSeconds) {
-
-    }
+    public static Time setTimeFromMilliSeconds(long milliSeconds) {
+     int minutes = (int)(milliSeconds/1000/60)% 60;
+             int hours = (int)(milliSeconds/1000/60/60);
+    return new Time (hours,minutes);}
 
 }
