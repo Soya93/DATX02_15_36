@@ -230,7 +230,7 @@ public class TimerFrag extends Fragment {
         while (cursor.moveToNext()) {
             String ccode = cursor.getString(ccodeColumn);
             String cname = cursor.getString(cnameColumn);
-            adapter.add(ccode + "-" + cname);
+            adapter.add(ccode + " " + cname);
         }
 
     }
@@ -238,7 +238,7 @@ public class TimerFrag extends Fragment {
 
     public void setSelectedCourse() {
         String temp = spinner.getSelectedItem().toString();
-        String[] parts = temp.split("-");
+        String[] parts = temp.split(" ");
         this.ccode = parts[0];
 
     }
