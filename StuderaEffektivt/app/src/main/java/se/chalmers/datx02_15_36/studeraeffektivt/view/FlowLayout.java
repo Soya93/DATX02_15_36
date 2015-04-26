@@ -242,7 +242,7 @@ public class FlowLayout extends ViewGroup {
                 if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode)
                                     && cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())
                                     && cursor.getInt(cursor.getColumnIndex("week")) == week
-                                    && cursor.getString(cursor.getColumnIndex("status")) == AssignmentStatus.UNDONE.toString()) {
+                                    && cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.UNDONE.toString())) {
 
                     AssignmentStatus assignmentStatus;
                     if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())) {
