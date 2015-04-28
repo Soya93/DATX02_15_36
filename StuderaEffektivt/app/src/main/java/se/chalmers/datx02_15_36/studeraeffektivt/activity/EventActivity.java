@@ -6,7 +6,10 @@ import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -54,6 +57,7 @@ public class EventActivity extends ActionBarActivity {
     private String location;
     private String description;
     private String calendarName;
+    private int color;
     private int notification;
     private Calendar calStart;
     private Calendar calEnd;
@@ -62,6 +66,8 @@ public class EventActivity extends ActionBarActivity {
     private boolean isAllDayEvent;
     private Switch allDaySwitch;
     private AlertDialog alertDialog;
+    private MenuItem item;
+    private long itemID;
 
 
     Map<Integer, String> notificationAlternativesMap = new LinkedHashMap<>();
@@ -110,6 +116,7 @@ public class EventActivity extends ActionBarActivity {
         calendarName = getIntent().getStringExtra("calName");
         notification = getIntent().getIntExtra("notification", -1);
         isAllDayEvent = getIntent().getIntExtra("isAllDay", 0) == 1;
+        color = getIntent().getIntExtra("color", 0);
 
 
         initComponents();
@@ -123,14 +130,19 @@ public class EventActivity extends ActionBarActivity {
 
         this.setTitle(title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setActionBarColor(getIntent().getIntExtra("color", 0));
+        setActionBarColor(color);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_event, menu);
+
+        if(isInAddMode) {
+            getMenuInflater().inflate(R.menu.menu_event_add, menu);
+        }else {
+            getMenuInflater().inflate(R.menu.menu_event, menu);
+        }
         return true;
     }
 
