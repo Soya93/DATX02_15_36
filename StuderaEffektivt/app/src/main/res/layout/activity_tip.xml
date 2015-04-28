@@ -35,9 +35,10 @@
 
             <Button
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:text="@string/tip_button_1"
                 android:id="@+id/button1"
+                android:drawableLeft="@drawable/where_to_study_tiny"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <Button
@@ -45,6 +46,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_2"
                 android:id="@+id/button2"
+                android:drawableRight="@drawable/wiki_in_hands"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <Button
@@ -52,6 +54,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_3"
                 android:id="@+id/button3"
+                android:drawableLeft="@drawable/set_of_mind"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <Button
@@ -59,6 +62,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_4"
                 android:id="@+id/button4"
+                android:drawableRight="@drawable/take_what_you_need_and_nothing_else"
                 android:background="?android:attr/selectableItemBackground" />
 
             <Button
@@ -66,6 +70,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_5"
                 android:id="@+id/button5"
+                android:drawableLeft="@drawable/schedule"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <Button
@@ -73,6 +78,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_6"
                 android:id="@+id/button6"
+                android:drawableRight="@drawable/schedule"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <Button
@@ -80,6 +86,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_7"
                 android:id="@+id/button7"
+                android:drawableLeft="@drawable/take_breaks"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <Button
@@ -87,6 +94,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_8"
                 android:id="@+id/button8"
+                android:drawableRight="@drawable/helathy_and_balanced"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <Button
@@ -94,6 +102,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_9"
                 android:id="@+id/button9"
+                android:drawableLeft="@drawable/reflect"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <Button
@@ -101,6 +110,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_10"
                 android:id="@+id/button10"
+                android:drawableRight="@drawable/motivation"
                 android:background="?android:attr/selectableItemBackground"/>
 
         </LinearLayout>
