@@ -89,14 +89,16 @@ public class StatsFrag extends Fragment {
         lineChart = (LineChart) rootView.findViewById(R.id.line_hours);
         lineChart.setNoDataTextDescription("Here a good graph will be.");
 
-
+        ArrayList<LineDataSet> lineDataSets = new ArrayList<>();
+        ArrayList<String> lineLabels = new ArrayList<>();
 
         Cursor courseCoursor = dbAdapter.getCourses();
         while (courseCoursor.moveToNext()){
             String ccode = courseCoursor.getString(courseCoursor.getColumnIndex("_ccode"));
-            Log.i("lineChart", "course: "+ccode);
             int smallestWeek = dbAdapter.getSmallestWeek(ccode);
-            Log.d("lineChart", "smallestWeek: "+smallestWeek);
+
+            ArrayList<Entry> lineYs = new ArrayList<>();
+            Entry lineY;
 
             for (int w=smallestWeek; w<=Utils.getCurrWeekNumber(); w++){
                 Cursor minutesCursor = dbAdapter.getMinutes(w, ccode);
@@ -108,9 +110,21 @@ public class StatsFrag extends Fragment {
 
                 int hoursInCourseAndWeek = minutesInCourseAndWeek/60;
                 Log.d("lineChart", "hours in course and week: "+hoursInCourseAndWeek);
+
+                lineY = new Entry(hoursInCourseAndWeek, w);
+                lineYs.add(lineY);
             }
 
+            LineDataSet lineDataSet = new LineDataSet(lineYs, ccode);
+            lineDataSet.setValueFormatter(new IntegerValueFormatter());
+            lineDataSets.add(lineDataSet);
+            lineLabels.add(ccode);
         }
+
+        LineData lineData = new LineData(lineLabels, lineDataSets);
+        lineChart.setData(lineData);
+
+        lineChart.invalidate();
 
     }
 
@@ -129,7 +143,6 @@ public class StatsFrag extends Fragment {
         pieEntries.add(hoursLeft);
 
         int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
-
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "Timmar");
         pieDataSet.setColors(colors);
         pieDataSet.setValueFormatter(new IntegerValueFormatter());
