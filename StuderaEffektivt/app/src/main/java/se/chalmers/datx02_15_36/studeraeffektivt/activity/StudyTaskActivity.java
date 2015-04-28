@@ -6,11 +6,15 @@ Saker att fixa är:
 Uppdatera då man kryssar av en ruta, någon sortering
  */
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -202,95 +207,129 @@ public class StudyTaskActivity extends ActionBarActivity {
 
 
     public void setSelectedCourse() {
-        String temp = courseSpinner.getSelectedItem().toString();
-        String[] parts = temp.split("-");
-        this.courseCode = parts[0];
-        Log.d("selected course", courseCode);
+        if(courseSpinner.getSelectedItem() != null) {
+            String temp = courseSpinner.getSelectedItem().toString();
+            String[] parts = temp.split("-");
+            this.courseCode = parts[0];
+            Log.d("selected course", courseCode);
 
-        listOfTasks.removeAllViews();
-        listOfReadAssignments.removeAllViews();
-        listOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
-        listOfReadAssignments.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+            listOfTasks.removeAllViews();
+            listOfReadAssignments.removeAllViews();
+            listOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
+            listOfReadAssignments.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+        }
+        else{
+            LayoutInflater inflater = this.getLayoutInflater();
+
+            final AlertDialog d = new AlertDialog.Builder(this)
+                    .setMessage("Du måste lägga till en kurs innan du kan lägga till uppgifter!")
+                    .setPositiveButton("OK", null) //Set to null. We override the onclick
+                    .create();
+
+            d.setOnShowListener(new DialogInterface.OnShowListener() {
+
+                @Override
+                public void onShow(DialogInterface dialog) {
+
+                    Button positive = d.getButton(AlertDialog.BUTTON_POSITIVE);
+                    positive.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+                            d.dismiss();
+                            finish();
+                        }
+                    });
+                }
+            });
+
+            d.show();
+        }
     }
 
     //Metod för att lägga till en uppgift
 
     public void addTask(int chapter, String taskString, String taskParts) {
 
-        ArrayList<String> stringList = new ArrayList();
-        String[] separateLine;
-        String[] separateComma;
-        String[] separateTaskParts;
-        separateTaskParts = taskParts.split("");
+        if(!(taskString.contains("-") && taskString.contains("."))){
 
-        taskString.replaceAll("\\s+", "");
+            ArrayList<String> stringList = new ArrayList();
+            String[] separateLine;
+            String[] separateComma;
+            String[] separateTaskParts;
+            separateTaskParts = taskParts.split("");
 
-        int start;
-        int end;
+            taskString.replaceAll("\\s+", "");
 
-        //Kollar om det finns kommatecken i input för uppgifter och separerar i så fall stringen så att alla element hamnar separat
-        if (taskString.contains(",")) {
+            int start;
+            int end;
 
-            separateComma = taskString.split(",");  //Delar upp stringen till en array med elementen mellan kommatecknerna
-        } else {
-            separateComma = new String[1];
-            separateComma[0] = taskString;
-        }
+            //Kollar om det finns kommatecken i input för uppgifter och separerar i så fall stringen så att alla element hamnar separat
+            if (taskString.contains(",")) {
 
-        //Kollar elementen var för sig och ser om de är ett spann av uppgifter att lägga till 1-3 gör så att 1, 2 och 3 läggs till
-        for (String aSeparateComma : separateComma) {
-            if (aSeparateComma.contains("-")) {
-
-                separateLine = aSeparateComma.split("-");   //Delar upp stringen till en array med elementen mellan bindesstrecken
-                start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
-                end = Integer.parseInt(separateLine[separateLine.length - 1]);
-
-                for (int i = start; i <= end; i++) {
-                    stringList.add("" + i);
-                }
+                separateComma = taskString.split(",");  //Delar upp stringen till en array med elementen mellan kommatecknerna
             } else {
-                stringList.add(aSeparateComma);
+                separateComma = new String[1];
+                separateComma[0] = taskString;
             }
-        }
 
-        //Lägger till deluppgifter om input för detta finns, tex a, b c.
-        String elementToAdd;
-        Random rand = new Random();
-        if (separateTaskParts.length > 1) {
-            for (int i = 1; i < separateTaskParts.length; i++) {       //För varje deluppgift
-                for (String s2 : stringList) {                         //För varje vihuv uppgift
-                    elementToAdd = s2 + separateTaskParts[i];       //Sätt ihop dessa Huvuduppgift 1 och deluppgift a blir 1a
-                    if(!listOfTasks.contains(chapter, elementToAdd)) {
+            //Kollar elementen var för sig och ser om de är ett spann av uppgifter att lägga till 1-3 gör så att 1, 2 och 3 läggs till
+            for (String aSeparateComma : separateComma) {
+                if (aSeparateComma.contains("-")) {
+
+                    separateLine = aSeparateComma.split("-");   //Delar upp stringen till en array med elementen mellan bindesstrecken
+                    start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
+                    end = Integer.parseInt(separateLine[separateLine.length - 1]);
+
+                    for (int i = start; i <= end; i++) {
+                        stringList.add("" + i);
+                    }
+                } else {
+                    stringList.add(aSeparateComma);
+                }
+            }
+
+            //Lägger till deluppgifter om input för detta finns, tex a, b c.
+            String elementToAdd;
+            Random rand = new Random();
+            if (separateTaskParts.length > 1) {
+                for (int i = 1; i < separateTaskParts.length; i++) {       //För varje deluppgift
+                    for (String s2 : stringList) {                         //För varje vihuv uppgift
+                        elementToAdd = s2 + separateTaskParts[i];       //Sätt ihop dessa Huvuduppgift 1 och deluppgift a blir 1a
+                        if (!listOfTasks.contains(chapter, elementToAdd)) {
+                            int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
+                            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, elementToAdd, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
+                            addToListOfTasks(studyTask);
+                            addToDatabase(studyTask);
+                        } else {
+                            Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+            //lägger till huvuduppgifterna då deluppgifter inte finns
+            else {
+                for (String s : stringList) {         //För varje huvuduppgift
+                    if (!listOfTasks.contains(chapter, s)) {
                         int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                        StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, elementToAdd, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
+                        StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, s, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
                         addToListOfTasks(studyTask);
                         addToDatabase(studyTask);
-                    }
-                    else{
-                        Toast.makeText(this,"Uppgift redan tillagd!",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         }
-        //lägger till huvuduppgifterna då deluppgifter inte finns
-        else {
-            for (String s : stringList) {         //För varje huvuduppgift
-                if(!listOfTasks.contains(chapter, s)) {
-                    int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, s, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
-                    addToListOfTasks(studyTask);
-                    addToDatabase(studyTask);
-                }
-                else{
-                    Toast.makeText(this,"Uppgift redan tillagd!",Toast.LENGTH_SHORT).show();
-                }
-            }
+        else{
+            Toast.makeText(getApplicationContext(), "Format ej godkänt",
+                    Toast.LENGTH_LONG).show();
         }
     }
 
     public void addReadAssignment(int chapter, String taskString) {
 
-        if(!taskString.contains(",")){
+        if(!taskString.contains(",") && !taskString.contains(".")){
         String[] separateLine;
 
         int start;

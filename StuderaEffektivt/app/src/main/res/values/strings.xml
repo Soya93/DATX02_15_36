@@ -51,7 +51,7 @@
     <!-- Tasks -->
     <string name="task_reading_above"><font size="20">Läsanvisning</font>\n\<font size="10">Klicka för att ändra</font></string>
     <string name="task_other_above"><font size="20">Räkneuppgift</font>\n\<font size="10">Klicka för att ändra</font></string>
-    <string name="save_task"><font size="30">SPARA UPPGIFT</font></string>
+    <string name="save_task"><font size="23">SPARA UPPGIFT</font></string>
 
     <string name="course_title">KURS</string>
     <string name="type_title">Typ och tid för uppgiften</string>
