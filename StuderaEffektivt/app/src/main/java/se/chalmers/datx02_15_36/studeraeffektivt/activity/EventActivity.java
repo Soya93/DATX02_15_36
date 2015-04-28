@@ -552,8 +552,9 @@ public class EventActivity extends ActionBarActivity {
 
     public void setCurrentTime() {
 
-        Calendar cal = Calendar.getInstance();
-        cal.getTimeInMillis();
+        //Calendar cal = Calendar.getInstance();
+        //cal.getTimeInMillis();
+        CalendarUtils.update();
 
         startTimeMillis = CalendarUtils.TODAY_IN_MILLIS;
 
