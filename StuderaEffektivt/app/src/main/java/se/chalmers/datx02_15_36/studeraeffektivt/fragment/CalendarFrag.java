@@ -39,6 +39,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarsFilterAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 
@@ -102,17 +103,17 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         backButton = (Button) view.findViewById(R.id.cal_back_button);
         Drawable backDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_left).mutate();
-        backDrawable.setColorFilter(Color.parseColor("#B3E5FC"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        backDrawable.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         backButton.setBackground(backDrawable);
 
         forwardButton = (Button) view.findViewById(R.id.cal_forward_button);
         Drawable forwardDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_right).mutate();
-        forwardDrawable.setColorFilter(Color.parseColor("#B3E5FC"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        forwardDrawable.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         forwardButton.setBackground(forwardDrawable);
 
         goToTodayButton = (Button) view.findViewById(R.id.go_to_today_button);
         Drawable todayDrawable = getResources().getDrawable( R.drawable.ic_device_access_time).mutate();
-        todayDrawable.setColorFilter(Color.parseColor("#B3E5FC"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        todayDrawable.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         goToTodayButton.setBackground(todayDrawable);
 
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
@@ -188,8 +189,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.setHourSeparatorColor(20);
         mWeekView.setEventMarginVertical(20);
         mWeekView.setBackgroundColor(Color.WHITE);
-        mWeekView.setTodayHeaderTextColor(Color.parseColor("#33b5e5"));
-        mWeekView.setTodayBackgroundColor(Color.parseColor("#B3E5FC"));
+        mWeekView.setTodayHeaderTextColor(Color.MAGENTA);
+        mWeekView.setTodayBackgroundColor(Color.parseColor(Constants.secondaryColor));
 
 
         //actionButton.setOnClickListener(myButtonHandler);
@@ -236,7 +237,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
 
-        calendarView.updateEventInfoView(dialogView, eventTitle, startTime, endTime, location, description, calendar);
+        calendarView.updateEventInfoView(dialogView, eventTitle, startTime, endTime, location, description, calendar, allDay);
         builder.setView(dialogView);
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -422,9 +423,10 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
        // String[] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
         final String[] alternatives = new String [7];
         int currentWeek = Utils.getCurrWeekNumber();
-        for(int i=0; i<alternatives.length; i++){
-            int newWeek = currentWeek+i;
-            alternatives[i] = "Vecka " + newWeek;
+        for(int i=7, j = 0; i>=0 && j < alternatives.length; i--, j++){
+            int newWeek = currentWeek-i;
+            Log.i("newWeek", newWeek + "");
+            alternatives[j] = "Vecka " + newWeek;
         }
 
         builder.setTitle("Välj ett pass att repetera")
