@@ -2,7 +2,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 /*
 Saker att fixa är:
-
 Uppdatera då man kryssar av en ruta, någon sortering
  */
 
@@ -61,7 +60,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     private ToggleButton readOrTaskAssignment;
 
     private String courseCode;
-    private String URL_CONNECTION = "http://10.0.2.2/insertassignmets.php";
+    private String URL_CONNECTION = "http://localhost/insertassignmets.php";
 
     //The access point of the database.
     private DBAdapter dbAdapter;
@@ -296,10 +295,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 } else {
                     stringList.add(aSeparateComma);
                 }
-            } else {
-                stringList.add(aSeparateComma);
             }
-        }
 
             //Lägger till deluppgifter om input för detta finns, tex a, b c.
             String elementToAdd;
@@ -329,10 +325,6 @@ public class StudyTaskActivity extends ActionBarActivity {
                         addToDatabase(studyTask);
                     } else {
                         Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
-                        new AddNewPrediction().execute(Integer.toString(randomNum), courseCode, Integer.toString(chapter), Integer.toString(chosenWeek), elementToAdd, Integer.toString(0), Integer.toString(0),"OTHER","UNDONE");
-                    }
-                    else{
-                        Toast.makeText(this,"Uppgift redan tillagd!",Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -340,64 +332,47 @@ public class StudyTaskActivity extends ActionBarActivity {
         else{
             Toast.makeText(getApplicationContext(), "Format ej godkänt",
                     Toast.LENGTH_LONG).show();
-        //lägger till huvuduppgifterna då deluppgifter inte finns
-        else {
-            for (String s : stringList) {         //För varje huvuduppgift
-                if(!listOfTasks.contains(chapter, s)) {
-                    int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, s, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
-                    addToListOfTasks(studyTask);
-                    addToDatabase(studyTask);
-                    // TODO Auto-generated method stub
-                    new AddNewPrediction().execute(Integer.toString(randomNum), courseCode, Integer.toString(chapter), Integer.toString(chosenWeek), s, Integer.toString(0), Integer.toString(0),"OTHER","UNDONE");
-                }
-                else{
-                    Toast.makeText(this,"Uppgift redan tillagd!",Toast.LENGTH_SHORT).show();
-                }
-            }
         }
     }
 
     public void addReadAssignment(int chapter, String taskString) {
 
         if(!taskString.contains(",") && !taskString.contains(".")){
-        String[] separateLine;
+            String[] separateLine;
 
-        int start;
-        int end;
+            int start;
+            int end;
 
-        Random rand = new Random();
-        int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
+            Random rand = new Random();
+            int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
 
-        if (taskString.contains("-")) {
+            if (taskString.contains("-")) {
 
-            separateLine = taskString.split("-");   //Delar upp stringen till en array med elementen mellan bindesstrecken
-            start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
-            end = Integer.parseInt(separateLine[separateLine.length - 1]);
+                separateLine = taskString.split("-");   //Delar upp stringen till en array med elementen mellan bindesstrecken
+                start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
+                end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
-            if(!(listOfReadAssignments.contains(chapter, start, end))) {
-                StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
+                if(!(listOfReadAssignments.contains(chapter, start, end))) {
+                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
-                addToDatabase(studyTask);
-                addToListOfTasks(studyTask);
-                new AddNewPrediction().execute(Integer.toString(randomNum), courseCode, Integer.toString(chapter), Integer.toString(chosenWeek), "ReadAssignment", Integer.toString(start), Integer.toString(end),"READ","UNDONE");
-            }
-            else{
-                Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
-            }
+                    addToDatabase(studyTask);
+                    addToListOfTasks(studyTask);
+                }
+                else{
+                    Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
+                }
 
-        } else {
-            if (!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
-
-                StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
-
-                addToDatabase(studyTask);
-                addToListOfTasks(studyTask);
             } else {
-                Toast.makeText(this, "Läsanvisning redan tillagd!", Toast.LENGTH_SHORT).show();
+                if (!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
 
+                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
+
+                    addToDatabase(studyTask);
+                    addToListOfTasks(studyTask);
+                } else {
+                    Toast.makeText(this, "Läsanvisning redan tillagd!", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
         }
         else{
             Toast.makeText(getApplicationContext(), "Format ej godkänt",
@@ -429,9 +404,8 @@ public class StudyTaskActivity extends ActionBarActivity {
                 studyTask.getStatus()
         );
 
-        //Log.d("Lägga till element i databas: ", "" + dbAdapter.getAssignments().getCount());
+       // Log.d("Lägga till element i databas: ", "" + dbAdapter.getAssignments().getCount());
     }
-
 
     private class AddNewPrediction extends AsyncTask<String, Void, Void> {
 
