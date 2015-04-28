@@ -6,7 +6,10 @@ import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -208,6 +212,22 @@ public class EventActivity extends ActionBarActivity {
         allDaySwitch = (Switch) findViewById(R.id.all_day_switch);
         allDaySwitch.setChecked(isAllDayEvent);
         allDaySwitch.setOnClickListener(myTextViewHandler);
+
+        //add color filter on icons
+        ImageView cal = (ImageView) findViewById(R.id.image_calendar);
+        cal.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP);
+
+        ImageView time = (ImageView) findViewById(R.id.image_time);
+        time.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP);
+
+        ImageView location = (ImageView) findViewById(R.id.image_location);
+        location.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP);
+
+        ImageView description = (ImageView) findViewById(R.id.image_description);
+        description.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP);
+
+        ImageView notification = (ImageView) findViewById(R.id.image_notification);
+        notification.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP);
 
 
         if (isInAddMode) {
@@ -551,9 +571,6 @@ public class EventActivity extends ActionBarActivity {
     }
 
     public void setCurrentTime() {
-
-        //Calendar cal = Calendar.getInstance();
-        //cal.getTimeInMillis();
         CalendarUtils.update();
 
         startTimeMillis = CalendarUtils.TODAY_IN_MILLIS;
