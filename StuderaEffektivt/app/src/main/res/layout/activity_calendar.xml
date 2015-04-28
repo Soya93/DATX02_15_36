@@ -30,21 +30,21 @@
 
 
     <Button
-        android:layout_width="50dp"
+        android:layout_width="30dp"
         android:layout_height="30dp"
         android:id="@+id/cal_back_button"
         android:layout_marginEnd="250dp"
         android:layout_alignParentTop="true" />
 
     <Button
-        android:layout_width="50dp"
+        android:layout_width="30dp"
         android:layout_height="30dp"
         android:id="@+id/cal_forward_button"
         android:layout_alignParentTop="true"
         android:layout_alignEnd="@+id/weekView" />
 
     <Button
-        android:layout_width="50dp"
+        android:layout_width="30dp"
         android:layout_height="30dp"
         android:id="@+id/go_to_today_button"
         android:layout_alignParentTop="true"
