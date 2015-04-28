@@ -2,7 +2,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 /*
 Saker att fixa är:
-
 Uppdatera då man kryssar av en ruta, någon sortering
  */
 
@@ -10,6 +9,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -27,8 +27,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -36,6 +42,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
@@ -53,6 +60,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     private ToggleButton readOrTaskAssignment;
 
     private String courseCode;
+    private String URL_CONNECTION = "http://localhost/insertassignmets.php";
 
     //The access point of the database.
     private DBAdapter dbAdapter;
@@ -330,41 +338,41 @@ public class StudyTaskActivity extends ActionBarActivity {
     public void addReadAssignment(int chapter, String taskString) {
 
         if(!taskString.contains(",") && !taskString.contains(".")){
-        String[] separateLine;
+            String[] separateLine;
 
-        int start;
-        int end;
+            int start;
+            int end;
 
-        Random rand = new Random();
-        int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
+            Random rand = new Random();
+            int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
 
-        if (taskString.contains("-")) {
+            if (taskString.contains("-")) {
 
-            separateLine = taskString.split("-");   //Delar upp stringen till en array med elementen mellan bindesstrecken
-            start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
-            end = Integer.parseInt(separateLine[separateLine.length - 1]);
+                separateLine = taskString.split("-");   //Delar upp stringen till en array med elementen mellan bindesstrecken
+                start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
+                end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
-            if(!(listOfReadAssignments.contains(chapter, start, end))) {
-                StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
+                if(!(listOfReadAssignments.contains(chapter, start, end))) {
+                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
-                addToDatabase(studyTask);
-                addToListOfTasks(studyTask);
-            }
-            else{
-                Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
-            }
+                    addToDatabase(studyTask);
+                    addToListOfTasks(studyTask);
+                }
+                else{
+                    Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
+                }
 
-        } else {
-            if (!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
-
-                StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
-
-                addToDatabase(studyTask);
-                addToListOfTasks(studyTask);
             } else {
-                Toast.makeText(this, "Läsanvisning redan tillagd!", Toast.LENGTH_SHORT).show();
+                if (!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
+
+                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
+
+                    addToDatabase(studyTask);
+                    addToListOfTasks(studyTask);
+                } else {
+                    Toast.makeText(this, "Läsanvisning redan tillagd!", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
         }
         else{
             Toast.makeText(getApplicationContext(), "Format ej godkänt",
@@ -396,6 +404,79 @@ public class StudyTaskActivity extends ActionBarActivity {
                 studyTask.getStatus()
         );
 
-        Log.d("Lägga till element i databas: ", "" + dbAdapter.getAssignments().getCount());
+       // Log.d("Lägga till element i databas: ", "" + dbAdapter.getAssignments().getCount());
+    }
+
+    private class AddNewPrediction extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected Void doInBackground(String... arg) {
+            String assignments_id= arg[0];
+            String assignments_course = arg[1];
+            String assignments_chapter = arg[2];
+            String assignments_week = arg[3];
+            String assignments_assNr = arg[4];
+            String assignments_startPage = arg[5];
+            String assignments_endPage = arg[6];
+            String assignments_type = arg[7];
+            String assignments_status = arg[8];
+            // TODO Auto-generated method stub
+
+
+
+            // Preparing post params
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("assignmets_id",assignments_id));
+            params.add(new BasicNameValuePair("assignmets_course",assignments_course));
+            params.add(new BasicNameValuePair("assignmets_chapter",assignments_chapter));
+            params.add(new BasicNameValuePair("assignmets_week",assignments_week));
+            params.add(new BasicNameValuePair("assignmets_assNr",assignments_assNr));
+            params.add(new BasicNameValuePair("assignmets_startPage",assignments_startPage));
+            params.add(new BasicNameValuePair("assignmets_endPage",assignments_endPage));
+            params.add(new BasicNameValuePair("assignmets_type",assignments_type));
+            params.add(new BasicNameValuePair("assignmets_status",assignments_status));
+
+
+
+            ServiceHandler serviceClient = new ServiceHandler();
+
+            String json = serviceClient.makeServiceCall(URL_CONNECTION,
+                    ServiceHandler.POST, params);
+
+            if (json != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(json);
+                    boolean error = jsonObj.getBoolean("error");
+                    // checking for error node in json
+                    if (!error) {
+                        // new category created successfully
+                        Log.d(" Success",
+                                "> " + jsonObj.getString("message"));
+                    } else {
+                        Log.d(" Error: ",
+                                "> " + jsonObj.getString("message"));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                Log.e("JSON Data", "JSON data error!");
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+        }
+
     }
 }
