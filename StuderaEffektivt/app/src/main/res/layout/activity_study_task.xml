@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:text="@string/type_title"
             android:gravity="center"
-            android:textSize="17dp"
+            android:textSize="17sp"
             android:textColor="#03A9F4"
             style="?android:attr/listSeparatorTextViewStyle"
             />
@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/chapterLabel"
                 android:text="@string/chapter_title"
-                android:textSize="17dp"
+                android:textSize="17sp"
                 android:layout_weight="0.35"/>
 
             <Spinner
@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/weekLabel"
             android:text="@string/week_title"
-            android:textSize="17dp"
+            android:textSize="17sp"
             android:layout_weight="0.35"/>
 
         <Spinner
@@ -115,12 +115,11 @@
         android:layout_height="fill_parent"
         android:layout_weight="0.5">
         <ToggleButton
-            android:layout_width="0dp"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/readOrTaskAssignment"
             android:textOff="@string/task_reading_above"
             android:textOn="@string/task_other_above"
-            android:layout_weight="0.5"
             android:background="@null"
             />
     </LinearLayout>
@@ -139,7 +138,7 @@
             android:layout_height="wrap_content"
             android:text="@string/task_info_title"
             android:gravity="center"
-            android:textSize="17dp"
+            android:textSize="17sp"
             android:textColor="#03A9F4"
             style="?android:attr/listSeparatorTextViewStyle"
             />
@@ -165,10 +164,10 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:inputType="number"
-            android:hint="Uppgiftsnr ex: 1-5 eller 1,2,3"
+            android:hint="@string/task_string_hint"
             android:digits="0123456789,-."
             android:id="@+id/taskInput"
-            android:layout_weight="0.5"/>
+            />
 
         <EditText
             android:layout_width="fill_parent"
@@ -179,7 +178,7 @@
             android:digits="abcdefghijklmnopqrstuvwxy"
             android:id="@+id/taskParts"
             android:layout_gravity="left|bottom"
-            android:layout_weight="0.5"/>
+            />
 
     </LinearLayout>
 
@@ -200,7 +199,7 @@
             android:textColor="#03A9F4"
             android:id="@+id/addButton"
             android:background="@null"
-            android:layout_weight="0.50"/>
+            />
 
     </LinearLayout>
 </LinearLayout>
@@ -212,7 +211,7 @@
         android:layout_height="wrap_content"
         android:text="@string/saved_tasks_title"
         android:gravity="center"
-        android:textSize="17dp"
+        android:textSize="17sp"
         android:textColor="#03A9F4"
         style="?android:attr/listSeparatorTextViewStyle"
         />
