@@ -202,6 +202,9 @@ public class EventActivity extends ActionBarActivity {
 
 
         if (isInAddMode) {
+           Calendar cal = Calendar.getInstance();
+            cal.getTimeInMillis();
+
             startTimeMillis = CalendarUtils.TODAY_IN_MILLIS;
 
             startYear = CalendarUtils.YEAR;

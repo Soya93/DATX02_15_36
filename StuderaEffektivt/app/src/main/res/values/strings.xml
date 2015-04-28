@@ -55,6 +55,10 @@
     <color name="purple">#5E229B</color>
     <color name="green">#78CF20</color>
     <color name="yellow">#E6DA23</color>
+    <color name="primaryColor">#33b5e5</color>
+    <color name="secondaryColor">#B3E5FC</color>
+
+
 
     <string name="title_activity_study_task">StudyTaskActivity</string>
     <string name="title_activity_event">EventActivity</string>
