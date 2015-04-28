@@ -47,7 +47,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Typ och plats för uppgiften"
+            android:text="Typ och tid för uppgiften"
             android:gravity="center"
             android:textSize="17dp"
             android:textColor="#03A9F4"
@@ -127,12 +127,12 @@
         <ToggleButton
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="New ToggleButton"
             android:id="@+id/readOrTaskAssignment"
-            android:textOff="Läsanvisningar"
-            android:textOn="Uppgifter"
+            android:textOff="@string/task_reading_above"
+            android:textOn="@string/task_other_above"
             android:layout_weight="0.5"
-            android:background="@android:drawable/btn_default"/>
+            android:background="@null"
+            />
     </LinearLayout>
     </LinearLayout>
 
@@ -147,7 +147,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="uppgiften"
+            android:text="uppgiftsinformation"
             android:gravity="center"
             android:textSize="17dp"
             android:textColor="#03A9F4"
@@ -209,11 +209,12 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:text="Spara uppgift"
+            android:text="@string/save_task"
             android:id="@+id/addButton"
             android:layout_toRightOf="@+id/taskLayout"
             android:layout_below="@+id/taskInput"
             android:layout_alignParentRight="true"
+            android:background="@null"
             android:layout_weight="0.50"/>
 
     </LinearLayout>

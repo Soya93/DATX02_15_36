@@ -47,6 +47,12 @@
     <string name="tip_button_18">Interleaved practice</string>
     <string name="header">Studietips och studiestilar</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Tasks -->
+    <string name="task_reading_above"><font size="20">Läsanvisning</font>\n\<font size="10">Klicka för att ändra</font></string>
+    <string name="task_other_above"><font size="20">Räkneuppgift</font>\n\<font size="10">Klicka för att ändra</font></string>
+    <string name="save_task"><font size="30">Spara uppgift</font></string>
+
     <!-- Colours -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
