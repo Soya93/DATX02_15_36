@@ -243,9 +243,11 @@ public class TimerFrag extends Fragment {
         taskSwitch.setChecked(true);
         assignmentType = AssignmentType.OTHER;
         spinner.setSelection(0);
-        setSelectedCourse();
 
-        updateTaskList(assignmentType, week);
+        if(spinner.getSelectedItem()!=null) {
+            setSelectedCourse();
+            updateTaskList(assignmentType, week);
+        }
 
         initButtons();
 
