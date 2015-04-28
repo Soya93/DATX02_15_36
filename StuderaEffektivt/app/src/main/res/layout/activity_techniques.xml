@@ -12,8 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Studietekniker"
-        android:id="@+id/tip_header"
+        android:text="@string/header_techniques"
+        android:id="@+id/technique_header"
         android:layout_centerHorizontal="true" />
 
     <ScrollView
@@ -22,7 +22,7 @@
         android:id="@+id/scrollView"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/tip_header"
+        android:layout_below="@+id/technique_header"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true">
@@ -38,49 +38,114 @@
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:text="@string/tip_button_11"
-                android:id="@+id/button11" />
+                android:id="@+id/button11"
+                android:drawableLeft="@drawable/where_to_study_tiny"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_gravity="center_vertical"
+                />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:text="@string/tip_button_12"
-                android:id="@+id/button12" />
+                android:id="@+id/button12"
+                android:drawableRight="@drawable/where_to_study_tiny"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_gravity="center_vertical"
+                />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:text="@string/tip_button_13"
-                android:id="@+id/button13" />
+                android:id="@+id/button13"
+                android:drawableLeft="@drawable/where_to_study_tiny"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_gravity="center_vertical"
+                />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:text="@string/tip_button_14"
-                android:id="@+id/button14" />
+                android:id="@+id/button14"
+                android:drawableRight="@drawable/where_to_study_tiny"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_gravity="center_vertical"
+                />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:text="@string/tip_button_15"
-                android:id="@+id/button15" />
+                android:id="@+id/button15"
+                android:drawableLeft="@drawable/where_to_study_tiny"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_gravity="center_vertical"
+                />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:text="@string/tip_button_16"
-                android:id="@+id/button16" />
+                android:id="@+id/button16"
+                android:drawableRight="@drawable/where_to_study_tiny"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_gravity="center_vertical"
+                />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:text="@string/tip_button_17"
-                android:id="@+id/button17" />
+                android:id="@+id/button17"
+                android:drawableLeft="@drawable/where_to_study_tiny"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_gravity="center_vertical"
+                />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:text="@string/tip_button_18"
-                android:id="@+id/button18" />
+                android:id="@+id/button18"
+                android:drawableRight="@drawable/where_to_study_tiny"
+                android:background="?android:attr/selectableItemBackground" />
         </LinearLayout>
     </ScrollView>
 
