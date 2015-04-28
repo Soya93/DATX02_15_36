@@ -67,8 +67,8 @@ public class StatsFrag extends Fragment {
 
         utils = new Utils();
 
-        //insertTestDataToDB();
-        //insertTestDataToDB2();
+        insertTestDataToDB();
+        insertTestDataToDB2();
         instantiateView();
 
         return rootView;
@@ -88,6 +88,29 @@ public class StatsFrag extends Fragment {
     private void instantiateLineChart(){
         lineChart = (LineChart) rootView.findViewById(R.id.line_hours);
         lineChart.setNoDataTextDescription("Here a good graph will be.");
+
+
+
+        Cursor courseCoursor = dbAdapter.getCourses();
+        while (courseCoursor.moveToNext()){
+            String ccode = courseCoursor.getString(courseCoursor.getColumnIndex("_ccode"));
+            Log.i("lineChart", "course: "+ccode);
+            int smallestWeek = dbAdapter.getSmallestWeek(ccode);
+            Log.d("lineChart", "smallestWeek: "+smallestWeek);
+
+            for (int w=smallestWeek; w<=Utils.getCurrWeekNumber(); w++){
+                Cursor minutesCursor = dbAdapter.getMinutes(w, ccode);
+
+                int minutesInCourseAndWeek = 0;
+                while (minutesCursor.moveToNext()){
+                    minutesInCourseAndWeek += minutesCursor.getInt(0);
+                }
+
+                int hoursInCourseAndWeek = minutesInCourseAndWeek/60;
+                Log.d("lineChart", "hours in course and week: "+hoursInCourseAndWeek);
+            }
+
+        }
 
     }
 
