@@ -1,6 +1,9 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
+    import android.app.AlertDialog;
+    import android.content.DialogInterface;
     import android.content.Intent;
+    import android.database.Cursor;
     import android.net.Uri;
     import android.os.Bundle;
     import android.support.v4.app.Fragment;
@@ -10,12 +13,24 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.ViewGroup;
+    import android.widget.ArrayAdapter;
     import android.widget.Button;
+    import android.widget.EditText;
+    import android.widget.LinearLayout;
+    import android.widget.ListView;
+    import android.widget.SimpleAdapter;
+    import android.widget.TextView;
+    import android.widget.Toast;
+
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.Map;
 
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.TechsNTipsActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+    import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 
 public class MyProfileFrag extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -27,8 +42,16 @@ public class MyProfileFrag extends Fragment {
     private Button addTaskButton;
     private Button tipButton;
     private Button techniqueButton;
+    private ListView listOfCourses;
     private ViewGroup container;
     private View view;
+
+    private EditText editTextCoursecode;
+    private EditText editTextCoursename;
+
+    private static List<String> courseList = new ArrayList<>();
+    private ArrayAdapter arrayAdapter;
+
 
     //The access point of the database.
     private DBAdapter dbAdapter;
@@ -137,6 +160,9 @@ public class MyProfileFrag extends Fragment {
         addCourseButton = (Button) view.findViewById(R.id.addCourse);
         addCourseButton.setOnClickListener(myOnlyhandler);
 
+        //addButtonInner = (Button) view.findViewById(R.id.addButtonInner);
+        //addButtonInner.setOnClickListener(myOnlyhandler);
+
         seePrevCoursesButton= (Button) view.findViewById(R.id.prevCourses);
         seePrevCoursesButton.setOnClickListener(myOnlyhandler);
 
@@ -148,6 +174,13 @@ public class MyProfileFrag extends Fragment {
 
         techniqueButton =  (Button) view.findViewById(R.id.techniques);
         techniqueButton.setOnClickListener(myOnlyhandler);
+
+        listOfCourses = (ListView) view.findViewById(R.id.listOfCourses);
+        updateCourses();
+        arrayAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, courseList);
+        listOfCourses.setAdapter(arrayAdapter);
+
+
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
@@ -172,10 +205,7 @@ public class MyProfileFrag extends Fragment {
 
         switch (id) {
             case R.id.addCourse:
-                /*fragment = new CourseFrag();
-                fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "coursefragment");
-                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
+                initDialogToAddCourse();
                 break;
             case R.id.prevCourses:
                 fragment = new CourseFrag();
@@ -214,6 +244,78 @@ public class MyProfileFrag extends Fragment {
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
                 break;
         }
+    }
+
+    public void initDialogToAddCourse(){
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        final AlertDialog d = new AlertDialog.Builder(getActivity())
+                .setView(inflater.inflate(R.layout.add_course_dialog, null))
+                .setTitle("Lägg till kurs")
+                .setPositiveButton("Lägg till", null) //Set to null. We override the onclick
+                .setNegativeButton("Avbryt", null)
+                .create();
+
+        d.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                Button positive = d.getButton(AlertDialog.BUTTON_POSITIVE);
+                positive.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        if(editTextCoursecode.getText().toString().trim().length() == 0 || editTextCoursename.getText().toString().trim().length() == 0){
+                            Toast toast = Toast.makeText(getActivity(), "Både kursnamn och kurskod måste fylls i!", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                        else {
+                            dbAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
+                            Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
+                            toast.show();
+                            updateCourses();
+                            d.dismiss();
+                        }
+
+                    }
+                });
+
+                Button negative = d.getButton(AlertDialog.BUTTON_NEGATIVE);
+                negative.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        d.dismiss();
+                    }
+                });
+            }
+        });
+
+        d.show();
+
+        editTextCoursecode = (EditText) d.findViewById(R.id.codeEditText);
+        editTextCoursename = (EditText) d.findViewById(R.id.nameEditText);
+    }
+
+    public void updateCourses(){
+        courseList.clear();
+
+        Cursor cursor = dbAdapter.getCourses();
+        if (cursor.getCount() > 0){
+            String ccode = "";
+            String cname = "";
+            while (cursor.moveToNext()) {
+                ccode = cursor.getString(0);
+                cname = cursor.getString(1);
+                //courseList.add();
+                //
+                courseList.add(ccode + " - " + cname);
+                //arrayAdapter.notifyDataSetChanged();
+            }
+        }else{
+            courseList.add("Det finns för tillfället inga kurser, lägg till en kurs genom att trycka på knappen ovan");
+        }
+
     }
 
 }
