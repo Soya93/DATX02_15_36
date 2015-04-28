@@ -6,10 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -214,30 +211,10 @@ public class EventActivity extends ActionBarActivity {
 
 
         if (isInAddMode) {
-           Calendar cal = Calendar.getInstance();
-            cal.getTimeInMillis();
-
-            startTimeMillis = CalendarUtils.TODAY_IN_MILLIS;
-
-            startYear = CalendarUtils.YEAR;
-            startMonth = CalendarUtils.MONTH + 1;
-            startDay = CalendarUtils.DAY;
-            startHour = CalendarUtils.HOUR;
-            startMinute = CalendarUtils.MINUTE;
-
-
-            endYear = CalendarUtils.YEAR;
-            endMonth = CalendarUtils.MONTH + 1;
-            endDay = CalendarUtils.DAY;
-            endHour = CalendarUtils.HOUR + 1;
-            endMinute = CalendarUtils.MINUTE;
-
-            CalendarUtils.cal.set(endYear, endMonth, endDay, endHour, endMinute);
-            endTimeMillis = CalendarUtils.cal.getTimeInMillis();
+            // get the current time and date for start and stop
+            setCurrentTime();
 
         } else {
-
-
             Calendar c = Calendar.getInstance();
 
             //Convert start time from millis
@@ -397,24 +374,25 @@ public class EventActivity extends ActionBarActivity {
 
     public void openDatePickerDialog(final boolean isStart) {
 
+        setCurrentTime();
         DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 
             // when dialog box is closed, below method will be called.
             public void onDateSet(DatePicker view, int selectedYear,
                                   int selectedMonth, int selectedDay) {
 
+
                 if (isStart) {
                     startYear = selectedYear;
-                    startMonth = selectedMonth + 1;
+                    startMonth = selectedMonth; //+ 1;
                     startDay = selectedDay;
                     calStart.set(startYear, startMonth, startDay);
 
                     SimpleDateFormat startDateFormat = new SimpleDateFormat("E d MMM yyyy");
-
                     startDate.setText(startDateFormat.format((new Date(calStart.getTimeInMillis()))));
 
+                    calStart.set(startYear, startMonth+1, startDay);
 
-                    //startDate.setText(startDay + "/" + startMonth + "/" + startYear);
                     if (endDay <= startDay && endMonth == startMonth && endYear == startYear || startMonth > endMonth || startYear > endYear) {
                         endDay = startDay;
                         endMonth = startMonth;
@@ -423,11 +401,12 @@ public class EventActivity extends ActionBarActivity {
 
                         SimpleDateFormat endDateFormat = new SimpleDateFormat("E d MMM yyyy");
                         endDate.setText(endDateFormat.format((new Date(calEnd.getTimeInMillis()))));
-                        //endDate.setText(endDay + "/" + endMonth + "/" + endYear);
+                        calEnd.set(startYear, startMonth+1, startDay);
+
                     }
                 } else {
                     endYear = selectedYear;
-                    endMonth = selectedMonth + 1;
+                    endMonth = selectedMonth; //+ 1;
                     endDay = selectedDay;
                     if (endDay <= startDay && endMonth == startMonth && endYear == startYear || startMonth > endMonth || startYear > endYear) {
                         endDay = startDay;
@@ -438,7 +417,8 @@ public class EventActivity extends ActionBarActivity {
 
                     SimpleDateFormat endDateFormat = new SimpleDateFormat("E d MMM yyyy");
                     endDate.setText(endDateFormat.format((new Date(calEnd.getTimeInMillis()))));
-                    //endDate.setText(endDay + "/" + endMonth + "/" + endYear);
+                    calEnd.set(endYear, endMonth+1, endDay);
+
                 }
             }
         };
@@ -446,11 +426,11 @@ public class EventActivity extends ActionBarActivity {
         DatePickerDialog datePickerDialog;
         if (isStart) {
             datePickerDialog = new DatePickerDialog(EventActivity.this, datePickerListener, startYear,
-                    startMonth - 1, startDay);
+                    startMonth, startDay);
 
         } else {
             datePickerDialog = new DatePickerDialog(EventActivity.this, datePickerListener, endYear,
-                    endMonth - 1, endDay);
+                    endMonth, endDay);
         }
 
         datePickerDialog.show();
@@ -458,6 +438,8 @@ public class EventActivity extends ActionBarActivity {
     }
 
     public void openTimePickerDialog(final boolean isStart) {
+
+        setCurrentTime();
 
         TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
 
@@ -566,5 +548,29 @@ public class EventActivity extends ActionBarActivity {
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
+    }
+
+    public void setCurrentTime() {
+
+        Calendar cal = Calendar.getInstance();
+        cal.getTimeInMillis();
+
+        startTimeMillis = CalendarUtils.TODAY_IN_MILLIS;
+
+        startYear = CalendarUtils.YEAR;
+        startMonth = CalendarUtils.MONTH;
+        startDay = CalendarUtils.DAY;
+        startHour = CalendarUtils.HOUR;
+        startMinute = CalendarUtils.MINUTE;
+
+        endYear = CalendarUtils.YEAR;
+        endMonth = CalendarUtils.MONTH;
+        endDay = CalendarUtils.DAY;
+        endHour = CalendarUtils.HOUR + 1;
+        endMinute = CalendarUtils.MINUTE;
+
+        CalendarUtils.cal.set(endYear, endMonth, endDay, endHour, endMinute);
+        endTimeMillis = CalendarUtils.cal.getTimeInMillis();
+
     }
 }
