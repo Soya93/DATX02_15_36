@@ -22,6 +22,8 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -87,10 +89,6 @@ public class StatsFrag extends Fragment {
         lineChart = (LineChart) rootView.findViewById(R.id.line_hours);
         lineChart.setNoDataTextDescription("Here a good graph will be.");
 
-        Cursor cursor = dbAdapter.getSessions(Utils.getCurrWeekNumber());
-
-
-
     }
 
     private void instantiatePieHours(){
@@ -98,8 +96,8 @@ public class StatsFrag extends Fragment {
         pieHours.setNoDataTextDescription("TIMMAR DU LAGT");
 
         //Set up pie chart data
-        Log.d("BAJS", "pieHours spent: "+getHoursSpent());
-        Log.d("BAJS", "pieHours left: "+getHoursLeft());
+        Log.d("stats", "pieHours spent: "+getHoursSpent());
+        Log.d("stats", "pieHours left: "+getHoursLeft());
 
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
         Entry hoursDone = new Entry(getHoursSpent(),0);
