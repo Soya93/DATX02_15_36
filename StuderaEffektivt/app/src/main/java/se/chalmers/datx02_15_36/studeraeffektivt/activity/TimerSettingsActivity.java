@@ -43,15 +43,16 @@ public class TimerSettingsActivity extends ActionBarActivity {
     private static Dialog dialog;
     private NumberPicker np;
 
-    TimePickerDialog.OnTimeSetListener d = new TimePickerDialog.OnTimeSetListener() {
-        public void onTimeSet(TimePicker view, int hourOfDay,
-                              int minute) {
-
-            studyTime = new Time(hourOfDay, minute);
-            mapping.put(1, studyTime);
-            updateView();
-        }
-    };
+            TimePickerDialog.OnTimeSetListener d = new TimePickerDialog.OnTimeSetListener() {
+                public void onTimeSet(TimePicker view, int hourOfDay,
+                                      int minute) {
+                    if (minute > 0) {
+                        studyTime = new Time(hourOfDay, minute);
+                        mapping.put(1, studyTime);
+                        updateView();
+                    }
+                }
+            };
 
     TimePickerDialog.OnTimeSetListener t = new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay,
