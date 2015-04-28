@@ -271,9 +271,7 @@ public class TimerFrag extends Fragment {
 
 
     public void setSelectedCourse() {
-        String temp = spinner.getSelectedItem().toString();
-        String[] parts = temp.split(" ");
-        this.ccode = parts[0];
+
 
     }
 

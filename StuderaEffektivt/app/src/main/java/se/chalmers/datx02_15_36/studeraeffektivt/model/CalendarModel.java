@@ -302,9 +302,9 @@ public class CalendarModel {
         return eventID;
     }
 
-    public void editEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, long eventID, int notification, boolean isAllDay) {
+    public long editEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, long eventID, int notification, boolean isAllDay) {
         deleteEvent(cr, eventID);
-        addEventAuto(cr, title, startMillis, endMillis, location, description, calID, notification, isAllDay);
+        return  addEventAuto(cr, title, startMillis, endMillis, location, description, calID, notification, isAllDay);
         //TODO remove notification if it is -1
     }
 
