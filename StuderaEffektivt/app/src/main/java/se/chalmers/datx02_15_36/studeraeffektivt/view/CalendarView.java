@@ -19,30 +19,44 @@ public class CalendarView {
 
     public CalendarView(){ ; }
 
-    public void updateEventInfoView(View dialogView, CharSequence name, long startTime, long endTime, String location, String description, String calendar) {
+    public void updateEventInfoView(View dialogView, CharSequence name, long startTime, long endTime, String location, String description, String calendar, int isAllDay) {
         TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
-        if (eventNameLabel != null) {
+        if (eventNameLabel != null && !name.toString().isEmpty()) {
+            eventNameLabel.setVisibility(View.VISIBLE);
             eventNameLabel.setText(name);
+        } else if (name.toString().isEmpty()){
+            eventNameLabel.setText("Namnlös händelse");
         }
 
         TextView eventTimeLabel = (TextView) dialogView.findViewById(R.id.event_time_label);
-        if (eventTimeLabel != null) {
+        if (eventTimeLabel != null && isAllDay == 0) {
             eventTimeLabel.setText("Tid: " + formatDate(startTime, endTime));
+        } else if (location.isEmpty()){
+            eventTimeLabel.setText("Heldagsevent");
         }
 
         TextView eventLocationLabel = (TextView) dialogView.findViewById(R.id.event_location_label);
-        if (eventLocationLabel != null) {
+        if (eventLocationLabel != null && !location.isEmpty()) {
+            eventLocationLabel.setVisibility(View.VISIBLE);
             eventLocationLabel.setText("Plats: " + location);
+        } else if (location.isEmpty()){
+            eventLocationLabel.setVisibility(View.GONE);
         }
 
         TextView eventDescriptionLabel = (TextView) dialogView.findViewById(R.id.event_description_label);
-        if (eventDescriptionLabel != null || !description.isEmpty()) {
+        if (eventDescriptionLabel != null && !description.isEmpty() ) {
+            eventDescriptionLabel.setVisibility(View.VISIBLE);
             eventDescriptionLabel.setText("Beskrivning: " + description);
+        } else if (description.isEmpty()){
+            eventDescriptionLabel.setVisibility(View.GONE);
         }
 
         TextView eventCalendarLabel = (TextView) dialogView.findViewById(R.id.event_calendar_label);
-        if (eventCalendarLabel != null) {
+        if (eventCalendarLabel != null && !calendar.isEmpty()) {
+            eventCalendarLabel.setVisibility(View.VISIBLE);
             eventCalendarLabel.setText("Kalender: " + calendar);
+        } else if (calendar.isEmpty()){
+            eventCalendarLabel.setVisibility(View.GONE);
         }
     }
 

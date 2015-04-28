@@ -111,9 +111,9 @@ public class MainActivity extends ActionBarActivity {
         button1.setOnClickListener(fabHandler);
 
         ImageView itemIcon2 = new ImageView(this);
-        Drawable editIcon = getResources().getDrawable( R.drawable.ic_content_create).mutate();
-        editIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
-        itemIcon2.setImageDrawable(editIcon);
+        Drawable repeatIcon = getResources().getDrawable( R.drawable.ic_av_loop).mutate();
+        repeatIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon2.setImageDrawable(repeatIcon);
         button2 = itemBuilder.setContentView(itemIcon2).build();
         button2.setTag(2);
         button2.setOnClickListener(fabHandler);
@@ -127,7 +127,7 @@ public class MainActivity extends ActionBarActivity {
         button3.setOnClickListener(fabHandler);
 
         ImageView itemIcon4 = new ImageView(this);
-        Drawable calendarsIcon = getResources().getDrawable( R.drawable.ic_cal1).mutate();
+        Drawable calendarsIcon = getResources().getDrawable( R.drawable.ic_cal2).mutate();
         calendarsIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon4.setImageDrawable(calendarsIcon);
         button4 = itemBuilder.setContentView(itemIcon4).build();
