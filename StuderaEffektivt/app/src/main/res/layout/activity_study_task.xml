@@ -6,33 +6,25 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:id="@+id/courseLayout"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:weightSum="1.0"
         >
-<LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_weight="0.5"
-    android:weightSum="1.0">
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/courselabel"
-            android:text="KURS"
-            android:textSize="17dp"
-            android:layout_weight="0.5"/>
+            android:text="@string/course_title"
+
+            />
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/courseSpinner"
-            android:layout_weight="0.50"
-            android:layout_toRightOf="@+id/courselabel"/>
-
-    </LinearLayout>
+            />
 
     </LinearLayout>
 
@@ -47,7 +39,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Typ och tid för uppgiften"
+            android:text="@string/type_title"
             android:gravity="center"
             android:textSize="17dp"
             android:textColor="#03A9F4"
@@ -62,6 +54,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/firstLayout"
         android:layout_below="@+id/typeLayout"
+        android:baselineAligned="false"
         android:weightSum="1.0">
 
         <LinearLayout
@@ -82,7 +75,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/chapterLabel"
-                android:text="KAPITEL"
+                android:text="@string/chapter_title"
                 android:textSize="17dp"
                 android:layout_weight="0.35"/>
 
@@ -90,8 +83,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/chapterSpinner"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@+id/chapterLabel"
                 android:layout_weight="0.65"/>
         </LinearLayout>
 
@@ -105,7 +96,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/weekLabel"
-            android:text="VECKA"
+            android:text="@string/week_title"
             android:textSize="17dp"
             android:layout_weight="0.35"/>
 
@@ -113,7 +104,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/weekSpinner"
-            android:layout_below="@+id/weekLabel"
             android:layout_weight="0.65"/>
 
     </LinearLayout>
@@ -125,7 +115,7 @@
         android:layout_height="fill_parent"
         android:layout_weight="0.5">
         <ToggleButton
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/readOrTaskAssignment"
             android:textOff="@string/task_reading_above"
@@ -147,7 +137,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="uppgiftsinformation"
+            android:text="@string/task_info_title"
             android:gravity="center"
             android:textSize="17dp"
             android:textColor="#03A9F4"
@@ -160,6 +150,7 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:id="@+id/secondLayout"
         android:layout_below="@+id/infoLyout"
         android:weightSum="1.0">
@@ -184,13 +175,10 @@
             android:layout_height="fill_parent"
             android:ems="10"
             android:inputType="text"
-            android:hint="Deluppgift(er) ex: abcd"
+            android:hint="@string/part_string_hint"
             android:digits="abcdefghijklmnopqrstuvwxy"
             android:id="@+id/taskParts"
             android:layout_gravity="left|bottom"
-            android:layout_below="@+id/addButton"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:layout_weight="0.5"/>
 
     </LinearLayout>
@@ -202,7 +190,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/thirdLayout"
-        android:layout_below="@+id/secondLayout"
         android:weightSum="1.0"
         android:layout_weight="0.65">
 
@@ -212,30 +199,41 @@
             android:text="@string/save_task"
             android:textColor="#03A9F4"
             android:id="@+id/addButton"
-            android:layout_toRightOf="@+id/taskLayout"
-            android:layout_below="@+id/taskInput"
-            android:layout_alignParentRight="true"
             android:background="@null"
             android:layout_weight="0.50"/>
 
     </LinearLayout>
 </LinearLayout>
+
+    <TextView
+        android:id="@+id/savedTaskTitle"
+        android:layout_below="@+id/secondLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/saved_tasks_title"
+        android:gravity="center"
+        android:textSize="17dp"
+        android:textColor="#03A9F4"
+        style="?android:attr/listSeparatorTextViewStyle"
+        />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:baselineAligned="false"
         android:id="@+id/fourthLayout"
-        android:layout_below="@+id/secondLayout"
+        android:layout_below="@+id/savedTaskTitle"
         android:layout_centerHorizontal="true"
         android:weightSum="1">
 
+
+
     <ScrollView
-        android:layout_width="10dp"
+        android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:id="@+id/scrollViewOfTasks"
         android:layout_weight="0.5"
-        android:layout_alignParentLeft="true"
-
          >
 
         <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
@@ -248,16 +246,15 @@
     </ScrollView>
 
     <ScrollView
-        android:layout_width="10dp"
+        android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:id="@+id/scrollViewOfReadingAssigmnents"
         android:layout_weight="0.5"
-        android:layout_alignParentRight="true"
         >
 
            <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:id="@+id/layoutWithinScrollViewOfReadingAssignments">
                 </se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>

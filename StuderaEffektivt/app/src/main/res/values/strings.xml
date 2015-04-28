@@ -51,7 +51,17 @@
     <!-- Tasks -->
     <string name="task_reading_above"><font size="20">Läsanvisning</font>\n\<font size="10">Klicka för att ändra</font></string>
     <string name="task_other_above"><font size="20">Räkneuppgift</font>\n\<font size="10">Klicka för att ändra</font></string>
-    <string name="save_task"><font size="30">Spara uppgift</font></string>
+    <string name="save_task"><font size="30">SPARA UPPGIFT</font></string>
+
+    <string name="course_title">KURS</string>
+    <string name="type_title">Typ och tid för uppgiften</string>
+    <string name="chapter_title">KAPITEL</string>
+    <string name="week_title">VECKA</string>
+    <string name="task_info_title">uppgiftsinformation</string>
+    <string name="saved_tasks_title">Sparade uppgifter</string>
+
+    <string name="task_string_hint">Uppgiftsnr ex: 1&#8211;5 eller 1,2,3</string>
+    <string name="part_string_hint">Deluppgift(er) ex: abcd</string>
 
     <!-- Colours -->
     <color name="white">#FFFFFF</color>

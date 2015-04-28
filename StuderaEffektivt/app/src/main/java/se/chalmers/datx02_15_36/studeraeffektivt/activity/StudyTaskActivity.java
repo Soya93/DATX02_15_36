@@ -290,6 +290,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     public void addReadAssignment(int chapter, String taskString) {
 
+        if(!taskString.contains(",")){
         String[] separateLine;
 
         int start;
@@ -315,16 +316,20 @@ public class StudyTaskActivity extends ActionBarActivity {
             }
 
         } else {
-            if(!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
+            if (!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
 
                 StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
                 addToDatabase(studyTask);
                 addToListOfTasks(studyTask);
+            } else {
+                Toast.makeText(this, "Läsanvisning redan tillagd!", Toast.LENGTH_SHORT).show();
             }
-            else{
-                Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
-            }
+        }
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Format ej godkänt",
+                    Toast.LENGTH_LONG).show();
         }
     }
 
