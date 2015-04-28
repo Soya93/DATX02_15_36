@@ -5,12 +5,6 @@
     android:theme="@style/Theme.YourTheme.Styled.ActionBar.TitleTextStyle">
 
 
-    <item android:id="@+id/delete_event"
-        android:title="DeletEvent"
-        android:icon="@drawable/ic_action_delete"
-        app:showAsAction="ifRoom"
-        />
-
     <item android:id="@+id/save_event"
         android:title="Spara"
         app:showAsAction="ifRoom"
