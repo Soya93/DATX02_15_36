@@ -60,7 +60,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     private ToggleButton readOrTaskAssignment;
 
     private String courseCode;
-    private String URL_CONNECTION = "http://localhost/insertassignmets.php";
+    private String URL_CONNECTION = "http://192.168.1.3/insertassignmets.php";
 
     //The access point of the database.
     private DBAdapter dbAdapter;
@@ -356,6 +356,8 @@ public class StudyTaskActivity extends ActionBarActivity {
                     StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
                     addToDatabase(studyTask);
+                    new AddNewPrediction().execute(randomNum+"", courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
+                            start+"",end+"","READ","UNDONE");
                     addToListOfTasks(studyTask);
                 }
                 else{
@@ -365,9 +367,12 @@ public class StudyTaskActivity extends ActionBarActivity {
             } else {
                 if (!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
 
-                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
+                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment",
+                            Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
                     addToDatabase(studyTask);
+                    new AddNewPrediction().execute(randomNum+"", courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
+                            taskString,taskString,"READ","UNDONE");
                     addToListOfTasks(studyTask);
                 } else {
                     Toast.makeText(this, "Läsanvisning redan tillagd!", Toast.LENGTH_SHORT).show();
@@ -417,50 +422,50 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         @Override
         protected Void doInBackground(String... arg) {
-            String assignments_id= arg[0];
-            String assignments_course = arg[1];
-            String assignments_chapter = arg[2];
-            String assignments_week = arg[3];
-            String assignments_assNr = arg[4];
-            String assignments_startPage = arg[5];
-            String assignments_endPage = arg[6];
-            String assignments_type = arg[7];
-            String assignments_status = arg[8];
+
+            String id= arg[0];
+            String course = arg[1];
+            String chapter = arg[2];
+            String week = arg[3];
+            String assNr = arg[4];
+            String startPage = arg[5];
+            String endPage = arg[6];
+            String type = arg[7];
+            String status = arg[8];
             // TODO Auto-generated method stub
 
 
 
             // Preparing post params
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("assignmets_id",assignments_id));
-            params.add(new BasicNameValuePair("assignmets_course",assignments_course));
-            params.add(new BasicNameValuePair("assignmets_chapter",assignments_chapter));
-            params.add(new BasicNameValuePair("assignmets_week",assignments_week));
-            params.add(new BasicNameValuePair("assignmets_assNr",assignments_assNr));
-            params.add(new BasicNameValuePair("assignmets_startPage",assignments_startPage));
-            params.add(new BasicNameValuePair("assignmets_endPage",assignments_endPage));
-            params.add(new BasicNameValuePair("assignmets_type",assignments_type));
-            params.add(new BasicNameValuePair("assignmets_status",assignments_status));
-
+            params.add(new BasicNameValuePair("id",id));
+            params.add(new BasicNameValuePair("course",course));
+            params.add(new BasicNameValuePair("chapter",chapter));
+            params.add(new BasicNameValuePair("week",week));
+            params.add(new BasicNameValuePair("assNr",assNr));
+            params.add(new BasicNameValuePair("startPage",startPage));
+            params.add(new BasicNameValuePair("endPage",endPage));
+            params.add(new BasicNameValuePair("type",type));
+            params.add(new BasicNameValuePair("status",status));
 
 
             ServiceHandler serviceClient = new ServiceHandler();
 
             String json = serviceClient.makeServiceCall(URL_CONNECTION,
                     ServiceHandler.POST, params);
-
+            Log.d("jason",json);
             if (json != null) {
                 try {
+                    Log.d("jason",json);
                     JSONObject jsonObj = new JSONObject(json);
                     boolean error = jsonObj.getBoolean("error");
                     // checking for error node in json
                     if (!error) {
                         // new category created successfully
-                        Log.d(" Success",
-                                "> " + jsonObj.getString("message"));
+                        Log.d(" Success","alexärbäst");
                     } else {
                         Log.d(" Error: ",
-                                "> " + jsonObj.getString("message"));
+                                "notsogod");
                     }
 
                 } catch (JSONException e) {
