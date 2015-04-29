@@ -14,7 +14,7 @@
         android:layout_height="200dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/where_to_study_large"/>
+        />
 
     <TextView
         android:layout_width="wrap_content"
