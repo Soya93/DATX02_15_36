@@ -86,4 +86,10 @@ public class CourseDetailedInfoFrag extends Fragment {
         startActivity(i);
 
     }
+
+    public void getAssignmetsFromWeb(){
+
+    }
+
+
 }

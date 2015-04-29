@@ -28,21 +28,38 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="Lägg till uppgifter"
         android:id="@+id/taskButton"
         android:layout_below="@+id/scrollViewOfTasks"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         />
 
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/taskScrollView"
+        android:layout_weight="0.42"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/taskButton"
+        android:layout_alignEnd="@+id/taskButton">
+
+        <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/taskList">
+        </se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
+
+    </ScrollView>
+
     <Button
-        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Grupper"
-        android:id="@+id/groupsButton"
-        android:layout_below="@+id/taskButton"
-        android:layout_alignEnd="@+id/taskButton"
-        android:layout_marginTop="45dp" />
+        android:text="Hämta uppgifter"
+        android:id="@+id/getAssignmets"
+        android:onClick="getAssignmetsFromWeb"
+        android:layout_below="@+id/scrollViewOfTasks"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
