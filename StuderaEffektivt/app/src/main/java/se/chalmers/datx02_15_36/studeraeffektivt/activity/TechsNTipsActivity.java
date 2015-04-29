@@ -1,5 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +13,7 @@ import android.view.MenuItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TechniquesFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TipFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 
 public class TechsNTipsActivity extends ActionBarActivity {
 
@@ -21,6 +24,7 @@ public class TechsNTipsActivity extends ActionBarActivity {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getIntent().getStringExtra("ActivityTitle"));
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
         initFrag(getIntent().getStringExtra("ActivityTitle"));
     }
 
@@ -37,14 +41,6 @@ public class TechsNTipsActivity extends ActionBarActivity {
         fragmentTransaction.add(getWindow().getDecorView().findViewById(android.R.id.content).getId(), fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_techs_ntips, menu);
-        return true;
     }
 
     @Override

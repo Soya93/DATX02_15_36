@@ -27,6 +27,7 @@
         <item name="actionModeBackground">@drawable/cab_background_top_pluggapp</item>
         <item name="actionModeSplitBackground">@drawable/cab_background_bottom_pluggapp</item>
         <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Pluggapp</item>
+        <item name="android:statusBarColor">@color/primaryDarkColor</item>
 
         <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.Pluggapp.Widget</item>

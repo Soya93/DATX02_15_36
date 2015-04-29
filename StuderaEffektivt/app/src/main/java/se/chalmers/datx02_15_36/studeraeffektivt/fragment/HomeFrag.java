@@ -29,6 +29,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.HomeAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeEventItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 
 public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -78,7 +79,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         homeFAB.setTag(1);
         homeFAB.setOnClickListener(myButtonHandler);
         homeFAB.setType(FloatingActionButton.TYPE_NORMAL);
-        homeFAB.setBackgroundColor(Color.parseColor("#33b5e5"));
+        homeFAB.setBackgroundColor(Color.parseColor(Constants.primaryColor));
 
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
