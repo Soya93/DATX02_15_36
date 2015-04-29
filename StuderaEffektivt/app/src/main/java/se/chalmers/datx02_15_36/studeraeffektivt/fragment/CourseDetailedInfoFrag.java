@@ -27,6 +27,7 @@ public class CourseDetailedInfoFrag extends Fragment {
     private Bundle bundleFromPreviousFragment;
     private Button taskButton;
     private FlowLayout layoutWithinScrollViewOfTasks;
+    private FlowLayout taskListfromWeb;
 
     private String courseCode;
 

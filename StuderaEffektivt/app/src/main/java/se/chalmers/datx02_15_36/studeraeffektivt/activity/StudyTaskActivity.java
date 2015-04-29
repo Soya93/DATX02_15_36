@@ -309,7 +309,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                             StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, elementToAdd, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
                             addToListOfTasks(studyTask);
                             addToDatabase(studyTask);
-                            new AddToWebDatabase().execute(randomNum+"", courseCode, chapter+"",chosenWeek+"",elementToAdd,
+                            new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"",elementToAdd,
                                     Integer.toString(0),Integer.toString(0),"OTHER","UNDONE");
                         } else {
                             Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
@@ -325,7 +325,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                         StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, s, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
                         addToListOfTasks(studyTask);
                         addToDatabase(studyTask);
-                        new AddToWebDatabase().execute(randomNum+"", courseCode, chapter+"",chosenWeek+"",s,
+                        new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"",s,
                                 Integer.toString(0),Integer.toString(0),"OTHER","UNDONE");
                     } else {
                         Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
@@ -360,7 +360,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                     StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
                     addToDatabase(studyTask);
-                    new AddToWebDatabase().execute(randomNum+"", courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
+                    new AddToWebDatabase().execute( courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
                             start+"",end+"","READ","UNDONE");
                     addToListOfTasks(studyTask);
                 }
@@ -375,7 +375,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                             Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
                     addToDatabase(studyTask);
-                    new AddToWebDatabase().execute(randomNum+"", courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
+                    new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
                             taskString,taskString,"READ","UNDONE");
                     addToListOfTasks(studyTask);
                 } else {
@@ -426,23 +426,20 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         @Override
         protected Void doInBackground(String... arg) {
-
-            String id= arg[0];
-            String course = arg[1];
-            String chapter = arg[2];
-            String week = arg[3];
-            String assNr = arg[4];
-            String startPage = arg[5];
-            String endPage = arg[6];
-            String type = arg[7];
-            String status = arg[8];
+            String course = arg[0];
+            String chapter = arg[1];
+            String week = arg[2];
+            String assNr = arg[3];
+            String startPage = arg[4];
+            String endPage = arg[5];
+            String type = arg[6];
+            String status = arg[7];
             // TODO Auto-generated method stub
 
 
 
             // Preparing post params
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("id",id));
             params.add(new BasicNameValuePair("course",course));
             params.add(new BasicNameValuePair("chapter",chapter));
             params.add(new BasicNameValuePair("week",week));
