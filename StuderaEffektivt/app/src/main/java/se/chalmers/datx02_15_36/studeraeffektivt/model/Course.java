@@ -48,5 +48,7 @@ public class Course {
         return courseCode;
     }
 
+    public String getCourseName(){ return courseName; }
+
 
 }

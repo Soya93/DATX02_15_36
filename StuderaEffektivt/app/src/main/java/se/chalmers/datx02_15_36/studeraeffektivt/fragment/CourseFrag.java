@@ -159,7 +159,7 @@ public class CourseFrag extends Fragment {
     }
 
     public void goToDetails(Bundle bundle) {
-        Fragment fragment = new CourseDetailedInfoFrag();
+        /*Fragment fragment = new CourseDetailedInfoFrag();
         //Fragment fragment = new StudyTaskFragment();
 
         fragment.setArguments(bundle);
@@ -169,7 +169,7 @@ public class CourseFrag extends Fragment {
         fragmentTransaction.add(containerId, fragment, "detailedcoursefragment");
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();*/
     }
 
     public void initComponents() {

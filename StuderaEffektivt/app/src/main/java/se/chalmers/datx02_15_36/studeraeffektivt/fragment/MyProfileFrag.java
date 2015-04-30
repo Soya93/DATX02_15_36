@@ -114,6 +114,7 @@ public class MyProfileFrag extends Fragment {
         this.view = rootView;
         this.container = container;
         //currentlyShown = this;
+        bundleToNextFragment = new Bundle();
         Log.d("FifthTabFrag ", "currentlyshown = fifthtabfragment");
         initComponents();
 
@@ -234,8 +235,8 @@ public class MyProfileFrag extends Fragment {
                 Intent it = new Intent(getActivity(), TechsNTipsActivity.class);
                 it.putExtra("ActivityTitle", "Studietips");
                 startActivity(it);
-                fragment = new TipFrag();
-                /*fragment.setArguments(bundle);
+                /*fragment = new TipFrag();
+                fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");*/
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 break;
@@ -331,17 +332,23 @@ public class MyProfileFrag extends Fragment {
 
                 HashMap courseMap = (HashMap) parent.getItemAtPosition(position);
                 Course course1 = (Course) courseMap.get("Courses");
-                bundleToNextFragment.putInt("containerId", ((ViewGroup) container.getParent()).getId());
-                bundleToNextFragment.putInt("kurs", courseList.indexOf(courseMap));
-                bundleToNextFragment.putString("CourseCode", course1.getCourseCode());
-                goToDetails(bundleToNextFragment);
+               // bundleToNextFragment.putInt("kurs", courseList.indexOf(courseMap));
+                //bundleToNextFragment.putString("CourseName", course1.courseName);
+                //bundleToNextFragment.putString("CourseCode", course1.getCourseCode());
+                goToDetails(course1);
             }
         });
 
     }
 
-    public void goToDetails(Bundle bundle) {
-        Fragment fragment = new CourseDetailedInfoFrag();
+    public void goToDetails(Course course) {
+
+        Intent it = new Intent(getActivity(), CourseDetailedInfoFrag.class);
+        it.putExtra("CourseCode", course.getCourseCode());
+        it.putExtra("CourseName", course.getCourseName());
+        startActivity(it);
+
+        /*Fragment fragment = new CourseDetailedInfoFrag();
         //Fragment fragment = new StudyTaskFragment();
 
         fragment.setArguments(bundle);
@@ -351,7 +358,7 @@ public class MyProfileFrag extends Fragment {
         fragmentTransaction.add(container.getId(), fragment, "detailedcoursefragment");
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();*/
     }
 
     private HashMap<String, Course> createCourse(String key, Course course) {
