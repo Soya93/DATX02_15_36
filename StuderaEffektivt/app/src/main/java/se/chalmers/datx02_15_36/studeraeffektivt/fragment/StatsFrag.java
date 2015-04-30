@@ -83,7 +83,43 @@ public class StatsFrag extends Fragment {
 
         instantiatePieHours();
         instantiatePieAssignments();
-        instantiateLineChart();
+        fakeLineChart();
+        //instantiateLineChart();
+    }
+
+    private void fakeLineChart(){
+        lineChart = (LineChart) rootView.findViewById(R.id.line_hours);
+
+        Cursor courses = dbAdapter.getCourses();
+
+        ArrayList<Entry> valsCourse1 = new ArrayList<>();
+        ArrayList<Entry> valsCourse2 = new ArrayList<>();
+
+        Entry e1c1 = new Entry(20, 0);
+        Entry e2c1 = new Entry(18, 1);
+        valsCourse1.add(e1c1);
+        valsCourse1.add(e2c1);
+
+        Entry e1c2 = new Entry(15, 0);
+        Entry e2c2 = new Entry(12, 1);
+        valsCourse2.add(e1c2);
+        valsCourse2.add(e2c2);
+
+        LineDataSet setC1 = new LineDataSet(valsCourse1, "Course No 1");
+        LineDataSet setC2 = new LineDataSet(valsCourse2, "Course No 2");
+
+        ArrayList<LineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(setC1);
+        dataSets.add(setC2);
+
+        ArrayList<String> xVals = new ArrayList<>();
+        xVals.add("w. 17");
+        xVals.add("w. 18");
+
+        LineData data = new LineData(xVals, dataSets);
+        lineChart.setData(data);
+        lineChart.invalidate();
+
     }
 
     private void instantiateLineChart(){
