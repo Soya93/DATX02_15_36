@@ -37,6 +37,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.IntegerValueFormatter;
@@ -67,8 +68,8 @@ public class StatsFrag extends Fragment {
 
         utils = new Utils();
 
-        insertTestDataToDB();
-        insertTestDataToDB2();
+        insertTestDataToDB("DDD111");
+        insertTestDataToDB2("APA777");
         instantiateView();
 
         return rootView;
@@ -89,8 +90,11 @@ public class StatsFrag extends Fragment {
         lineChart = (LineChart) rootView.findViewById(R.id.line_hours);
         lineChart.setNoDataTextDescription("Here a good graph will be.");
 
+        int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
+
         ArrayList<LineDataSet> lineDataSets = new ArrayList<>();
         ArrayList<String> lineLabels = new ArrayList<>();
+        ArrayList<String> lineXs = new ArrayList<>();
 
         Cursor courseCoursor = dbAdapter.getCourses();
         while (courseCoursor.moveToNext()){
@@ -100,6 +104,7 @@ public class StatsFrag extends Fragment {
             ArrayList<Entry> lineYs = new ArrayList<>();
             Entry lineY;
 
+            int i = 0;
             for (int w=smallestWeek; w<=Utils.getCurrWeekNumber(); w++){
                 Cursor minutesCursor = dbAdapter.getMinutes(w, ccode);
 
@@ -111,8 +116,11 @@ public class StatsFrag extends Fragment {
                 int hoursInCourseAndWeek = minutesInCourseAndWeek/60;
                 Log.d("lineChart", "hours in course and week: "+hoursInCourseAndWeek);
 
-                lineY = new Entry(hoursInCourseAndWeek, w);
+                lineY = new Entry(hoursInCourseAndWeek, i);
                 lineYs.add(lineY);
+                lineXs.add(""+w);
+
+                i++;
             }
 
             LineDataSet lineDataSet = new LineDataSet(lineYs, ccode);
@@ -121,8 +129,9 @@ public class StatsFrag extends Fragment {
             lineLabels.add(ccode);
         }
 
-        LineData lineData = new LineData(lineLabels, lineDataSets);
+        LineData lineData = new LineData(lineXs, lineDataSets);
         lineChart.setData(lineData);
+        lineChart.setDescription("");
 
         lineChart.invalidate();
 
@@ -267,77 +276,77 @@ public class StatsFrag extends Fragment {
         });
     }
 
-    private void insertTestDataToDB() {
+    private void insertTestDataToDB(String course) {
         //Insert course
-        long idCourse = dbAdapter.insertCourse("DDD111", "Default Course");
+        long idCourse = dbAdapter.insertCourse(course, "Default Course");
         if (idCourse > 0) {
-            Toast.makeText(getActivity(), "DDD111 created", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT ).show();
         }
 
         //Insert sessions
-        long idS1 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(), 60);
-        long idS2 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(), 120);
-        long idS3 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(),300);
-        long idS4 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(),30);
-        long idS5 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(),60);
-        long idS6 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(),60);
+        long idS1 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 60);
+        long idS2 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 120);
+        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-1),300);
+        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-1),30);
+        long idS5 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-2),60);
+        long idS6 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-2),60);
         if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
-            Toast.makeText(getActivity(), "Added six sessions to DDD111", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
         }
 
         //Insert TimeOnCourse.
-        long idTOC = dbAdapter.insertTimeOnCourse("DDD111", 1200);
+        long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
         if (idTOC>0) {
-            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for DD111", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
         }
 
         //Insert Assignments
-        long idA1 = dbAdapter.insertAssignment("DDD111", 0, Time.WEEK_NUM, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
-            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for DD111", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void insertTestDataToDB2() {
+    private void insertTestDataToDB2(String course) {
         //Insert course
-        long idCourse = dbAdapter.insertCourse("APA007", "Apkursen");
+        long idCourse = dbAdapter.insertCourse(course, "Apkursen");
         if (idCourse > 0) {
-            Toast.makeText(getActivity(), "APA007 created", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
         }
 
         //Insert sessions
-        long idS1 = dbAdapter.insertSession("APA007", utils.getCurrWeekNumber(),60);
-        long idS2 = dbAdapter.insertSession("APA007", utils.getCurrWeekNumber(),120);
-        long idS3 = dbAdapter.insertSession("APA007", utils.getCurrWeekNumber(),300);
-        long idS4 = dbAdapter.insertSession("APA007", utils.getCurrWeekNumber(),30);
+        long idS1 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(),60);
+        long idS2 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(),120);
+        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-1),300);
+        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-2),30);
         if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0) {
-            Toast.makeText(getActivity(), "Added six sessions to APA007", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
         }
 
         //Insert TimeOnCourse.
-        long idTOC = dbAdapter.insertTimeOnCourse("APA007", 1200);
+        long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
         if (idTOC>0) {
-            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for APA007", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
         }
 
         //Insert Assignments
-        long idA1 = dbAdapter.insertAssignment("APA007", 0, Time.WEEK_NUM, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
-            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for APA007", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
         }
