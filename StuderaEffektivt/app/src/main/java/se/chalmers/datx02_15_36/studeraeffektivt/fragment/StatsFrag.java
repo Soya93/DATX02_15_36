@@ -112,7 +112,7 @@ public class StatsFrag extends Fragment {
             int i = 0;
             for(int w=smallestWeek; w<Utils.getCurrWeekNumber(); w++){
 
-                if(i == 0){
+                if(c == 0){
                     weeks.add(""+w);
                 }
 
@@ -150,6 +150,7 @@ public class StatsFrag extends Fragment {
         data.setValueFormatter(new IntegerValueFormatter());
 
         lineChart.setData(data);
+        lineChart.setDescription("");
         lineChart.invalidate();
 
     }
