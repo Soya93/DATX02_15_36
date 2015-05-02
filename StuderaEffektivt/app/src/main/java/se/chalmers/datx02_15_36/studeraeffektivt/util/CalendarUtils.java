@@ -65,12 +65,23 @@ public class CalendarUtils {
     public static final Calendar cal = Calendar.getInstance();
 
     //get todays date
-    public static final int YEAR = cal.get(Calendar.YEAR);
-    public static final int MONTH = cal.get(Calendar.MONTH);
-    public static final int DAY = cal.get(Calendar.DATE);
-    public static final int HOUR = cal.get(Calendar.HOUR_OF_DAY);
-    public static final int MINUTE = cal.get(Calendar.MINUTE);
-    public static final long TODAY_IN_MILLIS = cal.getTimeInMillis();
+    public static int YEAR = cal.get(Calendar.YEAR);
+    public static int MONTH = cal.get(Calendar.MONTH);
+    public static int DAY = cal.get(Calendar.DATE);
+    public static int HOUR = cal.get(Calendar.HOUR_OF_DAY);
+    public static int MINUTE = cal.get(Calendar.MINUTE);
+    public static long TODAY_IN_MILLIS = cal.getTimeInMillis();
+
+    public static void update() {
+        Calendar newCal = Calendar.getInstance();
+        YEAR = newCal.get(Calendar.YEAR);
+        MONTH = newCal.get(Calendar.MONTH);
+        DAY = newCal.get(Calendar.DATE);
+        HOUR = newCal.get(Calendar.HOUR_OF_DAY);
+        MINUTE = newCal.get(Calendar.MINUTE);
+        TODAY_IN_MILLIS = newCal.getTimeInMillis();
+
+    }
 
 
     public static final String[] CALENDAR_CC_PROJECTION = {CalendarContract.Calendars._ID,

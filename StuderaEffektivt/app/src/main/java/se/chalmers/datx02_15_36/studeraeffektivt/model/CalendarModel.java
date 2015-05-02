@@ -6,6 +6,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.util.ArrayMap;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +30,8 @@ public class CalendarModel {
     private ArrayList<CalendarsFilterItem> calendarsFilterItems;
     private ArrayList<CalendarChoiceItem> calendarChoiceItems;
     private ArrayList<CalendarsFilterItem> calendarWritersPermissions;
+    private Map<Long, String> calendarsMap;
+    private Map<Long, Integer> calIdAndColorMap;
 
 
     public CalendarModel() {
@@ -37,7 +41,6 @@ public class CalendarModel {
         endDay = Calendar.getInstance();
         endDay.setTime(futureDate(1));
         calendarsFilterItems = new ArrayList<>();
-
         cur = null;
     }
 
@@ -183,7 +186,8 @@ public class CalendarModel {
     public ArrayList<CalendarsFilterItem> getCalendarWritersPermissions() { return calendarWritersPermissions; }
 
     public Map<Long, String> getCalendarInfo(ContentResolver cr) {
-        Map<Long, String> calendars = new LinkedHashMap<>();
+        calendarsMap = new LinkedHashMap<>();
+        calIdAndColorMap = new LinkedHashMap<>();
         calendarsFilterItems = new ArrayList<>();
         calendarChoiceItems = new ArrayList<>();
         calendarWritersPermissions = new ArrayList<>();
@@ -208,9 +212,10 @@ public class CalendarModel {
 
 
 
-            if (!calendars.containsKey(id) && !calendars.containsValue(name) && isVisible == 1) {
+            if (!calendarsMap.containsKey(id) && !calendarsMap.containsValue(name) && isVisible == 1) {
                 filterItem.setTitle(name);
 
+                //only selects the calendars with editing and writeing permssion
                 if(hasWritersPermission == 500 || hasWritersPermission == 700 || hasWritersPermission == 600 || hasWritersPermission == 800) {
 
                     CalendarsFilterItem filterItemPermission = new CalendarsFilterItem();
@@ -230,7 +235,9 @@ public class CalendarModel {
                 filterItem.setColor(color);
 
                 choiceItem = filterItem;
-                calendars.put(id, name);
+                calendarsMap.put(id, name);
+                calIdAndColorMap.put(id, color);
+                Log.i("model: ", "id: " + id + " name: " + name + " color: " + color);
                 calendarsFilterItems.add(filterItem);
                 calendarChoiceItems.add(choiceItem);
             }
@@ -240,7 +247,7 @@ public class CalendarModel {
 
 
         c.close();
-        return calendars;
+        return calendarsMap;
     }
 
 
@@ -380,7 +387,9 @@ public class CalendarModel {
     }
 
 
-    public int getCalendarColor(ContentResolver cr, String calName) {
+    public int getCalendarColor(ContentResolver cr, String calName, long id) {
+
+
         Cursor c = getCalendarCursor(cr);
 
         while (c.moveToNext()) {
@@ -388,9 +397,19 @@ public class CalendarModel {
                 return c.getInt(CalendarUtils.CALENDAR_COLOR);
             }
         }
+
         //TODO exceptionhandling
+
         return 0;
 
+    }
+
+    public Map<Long, String> getCalendarsMap() {
+        return calendarsMap;
+    }
+
+    public Map<Long, Integer> getCalIdAndColorMap() {
+        return calIdAndColorMap;
     }
 
 }

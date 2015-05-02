@@ -51,7 +51,7 @@
             android:layout_column="1"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
+            android:paddingLeft="0dp"
             android:paddingRight="15dp" />
 
         <TextView
@@ -64,7 +64,8 @@
             android:onClick="goToTextView"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical" />
 
 
     </TableRow>
@@ -86,11 +87,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/image_time"
-            android:src="@drawable/ic_timer"
+            android:src="@drawable/ic_action_query_builder"
             android:layout_column="1"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
+            android:paddingBottom="0dp"
+            android:paddingLeft="0dp"
             android:paddingRight="15dp" />
 
         <TextView
@@ -197,11 +197,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/image_location"
-            android:src="@drawable/ic_home1"
+            android:src="@drawable/ic_communication_location_on"
             android:layout_column="1"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
+            android:paddingLeft="0dp"
             android:paddingRight="15dp" />
 
         <EditText
@@ -213,7 +213,8 @@
             android:layout_column="3"
             android:gravity="center_vertical"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp" />
+            android:paddingBottom="10dp"
+            android:layout_gravity="center_vertical" />
     </TableRow>
 
     <View
@@ -234,11 +235,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/image_notification"
-            android:src="@drawable/ic_timer2"
+            android:src="@drawable/ic_social_notifications"
             android:layout_column="1"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
+            android:paddingLeft="0dp"
             android:paddingRight="15dp" />
 
         <TextView
@@ -253,7 +254,8 @@
             android:layout_column="3"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical" />
     </TableRow>
 
     <View
@@ -273,11 +275,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/image_description"
-            android:src="@drawable/ic_graph2"
+            android:src="@drawable/ic_action_subject"
             android:layout_column="1"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
+            android:paddingLeft="0dp"
             android:paddingRight="15dp" />
 
         <EditText
@@ -290,7 +292,8 @@
             android:layout_column="3"
             android:gravity="center_vertical"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp" />
+            android:paddingBottom="10dp"
+            android:layout_gravity="center_vertical" />
     </TableRow>
 
 

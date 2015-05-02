@@ -18,6 +18,7 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
+import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CourseDetailedInfoFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.HomeFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.StatsFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TimerFrag;
@@ -31,6 +32,7 @@ public class MainActivity extends ActionBarActivity {
     private CalendarFrag calendarFrag;
     private TimerFrag timerFrag;
     private Drawable tabResetIcon;
+    private CourseDetailedInfoFrag courseDetailedInfoFrag = new CourseDetailedInfoFrag();
     public static FloatingActionButton actionButton;
     public static SubActionButton button1;
     public static SubActionButton button2;
@@ -111,9 +113,9 @@ public class MainActivity extends ActionBarActivity {
         button1.setOnClickListener(fabHandler);
 
         ImageView itemIcon2 = new ImageView(this);
-        Drawable editIcon = getResources().getDrawable( R.drawable.ic_content_create).mutate();
-        editIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
-        itemIcon2.setImageDrawable(editIcon);
+        Drawable repeatIcon = getResources().getDrawable( R.drawable.ic_av_loop).mutate();
+        repeatIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon2.setImageDrawable(repeatIcon);
         button2 = itemBuilder.setContentView(itemIcon2).build();
         button2.setTag(2);
         button2.setOnClickListener(fabHandler);
@@ -127,7 +129,7 @@ public class MainActivity extends ActionBarActivity {
         button3.setOnClickListener(fabHandler);
 
         ImageView itemIcon4 = new ImageView(this);
-        Drawable calendarsIcon = getResources().getDrawable( R.drawable.ic_cal1).mutate();
+        Drawable calendarsIcon = getResources().getDrawable( R.drawable.ic_cal2).mutate();
         calendarsIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon4.setImageDrawable(calendarsIcon);
         button4 = itemBuilder.setContentView(itemIcon4).build();
@@ -159,7 +161,7 @@ public class MainActivity extends ActionBarActivity {
         timerUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
         Drawable statsUns = getResources().getDrawable( R.drawable.ic_pilegraph).mutate();
         statsUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
-        Drawable myProfileUns = getResources().getDrawable(R.drawable.ic_social_person).mutate();
+        Drawable myProfileUns = getResources().getDrawable(R.drawable.ic_action).mutate();
         myProfileUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
 
 
@@ -169,6 +171,7 @@ public class MainActivity extends ActionBarActivity {
                 timerUns,
                 statsUns,
                 myProfileUns
+
         };
 
 
@@ -177,6 +180,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
+
 
                 if(tab.getPosition() == 0) {
                     actionButton.setVisibility(View.GONE);
@@ -220,7 +224,7 @@ public class MainActivity extends ActionBarActivity {
                         tab.setIcon( getResources().getDrawable( R.drawable.ic_pilegraph).mutate());
                         break;
                     case 4:
-                        tab.setIcon(getResources().getDrawable( R.drawable.ic_social_person).mutate());
+                        tab.setIcon(getResources().getDrawable( R.drawable.ic_action).mutate());
                         break;
                     default:
                         break;
@@ -290,6 +294,9 @@ public class MainActivity extends ActionBarActivity {
     public void settingsTimer(View view) {
         timerFrag.settingsTimer();
     }
+
+    public void getAssignmetsFromWeb(View view) {courseDetailedInfoFrag.getAssignmetsFromWeb();}
+
 
 }
 

@@ -4,24 +4,24 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
  * Created by jesper on 2015-03-27.
  */
 
-        import android.content.Context;
-        import android.database.Cursor;
-        import android.util.AttributeSet;
-        import android.util.Log;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.TextView;
+import android.content.Context;
+import android.database.Cursor;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.Map;
-        import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
-        import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
-        import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
-        import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
-        import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
-        import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 
 /**
@@ -107,10 +107,10 @@ public class FlowLayout extends ViewGroup {
         for(int i = 0; i < this.getChildCount(); i++){
             if(
                     !(getChildAt(i).getClass().equals(TextView.class)) &&
-                    ((StudyTask) getChildAt(i)).getChapter() == chapter &&
-                    ((StudyTask) getChildAt(i)).getTaskString().equals(taskString)){
+                            ((StudyTask) getChildAt(i)).getChapter() == chapter &&
+                            ((StudyTask) getChildAt(i)).getTaskString().equals(taskString)){
 
-                        return true;
+                return true;
             }
 
         }
@@ -121,9 +121,9 @@ public class FlowLayout extends ViewGroup {
         for(int i = 0; i < this.getChildCount(); i++){
             if(
                     !(getChildAt(i).getClass().equals(TextView.class)) &&
-                    ((StudyTask) getChildAt(i)).getChapter() == chapter &&
-                    ((StudyTask) getChildAt(i)).getStartPage() == startPage &&
-                    ((StudyTask) getChildAt(i)).getEndPage() == endPage){
+                            ((StudyTask) getChildAt(i)).getChapter() == chapter &&
+                            ((StudyTask) getChildAt(i)).getStartPage() == startPage &&
+                            ((StudyTask) getChildAt(i)).getEndPage() == endPage){
 
                 return true;
             }
@@ -170,7 +170,7 @@ public class FlowLayout extends ViewGroup {
             while (cursor.moveToNext()) {
 
                 if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode) &&
-                   cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())) {
+                        cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())) {
 
                     AssignmentStatus assignmentStatus;
                     if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())) {
@@ -220,9 +220,9 @@ public class FlowLayout extends ViewGroup {
             }
 
             if(hashMapOfStudyTasks!=null)
-            addMap(hashMapOfStudyTasks);
+                addMap(hashMapOfStudyTasks);
             if(hashMapOfReadingAssignments!=null)
-            addMap(hashMapOfReadingAssignments);
+                addMap(hashMapOfReadingAssignments);
 
         }
     }
@@ -240,9 +240,9 @@ public class FlowLayout extends ViewGroup {
                 //Log.d("Vecka innan if-sats: ", "" + cursor.getInt(cursor.getColumnIndex("week")));
 
                 if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode)
-                                    && cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())
-                                    && cursor.getInt(cursor.getColumnIndex("week")) == week
-                                    && cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.UNDONE.toString())) {
+                        && cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())
+                        && cursor.getInt(cursor.getColumnIndex("week")) == week
+                        && cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.UNDONE.toString())) {
 
                     AssignmentStatus assignmentStatus;
                     if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())) {
