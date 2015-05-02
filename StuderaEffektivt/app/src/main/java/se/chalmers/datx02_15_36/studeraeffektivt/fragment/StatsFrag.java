@@ -90,33 +90,56 @@ public class StatsFrag extends Fragment {
     private void fakeLineChart(){
         lineChart = (LineChart) rootView.findViewById(R.id.line_hours);
 
+        //For each week
+        Entry hoursInWeek;
+        //For each course
+        ArrayList<Entry> hoursInCourse;
+        //Just enhance it with adding course identifier
+        LineDataSet setOfHoursInCourse;
+
+        //All courses
+        ArrayList<LineDataSet> setsOfHoursInCourses = new ArrayList<>();
+        ArrayList<String> weeks = new ArrayList<>();
+        LineData data;
+
         Cursor courses = dbAdapter.getCourses();
+        while( courses.moveToNext() ){
+            String ccode = courses.getString(courses.getColumnIndex("_ccode"));
+            int smallestWeek = dbAdapter.getSmallestWeek(ccode);
+            hoursInCourse = new ArrayList<>();
 
-        ArrayList<Entry> valsCourse1 = new ArrayList<>();
-        ArrayList<Entry> valsCourse2 = new ArrayList<>();
+            int i = 0;
+            for(int w=smallestWeek; w<Utils.getCurrWeekNumber(); w++){
 
-        Entry e1c1 = new Entry(20, 0);
-        Entry e2c1 = new Entry(18, 1);
-        valsCourse1.add(e1c1);
-        valsCourse1.add(e2c1);
+                if(i == 0){
+                    weeks.add(""+w);
+                }
 
-        Entry e1c2 = new Entry(15, 0);
-        Entry e2c2 = new Entry(12, 1);
-        valsCourse2.add(e1c2);
-        valsCourse2.add(e2c2);
+                Cursor mins = dbAdapter.getMinutes(w, ccode);
+                if(mins.getCount() == 0){
+                    hoursInWeek = new Entry(0, i);
+                    Log.d("lineChart", "week: "+w+", course: "+ccode+", hours 0 getMinutes().getCount() is 0");
+                }else {
+                    int hours = 0;
+                    while (mins.moveToNext()) {
+                        hours += (mins.getInt(0) / 60);
+                    }
+                    Log.d("lineChart", "week: "+w+", course: "+ccode+", hours in course and week: " + hours);
+                    hoursInWeek = new Entry(hours, i);
 
-        LineDataSet setC1 = new LineDataSet(valsCourse1, "Course No 1");
-        LineDataSet setC2 = new LineDataSet(valsCourse2, "Course No 2");
+                }
+                hoursInCourse.add(hoursInWeek);
+                Log.d("lineChart", "week: " + w + ", course: " + ccode + ", added something to entryarray");
+                i++;
+            }
 
-        ArrayList<LineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(setC1);
-        dataSets.add(setC2);
+            setOfHoursInCourse = new LineDataSet(hoursInCourse, ccode);
+            setsOfHoursInCourses.add(setOfHoursInCourse);
 
-        ArrayList<String> xVals = new ArrayList<>();
-        xVals.add("w. 17");
-        xVals.add("w. 18");
+            Log.d("lineChart", "weeks.length: "+weeks.size()+" dataSet.length: "+setOfHoursInCourse.getEntryCount());
+        }
 
-        LineData data = new LineData(xVals, dataSets);
+        data = new LineData(weeks, setsOfHoursInCourses);
         lineChart.setData(data);
         lineChart.invalidate();
 
