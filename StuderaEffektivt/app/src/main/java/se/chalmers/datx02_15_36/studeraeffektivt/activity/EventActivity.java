@@ -45,6 +45,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 public class EventActivity extends ActionBarActivity {
+    private CalendarModel calendarModel;
     private TextView startDate;
     private TextView startTime;
     private TextView endDate;
@@ -106,6 +107,7 @@ public class EventActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         calendarFrag = new CalendarFrag();
+        calendarModel = new CalendarModel();
         isInAddMode = getIntent().getBooleanExtra("isInAddMode", true);
         eventID = getIntent().getLongExtra("eventID", 0L);
         startTimeMillis = getIntent().getLongExtra("startTime", 0L);
@@ -118,6 +120,7 @@ public class EventActivity extends ActionBarActivity {
         notification = getIntent().getIntExtra("notification", -1);
         isAllDayEvent = getIntent().getIntExtra("isAllDay", 0) == 1;
         color = getIntent().getIntExtra("color", 0);
+
 
 
         initComponents();
@@ -340,16 +343,14 @@ public class EventActivity extends ActionBarActivity {
 
     public void openChooseCalendar() {
 
-        final List<String> calNames = new LinkedList<>(calendarFrag.getCalendarModel().getCalendarInfo(getContentResolver()).values());
-        final List<Long> calIDs = new LinkedList<>(calendarFrag.getCalendarModel().getCalendarInfo(getContentResolver()).keySet());
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater li = LayoutInflater.from(this);
         View view = li.inflate(R.layout.calendarchoiceslistview, null);
 
         final ListView listView = (ListView) view.findViewById(R.id.listView);
         ArrayList<CalendarChoiceItem> calendarsList = new ArrayList<CalendarChoiceItem>();
-        ArrayList<CalendarsFilterItem> filterItemsList = calendarFrag.getCalendarModel().getCalendarWritersPermissions();
+        calendarModel.getCalendarInfo(getContentResolver());
+        final ArrayList<CalendarsFilterItem> filterItemsList = calendarModel.getCalendarWritersPermissions();
         for (CalendarsFilterItem item : filterItemsList) {
             CalendarChoiceItem newItem = new CalendarChoiceItem();
             newItem.setTitle(item.getTitle());
@@ -376,11 +377,12 @@ public class EventActivity extends ActionBarActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                calendarID = calIDs.get(position);
-                calendarName = calNames.get(position);
+                CalendarsFilterItem cfi = filterItemsList.get(position);
+                calendarID = cfi.getCalID();
+                calendarName = cfi.getTitle();
                 calendarView.setText(calendarName);
-                CalendarChoiceItem cci = (CalendarChoiceItem) listView.getAdapter().getItem(position);
-                setActionBarColor(cci.getColor());
+                setActionBarColor(cfi.getColor());
+                Log.i("EventActivity", title + " id: "+ id);
                 alertDialog.dismiss();
             }
         });
