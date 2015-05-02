@@ -83,17 +83,17 @@ public class StatsFrag extends Fragment {
 
         instantiatePieHours();
         instantiatePieAssignments();
-        fakeLineChart();
-        //instantiateLineChart();
+        instantiateLineChart();
     }
 
-    private void fakeLineChart(){
+    private void instantiateLineChart(){
         lineChart = (LineChart) rootView.findViewById(R.id.line_hours);
 
         //For each week
         Entry hoursInWeek;
         //For each course
         ArrayList<Entry> hoursInCourse;
+        int color = Color.parseColor("#B3E5FC");
         //Just enhance it with adding course identifier
         LineDataSet setOfHoursInCourse;
 
@@ -103,6 +103,7 @@ public class StatsFrag extends Fragment {
         LineData data;
 
         Cursor courses = dbAdapter.getCourses();
+        int c = 0;
         while( courses.moveToNext() ){
             String ccode = courses.getString(courses.getColumnIndex("_ccode"));
             int smallestWeek = dbAdapter.getSmallestWeek(ccode);
@@ -130,70 +131,35 @@ public class StatsFrag extends Fragment {
                 }
                 hoursInCourse.add(hoursInWeek);
                 Log.d("lineChart", "week: " + w + ", course: " + ccode + ", added something to entryarray");
+
                 i++;
             }
 
             setOfHoursInCourse = new LineDataSet(hoursInCourse, ccode);
-            setsOfHoursInCourses.add(setOfHoursInCourse);
 
+            int[] cols = getColors();
+            color = cols[c%cols.length];
+            setOfHoursInCourse.setColor(color);
+
+            setsOfHoursInCourses.add(setOfHoursInCourse);
+            c++;
             Log.d("lineChart", "weeks.length: "+weeks.size()+" dataSet.length: "+setOfHoursInCourse.getEntryCount());
         }
 
         data = new LineData(weeks, setsOfHoursInCourses);
+        data.setValueFormatter(new IntegerValueFormatter());
+
         lineChart.setData(data);
         lineChart.invalidate();
 
     }
 
-    private void instantiateLineChart(){
-        lineChart = (LineChart) rootView.findViewById(R.id.line_hours);
-        lineChart.setNoDataTextDescription("Here a good graph will be.");
+    private int[] getColors(){
+        int[] cols = {Color.parseColor("#B3E5FC"), Color.parseColor("#56c8fc"),
+                Color.parseColor("#d9f1fc"), Color.parseColor("#00a2ed"), Color.parseColor("#0083bf"),
+                Color.parseColor("#32a6db"), Color.parseColor("#1a719a")};
 
-        int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
-
-        ArrayList<LineDataSet> lineDataSets = new ArrayList<>();
-        ArrayList<String> lineLabels = new ArrayList<>();
-        ArrayList<String> lineXs = new ArrayList<>();
-
-        Cursor courseCoursor = dbAdapter.getCourses();
-        while (courseCoursor.moveToNext()){
-            String ccode = courseCoursor.getString(courseCoursor.getColumnIndex("_ccode"));
-            int smallestWeek = dbAdapter.getSmallestWeek(ccode);
-
-            ArrayList<Entry> lineYs = new ArrayList<>();
-            Entry lineY;
-
-            int i = 0;
-            for (int w=smallestWeek; w<=Utils.getCurrWeekNumber(); w++){
-                Cursor minutesCursor = dbAdapter.getMinutes(w, ccode);
-
-                int minutesInCourseAndWeek = 0;
-                while (minutesCursor.moveToNext()){
-                    minutesInCourseAndWeek += minutesCursor.getInt(0);
-                }
-
-                int hoursInCourseAndWeek = minutesInCourseAndWeek/60;
-                Log.d("lineChart", "hours in course and week: "+hoursInCourseAndWeek);
-
-                lineY = new Entry(hoursInCourseAndWeek, i);
-                lineYs.add(lineY);
-                lineXs.add(""+w);
-
-                i++;
-            }
-
-            LineDataSet lineDataSet = new LineDataSet(lineYs, ccode);
-            lineDataSet.setValueFormatter(new IntegerValueFormatter());
-            lineDataSets.add(lineDataSet);
-            lineLabels.add(ccode);
-        }
-
-        LineData lineData = new LineData(lineXs, lineDataSets);
-        lineChart.setData(lineData);
-        lineChart.setDescription("");
-
-        lineChart.invalidate();
-
+        return cols;
     }
 
     private void instantiatePieHours(){
