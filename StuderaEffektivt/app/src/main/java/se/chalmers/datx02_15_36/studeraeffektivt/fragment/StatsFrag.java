@@ -73,8 +73,8 @@ public class StatsFrag extends Fragment {
 
         utils = new Utils();
 
-        insertTestDataToDB("DDD111");
-        insertTestDataToDB2("APA777");
+        //insertTestDataToDB("DDD111");
+        //insertTestDataToDB2("APA777");
         instantiateView();
 
         return rootView;
