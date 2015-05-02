@@ -2,6 +2,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
@@ -21,6 +22,9 @@ import com.github.mikephil.charting.charts.PieChart;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -41,6 +45,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.IntegerValueFormatter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.OneDecimalFormatter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 public class StatsFrag extends Fragment {
@@ -151,6 +156,19 @@ public class StatsFrag extends Fragment {
 
         lineChart.setData(data);
         lineChart.setDescription("");
+        lineChart.setTouchEnabled(false);
+
+        YAxis rightYAxis = lineChart.getAxisRight();
+        rightYAxis.setEnabled(false);
+
+        YAxis leftYAxis = lineChart.getAxisLeft();
+        leftYAxis.setValueFormatter(new OneDecimalFormatter());
+        leftYAxis.setStartAtZero(true);
+
+        Legend legend = lineChart.getLegend();
+        legend.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+        legend.setForm(Legend.LegendForm.CIRCLE);
+
         lineChart.invalidate();
 
     }
@@ -197,6 +215,7 @@ public class StatsFrag extends Fragment {
         pieHours.setDrawHoleEnabled(true);
         pieHours.setHoleColorTransparent(true);
         pieHours.getLegend().setEnabled(false);
+        pieHours.setTouchEnabled(false);
 
         //Show pie chart data
         pieHours.invalidate();
@@ -238,6 +257,7 @@ public class StatsFrag extends Fragment {
         pieAssignments.setDrawHoleEnabled(true);
         pieAssignments.setHoleColorTransparent(true);
         pieAssignments.getLegend().setEnabled(false);
+        pieAssignments.setTouchEnabled(false);
 
         //Show pie chart data
         pieAssignments.invalidate();
