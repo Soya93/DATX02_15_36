@@ -2,6 +2,8 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +14,7 @@ import com.google.android.gms.common.SignInButton;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.IO.LogInHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 
 /**
  * A login screen that offers login via email/password and via Google+ sign in.
@@ -55,7 +58,9 @@ public class LoginActivity extends Activity implements OnClickListener{
         mPlusSignInButton.setOnClickListener(this);
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView.getBackground().setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_IN);
         mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView.getBackground().setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_IN);
     }
 
     @Override
