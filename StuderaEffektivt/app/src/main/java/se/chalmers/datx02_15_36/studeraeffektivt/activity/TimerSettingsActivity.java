@@ -86,6 +86,9 @@ public class TimerSettingsActivity extends ActionBarActivity {
         if (id == R.id.save_event) {
            //TODO add save settings;
             return true;
+        }else if (id == android.R.id.home){
+            this.finish();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
