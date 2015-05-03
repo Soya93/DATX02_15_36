@@ -503,7 +503,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final String[] choices = {"1", "3", "5"};
         final int previousNumberOfVisibleDays = numberOfVisibleDays;
-        numberOfVisibleDays = mWeekView.getNumberOfVisibleDays();
         int index = getIndexOfVisibleDays();
 
         builder.setTitle("Antalet dagar i vyn");
@@ -516,43 +515,49 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
+                Calendar oldDate = mWeekView.getFirstVisibleDay();
+
+                Calendar todayDate = Calendar.getInstance();
+                todayDate.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
+
+
+                mWeekView.setNumberOfVisibleDays(numberOfVisibleDays);
                 Calendar newDate = mWeekView.getFirstVisibleDay();
-                mWeekView.goToHour(CalendarUtils.HOUR > 16 ? 16 : CalendarUtils.HOUR - 1);
+
+                Log.i("prevNumOfVisDays",previousNumberOfVisibleDays + "");
+                Log.i("NumOfVisDays", numberOfVisibleDays + "");
 
 
+              /*  if(previousNumberOfVisibleDays == 1 && numberOfVisibleDays == 3) {
+                    Log.i("NewDate", newDate.get(Calendar.DAY_OF_MONTH) + "");
 
-                if(previousNumberOfVisibleDays == 5 && numberOfVisibleDays == 3 || numberOfVisibleDays == 1 ) {
-                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays -1);
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - (2*(oldDate.get(Calendar.DAY_OF_MONTH) - todayDate.get(Calendar.DAY_OF_MONTH))));
 
-                } else if (previousNumberOfVisibleDays == 3 && numberOfVisibleDays == 5){
-                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + 2);
-                } else {
-                    /*if prev = 5 and cur = 1, prev = 5 and cur = 5, prev = 3 and cur = 5,
-                    * prev = 3 and cur = 1, prev = 3 and cur = 3, prev = 1
-                    * then we want to set the date as the prev first one*/
+                    Log.i("OldDate", oldDate.get(Calendar.DAY_OF_MONTH) + "");
 
-                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH));
+                    Log.i("todaydate", todayDate.get(Calendar.DAY_OF_MONTH) + "");
 
+
+                    Log.i("NewNewDate", newDate.get(Calendar.DAY_OF_MONTH) + "");
+
+
+                } else if(previousNumberOfVisibleDays == 1 && numberOfVisibleDays == 5) {
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - (2*2*(oldDate.get(Calendar.DAY_OF_MONTH) - todayDate.get(Calendar.DAY_OF_MONTH))));
                 }
 
-                /*  if(previousNumberOfVisibleDays == 5 && numberOfVisibleDays == 3) {
-                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - 2);
-
-                } else if (previousNumberOfVisibleDays == 3 && numberOfVisibleDays == 5){
-                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + 2);
-                } else {
-                    /*if prev = 5 and cur = 1, prev = 5 and cur = 5, prev = 3 and cur = 5,
-                    * prev = 3 and cur = 1, prev = 3 and cur = 3, prev = 1
-                    * then we want to set the date as the prev first one
-
-                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH));
+                if(previousNumberOfVisibleDays == 3 && numberOfVisibleDays == 1){
 
                 }*/
-                mWeekView.setNumberOfVisibleDays(numberOfVisibleDays);
+
+                Log.i("NewDate", newDate.get(Calendar.DAY_OF_MONTH) + "");
 
                 mWeekView.goToDate(newDate);
 
 
+                Log.i("NewDate mWeekView", mWeekView.getFirstVisibleDay().get(Calendar.DAY_OF_MONTH) + "" );
+
+
+                mWeekView.goToHour(CalendarUtils.HOUR > 16 ? 16 : CalendarUtils.HOUR - 1);
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
             }
