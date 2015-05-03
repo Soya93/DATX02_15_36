@@ -85,6 +85,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         calendarModel = new CalendarModel();
 
 
+
         numberOfVisibleDays = 5;
 
         Map<Long, String> cals = calendarModel.getCalendarInfo(cr);
@@ -238,7 +239,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
 
-        calendarView.updateEventInfoView(dialogView, eventTitle, startTime, endTime, location, description, calendar, allDay);
+        calendarView.updateEventInfoView(dialogView, eventTitle, startTime, endTime, location, description, calendar, allDay, notification);
         builder.setView(dialogView);
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -516,24 +517,41 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 Calendar newDate = mWeekView.getFirstVisibleDay();
-                mWeekView.setNumberOfVisibleDays(numberOfVisibleDays);
-
-
                 mWeekView.goToHour(CalendarUtils.HOUR > 16 ? 16 : CalendarUtils.HOUR - 1);
 
 
-                /*)  if(previousNumberOfVisibleDays == 5 && numberOfVisibleDays == 3) {
+
+                if(previousNumberOfVisibleDays == 5 && numberOfVisibleDays == 3 || numberOfVisibleDays == 1 ) {
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays -1);
+
+                } else if (previousNumberOfVisibleDays == 3 && numberOfVisibleDays == 5){
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + 2);
+                } else {
+                    /*if prev = 5 and cur = 1, prev = 5 and cur = 5, prev = 3 and cur = 5,
+                    * prev = 3 and cur = 1, prev = 3 and cur = 3, prev = 1
+                    * then we want to set the date as the prev first one*/
+
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH));
+
+                }
+
+                /*  if(previousNumberOfVisibleDays == 5 && numberOfVisibleDays == 3) {
                     newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - 2);
 
                 } else if (previousNumberOfVisibleDays == 3 && numberOfVisibleDays == 5){
-                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - 2);
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + 2);
                 } else {
                     /*if prev = 5 and cur = 1, prev = 5 and cur = 5, prev = 3 and cur = 5,
                     * prev = 3 and cur = 1, prev = 3 and cur = 3, prev = 1
                     * then we want to set the date as the prev first one
 
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH));
+
                 }*/
+                mWeekView.setNumberOfVisibleDays(numberOfVisibleDays);
+
                 mWeekView.goToDate(newDate);
+
 
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
@@ -561,7 +579,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         if (numberOfVisibleDays == 1) {
             newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + 1);
         } else {
-            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays - 1);
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays);
         }
 
         mWeekView.goToDate(newDate);
@@ -574,7 +592,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         if (numberOfVisibleDays == 1) {
             newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - 1);
         } else {
-            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays + 1);
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays);
         }
 
         mWeekView.goToDate(newDate);
@@ -596,8 +614,5 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     public CalendarModel getCalendarModel() {
         return calendarModel;
     }
-
-
-
 
 }

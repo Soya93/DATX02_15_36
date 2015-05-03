@@ -3,6 +3,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -19,7 +20,7 @@ public class CalendarView {
 
     public CalendarView(){ ; }
 
-    public void updateEventInfoView(View dialogView, CharSequence name, long startTime, long endTime, String location, String description, String calendar, int isAllDay) {
+    public void updateEventInfoView(View dialogView, CharSequence name, long startTime, long endTime, String location, String description, String calendar, int isAllDay, int notificationTime) {
         TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
         if (eventNameLabel != null && !name.toString().isEmpty()) {
             eventNameLabel.setVisibility(View.VISIBLE);
@@ -57,6 +58,12 @@ public class CalendarView {
             eventCalendarLabel.setText("Kalender: " + calendar);
         } else if (calendar.isEmpty()){
             eventCalendarLabel.setVisibility(View.GONE);
+        }
+
+        TextView notificationLabel = (TextView) dialogView.findViewById(R.id.event_notification_label);
+        if (notificationLabel != null) {
+            notificationLabel.setVisibility(View.VISIBLE);
+            notificationLabel.setText("Påminnelse: " + notificationTimeToString(notificationTime));
         }
     }
 
@@ -100,7 +107,28 @@ public class CalendarView {
 
     }
 
+    private String notificationTimeToString(int notificationTime) {
 
+       /* if(notificationTime ==  5 || notificationTime ==  10 || notificationTime ==  15 || notificationTime ==  30){
+            return notificationTime + " minuter";
+        }*/
+
+        switch (notificationTime) {
+            case -1:
+                return "Ingen";
+            case 0:
+                return "Vid start";
+            case 1:
+                return "2 minut";
+            case 60:
+                return "1 timme";
+            case 120:
+                return "2 timmar";
+            default:
+                return notificationTime + " minuter";
+
+        }
+    }
 
 }
 
