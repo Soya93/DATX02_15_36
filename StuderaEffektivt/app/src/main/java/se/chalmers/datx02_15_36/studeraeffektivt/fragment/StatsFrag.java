@@ -2,6 +2,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
@@ -21,6 +22,9 @@ import com.github.mikephil.charting.charts.PieChart;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -37,9 +41,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.IntegerValueFormatter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.OneDecimalFormatter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 public class StatsFrag extends Fragment {
@@ -67,8 +73,8 @@ public class StatsFrag extends Fragment {
 
         utils = new Utils();
 
-        //insertTestDataToDB();
-        //insertTestDataToDB2();
+        //insertTestDataToDB("DDD111");
+        //insertTestDataToDB2("APA777");
         instantiateView();
 
         return rootView;
@@ -87,8 +93,92 @@ public class StatsFrag extends Fragment {
 
     private void instantiateLineChart(){
         lineChart = (LineChart) rootView.findViewById(R.id.line_hours);
-        lineChart.setNoDataTextDescription("Here a good graph will be.");
 
+        //For each week
+        Entry hoursInWeek;
+        //For each course
+        ArrayList<Entry> hoursInCourse;
+        int color = Color.parseColor("#B3E5FC");
+        //Just enhance it with adding course identifier
+        LineDataSet setOfHoursInCourse;
+
+        //All courses
+        ArrayList<LineDataSet> setsOfHoursInCourses = new ArrayList<>();
+        ArrayList<String> weeks = new ArrayList<>();
+        LineData data;
+
+        Cursor courses = dbAdapter.getCourses();
+        int c = 0;
+        while( courses.moveToNext() ){
+            String ccode = courses.getString(courses.getColumnIndex("_ccode"));
+            int smallestWeek = dbAdapter.getSmallestWeek(ccode);
+            hoursInCourse = new ArrayList<>();
+
+            int i = 0;
+            for(int w=smallestWeek; w<Utils.getCurrWeekNumber(); w++){
+
+                if(c == 0){
+                    weeks.add(""+w);
+                }
+
+                Cursor mins = dbAdapter.getMinutes(w, ccode);
+                if(mins.getCount() == 0){
+                    hoursInWeek = new Entry(0, i);
+                    Log.d("lineChart", "week: "+w+", course: "+ccode+", hours 0 getMinutes().getCount() is 0");
+                }else {
+                    int hours = 0;
+                    while (mins.moveToNext()) {
+                        hours += (mins.getInt(0) / 60);
+                    }
+                    Log.d("lineChart", "week: "+w+", course: "+ccode+", hours in course and week: " + hours);
+                    hoursInWeek = new Entry(hours, i);
+
+                }
+                hoursInCourse.add(hoursInWeek);
+                Log.d("lineChart", "week: " + w + ", course: " + ccode + ", added something to entryarray");
+
+                i++;
+            }
+
+            setOfHoursInCourse = new LineDataSet(hoursInCourse, ccode);
+
+            int[] cols = getColors();
+            color = cols[c%cols.length];
+            setOfHoursInCourse.setColor(color);
+
+            setsOfHoursInCourses.add(setOfHoursInCourse);
+            c++;
+            Log.d("lineChart", "weeks.length: "+weeks.size()+" dataSet.length: "+setOfHoursInCourse.getEntryCount());
+        }
+
+        data = new LineData(weeks, setsOfHoursInCourses);
+        data.setValueFormatter(new IntegerValueFormatter());
+
+        lineChart.setData(data);
+        lineChart.setDescription("");
+        lineChart.setTouchEnabled(false);
+
+        YAxis rightYAxis = lineChart.getAxisRight();
+        rightYAxis.setEnabled(false);
+
+        YAxis leftYAxis = lineChart.getAxisLeft();
+        leftYAxis.setValueFormatter(new OneDecimalFormatter());
+        leftYAxis.setStartAtZero(true);
+
+        Legend legend = lineChart.getLegend();
+        legend.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+        legend.setForm(Legend.LegendForm.CIRCLE);
+
+        lineChart.invalidate();
+
+    }
+
+    private int[] getColors(){
+        int[] cols = {Color.parseColor("#B3E5FC"), Color.parseColor("#56c8fc"),
+                Color.parseColor("#d9f1fc"), Color.parseColor("#00a2ed"), Color.parseColor("#0083bf"),
+                Color.parseColor("#32a6db"), Color.parseColor("#1a719a")};
+
+        return cols;
     }
 
     private void instantiatePieHours(){
@@ -106,7 +196,6 @@ public class StatsFrag extends Fragment {
         pieEntries.add(hoursLeft);
 
         int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
-
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "Timmar");
         pieDataSet.setColors(colors);
         pieDataSet.setValueFormatter(new IntegerValueFormatter());
@@ -126,6 +215,7 @@ public class StatsFrag extends Fragment {
         pieHours.setDrawHoleEnabled(true);
         pieHours.setHoleColorTransparent(true);
         pieHours.getLegend().setEnabled(false);
+        pieHours.setTouchEnabled(false);
 
         //Show pie chart data
         pieHours.invalidate();
@@ -167,6 +257,7 @@ public class StatsFrag extends Fragment {
         pieAssignments.setDrawHoleEnabled(true);
         pieAssignments.setHoleColorTransparent(true);
         pieAssignments.getLegend().setEnabled(false);
+        pieAssignments.setTouchEnabled(false);
 
         //Show pie chart data
         pieAssignments.invalidate();
@@ -231,77 +322,77 @@ public class StatsFrag extends Fragment {
         });
     }
 
-    private void insertTestDataToDB() {
+    private void insertTestDataToDB(String course) {
         //Insert course
-        long idCourse = dbAdapter.insertCourse("DDD111", "Default Course");
+        long idCourse = dbAdapter.insertCourse(course, "Default Course");
         if (idCourse > 0) {
-            Toast.makeText(getActivity(), "DDD111 created", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT ).show();
         }
 
         //Insert sessions
-        long idS1 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(), 60);
-        long idS2 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(), 120);
-        long idS3 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(),300);
-        long idS4 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(),30);
-        long idS5 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(),60);
-        long idS6 = dbAdapter.insertSession("DDD111", utils.getCurrWeekNumber(),60);
+        long idS1 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 60);
+        long idS2 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 120);
+        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-1),300);
+        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-1),30);
+        long idS5 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-2),60);
+        long idS6 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-2),60);
         if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
-            Toast.makeText(getActivity(), "Added six sessions to DDD111", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
         }
 
         //Insert TimeOnCourse.
-        long idTOC = dbAdapter.insertTimeOnCourse("DDD111", 1200);
+        long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
         if (idTOC>0) {
-            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for DD111", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
         }
 
         //Insert Assignments
-        long idA1 = dbAdapter.insertAssignment("DDD111", 0, Time.WEEK_NUM, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
-            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for DD111", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void insertTestDataToDB2() {
+    private void insertTestDataToDB2(String course) {
         //Insert course
-        long idCourse = dbAdapter.insertCourse("APA007", "Apkursen");
+        long idCourse = dbAdapter.insertCourse(course, "Apkursen");
         if (idCourse > 0) {
-            Toast.makeText(getActivity(), "APA007 created", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
         }
 
         //Insert sessions
-        long idS1 = dbAdapter.insertSession("APA007", utils.getCurrWeekNumber(),60);
-        long idS2 = dbAdapter.insertSession("APA007", utils.getCurrWeekNumber(),120);
-        long idS3 = dbAdapter.insertSession("APA007", utils.getCurrWeekNumber(),300);
-        long idS4 = dbAdapter.insertSession("APA007", utils.getCurrWeekNumber(),30);
+        long idS1 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(),60);
+        long idS2 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(),120);
+        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-1),300);
+        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-2),30);
         if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0) {
-            Toast.makeText(getActivity(), "Added six sessions to APA007", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
         }
 
         //Insert TimeOnCourse.
-        long idTOC = dbAdapter.insertTimeOnCourse("APA007", 1200);
+        long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
         if (idTOC>0) {
-            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for APA007", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
         }
 
         //Insert Assignments
-        long idA1 = dbAdapter.insertAssignment("APA007", 0, Time.WEEK_NUM, "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
-            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for APA007", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
         }

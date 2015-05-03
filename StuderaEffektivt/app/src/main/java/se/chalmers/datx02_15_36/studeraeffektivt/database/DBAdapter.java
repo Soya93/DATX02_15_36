@@ -177,6 +177,26 @@ public class DBAdapter {
         return db.query(dbHelper.TABLE_SESSIONS, null, dbHelper.SESSION_week + " = '" + week + "'", null, null, null, null);
     }
 
+    public Cursor getMinutes(int week, String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String[] columns = {"minutes"};
+
+        return db.query(dbHelper.TABLE_SESSIONS,columns, dbHelper.SESSION_week + " = '" + week + "' AND "+
+                dbHelper.SESSIONS_ccode + " = '" + ccode + "'", null, null, null, "minutes");
+    }
+
+    public int getSmallestWeek(String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String[] columns = {"min(week)"};
+        Cursor cursor = db.query(dbHelper.TABLE_SESSIONS, columns, dbHelper.SESSIONS_ccode
+                + " = '" + ccode + "'", null, null, null, null);
+
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+    }
+
     public int getSpentTime(String ccode) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
