@@ -9,6 +9,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -42,6 +44,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
@@ -71,6 +74,11 @@ public class StudyTaskActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_task);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Lägg till uppgifter");
 
         //Create the database access point but check if the context is null first.
         if (this != null) {
@@ -104,8 +112,12 @@ public class StudyTaskActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        //noinspection SimplifiableIfStatement  //noinspection SimplifiableIfStatement
+        if (id == R.id.save_tasks) {
+            saveTaks();
+            return true;
+        }else if (id == android.R.id.home){
+            this.finish();
             return true;
         }
 
@@ -174,29 +186,33 @@ public class StudyTaskActivity extends ActionBarActivity {
         public void onClick(View v) {
 
             if ((v) == addButton) {
-                String[] chapSep = chapterSpinner.getSelectedItem().toString().split(" ");
-                int chapter = Integer.parseInt(chapSep[chapSep.length-1]);
-                //int chapter = Integer.parseInt(chapterSpinner.getSelectedItem().toString());
-                String[] weekSep = weekSpinner.getSelectedItem().toString().split(" ");
-                chosenWeek = Integer.parseInt(weekSep[weekSep.length-1]);
-                //chosenWeek = Integer.parseInt(weekSpinner.getSelectedItem().toString());
-                if(!taskInput.getText().toString().equals("")) {
-                    if (readOrTaskAssignment.isChecked()) {
-                        addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString());
-                    }
-                    else {
-                        addReadAssignment(chapter, taskInput.getText().toString());
-                    }
-                }
-
-                else{
-                    Toast.makeText(getApplicationContext(), "Format ej godkänt",
-                            Toast.LENGTH_LONG).show();
-                }
+                saveTaks();
             }
 
         }
     };
+
+    private void saveTaks() {
+        String[] chapSep = chapterSpinner.getSelectedItem().toString().split(" ");
+        int chapter = Integer.parseInt(chapSep[chapSep.length-1]);
+        //int chapter = Integer.parseInt(chapterSpinner.getSelectedItem().toString());
+        String[] weekSep = weekSpinner.getSelectedItem().toString().split(" ");
+        chosenWeek = Integer.parseInt(weekSep[weekSep.length-1]);
+        //chosenWeek = Integer.parseInt(weekSpinner.getSelectedItem().toString());
+        if(!taskInput.getText().toString().equals("")) {
+            if (readOrTaskAssignment.isChecked()) {
+                addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString());
+            }
+            else {
+                addReadAssignment(chapter, taskInput.getText().toString());
+            }
+        }
+
+        else{
+            Toast.makeText(getApplicationContext(), "Format ej godkänt",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 
     private void setCourses() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);

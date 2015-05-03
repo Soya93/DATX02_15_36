@@ -161,7 +161,7 @@ public class MainActivity extends ActionBarActivity {
         timerUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
         Drawable statsUns = getResources().getDrawable( R.drawable.ic_pilegraph).mutate();
         statsUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
-        Drawable myProfileUns = getResources().getDrawable(R.drawable.ic_social_person).mutate();
+        Drawable myProfileUns = getResources().getDrawable(R.drawable.ic_action).mutate();
         myProfileUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
 
 
@@ -171,6 +171,7 @@ public class MainActivity extends ActionBarActivity {
                 timerUns,
                 statsUns,
                 myProfileUns
+
         };
 
 
@@ -179,6 +180,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
                 viewPager.setCurrentItem(tab.getPosition());
+
 
                 if(tab.getPosition() == 0) {
                     actionButton.setVisibility(View.GONE);
@@ -222,7 +224,7 @@ public class MainActivity extends ActionBarActivity {
                         tab.setIcon( getResources().getDrawable( R.drawable.ic_pilegraph).mutate());
                         break;
                     case 4:
-                        tab.setIcon(getResources().getDrawable( R.drawable.ic_social_person).mutate());
+                        tab.setIcon(getResources().getDrawable( R.drawable.ic_action).mutate());
                         break;
                     default:
                         break;
