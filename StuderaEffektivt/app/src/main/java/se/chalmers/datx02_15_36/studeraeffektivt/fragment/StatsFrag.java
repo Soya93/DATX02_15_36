@@ -66,16 +66,22 @@ public class StatsFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_stats, container, false);
         if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
         }
-
         utils = new Utils();
 
         //insertTestDataToDB("DDD111");
         //insertTestDataToDB2("APA777");
-        instantiateView();
+
+        Log.d("stats", "there is data: "+thereIsData());
+        if(thereIsData()) {
+            rootView = inflater.inflate(R.layout.activity_stats, container, false);
+            instantiateView();
+        }else{
+
+            rootView = inflater.inflate(R.layout.activity_stats_empty, container, false);
+        }
 
         return rootView;
     }
@@ -310,16 +316,28 @@ public class StatsFrag extends Fragment {
         return (assignments-doneAssignments);
     }
 
+    private boolean thereIsData(){
+        Cursor courses = dbAdapter.getCourses();
+        if( courses.getCount() == 0 ){
+            return false;
+        }
+        return true;
+    }
+
     public void onStart(){
         super.onStart();
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setSelectedCourse();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        if (thereIsData()) {
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    setSelectedCourse();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
     }
 
     private void insertTestDataToDB(String course) {

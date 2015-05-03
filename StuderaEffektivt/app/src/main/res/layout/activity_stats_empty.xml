@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_vertical|left">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="As soon as you add courses \n and study with the timer \n you will be able to watch \n your progress here!"
+        android:id="@+id/stats_empty"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>
