@@ -60,7 +60,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     private ToggleButton readOrTaskAssignment;
 
     private String courseCode;
-    private String URL_CONNECTION = "http://192.168.1.3/insertassignmets.php";
+    private String URL_CONNECTION = "http://192.168.1.6/insertassignmets.php";
 
     //The access point of the database.
     private DBAdapter dbAdapter;
@@ -357,10 +357,10 @@ public class StudyTaskActivity extends ActionBarActivity {
                 end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
                 if(!(listOfReadAssignments.contains(chapter, start, end))) {
-                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
+                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "read", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
                     addToDatabase(studyTask);
-                    new AddToWebDatabase().execute( courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
+                    new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
                             start+"",end+"","READ","UNDONE");
                     addToListOfTasks(studyTask);
                 }
@@ -454,7 +454,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
             String json = serviceClient.makeServiceCall(URL_CONNECTION,
                     ServiceHandler.POST, params);
-            Log.d("jason",json);
+
             if (json != null) {
                 try {
                     Log.d("jason",json);
