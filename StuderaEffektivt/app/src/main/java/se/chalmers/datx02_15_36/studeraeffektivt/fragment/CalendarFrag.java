@@ -305,9 +305,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         intent.putExtra("endTime", 0L);
         intent.putExtra("title", "Repititonspass för " + week);
         intent.putExtra("calID", 1);        // 1 är hem kalender
-        List<String> calNames = new LinkedList<>(calendarModel.getCalendarInfo(cr).values());
-        String name = calNames.get(0);
-        intent.putExtra("calName", name);
+        intent.putExtra("calName", calendarModel.getCalendarsMap().get(1L));
+        intent.putExtra("color", calendarModel.getCalIdAndColorMap().get(1L));
         startActivity(intent);
     }
 
@@ -432,10 +431,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             alternatives[j] = "Vecka " + newWeek;
         }
 
-        builder.setTitle("Välj ett pass att repetera")
+        builder.setTitle("Välj en vecka att repetera")
                 .setItems(alternatives, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //TODO hämta några random uppgifter
+                        //TODO visa vilken vecka det är nu???
                         String tasks = "";
                         String week = alternatives[which];
                         openAddRepetition(week);
