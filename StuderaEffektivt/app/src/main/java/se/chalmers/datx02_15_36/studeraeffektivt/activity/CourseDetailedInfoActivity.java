@@ -1,9 +1,10 @@
-package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
+package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 /**
  * Created by SoyaPanda on 15-03-06.
  */
-public class CourseDetailedInfoFrag extends Fragment {
+public class CourseDetailedInfoActivity extends ActionBarActivity {
     private TextView kursDetaljer;
     private int selectedCourse;
     private View view;
@@ -51,6 +52,7 @@ public class CourseDetailedInfoFrag extends Fragment {
 
 
     private String courseCode;
+    private String courseName;
 
     private DBAdapter dbAdapter;
 
@@ -62,25 +64,26 @@ public class CourseDetailedInfoFrag extends Fragment {
 
         initComponents();
 
-        bundleFromPreviousFragment = this.getArguments();
-        selectedCourse = bundleFromPreviousFragment.getInt("kurs");
-        courseCode = bundleFromPreviousFragment.getString("CourseCode");
-        Course course = CourseFrag.courseList.get(selectedCourse).get("Courses");
+        //bundleFromPreviousFragment = this.getArguments();
+        //selectedCourse = bundleFromPreviousFragment.getInt("kurs");
+        //courseCode = bundleFromPreviousFragment.getString("CourseCode");
+        //courseName = bundleFromPreviousFragment.getString("CourseName");
+        //Course course = CourseFrag.courseList.get(selectedCourse).get("Courses");
 
         //Create the database access point but check if the context is null first.
         if (this != null) {
-            dbAdapter = new DBAdapter(getActivity());
+            dbAdapter = new DBAdapter(this);
         }
 
         layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
 
-        fillActivity(course);
+        fillActivity(courseCode, courseName);
 
         return rootView;
     }
 
-    public void fillActivity(Course course) {
-        kursDetaljer.setText(course.toString());
+    public void fillActivity(String courseCode, String courseName) {
+        kursDetaljer.setText(courseCode + " - " + courseName);
     }
 
     public void initComponents() {
@@ -103,7 +106,7 @@ public class CourseDetailedInfoFrag extends Fragment {
 
     public void goToTasks(Button button) {
 
-        Intent i = new Intent(getActivity(), StudyTaskActivity.class);
+        Intent i = new Intent(this, StudyTaskActivity.class);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);
 
