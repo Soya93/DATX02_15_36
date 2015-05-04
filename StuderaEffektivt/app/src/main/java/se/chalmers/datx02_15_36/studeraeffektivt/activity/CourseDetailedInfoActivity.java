@@ -56,11 +56,12 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     private DBAdapter dbAdapter;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.activity_course_details, container, false);
-        this.view = rootView;
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_course_details);
+        courseCode = getIntent().getStringExtra("CourseCode");
+        courseName = getIntent().getStringExtra("CourseName");
 
         initComponents();
 
@@ -79,7 +80,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         fillActivity(courseCode, courseName);
 
-        return rootView;
     }
 
     public void fillActivity(String courseCode, String courseName) {
@@ -87,12 +87,12 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     public void initComponents() {
-        taskButton = (Button) view.findViewById(R.id.taskButton);
+        taskButton = (Button) findViewById(R.id.taskButton);
         taskButton.setOnClickListener(myOnlyhandler);
 
-        kursDetaljer = (TextView) view.findViewById(R.id.kursDetaljer);
+        kursDetaljer = (TextView) findViewById(R.id.kursDetaljer);
 
-        layoutWithinScrollViewOfTasks = (FlowLayout) view.findViewById(R.id.layoutWithinScrollViewOfTasks);
+        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
 
     }
 
@@ -163,7 +163,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                                 status1 = AssignmentType.OTHER;
 
                             }
-                            StudyTask2 studyTask2 = new StudyTask2(getActivity().getBaseContext(), returnedCod, Integer.parseInt(chapter),
+                            StudyTask2 studyTask2 = new StudyTask2(getBaseContext(), returnedCod, Integer.parseInt(chapter),
                                     Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), dbAdapter, status1
                                     , AssignmentStatus.UNDONE);
 
