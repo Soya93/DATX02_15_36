@@ -120,6 +120,11 @@
             android:label="@string/title_activity_techs_ntips"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".activity.CourseDetailedInfoActivity"
+            android:label="@string/title_activity_course_details"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

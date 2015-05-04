@@ -14,13 +14,10 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import android.view.View;
     import android.view.ViewGroup;
     import android.widget.AdapterView;
-    import android.widget.ArrayAdapter;
     import android.widget.Button;
     import android.widget.EditText;
-    import android.widget.LinearLayout;
     import android.widget.ListView;
     import android.widget.SimpleAdapter;
-    import android.widget.TextView;
     import android.widget.Toast;
 
     import java.util.ArrayList;
@@ -29,6 +26,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import java.util.Map;
 
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
+    import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.TechsNTipsActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
@@ -343,10 +341,10 @@ public class MyProfileFrag extends Fragment {
 
     public void goToDetails(Course course) {
 
-        Intent it = new Intent(getActivity(), CourseDetailedInfoFrag.class);
-        it.putExtra("CourseCode", course.getCourseCode());
-        it.putExtra("CourseName", course.getCourseName());
-        startActivity(it);
+        Intent intent = new Intent(getActivity(), CourseDetailedInfoActivity.class);
+        intent.putExtra("CourseCode", course.getCourseCode());
+        intent.putExtra("CourseName", course.getCourseName());
+        startActivity(intent);
 
         /*Fragment fragment = new CourseDetailedInfoFrag();
         //Fragment fragment = new StudyTaskFragment();
