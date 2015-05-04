@@ -2,6 +2,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +34,7 @@ public class CounterUpTimer extends Activity {
         setText = (TextView) findViewById(R.id.textView2);
         startB = (Button) findViewById(R.id.button_start2);
         stopB = (Button) findViewById(R.id.button_stop2);
+
 
         viewTimePassed.clearFocus();
         viewTimePassed.setIs24HourView(true);

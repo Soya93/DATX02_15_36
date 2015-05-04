@@ -121,11 +121,11 @@ public class StudyTask extends CheckBox{
         return id;
     }
 
-   public AssignmentType getType(){
+    public AssignmentType getType(){
         return type;
     }
 
-   public int getChapter() {
+    public int getChapter() {
         return chapter;
     }
 

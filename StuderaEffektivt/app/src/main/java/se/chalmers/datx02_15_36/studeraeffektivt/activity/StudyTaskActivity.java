@@ -2,7 +2,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 /*
 Saker att fixa är:
-
 Uppdatera då man kryssar av en ruta, någon sortering
  */
 
@@ -10,6 +9,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -27,8 +29,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -36,6 +44,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
@@ -53,6 +63,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     private ToggleButton readOrTaskAssignment;
 
     private String courseCode;
+    private String URL_CONNECTION = "http://192.168.1.6/insertassignmets.php";
 
     //The access point of the database.
     private DBAdapter dbAdapter;
@@ -63,6 +74,11 @@ public class StudyTaskActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_task);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Lägg till uppgifter");
 
         //Create the database access point but check if the context is null first.
         if (this != null) {
@@ -96,8 +112,12 @@ public class StudyTaskActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        //noinspection SimplifiableIfStatement  //noinspection SimplifiableIfStatement
+        if (id == R.id.save_tasks) {
+            saveTaks();
+            return true;
+        }else if (id == android.R.id.home){
+            this.finish();
             return true;
         }
 
@@ -166,29 +186,33 @@ public class StudyTaskActivity extends ActionBarActivity {
         public void onClick(View v) {
 
             if ((v) == addButton) {
-                String[] chapSep = chapterSpinner.getSelectedItem().toString().split(" ");
-                int chapter = Integer.parseInt(chapSep[chapSep.length-1]);
-                //int chapter = Integer.parseInt(chapterSpinner.getSelectedItem().toString());
-                String[] weekSep = weekSpinner.getSelectedItem().toString().split(" ");
-                chosenWeek = Integer.parseInt(weekSep[weekSep.length-1]);
-                //chosenWeek = Integer.parseInt(weekSpinner.getSelectedItem().toString());
-                if(!taskInput.getText().toString().equals("")) {
-                    if (readOrTaskAssignment.isChecked()) {
-                        addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString());
-                    }
-                    else {
-                        addReadAssignment(chapter, taskInput.getText().toString());
-                    }
-                }
-
-                else{
-                    Toast.makeText(getApplicationContext(), "Format ej godkänt",
-                            Toast.LENGTH_LONG).show();
-                }
+                saveTaks();
             }
 
         }
     };
+
+    private void saveTaks() {
+        String[] chapSep = chapterSpinner.getSelectedItem().toString().split(" ");
+        int chapter = Integer.parseInt(chapSep[chapSep.length-1]);
+        //int chapter = Integer.parseInt(chapterSpinner.getSelectedItem().toString());
+        String[] weekSep = weekSpinner.getSelectedItem().toString().split(" ");
+        chosenWeek = Integer.parseInt(weekSep[weekSep.length-1]);
+        //chosenWeek = Integer.parseInt(weekSpinner.getSelectedItem().toString());
+        if(!taskInput.getText().toString().equals("")) {
+            if (readOrTaskAssignment.isChecked()) {
+                addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString());
+            }
+            else {
+                addReadAssignment(chapter, taskInput.getText().toString());
+            }
+        }
+
+        else{
+            Toast.makeText(getApplicationContext(), "Format ej godkänt",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 
     private void setCourses() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
@@ -301,6 +325,8 @@ public class StudyTaskActivity extends ActionBarActivity {
                             StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, elementToAdd, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
                             addToListOfTasks(studyTask);
                             addToDatabase(studyTask);
+                            new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"",elementToAdd,
+                                    Integer.toString(0),Integer.toString(0),"OTHER","UNDONE");
                         } else {
                             Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
                         }
@@ -315,6 +341,8 @@ public class StudyTaskActivity extends ActionBarActivity {
                         StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, s, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
                         addToListOfTasks(studyTask);
                         addToDatabase(studyTask);
+                        new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"",s,
+                                Integer.toString(0),Integer.toString(0),"OTHER","UNDONE");
                     } else {
                         Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
                     }
@@ -330,41 +358,46 @@ public class StudyTaskActivity extends ActionBarActivity {
     public void addReadAssignment(int chapter, String taskString) {
 
         if(!taskString.contains(",") && !taskString.contains(".")){
-        String[] separateLine;
+            String[] separateLine;
 
-        int start;
-        int end;
+            int start;
+            int end;
 
-        Random rand = new Random();
-        int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
+            Random rand = new Random();
+            int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
 
-        if (taskString.contains("-")) {
+            if (taskString.contains("-")) {
 
-            separateLine = taskString.split("-");   //Delar upp stringen till en array med elementen mellan bindesstrecken
-            start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
-            end = Integer.parseInt(separateLine[separateLine.length - 1]);
+                separateLine = taskString.split("-");   //Delar upp stringen till en array med elementen mellan bindesstrecken
+                start = Integer.parseInt(separateLine[0]);    //Start och end är intervallet för de element som skall läggas till
+                end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
-            if(!(listOfReadAssignments.contains(chapter, start, end))) {
-                StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
+                if(!(listOfReadAssignments.contains(chapter, start, end))) {
+                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "read", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
-                addToDatabase(studyTask);
-                addToListOfTasks(studyTask);
-            }
-            else{
-                Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
-            }
+                    addToDatabase(studyTask);
+                    new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
+                            start+"",end+"","READ","UNDONE");
+                    addToListOfTasks(studyTask);
+                }
+                else{
+                    Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
+                }
 
-        } else {
-            if (!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
-
-                StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment", Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
-
-                addToDatabase(studyTask);
-                addToListOfTasks(studyTask);
             } else {
-                Toast.makeText(this, "Läsanvisning redan tillagd!", Toast.LENGTH_SHORT).show();
+                if (!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
+
+                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment",
+                            Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
+
+                    addToDatabase(studyTask);
+                    new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
+                            taskString,taskString,"READ","UNDONE");
+                    addToListOfTasks(studyTask);
+                } else {
+                    Toast.makeText(this, "Läsanvisning redan tillagd!", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
         }
         else{
             Toast.makeText(getApplicationContext(), "Format ej godkänt",
@@ -396,6 +429,76 @@ public class StudyTaskActivity extends ActionBarActivity {
                 studyTask.getStatus()
         );
 
-        Log.d("Lägga till element i databas: ", "" + dbAdapter.getAssignments().getCount());
+       // Log.d("Lägga till element i databas: ", "" + dbAdapter.getAssignments().getCount());
+    }
+
+    private class AddToWebDatabase extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected Void doInBackground(String... arg) {
+            String course = arg[0];
+            String chapter = arg[1];
+            String week = arg[2];
+            String assNr = arg[3];
+            String startPage = arg[4];
+            String endPage = arg[5];
+            String type = arg[6];
+            String status = arg[7];
+            // TODO Auto-generated method stub
+
+
+
+            // Preparing post params
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("course",course));
+            params.add(new BasicNameValuePair("chapter",chapter));
+            params.add(new BasicNameValuePair("week",week));
+            params.add(new BasicNameValuePair("assNr",assNr));
+            params.add(new BasicNameValuePair("startPage",startPage));
+            params.add(new BasicNameValuePair("endPage",endPage));
+            params.add(new BasicNameValuePair("type",type));
+            params.add(new BasicNameValuePair("status",status));
+
+
+            ServiceHandler serviceClient = new ServiceHandler();
+
+            String json = serviceClient.makeServiceCall(URL_CONNECTION,
+                    ServiceHandler.POST, params);
+
+            if (json != null) {
+                try {
+                    Log.d("jason",json);
+                    JSONObject jsonObj = new JSONObject(json);
+                    boolean error = jsonObj.getBoolean("error");
+                    // checking for error node in json
+                    if (!error) {
+                        // new category created successfully
+                        Log.d(" Success","alexärbäst");
+                    } else {
+                        Log.d(" Error: ",
+                                "notsogod");
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                Log.e("JSON Data", "JSON data error!");
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+        }
+
     }
 }

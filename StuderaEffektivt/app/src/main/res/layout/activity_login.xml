@@ -8,8 +8,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/main1"
-    tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.LoginActivity">
+    android:background="@color/primaryColor">
+   <!-- android:background="@drawable/main1"
+    tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.LoginActivity">-->
 
     <!-- Login progress >
     <Button
@@ -60,7 +61,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="49dp"
-        android:textColorHint="#ff000000" />
+        android:textColorHint="#ff000000"
+        android:textCursorDrawable="@null"/>
 
     <AutoCompleteTextView
         android:id="@+id/email"
@@ -73,7 +75,8 @@
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textColorHint="#ff000000" />
+        android:textColorHint="#ff000000"
+        android:textCursorDrawable="@null"/>
 
     <TextView
         android:layout_width="wrap_content"

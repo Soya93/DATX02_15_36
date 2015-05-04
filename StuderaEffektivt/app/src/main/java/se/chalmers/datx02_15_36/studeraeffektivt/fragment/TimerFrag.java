@@ -220,8 +220,13 @@ public class TimerFrag extends Fragment {
 
     private void instantiateButtons() {
         startButton = (ImageButton) rootView.findViewById(R.id.button_start_timer);
+        startButton.setBackgroundColor(Color.TRANSPARENT);
         previousWeek = (ImageButton) rootView.findViewById(R.id.previousWeek);
         nextWeek = (ImageButton) rootView.findViewById(R.id.nextWeek);
+        ImageButton settingsButton = (ImageButton) rootView.findViewById(R.id.button);
+        settingsButton.setBackgroundColor(Color.TRANSPARENT);
+        ImageButton stopButton = (ImageButton) rootView.findViewById(R.id.button_reset);
+        stopButton.setBackgroundColor(Color.TRANSPARENT);
 
     }
 

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
+//import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CourseDetailedInfoFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.FifthTabFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.HomeFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.MyProfileFrag;

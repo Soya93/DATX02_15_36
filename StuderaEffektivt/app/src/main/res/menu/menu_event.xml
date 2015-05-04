@@ -7,7 +7,7 @@
 
     <item android:id="@+id/delete_event"
         android:title="DeletEvent"
-        android:icon="@drawable/ic_pilegraph"
+        android:icon="@drawable/ic_action_delete"
         app:showAsAction="ifRoom"
         />
 

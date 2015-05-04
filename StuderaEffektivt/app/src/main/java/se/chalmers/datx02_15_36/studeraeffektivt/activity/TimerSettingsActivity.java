@@ -7,10 +7,14 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -23,6 +27,7 @@ import java.util.HashMap;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.ListAdapter;
 
 
@@ -43,7 +48,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
     private static Dialog dialog;
     private NumberPicker np;
 
-            TimePickerDialog.OnTimeSetListener d = new TimePickerDialog.OnTimeSetListener() {
+    TimePickerDialog.OnTimeSetListener d = new TimePickerDialog.OnTimeSetListener() {
                 public void onTimeSet(TimePicker view, int hourOfDay,
                                       int minute) {
                     if (minute > 0) {
@@ -63,11 +68,41 @@ public class TimerSettingsActivity extends ActionBarActivity {
         }
     };
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.menu_timer, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.save_event) {
+           //TODO add save settings;
+            return true;
+        }else if (id == android.R.id.home){
+            this.finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timersettings);
         context = this;
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Ställ in tid");
         listView = (ListView) findViewById(R.id.listView);
         initFromSharedPref();
         updateView();
