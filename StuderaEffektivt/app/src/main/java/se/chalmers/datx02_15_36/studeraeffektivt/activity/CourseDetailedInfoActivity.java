@@ -1,6 +1,8 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,6 +35,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask2;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
@@ -56,12 +59,24 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     private DBAdapter dbAdapter;
 
-    public void onCreate(Bundle savedInstanceState) {
-
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_details);
-        courseCode = getIntent().getStringExtra("CourseCode");
-        courseName = getIntent().getStringExtra("CourseName");
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(getIntent().getStringExtra("CourseName"));
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
+        //initFrag(getIntent().getStringExtra("ActivityTitle"));
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_course_details);
+
+        View rootView = inflater.inflate(R.layout.activity_course_details, container, false);
+        this.view = rootView;
 
         initComponents();
 
@@ -80,6 +95,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         fillActivity(courseCode, courseName);
 
+        return rootView;
     }
 
     public void fillActivity(String courseCode, String courseName) {
@@ -87,12 +103,12 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     public void initComponents() {
-        taskButton = (Button) findViewById(R.id.taskButton);
+        taskButton = (Button) view.findViewById(R.id.taskButton);
         taskButton.setOnClickListener(myOnlyhandler);
 
-        kursDetaljer = (TextView) findViewById(R.id.kursDetaljer);
+        kursDetaljer = (TextView) view.findViewById(R.id.kursDetaljer);
 
-        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
+        layoutWithinScrollViewOfTasks = (FlowLayout) view.findViewById(R.id.layoutWithinScrollViewOfTasks);
 
     }
 
@@ -136,39 +152,36 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             String jsonStr = sh.makeServiceCall(URL_CONNECTION, ServiceHandler.POST, params);
             if (jsonStr != null) {
                 try {
-
+                    Log.e("BAJS",jsonStr);
                     JSONObject jsonObj = new JSONObject(jsonStr);
-                    int success = jsonObj.getInt("success");
-                    if(success == 1) {
 
-                        // Getting JSON Array node
-                        JSONArray assignmetsList = jsonObj.getJSONArray("assignmets");
+                    // Getting JSON Array node
+                    JSONArray assignmetsList = jsonObj.getJSONArray("assignmets");
 
-                        // looping through All Contacts
-                        for (int i = 0; i < assignmetsList.length(); i++) {
-                            JSONObject c = assignmetsList.getJSONObject(i);
+                    // looping through All Contacts
+                    for (int i = 0; i < assignmetsList.length(); i++) {
+                        JSONObject c = assignmetsList.getJSONObject(i);
 
-                            String returnedCod = c.getString("courseCode");
-                            String chapter = c.getString("chapter");
-                            String week = c.getString("week");
-                            String assNr = c.getString("assNr");
-                            String startPage = c.getString("startPage");
-                            String endPage = c.getString("endPage");
-                            String type = c.getString("type");
-                            String status = c.getString("status");
-                            AssignmentType status1;
-                            if (status.equals("READ")) {
-                                status1 = AssignmentType.READ;
-                            } else {
-                                status1 = AssignmentType.OTHER;
-
-                            }
-                            StudyTask2 studyTask2 = new StudyTask2(getBaseContext(), returnedCod, Integer.parseInt(chapter),
-                                    Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), dbAdapter, status1
-                                    , AssignmentStatus.UNDONE);
-
+                        String returnedCod = c.getString("courseCode");
+                        String chapter = c.getString("chapter");
+                        String week = c.getString("week");
+                        String assNr = c.getString("assNr");
+                        String startPage = c.getString("startPage");
+                        String endPage = c.getString("endPage");
+                        String type = c.getString("type");
+                        String status = c.getString("status");
+                        AssignmentType status1;
+                        if (status.equals("READ")) {
+                            status1 = AssignmentType.READ;
+                        } else {
+                            status1 = AssignmentType.OTHER;
 
                         }
+                        StudyTask2 studyTask2 = new StudyTask2(getBaseContext(), returnedCod, Integer.parseInt(chapter),
+                                Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), dbAdapter, status1
+                                , AssignmentStatus.UNDONE);
+
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -190,7 +203,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 taskListfromWeb.addTasksFromWeb(test.getIdNr(),test.getCourseCode(),
                         test.getChapter(),test.getWeek(),test.getTaskString(),test.getStartPage(),
                         test.getEndPage(),"UNDONE", "READ",dbAdapter);
-                it.remove(); //
+                it.remove(); // avoids a ConcurrentModificationException
             }
         }
 
