@@ -1,6 +1,8 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
@@ -13,6 +15,8 @@ import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
@@ -27,6 +31,7 @@ public class MyCountDownTimer extends Service {
     private final int PAUSE = 0;
     private final int RESUME = 1;
     private final int STOP = 2;
+    private final int ACTIVITY_NOT_RUNNING = 3;
 
 
     private long studyTime,pauseTime;
@@ -42,6 +47,7 @@ public class MyCountDownTimer extends Service {
     private DBAdapter dbAdapter;
     private String ccode;
     private long studyTimePassed=0;
+    private boolean activityIsRunning = true;
 
     private Utils utils;
 
@@ -59,6 +65,9 @@ public class MyCountDownTimer extends Service {
                 case STOP:
                     onDestroy();
                     break;
+                case ACTIVITY_NOT_RUNNING:
+                    activityIsRunning = false;
+
             }
 
         }
@@ -149,17 +158,19 @@ public class MyCountDownTimer extends Service {
                         totalcount ++;
                         studyTimer = timerFunction(pauseTime, 100);
                         sendMessage(pauseTime);
-                        mHandler.sendEmptyMessage(1);
+                        if(activityIsRunning){
+                        mHandler.sendEmptyMessage(1);}
                     } else if (count == 0) {
                         studyTimer = timerFunction(studyTime, 100);
                         sendMessage(studyTime);
-                        mHandler.sendEmptyMessage(2);
-
+                        if(activityIsRunning) {
+                            mHandler.sendEmptyMessage(2);
+                        }
                     }
                     studyTimer.start();
                 }
                 else {
-                    mHandler.sendEmptyMessage(3);
+                   onDestroy();
                 }
 
             }
@@ -187,6 +198,11 @@ public class MyCountDownTimer extends Service {
 
     }
 
+    public void setActivityIsRunning(){
+        this.activityIsRunning = true;
+    }
+
+
     private void insertIntoDataBase(long millisPassed) {
         long inserted = dbAdapter.insertSession(ccode, utils.getCurrWeekNumber(), milliSecondsToMin(millisPassed));
         if (inserted > 0 && getBaseContext() != null) {
@@ -200,6 +216,7 @@ public class MyCountDownTimer extends Service {
     private int milliSecondsToMin(long milliSeconds) {
         return ((int) milliSeconds / 1000 / 60);
     }
+
 
 
 }

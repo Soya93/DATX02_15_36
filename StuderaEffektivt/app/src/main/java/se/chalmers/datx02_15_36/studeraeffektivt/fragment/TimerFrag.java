@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 
 import java.util.HashMap;
+import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
@@ -105,11 +106,12 @@ public class TimerFrag extends Fragment {
 
                 case CHANGE_COLOR_1:
 
-                    progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
-                    break;
+                        progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
+                        break;
+
 
                 case TIMER_FINISHED:
-                    resetTimer();
+                  //  resetTimer();
                     break;
             }
 
@@ -121,6 +123,7 @@ public class TimerFrag extends Fragment {
         public void onServiceConnected(ComponentName name, IBinder service) {
             timerService = ((MyCountDownTimer.MCDTBinder) service).getService();
             timerService.setHandler(handler);
+            timerService.setActivityIsRunning();
             serviceHandler = timerService.getServiceHandler();
 
 
@@ -192,6 +195,9 @@ public class TimerFrag extends Fragment {
         hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
         if (hasBeenPaused) {
             long temp = sharedPref.getLong("timeLeft", -1);
+        }
+        if(!isMyServiceRunning(MyCountDownTimer.class)) {
+            startButton.setImageResource(R.drawable.ic_start);
         }
 
         getTimeFromSettings();
@@ -370,6 +376,7 @@ public class TimerFrag extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         if (isMyServiceRunning(MyCountDownTimer.class)) {
+            serviceHandler.sendEmptyMessage(3);
             getActivity().unbindService(sc);
             removeMessages();
         }
@@ -467,5 +474,17 @@ public class TimerFrag extends Fragment {
         nextWeek.setBackground(forwardDrawable);
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
