@@ -32,7 +32,6 @@ public class MainActivity extends ActionBarActivity {
     private CalendarFrag calendarFrag;
     private TimerFrag timerFrag;
     private Drawable tabResetIcon;
-    private CourseDetailedInfoActivity courseDetailedInfoFrag = new CourseDetailedInfoActivity();
     public static FloatingActionButton actionButton;
     public static SubActionButton button1;
     public static SubActionButton button2;
@@ -294,8 +293,6 @@ public class MainActivity extends ActionBarActivity {
     public void settingsTimer(View view) {
         timerFrag.settingsTimer();
     }
-
-    public void getAssignmetsFromWeb(View view) {courseDetailedInfoFrag.getAssignmetsFromWeb();}
 
 
 }

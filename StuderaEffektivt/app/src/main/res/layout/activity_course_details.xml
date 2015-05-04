@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:text="Lägg till uppgifter"
         android:id="@+id/taskButton"
+        android:onClick="goToTasks"
         android:layout_below="@+id/scrollViewOfTasks"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"

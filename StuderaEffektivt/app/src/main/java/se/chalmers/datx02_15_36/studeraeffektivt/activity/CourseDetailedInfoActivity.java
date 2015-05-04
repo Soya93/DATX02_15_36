@@ -120,7 +120,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         }
     };
 
-    public void goToTasks(Button button) {
+    public void goToTasks(View v) {
 
         Intent i = new Intent(this, StudyTaskActivity.class);
         i.putExtra("CourseCode", courseCode);
@@ -128,7 +128,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     }
 
-    public void getAssignmetsFromWeb() {
+    public void getAssignmetsFromWeb(View v) {
         new GetAllAssignments().execute(courseCode);
     }
 
