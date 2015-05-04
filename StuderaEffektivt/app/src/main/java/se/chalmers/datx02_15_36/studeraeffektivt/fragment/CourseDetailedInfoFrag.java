@@ -133,36 +133,39 @@ public class CourseDetailedInfoFrag extends Fragment {
             String jsonStr = sh.makeServiceCall(URL_CONNECTION, ServiceHandler.POST, params);
             if (jsonStr != null) {
                 try {
-                    Log.e("BAJS",jsonStr);
+
                     JSONObject jsonObj = new JSONObject(jsonStr);
+                    int success = jsonObj.getInt("success");
+                    if(success == 1) {
 
-                    // Getting JSON Array node
-                    JSONArray assignmetsList = jsonObj.getJSONArray("assignmets");
+                        // Getting JSON Array node
+                        JSONArray assignmetsList = jsonObj.getJSONArray("assignmets");
 
-                    // looping through All Contacts
-                    for (int i = 0; i < assignmetsList.length(); i++) {
-                        JSONObject c = assignmetsList.getJSONObject(i);
+                        // looping through All Contacts
+                        for (int i = 0; i < assignmetsList.length(); i++) {
+                            JSONObject c = assignmetsList.getJSONObject(i);
 
-                        String returnedCod = c.getString("courseCode");
-                        String chapter = c.getString("chapter");
-                        String week = c.getString("week");
-                        String assNr = c.getString("assNr");
-                        String startPage = c.getString("startPage");
-                        String endPage = c.getString("endPage");
-                        String type = c.getString("type");
-                        String status = c.getString("status");
-                        AssignmentType status1;
-                        if (status.equals("READ")) {
-                            status1 = AssignmentType.READ;
-                        } else {
-                            status1 = AssignmentType.OTHER;
+                            String returnedCod = c.getString("courseCode");
+                            String chapter = c.getString("chapter");
+                            String week = c.getString("week");
+                            String assNr = c.getString("assNr");
+                            String startPage = c.getString("startPage");
+                            String endPage = c.getString("endPage");
+                            String type = c.getString("type");
+                            String status = c.getString("status");
+                            AssignmentType status1;
+                            if (status.equals("READ")) {
+                                status1 = AssignmentType.READ;
+                            } else {
+                                status1 = AssignmentType.OTHER;
+
+                            }
+                            StudyTask2 studyTask2 = new StudyTask2(getActivity().getBaseContext(), returnedCod, Integer.parseInt(chapter),
+                                    Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), dbAdapter, status1
+                                    , AssignmentStatus.UNDONE);
+
 
                         }
-                        StudyTask2 studyTask2 = new StudyTask2(getActivity().getBaseContext(), returnedCod, Integer.parseInt(chapter),
-                                Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), dbAdapter, status1
-                                , AssignmentStatus.UNDONE);
-
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -184,7 +187,7 @@ public class CourseDetailedInfoFrag extends Fragment {
                 taskListfromWeb.addTasksFromWeb(test.getIdNr(),test.getCourseCode(),
                         test.getChapter(),test.getWeek(),test.getTaskString(),test.getStartPage(),
                         test.getEndPage(),"UNDONE", "READ",dbAdapter);
-                it.remove(); // avoids a ConcurrentModificationException
+                it.remove(); //
             }
         }
 
