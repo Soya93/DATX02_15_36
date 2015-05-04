@@ -50,8 +50,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private Button taskButton;
     private FlowLayout layoutWithinScrollViewOfTasks;
     private FlowLayout taskListfromWeb;
-    private String URL_CONNECTION = "http://192.168.1.6/getassignmets.php";
-    private HashMap<String, StudyTask2> assignmetsHashMap = new HashMap<String, StudyTask2>();
+    private String URL_CONNECTION = "http://192.168.1.6/getassignmets2.php";
+    private HashMap<Integer, StudyTask2> assignmetsHashMap = new HashMap<Integer, StudyTask2>();
 
 
     private String courseCode;
@@ -130,20 +130,20 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     public void getAssignmetsFromWeb(View v) {
         new GetAllAssignments().execute(courseCode);
+
     }
 
-    private class GetAllAssignments extends AsyncTask<String, Void, Void> {
+    private class GetAllAssignments extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
-        protected Void doInBackground(String... args) {
+        protected String doInBackground(String... args) {
             String courseCode = args[0];
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("courseCode", courseCode));
-
 
 
             ServiceHandler sh = new ServiceHandler();
@@ -152,17 +152,17 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             String jsonStr = sh.makeServiceCall(URL_CONNECTION, ServiceHandler.POST, params);
             if (jsonStr != null) {
                 try {
-                    Log.e("BAJS",jsonStr);
+                    //Log.e("BAJS",jsonStr);
                     JSONObject jsonObj = new JSONObject(jsonStr);
-
                     // Getting JSON Array node
-                    JSONArray assignmetsList = jsonObj.getJSONArray("assignmets");
+                    JSONArray assignmetsList = jsonObj.getJSONArray("assignments");
 
                     // looping through All Contacts
                     for (int i = 0; i < assignmetsList.length(); i++) {
                         JSONObject c = assignmetsList.getJSONObject(i);
 
-                        String returnedCod = c.getString("courseCode");
+                        String returnedCod = c.getString("course");
+                        Log.d("code", returnedCod);
                         String chapter = c.getString("chapter");
                         String week = c.getString("week");
                         String assNr = c.getString("assNr");
@@ -180,7 +180,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                         StudyTask2 studyTask2 = new StudyTask2(getBaseContext(), returnedCod, Integer.parseInt(chapter),
                                 Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), dbAdapter, status1
                                 , AssignmentStatus.UNDONE);
-
+                        assignmetsHashMap.put(studyTask2.getIdNr(), studyTask2);
 
                     }
                 } catch (JSONException e) {
@@ -194,22 +194,25 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         }
 
 
-        protected void onPostExecute() {
-
-            Iterator it = assignmetsHashMap.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry) it.next();
-                StudyTask2 test = (StudyTask2) pair.getValue();
-                taskListfromWeb.addTasksFromWeb(test.getIdNr(),test.getCourseCode(),
-                        test.getChapter(),test.getWeek(),test.getTaskString(),test.getStartPage(),
-                        test.getEndPage(),"UNDONE", "READ",dbAdapter);
-                it.remove(); // avoids a ConcurrentModificationException
+        protected void onPostExecute(String file_url) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    taskListfromWeb = (FlowLayout) findViewById(R.id.taskListfromWeb);
+                    Iterator it = assignmetsHashMap.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry pair = (Map.Entry) it.next();
+                        StudyTask2 test = (StudyTask2) pair.getValue();
+                        taskListfromWeb.addTasksFromWeb(test.getIdNr(), test.getCourseCode(),
+                                test.getChapter(), test.getWeek(), test.getTaskString(), test.getStartPage(),
+                                test.getEndPage(), "UNDONE", "READ", dbAdapter);
+                        it.remove(); // avoids a ConcurrentModificationException
+                    }
+                }
+            });
             }
-        }
 
 
     }
-
 
 }
 
