@@ -35,7 +35,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         />
-    <!--
+
        <ScrollView
            android:layout_width="fill_parent"
            android:layout_height="fill_parent"
@@ -53,7 +53,7 @@
            </se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
 
        </ScrollView>
--->
+
 
        <Button
            android:layout_width="wrap_content"
@@ -63,13 +63,5 @@
            android:onClick="getAssignmetsFromWeb"
            android:layout_below="@+id/scrollViewOfTasks"
            android:layout_alignParentStart="true" />
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listViewForWeb"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/taskButton" />
 
 </RelativeLayout>
