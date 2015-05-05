@@ -186,8 +186,8 @@ public class StatsFrag extends Fragment {
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
         Entry hoursLeft = new Entry(getMinutesLeft(),1);
         Entry hoursDone = new Entry(getMinutesSpent(),0);
-        pieEntries.add(hoursDone);
         pieEntries.add(hoursLeft);
+        pieEntries.add(hoursDone);
 
         int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "Minuter");
@@ -226,8 +226,8 @@ public class StatsFrag extends Fragment {
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
         Entry assesDone = new Entry(getAssDone(),0);
         Entry assesLeft = new Entry(getAssLeft(),1);
-        pieEntries.add(assesDone);
         pieEntries.add(assesLeft);
+        pieEntries.add(assesDone);
 
         int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
 
@@ -282,7 +282,7 @@ public class StatsFrag extends Fragment {
     }
 
     private int getMinutesSpent(){
-        setSelectedCourse(); //take this away
+        setSelectedCourse(); //take this away safely
         return (dbAdapter.getSpentTime(currCourse));
     }
 
@@ -297,16 +297,14 @@ public class StatsFrag extends Fragment {
         }
     }
 
-    private int getMinutesTotal(){
-        return dbAdapter.getTimeOnCourse(currCourse);
-    }
-
     private int getAssDone(){
+
         return dbAdapter.getDoneAssignments(currCourse).getCount();
     }
 
     private int getAssLeft(){
         int assignments = dbAdapter.getAssignments(currCourse).getCount();
+        Log.d("ass", "total amount of asses: "+assignments);
         int doneAssignments = dbAdapter.getDoneAssignments(currCourse).getCount();
         return (assignments-doneAssignments);
     }
@@ -321,7 +319,7 @@ public class StatsFrag extends Fragment {
 
     public void onStart(){
         super.onStart();
-        if (isCourses()) {
+        if (isCourses() && spinner != null) {
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
