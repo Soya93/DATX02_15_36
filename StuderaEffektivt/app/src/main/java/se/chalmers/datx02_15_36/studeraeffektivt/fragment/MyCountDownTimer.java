@@ -131,7 +131,8 @@ public class MyCountDownTimer extends Service {
 
             public void onTick(long millisUntilFinished) {
                 timeUntilFinished=millisUntilFinished; // if user wants to pause timer;
-                sendMessage((int)millisUntilFinished);
+                if(activityIsRunning){
+                sendMessage((int)millisUntilFinished);}
                 if(count==0){
                     studyTimePassed+=100;
 
@@ -142,6 +143,7 @@ public class MyCountDownTimer extends Service {
             }
 
             @Override
+            // här ska du in
             public void onFinish() {
                 Log.d("Values of totC", String.valueOf(totalcount));
                 Log.d("Value of reps", String.valueOf(reps));
@@ -152,18 +154,13 @@ public class MyCountDownTimer extends Service {
                 if(totalcount<reps) {
                     count = (count + 1) % 2;
 
-                    if (count == 1) {
+                    if (count == 1) { // här  vill du att en notification att studietiden är slut
                         totalcount ++;
+                        insertIntoDataBase(studyTimePassed);
+                        studyTimePassed = 0;
                         studyTimer = timerFunction(pauseTime, 100);
-                        sendMessage(pauseTime);
-                        if(activityIsRunning){
-                        mHandler.sendEmptyMessage(1);}
-                    } else if (count == 0) {
+                    } else if (count == 0) {  // här  vill du att en notification att pausetiden är slut
                         studyTimer = timerFunction(studyTime, 100);
-                        sendMessage(studyTime);
-                        if(activityIsRunning) {
-                            mHandler.sendEmptyMessage(2);
-                        }
                     }
                     studyTimer.start();
                 }

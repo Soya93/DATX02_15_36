@@ -207,11 +207,6 @@ public class CalendarModel {
 
 
 
-
-
-
-
-
             if (!calendarsMap.containsKey(id) && !calendarsMap.containsValue(name) && isVisible == 1) {
                 filterItem.setTitle(name);
 

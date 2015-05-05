@@ -77,6 +77,7 @@ public class TechniquesFrag extends Fragment {
 
         Bundle bundle = new Bundle();
         bundle.putString("key", (String) b.getText());
+        bundle.putString("PreviousTitle", "Studietekniker");
 
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = this.getFragmentManager();
