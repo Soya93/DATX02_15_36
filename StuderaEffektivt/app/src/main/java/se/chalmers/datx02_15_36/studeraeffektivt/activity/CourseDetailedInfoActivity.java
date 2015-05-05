@@ -17,9 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
@@ -69,6 +71,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private SubActionButton button2;
     private SubActionButton button3;
     private SubActionButton button4;
+    private Switch isActiveSwitch;
 
 
     private String courseCode;
@@ -94,6 +97,34 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
 //        fillActivity(courseCode, courseName);
 
+        isActiveSwitch = (Switch) findViewById(R.id.isActiveSwitch);
+        isActiveSwitch.setChecked(true); //TODO hämta från databas
+        if(isActiveSwitch.isChecked()){
+            isActiveSwitch.setText("Pågående");
+        }else {
+            isActiveSwitch.setText("Avslutad");
+        }
+
+        isActiveSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+
+                if (isChecked) {
+                    isActiveSwitch.setText("Pågående");
+                } else {
+                    isActiveSwitch.setText("Avslutad");
+                }
+                //TODO update status in database
+
+            }
+        });
+
+
+
+
+
         // listener for FAB menu
         FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
             @Override
@@ -109,6 +140,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         fabHandler = new View.OnClickListener() {
 
             public void onClick(View v) {
+                Log.i("detailedInfo", "click on switch " + v.getId());
+                Log.i("detailedInfo", "click on switch " + isActiveSwitch.getId());
+
                 if (v.getTag() == button1.getTag()) {
                     //delete course
                     deleteCourse(v);
@@ -117,9 +151,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 } else if (v.getTag() == button3.getTag()) {
                     //download tasks
                     getAssignmetsFromWeb(v);
-                } else {
+                } else if (v.getTag() == button4.getTag()) {
                     //Add tasks
-                   goToTasks(v);
+                    goToTasks(v);
                 }
 
             }
