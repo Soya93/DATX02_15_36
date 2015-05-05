@@ -147,8 +147,6 @@ public class CalendarModelTest extends AndroidTestCase {
         cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
         while (cur.moveToNext()) {
             String eventTitle = cur.getString(CalendarUtils.TITLE);
-            long startTime = cur.getLong(CalendarUtils.EVENT_BEGIN);
-            long endTime = cur.getLong(CalendarUtils.EVENT_END);
             String eventLocation = cur.getString(CalendarUtils.LOCATION);
             String eventDescription = cur.getString(CalendarUtils.DESCRIPTION);
             Long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
@@ -156,12 +154,9 @@ public class CalendarModelTest extends AndroidTestCase {
             boolean isAllDayEventValue = cur.getInt(CalendarUtils.ALL_DAY) == 1;
             long eventID2 = cur.getLong(CalendarUtils.EVENT_ID);
 
-
-            //TODO fix notification test...
-
             boolean isEvent = newEventID == eventID2 && eventTitle.equals(newTitle)  && eventLocation.equals(newLocation)
                     && eventDescription.equals(newDescription) && bachelorThesisCalID.equals(calID)
-                    /*&& newNotification == eventNotification*/ && isAllDayEventValue;
+                    && /*newNotification == eventNotification &&*/ isAllDayEventValue;
 
             isEventList.add(isEvent);
         }
@@ -191,26 +186,13 @@ public class CalendarModelTest extends AndroidTestCase {
         //Read events if the event equals the added event true -> isEventList
         cur = cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
         while (cur.moveToNext()) {
-            String eventTitle = cur.getString(CalendarUtils.TITLE);
-            long startTime = cur.getLong(CalendarUtils.EVENT_BEGIN);
-            long endTime = cur.getLong(CalendarUtils.EVENT_END);
-            String eventLocatoion = cur.getString(CalendarUtils.LOCATION);
-            String eventDescription = cur.getString(CalendarUtils.DESCRIPTION);
-            long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
-            int eventNotification = cur.getInt(CalendarUtils.NOTIFICATION_EVENT_ID);
-            boolean isAllDayEventValue = cur.getInt(CalendarUtils.ALL_DAY) == 0;
+
             long eventID2 = cur.getLong(CalendarUtils.EVENT_ID);
-
-
-            //TODO fix notification test...
-
             boolean isEvent = eventID == eventID2;
-
             isEventList.add(isEvent);
         }
 
-        calendarModel.deleteEvent(cr, eventID);
-
+        // test so the event exists
         if (isEventList.isEmpty()) {
             fail();
         } else {
@@ -223,8 +205,11 @@ public class CalendarModelTest extends AndroidTestCase {
 
         }
 
+        // deletes the event
         calendarModel.deleteEvent(cr, eventID);
 
+
+        //tests so the event doesn't exist any more
         ArrayList<HomeEventItem> todaysEvents = calendarModel.readEventsToday(cr);
         for (HomeEventItem item : todaysEvents) {
             assertTrue(item.getId() != eventID);
