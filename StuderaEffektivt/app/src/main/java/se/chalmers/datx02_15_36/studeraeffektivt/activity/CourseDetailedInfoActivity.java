@@ -67,6 +67,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getIntent().getStringExtra("CourseName"));
+        courseCode = getIntent().getStringExtra("CourseCode");
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
         //initFrag(getIntent().getStringExtra("ActivityTitle"));
         if (this != null) {
