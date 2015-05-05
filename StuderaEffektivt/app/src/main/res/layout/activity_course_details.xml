@@ -25,25 +25,14 @@
             android:id="@+id/layoutWithinScrollViewOfTasks"></se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
     </ScrollView>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Lägg till uppgifter"
-        android:id="@+id/taskButton"
-        android:onClick="goToTasks"
-        android:layout_below="@+id/scrollViewOfTasks"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        />
-
-       <ScrollView
+    <ScrollView
            android:layout_width="fill_parent"
            android:layout_height="fill_parent"
            android:id="@+id/taskScrollView"
            android:layout_weight="0.42"
            android:layout_alignParentLeft="true"
-           android:layout_below="@+id/taskButton"
-           android:layout_alignEnd="@+id/taskButton">
+           android:layout_below="@+id/scrollViewOfTasks"
+           android:layout_centerVertical="true">
 
            <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
                android:layout_width="fill_parent"
@@ -54,14 +43,5 @@
 
        </ScrollView>
 
-
-       <Button
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Hämta uppgifter"
-           android:id="@+id/getAssignmets"
-           android:onClick="getAssignmetsFromWeb"
-           android:layout_below="@+id/scrollViewOfTasks"
-           android:layout_alignParentStart="true" />
 
 </RelativeLayout>
