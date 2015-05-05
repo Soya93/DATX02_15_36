@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -81,8 +82,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         setContentView(R.layout.activity_course_details);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(getIntent().getStringExtra("CourseName"));
+        courseName = getIntent().getStringExtra("CourseName");
         courseCode = getIntent().getStringExtra("CourseCode");
+        actionBar.setTitle(courseName);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
         //initFrag(getIntent().getStringExtra("ActivityTitle"));
         if (this != null) {
@@ -109,6 +111,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             public void onClick(View v) {
                 if (v.getTag() == button1.getTag()) {
                     //delete course
+                    deleteCourse(v);
                 } else if (v.getTag() == button2.getTag()) {
                     //set time
                 } else if (v.getTag() == button3.getTag()) {
@@ -243,12 +246,22 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         }
     };
 
+    public void deleteCourse(View v) {
+        dbAdapter.deleteCourse(courseCode);
+        Cursor cur = dbAdapter.getCourses();
+        while(cur.moveToNext()) {
+            Log.i("DetailedInfo: in database", cur.getString(0));
+        }
+
+
+        this.finish();
+    }
+
     public void goToTasks(View v) {
 
         Intent i = new Intent(this, StudyTaskActivity.class);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);
-
     }
 
     public void getAssignmetsFromWeb(View v) {

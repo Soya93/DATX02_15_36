@@ -59,15 +59,4 @@ public class TechsNTipsActivity extends ActionBarActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i("In resume", "prevactionbartitle " +  getSupportActionBar().getTitle());
-        getSupportActionBar().setTitle(title);
-        Log.i("In resume", "title " + title);
-        Log.i("In resume", "nextactionbartitle " +  getSupportActionBar().getTitle());
-
-
-    }
 }
