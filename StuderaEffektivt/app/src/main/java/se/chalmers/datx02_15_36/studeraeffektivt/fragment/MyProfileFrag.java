@@ -13,20 +13,20 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.ViewGroup;
-    import android.widget.ArrayAdapter;
+    import android.widget.AdapterView;
     import android.widget.Button;
     import android.widget.EditText;
-    import android.widget.LinearLayout;
     import android.widget.ListView;
     import android.widget.SimpleAdapter;
-    import android.widget.TextView;
     import android.widget.Toast;
 
     import java.util.ArrayList;
+    import java.util.HashMap;
     import java.util.List;
     import java.util.Map;
 
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
+    import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.TechsNTipsActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
@@ -49,8 +49,9 @@ public class MyProfileFrag extends Fragment {
     private EditText editTextCoursecode;
     private EditText editTextCoursename;
 
-    private static List<String> courseList = new ArrayList<>();
-    private ArrayAdapter arrayAdapter;
+    private static List<Map<String,Course>> courseList = new ArrayList<>();
+    private SimpleAdapter simpleAdapter;
+    private Bundle bundleToNextFragment;
 
 
     //The access point of the database.
@@ -111,6 +112,7 @@ public class MyProfileFrag extends Fragment {
         this.view = rootView;
         this.container = container;
         //currentlyShown = this;
+        bundleToNextFragment = new Bundle();
         Log.d("FifthTabFrag ", "currentlyshown = fifthtabfragment");
         initComponents();
 
@@ -177,8 +179,10 @@ public class MyProfileFrag extends Fragment {
 
         listOfCourses = (ListView) view.findViewById(R.id.listOfCourses);
         updateCourses();
-        arrayAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, courseList);
-        listOfCourses.setAdapter(arrayAdapter);
+        simpleAdapter = new SimpleAdapter(this.getActivity(), courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
+        listOfCourses.setAdapter(simpleAdapter);
+
+        setListOfCourses();
 
 
     }
@@ -229,8 +233,8 @@ public class MyProfileFrag extends Fragment {
                 Intent it = new Intent(getActivity(), TechsNTipsActivity.class);
                 it.putExtra("ActivityTitle", "Studietips");
                 startActivity(it);
-                fragment = new TipFrag();
-                /*fragment.setArguments(bundle);
+                /*fragment = new TipFrag();
+                fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");*/
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 break;
@@ -309,13 +313,57 @@ public class MyProfileFrag extends Fragment {
                 cname = cursor.getString(1);
                 //courseList.add();
                 //
-                courseList.add(ccode + " - " + cname);
+                courseList.add(createCourse("Courses", new Course(cname, ccode)));
                 //arrayAdapter.notifyDataSetChanged();
             }
         }else{
-            courseList.add("Det finns för tillfället inga kurser, lägg till en kurs genom att trycka på knappen ovan");
+           // courseList.add("Det finns för tillfället inga kurser, lägg till en kurs genom att trycka på knappen ovan");
+            courseList.add(createCourse("Courses", new Course("Inga kurser.", "")));
+
         }
 
+    }
+
+    public void setListOfCourses() {
+        listOfCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+
+                HashMap courseMap = (HashMap) parent.getItemAtPosition(position);
+                Course course1 = (Course) courseMap.get("Courses");
+               // bundleToNextFragment.putInt("kurs", courseList.indexOf(courseMap));
+                //bundleToNextFragment.putString("CourseName", course1.courseName);
+                //bundleToNextFragment.putString("CourseCode", course1.getCourseCode());
+                goToDetails(course1);
+            }
+        });
+
+    }
+
+    public void goToDetails(Course course) {
+
+        Intent intent = new Intent(getActivity(), CourseDetailedInfoActivity.class);
+        intent.putExtra("CourseCode", course.getCourseCode());
+        intent.putExtra("CourseName", course.getCourseName());
+        startActivity(intent);
+
+        /*Fragment fragment = new CourseDetailedInfoFrag();
+        //Fragment fragment = new StudyTaskFragment();
+
+        fragment.setArguments(bundle);
+        FragmentManager fragmentManager = this.getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.add(container.getId(), fragment, "detailedcoursefragment");
+        fragmentTransaction.hide(this);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();*/
+    }
+
+    private HashMap<String, Course> createCourse(String key, Course course) {
+        HashMap<String, Course> newCourse = new HashMap<String, Course>();
+        newCourse.put(key, course);
+
+        return newCourse;
     }
 
 }

@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <supports-screens
         android:anyDensity="true"
@@ -109,6 +110,11 @@
         <activity
             android:name=".activity.TechsNTipsActivity"
             android:label="@string/title_activity_techs_ntips"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".activity.CourseDetailedInfoActivity"
+            android:label="@string/title_activity_course_details"
             android:screenOrientation="portrait">
         </activity>
     </application>

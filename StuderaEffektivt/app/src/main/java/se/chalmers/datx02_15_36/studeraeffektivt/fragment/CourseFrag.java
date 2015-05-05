@@ -1,10 +1,9 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 
@@ -152,14 +152,20 @@ public class CourseFrag extends Fragment {
                 bundleToNextFragment.putInt("containerId", ((ViewGroup) container.getParent()).getId());
                 bundleToNextFragment.putInt("kurs", courseList.indexOf(courseMap));
                 bundleToNextFragment.putString("CourseCode", course1.getCourseCode());
-                goToDetails(bundleToNextFragment);
+                goToDetails(course1);
             }
         });
 
     }
 
-    public void goToDetails(Bundle bundle) {
-        Fragment fragment = new CourseDetailedInfoFrag();
+    public void goToDetails(Course course) {
+
+        Intent intent = new Intent(getActivity(), CourseDetailedInfoActivity.class);
+        intent.putExtra("CourseCode", course.getCourseCode());
+        intent.putExtra("CourseName", course.getCourseName());
+        startActivity(intent);
+
+        /*Fragment fragment = new CourseDetailedInfoFrag();
         //Fragment fragment = new StudyTaskFragment();
 
         fragment.setArguments(bundle);
@@ -169,7 +175,7 @@ public class CourseFrag extends Fragment {
         fragmentTransaction.add(containerId, fragment, "detailedcoursefragment");
         fragmentTransaction.hide(this);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();*/
     }
 
     public void initComponents() {

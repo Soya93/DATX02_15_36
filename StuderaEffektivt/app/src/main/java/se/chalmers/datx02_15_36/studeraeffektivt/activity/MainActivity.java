@@ -18,7 +18,7 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
-import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CourseDetailedInfoFrag;
+//import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CourseDetailedInfoFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.HomeFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.StatsFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TimerFrag;
@@ -32,7 +32,6 @@ public class MainActivity extends ActionBarActivity {
     private CalendarFrag calendarFrag;
     private TimerFrag timerFrag;
     private Drawable tabResetIcon;
-    private CourseDetailedInfoFrag courseDetailedInfoFrag = new CourseDetailedInfoFrag();
     public static FloatingActionButton actionButton;
     public static SubActionButton button1;
     public static SubActionButton button2;
@@ -294,8 +293,6 @@ public class MainActivity extends ActionBarActivity {
     public void settingsTimer(View view) {
         timerFrag.settingsTimer();
     }
-
-    public void getAssignmetsFromWeb(View view) {courseDetailedInfoFrag.getAssignmetsFromWeb();}
 
 
 }
