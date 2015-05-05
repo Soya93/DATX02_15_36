@@ -357,8 +357,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
                 Log.d("course", "add "+value+" minutes to "+courseCode);
-                long add = dbAdapter.insertTimeOnCourse(courseCode, Integer.parseInt(value));
 
+                //add value
+                long add = dbAdapter.insertTimeOnCourse(courseCode, Integer.parseInt(value));
                 Toast toast;
                 if(add > 0){
 
