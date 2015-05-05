@@ -74,6 +74,7 @@ public class MyCountDownTimer extends Service {
                     break;
                 case ACTIVITY_NOT_RUNNING:
                     activityIsRunning = false;
+                    break;
 
             }
 
@@ -166,28 +167,10 @@ public class MyCountDownTimer extends Service {
                         insertIntoDataBase(studyTimePassed);
                         studyTimePassed = 0;
                         studyTimer = timerFunction(pauseTime, 100);
-                       
+
 
                     } else if (count == 0) {  // här  vill du att en notification att pausetiden är slut
                         studyTimer = timerFunction(studyTime, 100);
-                        NotificationCompat.Builder mBuilder =
-                                new NotificationCompat.Builder(getApplication())
-                                        .setSmallIcon(R.drawable.ic_timer)
-                                        .setContentTitle("StudieCoach")
-                                        .setContentText("Dags att plugga");
-                        Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplication());
-                        stackBuilder.addParentStack(MainActivity.class);
-                        stackBuilder.addNextIntent(resultIntent);
-                        PendingIntent resultPendingIntent =
-                                stackBuilder.getPendingIntent(
-                                        0,
-                                        PendingIntent.FLAG_UPDATE_CURRENT
-                                );
-                        mBuilder.setContentIntent(resultPendingIntent);
-                        NotificationManager mNotificationManager =
-                                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        mNotificationManager.notify(61, mBuilder.build());
                     }
                     studyTimer.start();
                 }
@@ -252,6 +235,10 @@ public class MyCountDownTimer extends Service {
     }
 
 
+
+    private void showNotification() {
+
+    }
 
 
 }

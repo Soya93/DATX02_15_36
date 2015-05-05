@@ -250,7 +250,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         dbAdapter.deleteCourse(courseCode);
         Cursor cur = dbAdapter.getCourses();
         while(cur.moveToNext()) {
-            Log.i("DetailedInfo: in database", cur.getString(0));
         }
 
 

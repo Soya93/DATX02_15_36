@@ -109,15 +109,6 @@ public class TimerFrag extends Fragment {
 
                     setTimerView(serviceInt);
                     break;
-                case CHANGE_COLOR_0:
-
-
-                    break;
-
-                case CHANGE_COLOR_1:
-
-
-                        break;
 
 
                 case TIMER_FINISHED:
@@ -392,8 +383,8 @@ public class TimerFrag extends Fragment {
         super.onDestroyView();
         if (isMyServiceRunning(MyCountDownTimer.class)) {
             serviceHandler.sendEmptyMessage(3);
-            getActivity().unbindService(sc);
             removeMessages();
+            getActivity().unbindService(sc);
         }
 
         saveFragmentState();

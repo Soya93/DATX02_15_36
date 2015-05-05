@@ -6,12 +6,14 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 /**
  * This class is for StudyTasks that when is checked is inserted in database
@@ -71,6 +73,8 @@ public class StudyTask2 extends CheckBox {
 // TODO Auto-generated method stub
                 if (buttonView.isChecked()) {
                     addToDatabase();
+                    Toast.makeText(StudyTask2.this.getContext(), "Uppgiften har sparats", Toast.LENGTH_SHORT).show();
+                    ((FlowLayout)getParent()).(getStudyTask());
                 } else {
                 }
             }
