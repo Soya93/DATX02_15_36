@@ -156,6 +156,8 @@ public class MyCountDownTimer extends Service {
 
                     if (count == 1) {
                         totalcount ++;
+                        insertIntoDataBase(studyTimePassed);
+                        studyTimePassed = 0;
                         studyTimer = timerFunction(pauseTime, 100);
                         sendMessage(pauseTime);
                         if(activityIsRunning){
