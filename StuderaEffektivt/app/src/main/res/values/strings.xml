@@ -51,19 +51,24 @@
     <string name="header_techniques">Studietekniker</string>
 
     <!-- Tasks -->
-    <string name="task_reading_above"><font size="20">Läsanvisning</font>\n\<font size="10">Klicka för att ändra</font></string>
-    <string name="task_other_above"><font size="20">Räkneuppgift</font>\n\<font size="10">Klicka för att ändra</font></string>
+    <string name="type_button_text_reading"><u>RÄKNEUPPGIFT</u></string>
+    <string name="type_button_text_other"><u>LÄSANVISNING</u></string>
+
+    <string name="type_title">TYP AV UPPGIFT\n\<font size="10">Klicka för att ändra</font></string>
+
     <string name="save_task"><font size="23">SPARA UPPGIFT</font></string>
 
     <string name="course_title">KURS</string>
-    <string name="type_title">Typ och tid för uppgiften</string>
+    <string name="type_place_title">Typ och tid för uppgiften</string>
     <string name="chapter_title">KAPITEL</string>
     <string name="week_title">VECKA</string>
     <string name="task_info_title">uppgiftsinformation</string>
     <string name="saved_tasks_title">Sparade uppgifter</string>
 
-    <string name="task_string_hint"><font size="15">Uppgiftsnr ex: 1&#8211;5 eller 1,2,3</font></string>
-    <string name="part_string_hint"><font size="15">Deluppgift(er) ex: abcd</font></string>
+    <string name="task_title"><font size="15">UPPGIFTSNUMMER </font></string>
+    <string name="task_string_hint"><font size="15">ex: 1&#8211;5 eller 1,2,3</font></string>
+    <string name="part_title"><font size="15">DELUPPGIFT(ER) </font></string>
+    <string name="part_string_hint"><font size="15">ex: abcd</font></string>
 
     <!-- Colours -->
     <color name="white">#FFFFFF</color>

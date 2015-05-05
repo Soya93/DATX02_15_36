@@ -3,6 +3,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -20,9 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +78,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private SubActionButton button2;
     private SubActionButton button3;
     private SubActionButton button4;
+    private Switch isActiveSwitch;
 
 
     private String courseCode;
@@ -88,16 +92,46 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         setContentView(R.layout.activity_course_details);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(getIntent().getStringExtra("CourseName"));
+        courseName = getIntent().getStringExtra("CourseName");
         courseCode = getIntent().getStringExtra("CourseCode");
+        actionBar.setTitle(courseName);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
         //initFrag(getIntent().getStringExtra("ActivityTitle"));
         if (this != null) {
             dbAdapter = new DBAdapter(this);
         }
-        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
-        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+
 //        fillActivity(courseCode, courseName);
+        initComponents();
+        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+
+        isActiveSwitch = (Switch) findViewById(R.id.isActiveSwitch);
+        isActiveSwitch.setChecked(true); //TODO hämta från databas
+        if(isActiveSwitch.isChecked()){
+            isActiveSwitch.setText("Pågående");
+        }else {
+            isActiveSwitch.setText("Avslutad");
+        }
+
+        isActiveSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+
+                if (isChecked) {
+                    isActiveSwitch.setText("Pågående");
+                } else {
+                    isActiveSwitch.setText("Avslutad");
+                }
+                //TODO update status in database
+
+            }
+        });
+
+
+
+
 
         // listener for FAB menu
         FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
@@ -114,16 +148,20 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         fabHandler = new View.OnClickListener() {
 
             public void onClick(View v) {
+                Log.i("detailedInfo", "click on switch " + v.getId());
+                Log.i("detailedInfo", "click on switch " + isActiveSwitch.getId());
+
                 if (v.getTag() == button1.getTag()) {
                     //delete course
+                    deleteCourse(v);
                 } else if (v.getTag() == button2.getTag()) {
                     chooseTimeOnCourseDialog();
                 } else if (v.getTag() == button3.getTag()) {
                     //download tasks
                     getAssignmetsFromWeb(v);
-                } else {
+                } else if (v.getTag() == button4.getTag()) {
                     //Add tasks
-                   goToTasks(v);
+                    goToTasks(v);
                 }
 
             }
@@ -192,7 +230,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         View rootView = inflater.inflate(R.layout.activity_course_details, container, false);
         this.view = rootView;
 
-        initComponents();
+
 
         //bundleFromPreviousFragment = this.getArguments();
         //selectedCourse = bundleFromPreviousFragment.getInt("kurs");
@@ -236,26 +274,28 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     public void initComponents() {
-        kursDetaljer = (TextView) view.findViewById(R.id.kursDetaljer);
 
-        layoutWithinScrollViewOfTasks = (FlowLayout) view.findViewById(R.id.layoutWithinScrollViewOfTasks);
+        kursDetaljer = (TextView) findViewById(R.id.kursDetaljer);
+
+        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
 
     }
 
-    View.OnClickListener myOnlyhandler = new View.OnClickListener() {
-        public void onClick(View v) {
-
-            goToTasks((Button) v);
-
+    public void deleteCourse(View v) {
+        dbAdapter.deleteCourse(courseCode);
+        Cursor cur = dbAdapter.getCourses();
+        while(cur.moveToNext()) {
         }
-    };
+
+
+        this.finish();
+    }
 
     public void goToTasks(View v) {
 
         Intent i = new Intent(this, StudyTaskActivity.class);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);
-
     }
 
     public void getAssignmetsFromWeb(View v) {

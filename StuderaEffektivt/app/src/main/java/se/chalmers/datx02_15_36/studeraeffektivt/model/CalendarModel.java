@@ -232,7 +232,7 @@ public class CalendarModel {
                 choiceItem = filterItem;
                 calendarsMap.put(id, name);
                 calIdAndColorMap.put(id, color);
-                Log.i("model: ", "id: " + id + " name: " + name + " color: " + color);
+             //   Log.i("model: ", "id: " + id + " name: " + name + " color: " + color);
                 calendarsFilterItems.add(filterItem);
                 calendarChoiceItems.add(choiceItem);
             }
