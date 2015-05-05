@@ -416,37 +416,10 @@ public class StatsFrag extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-       /* if (getActivity() != null) {
-            dbAdapter = new DBAdapter(getActivity());
-        }
-        utils = new Utils();
-
-        //insertTestDataToDB("DDD111");
-        //insertTestDataToDB2("APA777");
-
-        if(isCourses()) {
-            rootView = inflater.inflate(R.layout.activity_stats, getView().getRootView(), false);
-            instantiateView();
-        }else{
-            rootView = inflater.inflate(R.layout.activity_stats_empty, container, false);
-        }*/
-
         rootView = this.getView();
         if(isCourses()) {
-            Log.i("iscourses", isCourses() + "");
+            drawCharts();
         }
-
-        Log.i("Onresume", rootView.equals(null) + "");
-
-
-        //Log.i("Is RootView Null", rootView.equals(null) + "");
-
-        //Log.i("Is Spinner Null", rootView.findViewById(R.id.spinner_stats).equals(null) + "");
-
-           /* getFragmentManager().beginTransaction()
-                    .replace(((ViewGroup)getView().getParent()).getId(), new StatsFrag())
-                    .commit();*/
     }
 
     private void drawCharts(){
