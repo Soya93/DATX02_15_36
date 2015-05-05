@@ -72,9 +72,10 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         if (this != null) {
             dbAdapter = new DBAdapter(this);
         }
-        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
-        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+
 //        fillActivity(courseCode, courseName);
+        initComponents();
+        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,7 +86,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         View rootView = inflater.inflate(R.layout.activity_course_details, container, false);
         this.view = rootView;
 
-        initComponents();
+
 
         //bundleFromPreviousFragment = this.getArguments();
         //selectedCourse = bundleFromPreviousFragment.getInt("kurs");
@@ -106,12 +107,12 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     public void initComponents() {
-        taskButton = (Button) view.findViewById(R.id.taskButton);
+        taskButton = (Button) findViewById(R.id.taskButton);
         taskButton.setOnClickListener(myOnlyhandler);
 
-        kursDetaljer = (TextView) view.findViewById(R.id.kursDetaljer);
+        kursDetaljer = (TextView) findViewById(R.id.kursDetaljer);
 
-        layoutWithinScrollViewOfTasks = (FlowLayout) view.findViewById(R.id.layoutWithinScrollViewOfTasks);
+        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
 
     }
 

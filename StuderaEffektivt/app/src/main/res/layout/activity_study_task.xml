@@ -28,7 +28,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
@@ -39,7 +39,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/type_title"
+            android:text="@string/type_place_title"
             android:gravity="center"
             android:textSize="17sp"
             android:textColor="#03A9F4"
@@ -47,9 +47,19 @@
             />
 
         </LinearLayout>
+        -->
+
+    <View
+        android:id="@+id/typeLayout"
+        android:layout_below="@+id/courseLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"
+        android:layout_gravity="center_vertical"
+        />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/firstLayout"
@@ -60,13 +70,6 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="0.5"
-            android:layout_weight="0.5">
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
             android:orientation="horizontal"
             android:weightSum="1"
             android:layout_weight="0.5">
@@ -77,18 +80,25 @@
                 android:id="@+id/chapterLabel"
                 android:text="@string/chapter_title"
                 android:textSize="17sp"
-                android:layout_weight="0.35"/>
+                android:layout_weight="0.5"
+                android:layout_marginRight="5dp"
+                android:gravity="right"
+                android:textAlignment="gravity"
+                android:layout_gravity="center"
+                />
 
             <Spinner
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/chapterSpinner"
-                android:layout_weight="0.65"/>
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0.5"
+                />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_weight="0.5">
 
@@ -98,34 +108,61 @@
             android:id="@+id/weekLabel"
             android:text="@string/week_title"
             android:textSize="17sp"
-            android:layout_weight="0.35"/>
+            android:layout_weight="0.5"
+            android:layout_marginRight="5dp"
+            android:gravity="right"
+            android:textAlignment="gravity"
+            android:layout_gravity="center"
+            />
 
-        <Spinner
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/weekSpinner"
-            android:layout_weight="0.65"/>
-
-    </LinearLayout>
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/weekSpinner"
+                android:layout_weight="0.5"
+                android:layout_marginLeft="5dp"
+                />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
         android:layout_weight="0.5">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/typeLabel"
+            android:text="@string/type_title"
+            android:textSize="17sp"
+            android:layout_marginRight="5dp"
+            android:gravity="right"
+            android:textAlignment="gravity"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            />
+
         <ToggleButton
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/readOrTaskAssignment"
-            android:textOff="@string/task_reading_above"
-            android:textOn="@string/task_other_above"
-            android:background="@null"
-            />
+            android:textOff="@string/type_button_text_reading"
+            android:textOn="@string/type_button_text_other"
+            android:layout_weight="0.5"
+            android:layout_gravity="center"
+            android:gravity="left|center"
+            android:textAlignment="gravity"
+            android:layout_marginLeft="15dp"
+            android:textColor="#03A9F4"
+            android:background="@null"/>
+
     </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
@@ -143,10 +180,19 @@
             style="?android:attr/listSeparatorTextViewStyle"
             />
 
-    </LinearLayout>
+    </LinearLayout>-->
+
+    <View
+        android:id="@+id/infoLyout"
+        android:layout_below="@+id/firstLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"
+        android:layout_gravity="center_vertical"
+        />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
@@ -157,54 +203,91 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="0.35">
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_weight="0.5">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/task_title"
+                android:textSize="17sp"
+                android:layout_weight="0.5"
+                android:layout_marginRight="5dp"
+                android:gravity="right"
+                android:textAlignment="gravity"
+                android:layout_gravity="center"
+                />
 
             <EditText
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:inputType="number"
             android:hint="@string/task_string_hint"
             android:digits="0123456789,-."
             android:id="@+id/taskInput"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="0.5"
             />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="0.5">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/part_title"
+                android:textSize="17sp"
+                android:layout_weight="0.5"
+                android:layout_marginRight="5dp"
+                android:gravity="right"
+                android:textAlignment="gravity"
+                android:layout_gravity="center"
+                />
 
         <EditText
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="text"
             android:hint="@string/part_string_hint"
             android:digits="abcdefghijklmnopqrstuvwxy"
             android:id="@+id/taskParts"
             android:layout_gravity="left|bottom"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="0.5"
             />
 
     </LinearLayout>
 
 
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/thirdLayout"
-        android:weightSum="1.0"
-        android:layout_weight="0.65">
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:text="@string/save_task"
-            android:textColor="#03A9F4"
-            android:id="@+id/addButton"
-            android:background="@null"
-            />
-
-    </LinearLayout>
 </LinearLayout>
 
+    <View
+        android:id="@+id/line3"
+        android:layout_below="@+id/secondLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"
+        android:layout_gravity="center_vertical"
+        />
+
     <TextView
+        android:id="@+id/savedTaskTitle"
+        android:layout_below="@+id/line3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/saved_tasks_title"
+        android:gravity="center"
+        android:textSize="17sp"
+        android:textColor="#03A9F4"
+        />
+
+    <!--<TextView
         android:id="@+id/savedTaskTitle"
         android:layout_below="@+id/secondLayout"
         android:layout_width="fill_parent"
@@ -214,7 +297,7 @@
         android:textSize="17sp"
         android:textColor="#03A9F4"
         style="?android:attr/listSeparatorTextViewStyle"
-        />
+        />-->
 
     <LinearLayout
         android:orientation="horizontal"
