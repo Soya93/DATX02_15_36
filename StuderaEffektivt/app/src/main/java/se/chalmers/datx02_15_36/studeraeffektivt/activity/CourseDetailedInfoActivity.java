@@ -2,19 +2,28 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -53,6 +62,12 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private FlowLayout taskListfromWeb;
     private String URL_CONNECTION = "http://studiecoachchalmers.se/getassignmets2.php";
     private HashMap<Integer, StudyTask2> assignmetsHashMap = new HashMap<Integer, StudyTask2>();
+    private View.OnClickListener fabHandler;
+    private FloatingActionButton actionButton;
+    private SubActionButton button1;
+    private SubActionButton button2;
+    private SubActionButton button3;
+    private SubActionButton button4;
 
 
     private String courseCode;
@@ -67,6 +82,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getIntent().getStringExtra("CourseName"));
+        courseCode = getIntent().getStringExtra("CourseCode");
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
         //initFrag(getIntent().getStringExtra("ActivityTitle"));
         if (this != null) {
@@ -76,6 +92,90 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 //        fillActivity(courseCode, courseName);
         initComponents();
         layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+
+        // listener for FAB menu
+        FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
+            @Override
+            public void onMenuOpened(FloatingActionMenu floatingActionMenu) {
+            }
+
+            @Override
+            public void onMenuClosed(FloatingActionMenu floatingActionMenu) {
+            }
+        };
+
+        //Handler for submenu items
+        fabHandler = new View.OnClickListener() {
+
+            public void onClick(View v) {
+                if (v.getTag() == button1.getTag()) {
+                    //delete course
+                } else if (v.getTag() == button2.getTag()) {
+                    //set time
+                } else if (v.getTag() == button3.getTag()) {
+                    //download tasks
+                    getAssignmetsFromWeb(v);
+                } else {
+                    //Add tasks
+                   goToTasks(v);
+                }
+
+            }
+        };
+
+        //Create menu
+        ImageView icon = new ImageView(this); // Create an icon
+        Drawable moreIcon = getResources().getDrawable( R.drawable.ic_navigation_more_vert).mutate();
+        moreIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP);
+        icon.setImageDrawable(moreIcon);
+
+        actionButton = new FloatingActionButton.Builder(this)
+                .setContentView(icon)
+                .build();
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
+        // repeat many times:
+        ImageView itemIcon1 = new ImageView(this);
+        Drawable plusIcon = getResources().getDrawable( R.drawable.ic_action_delete).mutate();
+        plusIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon1.setImageDrawable(plusIcon);
+        button1 = itemBuilder.setContentView(itemIcon1).build();
+        button1.setTag(1);
+        button1.setOnClickListener(fabHandler);
+
+        ImageView itemIcon2 = new ImageView(this);
+        Drawable repeatIcon = getResources().getDrawable( R.drawable.ic_device_access_time).mutate();
+        repeatIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon2.setImageDrawable(repeatIcon);
+        button2 = itemBuilder.setContentView(itemIcon2).build();
+        button2.setTag(2);
+        button2.setOnClickListener(fabHandler);
+        ImageView itemIcon3 = new ImageView(this);
+        Drawable nbrOfVisibleDaysIcon = getResources().getDrawable( R.drawable.ic_action_download).mutate();
+        nbrOfVisibleDaysIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon3.setImageDrawable(nbrOfVisibleDaysIcon);
+        button3 = itemBuilder.setContentView(itemIcon3).build();
+        button3.setTag(3);
+        button3.setOnClickListener(fabHandler);
+
+        ImageView itemIcon4 = new ImageView(this);
+        Drawable calendarsIcon = getResources().getDrawable( R.drawable.ic_content_add).mutate();
+        calendarsIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon4.setImageDrawable(calendarsIcon);
+        button4 = itemBuilder.setContentView(itemIcon4).build();
+        button4.setTag(4);
+        button4.setOnClickListener(fabHandler);
+
+        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
+                .addSubActionView(button1)
+                .addSubActionView(button2)
+                .addSubActionView(button3)
+                .addSubActionView(button4)
+                .attachTo(actionButton)
+                .build();
+
+        actionMenu.setStateChangeListener(myFABHandler);
+
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,6 +200,29 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         fillActivity(courseCode, courseName);
 
         return rootView;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.menu_course_details, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void fillActivity(String courseCode, String courseName) {
@@ -199,6 +322,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
 
         protected void onPostExecute(String file_url) {
+
             taskListfromWeb = (FlowLayout) findViewById(R.id.taskListfromWeb);
                     Iterator it = assignmetsHashMap.entrySet().iterator();
                     while (it.hasNext()) {
@@ -214,6 +338,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
 
     }
+
+
 
 }
 

@@ -293,7 +293,12 @@ public class TimerFrag extends Fragment {
 
 
     public void setSelectedCourse() {
-
+        Log.i("timer", "spinner's selected item: " + spinner.getSelectedItem());
+        if(spinner.getSelectedItem() != null){
+            String temp = spinner.getSelectedItem().toString();
+            String[] parts = temp.split(" ");
+            this.ccode = parts[0];
+        }
     }
 
 

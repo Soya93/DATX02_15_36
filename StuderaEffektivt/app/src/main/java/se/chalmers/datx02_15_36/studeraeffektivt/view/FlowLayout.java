@@ -355,7 +355,39 @@ public class FlowLayout extends ViewGroup {
             }
         }
 
+        if(hashMapOfStudyTasks2!=null)
+            addMap2(hashMapOfStudyTasks2);
+        if(hashMapOfReadingAssignments2!=null)
+            addMap2(hashMapOfReadingAssignments2);
+    }
 
+
+    public void addMap2(HashMap<Integer, ArrayList<StudyTask2>> hashMap){
+        Map<Integer, ArrayList> treeMap;
+        treeMap = new TreeMap<Integer, ArrayList>(hashMap);
+        for (Object value : treeMap.values()) {
+            ArrayList<StudyTask2> a = (ArrayList) value;
+            TextView kapitelText = new TextView(this.getContext());
+            kapitelText.setText("KAPITEL " + a.get(0).getChapter());
+            int width = this.getWidth();
+            kapitelText.setWidth(width);
+            this.addView(kapitelText);
+            Log.d("HEJALEX","jgjkdgm");
+            int counter = this.getChildCount();
+            for(int i = 0; i < a.size(); i++){
+
+                if(a.get(i).getParent()!=null){
+                    ((ViewGroup) a.get(i).getParent()).removeView(a.get(i));
+                }
+                if(!a.get(i).isChecked()) {
+                    this.addView(a.get(i), counter);
+                    counter++;
+                }
+                else{
+                    this.addView(a.get(i),counter);
+                }
+            }
+        }
     }
 
 }
