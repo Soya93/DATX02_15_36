@@ -1,6 +1,8 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.app.ActivityManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,11 +16,15 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.util.List;
 
+import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
@@ -159,8 +165,44 @@ public class MyCountDownTimer extends Service {
                         insertIntoDataBase(studyTimePassed);
                         studyTimePassed = 0;
                         studyTimer = timerFunction(pauseTime, 100);
+                        NotificationCompat.Builder mBuilder =
+                                new NotificationCompat.Builder(getApplication())
+                                        .setSmallIcon(R.drawable.ic_timer)
+                                        .setContentTitle("StudieCoach")
+                                        .setContentText("Dags för paus");
+                        Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplication());
+                        stackBuilder.addParentStack(MainActivity.class);
+                        stackBuilder.addNextIntent(resultIntent);
+                        PendingIntent resultPendingIntent =
+                                stackBuilder.getPendingIntent(
+                                        0,
+                                        PendingIntent.FLAG_UPDATE_CURRENT
+                                );
+                        mBuilder.setContentIntent(resultPendingIntent);
+                        NotificationManager mNotificationManager =
+                                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        mNotificationManager.notify(60, mBuilder.build());
                     } else if (count == 0) {  // här  vill du att en notification att pausetiden är slut
                         studyTimer = timerFunction(studyTime, 100);
+                        NotificationCompat.Builder mBuilder =
+                                new NotificationCompat.Builder(getApplication())
+                                        .setSmallIcon(R.drawable.ic_timer)
+                                        .setContentTitle("StudieCoach")
+                                        .setContentText("Dags att plugga");
+                        Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplication());
+                        stackBuilder.addParentStack(MainActivity.class);
+                        stackBuilder.addNextIntent(resultIntent);
+                        PendingIntent resultPendingIntent =
+                                stackBuilder.getPendingIntent(
+                                        0,
+                                        PendingIntent.FLAG_UPDATE_CURRENT
+                                );
+                        mBuilder.setContentIntent(resultPendingIntent);
+                        NotificationManager mNotificationManager =
+                                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        mNotificationManager.notify(61, mBuilder.build());
                     }
                     studyTimer.start();
                 }

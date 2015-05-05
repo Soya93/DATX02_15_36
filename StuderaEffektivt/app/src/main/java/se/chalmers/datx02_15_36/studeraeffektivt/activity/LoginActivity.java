@@ -1,7 +1,9 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import com.google.android.gms.common.SignInButton;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.IO.LogInHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 
 /**
@@ -27,7 +30,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
  */
 
 public class LoginActivity extends Activity implements OnClickListener{
-        LogInHandler logInHandler;
+        private SharedPreferences sharedPref;
+        private String prefName = "LogInPref";
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -45,15 +49,17 @@ public class LoginActivity extends Activity implements OnClickListener{
     private SignInButton mPlusSignInButton;
     private View mSignOutButtons;
     private View mLoginFormView;
+    boolean hasAlreadyLoggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        boolean hasAlreadyLoggedIn = true;
+        sharedPref = getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        hasAlreadyLoggedIn = sharedPref.getBoolean("hasLoggedIn", false);
 
-        if(hasAlreadyLoggedIn) {
 
+        if(!hasAlreadyLoggedIn) {
             mPlusSignInButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
             mPlusSignInButton.setSize(SignInButton.SIZE_STANDARD);
             mPlusSignInButton.setColorScheme(SignInButton.COLOR_LIGHT);
@@ -82,11 +88,27 @@ public class LoginActivity extends Activity implements OnClickListener{
 
     @Override
     public void onClick(View v) {
-
         switch(v.getId()) {
             case R.id.plus_sign_in_button:
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+
+                sharedPref = getSharedPreferences(prefName, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("hasLoggedIn", true);
+                editor.apply();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sharedPref = getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        hasAlreadyLoggedIn = sharedPref.getBoolean("hasLoggedIn", false);
+
+        if(hasAlreadyLoggedIn) {
+           this.finish();
+
         }
     }
 }
