@@ -81,7 +81,7 @@ public class TipFrag extends Fragment {
 
         Bundle bundle = new Bundle();
         bundle.putString("key", (String) b.getText());
-
+        bundle.putString("PreviousTitle", "Studietips");
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = this.getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
