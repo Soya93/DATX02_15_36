@@ -294,7 +294,11 @@ public class MainActivity extends ActionBarActivity {
         timerFrag.settingsTimer();
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewPager = (ViewPager) findViewById(R.id.pager);
+    }
 }
 
 

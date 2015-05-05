@@ -31,6 +31,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -76,6 +77,9 @@ public class StatsFrag extends Fragment {
 
     private void instantiateView(){
         spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
+
+        Log.i("IsNull", spinner.equals(null) + "");
+
         setCourses();
         spinner.setSelection(0);
         Log.i("DB", "initial selection: "+spinner.getSelectedItem());
@@ -279,10 +283,10 @@ public class StatsFrag extends Fragment {
             String[] parts = temp.split(" ");
             this.currCourse = parts[0];
         }
+        drawCharts();
     }
 
     private int getMinutesSpent(){
-        setSelectedCourse(); //take this away
         return (dbAdapter.getSpentTime(currCourse));
     }
 
@@ -409,5 +413,47 @@ public class StatsFrag extends Fragment {
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+       /* if (getActivity() != null) {
+            dbAdapter = new DBAdapter(getActivity());
+        }
+        utils = new Utils();
+
+        //insertTestDataToDB("DDD111");
+        //insertTestDataToDB2("APA777");
+
+        if(isCourses()) {
+            rootView = inflater.inflate(R.layout.activity_stats, getView().getRootView(), false);
+            instantiateView();
+        }else{
+            rootView = inflater.inflate(R.layout.activity_stats_empty, container, false);
+        }*/
+
+        rootView = this.getView();
+        if(isCourses()) {
+            Log.i("iscourses", isCourses() + "");
+        }
+
+        Log.i("Onresume", rootView.equals(null) + "");
+
+
+        //Log.i("Is RootView Null", rootView.equals(null) + "");
+
+        //Log.i("Is Spinner Null", rootView.findViewById(R.id.spinner_stats).equals(null) + "");
+
+           /* getFragmentManager().beginTransaction()
+                    .replace(((ViewGroup)getView().getParent()).getId(), new StatsFrag())
+                    .commit();*/
+    }
+
+    private void drawCharts(){
+        instantiatePieMinutes();
+        instantiatePieAssignments();
+        instantiateLineChart();
     }
 }
