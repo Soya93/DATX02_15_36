@@ -178,10 +178,10 @@ public class MyProfileFrag extends Fragment {
         techniqueButton.setOnClickListener(myOnlyhandler);
 
         listOfCourses = (ListView) view.findViewById(R.id.listOfCourses);
-        updateCourses();
+
         simpleAdapter = new SimpleAdapter(this.getActivity(), courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
         listOfCourses.setAdapter(simpleAdapter);
-
+        updateCourses();
         setListOfCourses();
 
 
@@ -313,8 +313,9 @@ public class MyProfileFrag extends Fragment {
                 cname = cursor.getString(1);
                 //courseList.add();
                 //
-                courseList.add(createCourse("Courses", new Course(cname, ccode)));
-                //arrayAdapter.notifyDataSetChanged();
+                courseList.add(0,createCourse("Courses", new Course(cname, ccode)));
+                simpleAdapter.notifyDataSetChanged();
+
             }
         }else{
            // courseList.add("Det finns för tillfället inga kurser, lägg till en kurs genom att trycka på knappen ovan");
