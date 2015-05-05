@@ -53,17 +53,15 @@
         android:backgroundTint="@null"
 
         android:clickable="true"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/listOfCourses"
-        android:layout_alignParentStart="true" />
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="150dp"
         android:id="@+id/listOfCourses"
         android:layout_below="@+id/addCourse"
-        android:layout_alignStart="@+id/addCourse"
-         />
+        android:layout_alignStart="@+id/addCourse" />
 
 
 
@@ -97,7 +95,7 @@
         android:id="@+id/addTask"
         android:enabled="true"
         android:clickable="true"
-        android:layout_below="@+id/textView6"
+        android:layout_above="@+id/tips"
         android:layout_alignParentEnd="true" />
 
     <View
@@ -121,7 +119,7 @@
         android:id="@+id/tips"
         android:enabled="true"
         android:clickable="true"
-        android:layout_below="@+id/addTask"
+        android:layout_above="@+id/techniques"
         android:layout_alignParentStart="true" />
 
     <Button
@@ -134,8 +132,8 @@
         android:id="@+id/techniques"
         android:enabled="true"
         android:clickable="true"
-        android:layout_below="@+id/tips"
-        android:layout_alignStart="@+id/tips" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>
