@@ -74,7 +74,7 @@ public class StudyTask2 extends CheckBox {
                 if (buttonView.isChecked()) {
                     addToDatabase();
                     Toast.makeText(StudyTask2.this.getContext(), "Uppgiften har sparats", Toast.LENGTH_SHORT).show();
-                    ((FlowLayout)getParent()).(getStudyTask());
+
                 } else {
                 }
             }

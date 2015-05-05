@@ -70,6 +70,8 @@ public class TimerFrag extends Fragment {
     public static final int CHANGE_COLOR_1 = 2;
     public static final int TIMER_FINISHED = 3;
 
+    private TextView textViewWeek;
+
     private long serviceInt;
 
     private Time default_studyTime;
@@ -247,10 +249,12 @@ public class TimerFrag extends Fragment {
         taskSwitch = (Switch) rootView.findViewById(R.id.taskSwitch);
         previousWeek = (ImageButton) rootView.findViewById(R.id.previousWeek);
         nextWeek = (ImageButton) rootView.findViewById(R.id.nextWeek);
+        textViewWeek = (TextView) rootView.findViewById(R.id.textViewWeek);
 
         setCourses();
 
         week = Utils.getCurrWeekNumber();
+        textViewWeek.setText("Vecka " + String.valueOf(week));
 
 
         taskSwitch.setChecked(true);
@@ -425,13 +429,16 @@ public class TimerFrag extends Fragment {
 
     public void updateTaskList(AssignmentType assignmentType, int week) {
         taskList.removeAllViews();
+
         taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
 
         if(taskList.isEmpty()){
             TextView textView1 = new TextView(getActivity());
             textView1.setText("Ingen uppgift av den här typen för den valda veckan");
             taskList.addView(textView1);
+
         }
+
     }
 
     public void initButtons() {
@@ -453,6 +460,7 @@ public class TimerFrag extends Fragment {
         previousWeek.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 week--;
+                textViewWeek.setText("Vecka " + String.valueOf(week));
                 updateTaskList(assignmentType, week);
             }
         });
@@ -460,6 +468,7 @@ public class TimerFrag extends Fragment {
         nextWeek.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 week++;
+                textViewWeek.setText("Vecka " + String.valueOf(week));
                 updateTaskList(assignmentType, week);
             }
         });
