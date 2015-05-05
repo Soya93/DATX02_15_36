@@ -1,5 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -9,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,10 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -32,6 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -45,6 +51,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask2;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
@@ -110,7 +117,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 if (v.getTag() == button1.getTag()) {
                     //delete course
                 } else if (v.getTag() == button2.getTag()) {
-                    //set time
+                    chooseTimeOnCourseDialog();
                 } else if (v.getTag() == button3.getTag()) {
                     //download tasks
                     getAssignmetsFromWeb(v);
@@ -333,6 +340,44 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             }
 
 
+    }
+
+    private void chooseTimeOnCourseDialog(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("Hur många timmar vill du lägga på kursen per vecka?");
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        input.setText("0");
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                Log.d("course", "add "+value+" minutes to "+courseCode);
+                long add = dbAdapter.insertTimeOnCourse(courseCode, Integer.parseInt(value));
+
+                Toast toast;
+                if(add > 0){
+
+                    int mins = dbAdapter.getTimeOnCourse(courseCode);
+                    toast = Toast.makeText(getBaseContext(), "Ditt mål är nu att lägga "+mins+" minuter på "+courseCode+" i veckan.", Toast.LENGTH_LONG);
+                }else{
+                    toast = Toast.makeText(getBaseContext(), "Det gick inte att lägga till.", Toast.LENGTH_SHORT);
+                }
+                toast.show();
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
     }
 
 

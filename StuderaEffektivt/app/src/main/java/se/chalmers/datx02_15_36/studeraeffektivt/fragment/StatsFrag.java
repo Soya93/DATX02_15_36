@@ -186,8 +186,8 @@ public class StatsFrag extends Fragment {
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
         Entry hoursLeft = new Entry(getMinutesLeft(),1);
         Entry hoursDone = new Entry(getMinutesSpent(),0);
-        pieEntries.add(hoursDone);
         pieEntries.add(hoursLeft);
+        pieEntries.add(hoursDone);
 
         int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "Minuter");
@@ -321,7 +321,7 @@ public class StatsFrag extends Fragment {
 
     public void onStart(){
         super.onStart();
-        if (isCourses()) {
+        if (isCourses() && spinner != null) {
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
