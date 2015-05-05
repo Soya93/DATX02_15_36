@@ -43,10 +43,13 @@ public class CalendarModelTest extends AndroidTestCase {
         calendarModel.getCalendarInfo(cr);
         ArrayList<CalendarsFilterItem> calendars = calendarModel.getCalendarWritersPermissions();
         for (CalendarsFilterItem item : calendars) {
-            if (item.getTitle() == "Kandidatarbete") {
+            if (item.getTitle().equals("Kandidatarbete")) {
                 bachelorThesisCalID = item.getCalID();
+
             }
         }
+        assertTrue(calendars.size()==6);
+        assertNotNull(bachelorThesisCalID);
 
 
         //Code for reading all events -24hours from now to +24hours from now
@@ -133,8 +136,9 @@ public class CalendarModelTest extends AndroidTestCase {
         Boolean newIsAllDayEvent = true;
         int newNotification = -1;
 
+
         //TODO add edit for notification
-        long newEventID = calendarModel.editEventAuto(cr, newTitle, newStartMillis, newEndMillis, newLocation, newDescription, homeCalID, eventID, newNotification, newIsAllDayEvent);
+        long newEventID = calendarModel.editEventAuto(cr, newTitle, newStartMillis, newEndMillis, newLocation, newDescription, bachelorThesisCalID, eventID, newNotification, newIsAllDayEvent);
 
         ArrayList<Boolean> isEventList = new ArrayList<Boolean>();
 
@@ -147,7 +151,7 @@ public class CalendarModelTest extends AndroidTestCase {
             long endTime = cur.getLong(CalendarUtils.EVENT_END);
             String eventLocation = cur.getString(CalendarUtils.LOCATION);
             String eventDescription = cur.getString(CalendarUtils.DESCRIPTION);
-            long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
+            Long calID = cur.getLong(CalendarUtils.CALENDAR_ID);
             int eventNotification = cur.getInt(CalendarUtils.NOTIFICATION_EVENT_ID);
             boolean isAllDayEventValue = cur.getInt(CalendarUtils.ALL_DAY) == 1;
             long eventID2 = cur.getLong(CalendarUtils.EVENT_ID);
@@ -156,7 +160,7 @@ public class CalendarModelTest extends AndroidTestCase {
             //TODO fix notification test...
 
             boolean isEvent = newEventID == eventID2 && eventTitle.equals(newTitle)  && eventLocation.equals(newLocation)
-                    && eventDescription.equals(newDescription) && homeCalID.equals((Long) calID)
+                    && eventDescription.equals(newDescription) && bachelorThesisCalID.equals(calID)
                     /*&& newNotification == eventNotification*/ && isAllDayEventValue;
 
             isEventList.add(isEvent);
