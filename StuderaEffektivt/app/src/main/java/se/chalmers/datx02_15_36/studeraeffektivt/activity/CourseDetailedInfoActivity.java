@@ -51,9 +51,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private Button taskButton;
     private FlowLayout layoutWithinScrollViewOfTasks;
     private FlowLayout taskListfromWeb;
-    private String URL_CONNECTION = "http://192.168.1.6/getassignmets2.php";
+    private String URL_CONNECTION = "http://studiecoachchalmers.se/getassignmets2.php";
     private HashMap<Integer, StudyTask2> assignmetsHashMap = new HashMap<Integer, StudyTask2>();
-    private ListView tasksfromWeb;
 
 
     private String courseCode;
@@ -70,6 +69,12 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         actionBar.setTitle(getIntent().getStringExtra("CourseName"));
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
         //initFrag(getIntent().getStringExtra("ActivityTitle"));
+        if (this != null) {
+            dbAdapter = new DBAdapter(this);
+        }
+        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
+        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+//        fillActivity(courseCode, courseName);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,11 +94,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         //Course course = CourseFrag.courseList.get(selectedCourse).get("Courses");
 
         //Create the database access point but check if the context is null first.
-        if (this != null) {
-            dbAdapter = new DBAdapter(this);
-        }
 
-        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
 
         fillActivity(courseCode, courseName);
 
@@ -197,9 +198,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
 
         protected void onPostExecute(String file_url) {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    tasksfromWeb = (ListView) findViewById(R.id.listViewForWeb);
+            taskListfromWeb = (FlowLayout) findViewById(R.id.taskListfromWeb);
                     Iterator it = assignmetsHashMap.entrySet().iterator();
                     while (it.hasNext()) {
                         Map.Entry pair = (Map.Entry) it.next();
@@ -209,8 +208,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                                 test.getEndPage(), "UNDONE", "READ", dbAdapter);
                         it.remove(); // avoids a ConcurrentModificationException
                     }
-                }
-            });
+
             }
 
 

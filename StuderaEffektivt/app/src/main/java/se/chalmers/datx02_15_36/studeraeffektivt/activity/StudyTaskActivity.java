@@ -63,7 +63,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     private ToggleButton readOrTaskAssignment;
 
     private String courseCode;
-    private String URL_CONNECTION = "http://192.168.1.6/insertassignmets.php";
+    private String URL_CONNECTION = "http://studiecoachchalmers.se/insertassignmets.php";
 
     //The access point of the database.
     private DBAdapter dbAdapter;
