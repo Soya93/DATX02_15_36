@@ -71,8 +71,8 @@ public class StatsFrag extends Fragment {
         }
         utils = new Utils();
 
-        //insertTestDataToDB("DDD111");
-        //insertTestDataToDB2("APA777");
+        insertTestDataToDB("DDD111");
+        insertTestDataToDB2("APA777");
 
         Log.d("stats", "there is data: "+thereIsData());
         if(thereIsData()) {
@@ -124,7 +124,7 @@ public class StatsFrag extends Fragment {
             for(int w=smallestWeek; w<Utils.getCurrWeekNumber(); w++){
 
                 if(c == 0){
-                    weeks.add(""+w);
+                    weeks.add("v. "+w);
                 }
 
                 Cursor mins = dbAdapter.getMinutes(w, ccode);

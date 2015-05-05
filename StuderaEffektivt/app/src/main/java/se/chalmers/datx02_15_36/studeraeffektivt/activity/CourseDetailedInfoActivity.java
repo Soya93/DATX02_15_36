@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -52,6 +53,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private FlowLayout taskListfromWeb;
     private String URL_CONNECTION = "http://192.168.1.6/getassignmets2.php";
     private HashMap<Integer, StudyTask2> assignmetsHashMap = new HashMap<Integer, StudyTask2>();
+    private ListView tasksfromWeb;
 
 
     private String courseCode;
@@ -197,7 +199,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         protected void onPostExecute(String file_url) {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    taskListfromWeb = (FlowLayout) findViewById(R.id.taskListfromWeb);
+                    tasksfromWeb = (ListView) findViewById(R.id.listViewForWeb);
                     Iterator it = assignmetsHashMap.entrySet().iterator();
                     while (it.hasNext()) {
                         Map.Entry pair = (Map.Entry) it.next();
