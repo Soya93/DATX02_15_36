@@ -38,6 +38,16 @@ public class DBAdapter {
         }
     }
 
+    public long deleteCourse(String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        try{
+            return db.delete(dbHelper.TABLE_COURSES, dbHelper.COURSES__ccode + "=" + ccode, null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
     public long insertSession(String courseCode, int week, int minutes) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
