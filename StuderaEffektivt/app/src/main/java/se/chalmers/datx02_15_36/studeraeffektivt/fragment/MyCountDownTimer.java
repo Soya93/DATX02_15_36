@@ -133,7 +133,8 @@ public class MyCountDownTimer extends Service {
 
             public void onTick(long millisUntilFinished) {
                 timeUntilFinished=millisUntilFinished; // if user wants to pause timer;
-                sendMessage((int)millisUntilFinished);
+                if(activityIsRunning){
+                sendMessage((int)millisUntilFinished);}
                 if(count==0){
                     studyTimePassed+=100;
 
@@ -159,15 +160,8 @@ public class MyCountDownTimer extends Service {
                         insertIntoDataBase(studyTimePassed);
                         studyTimePassed = 0;
                         studyTimer = timerFunction(pauseTime, 100);
-                        sendMessage(pauseTime);
-                        if(activityIsRunning){
-                        mHandler.sendEmptyMessage(1);}
                     } else if (count == 0) {
                         studyTimer = timerFunction(studyTime, 100);
-                        sendMessage(studyTime);
-                        if(activityIsRunning) {
-                            mHandler.sendEmptyMessage(2);
-                        }
                     }
                     studyTimer.start();
                 }
