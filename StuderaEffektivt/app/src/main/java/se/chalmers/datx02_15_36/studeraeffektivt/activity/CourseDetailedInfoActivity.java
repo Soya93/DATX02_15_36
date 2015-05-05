@@ -93,9 +93,10 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         if (this != null) {
             dbAdapter = new DBAdapter(this);
         }
-        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
-        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+
 //        fillActivity(courseCode, courseName);
+        initComponents();
+        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
 
         isActiveSwitch = (Switch) findViewById(R.id.isActiveSwitch);
         isActiveSwitch.setChecked(true); //TODO hämta från databas
@@ -222,7 +223,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         View rootView = inflater.inflate(R.layout.activity_course_details, container, false);
         this.view = rootView;
 
-        initComponents();
+
 
         //bundleFromPreviousFragment = this.getArguments();
         //selectedCourse = bundleFromPreviousFragment.getInt("kurs");
@@ -266,9 +267,12 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     public void initComponents() {
-        kursDetaljer = (TextView) view.findViewById(R.id.kursDetaljer);
+        taskButton = (Button) findViewById(R.id.taskButton);
+        taskButton.setOnClickListener(myOnlyhandler);
 
-        layoutWithinScrollViewOfTasks = (FlowLayout) view.findViewById(R.id.layoutWithinScrollViewOfTasks);
+        kursDetaljer = (TextView) findViewById(R.id.kursDetaljer);
+
+        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
 
     }
 

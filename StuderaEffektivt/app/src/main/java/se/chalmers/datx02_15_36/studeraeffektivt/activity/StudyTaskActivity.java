@@ -53,7 +53,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     //Components in the view
     private EditText taskInput;
-    private Button addButton;
+   // private Button addButton;
     private EditText taskParts;
     private FlowLayout listOfTasks;
     private FlowLayout listOfReadAssignments;
@@ -125,7 +125,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     }
 
     public void initComponents() {
-        addButton = (Button) findViewById(R.id.addButton);
+        //addButton = (Button) findViewById(R.id.addButton);
         taskInput = (EditText) findViewById(R.id.taskInput);
         taskParts = (EditText) findViewById(R.id.taskParts);
         listOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
@@ -166,7 +166,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         listOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
         listOfReadAssignments.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
 
-        addButton.setOnClickListener(myOnlyhandler);
+        //addButton.setOnClickListener(myOnlyhandler);
 
         courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -182,7 +182,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         });
     }
 
-    View.OnClickListener myOnlyhandler = new View.OnClickListener() {
+    /*View.OnClickListener myOnlyhandler = new View.OnClickListener() {
         public void onClick(View v) {
 
             if ((v) == addButton) {
@@ -190,7 +190,7 @@ public class StudyTaskActivity extends ActionBarActivity {
             }
 
         }
-    };
+    };*/
 
     private void saveTaks() {
         String[] chapSep = chapterSpinner.getSelectedItem().toString().split(" ");
