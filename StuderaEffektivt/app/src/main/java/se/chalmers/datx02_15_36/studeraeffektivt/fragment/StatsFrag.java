@@ -31,6 +31,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -76,6 +77,9 @@ public class StatsFrag extends Fragment {
 
     private void instantiateView(){
         spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
+
+        Log.i("IsNull", spinner.equals(null) + "");
+
         setCourses();
         spinner.setSelection(0);
         Log.i("DB", "initial selection: "+spinner.getSelectedItem());
@@ -279,10 +283,10 @@ public class StatsFrag extends Fragment {
             String[] parts = temp.split(" ");
             this.currCourse = parts[0];
         }
+        drawCharts();
     }
 
     private int getMinutesSpent(){
-        setSelectedCourse(); //take this away safely
         return (dbAdapter.getSpentTime(currCourse));
     }
 
@@ -407,5 +411,20 @@ public class StatsFrag extends Fragment {
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        rootView = this.getView();
+        if(isCourses()) {
+            drawCharts();
+        }
+    }
+
+    private void drawCharts(){
+        instantiatePieMinutes();
+        instantiatePieAssignments();
+        instantiateLineChart();
     }
 }
