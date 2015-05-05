@@ -50,6 +50,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 public class TimerFrag extends Fragment {
 
     private ImageButton startButton;
+    private ImageButton stopButton;
+    private ImageButton pauseButton;
 
 
     private int buttonId = R.drawable.ic_action_play;
@@ -97,22 +99,29 @@ public class TimerFrag extends Fragment {
                     Bundle b = msg.getData();
                     serviceInt = b.getLong("timePassed", -1);
                     phaceInt = b.getInt("Phace", -1);
-                    setTimerView(serviceInt);
+                    if(phaceInt == 0){
+                        progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
+                    }
 
+                    if(phaceInt == 1){
+                        progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_pause));
+                    }
+
+                    setTimerView(serviceInt);
                     break;
                 case CHANGE_COLOR_0:
 
-                    progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_pause));
+
                     break;
 
                 case CHANGE_COLOR_1:
 
-                        progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
+
                         break;
 
 
                 case TIMER_FINISHED:
-                  //  resetTimer();
+                    resetTimer();
                     break;
             }
 
@@ -195,7 +204,7 @@ public class TimerFrag extends Fragment {
         }
         hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
         if (hasBeenPaused) {
-            long temp = sharedPref.getLong("timeLeft", -1);
+
         }
         if(!isMyServiceRunning(MyCountDownTimer.class)) {
             startButton.setImageResource(R.drawable.ic_action_play);
@@ -227,6 +236,7 @@ public class TimerFrag extends Fragment {
 
     private void instantiateButtons() {
         startButton = (ImageButton) rootView.findViewById(R.id.button_start_timer);
+        stopButton = (ImageButton) rootView.findViewById(R.id.button_reset);
         startButton.setBackgroundColor(Color.TRANSPARENT);
         previousWeek = (ImageButton) rootView.findViewById(R.id.previousWeek);
         nextWeek = (ImageButton) rootView.findViewById(R.id.nextWeek);
@@ -283,7 +293,12 @@ public class TimerFrag extends Fragment {
 
 
     public void setSelectedCourse() {
-
+        Log.i("timer", "spinner's selected item: " + spinner.getSelectedItem());
+        if(spinner.getSelectedItem() != null){
+            String temp = spinner.getSelectedItem().toString();
+            String[] parts = temp.split(" ");
+            this.ccode = parts[0];
+        }
     }
 
 
@@ -472,6 +487,8 @@ public class TimerFrag extends Fragment {
         Drawable forwardDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_right).mutate();
         forwardDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         nextWeek.setBackground(forwardDrawable);
+
+
 
     }
 

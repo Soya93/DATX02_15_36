@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -61,7 +62,6 @@ public class MyCountDownTimer extends Service {
                 case RESUME:
                         resumeTimer();
                     break;
-
                 case STOP:
                     onDestroy();
                     break;
@@ -112,8 +112,6 @@ public class MyCountDownTimer extends Service {
         super.onDestroy();
         if(count==0 ){
             insertIntoDataBase(studyTimePassed);
-            Toast toast = Toast.makeText(getBaseContext(), "Studiepasset har lagts in i databasen", Toast.LENGTH_SHORT);
-            toast.show();
         }
         studyTimer.cancel();
 
@@ -133,7 +131,8 @@ public class MyCountDownTimer extends Service {
 
             public void onTick(long millisUntilFinished) {
                 timeUntilFinished=millisUntilFinished; // if user wants to pause timer;
-                sendMessage((int)millisUntilFinished);
+                if(activityIsRunning){
+                sendMessage((int)millisUntilFinished);}
                 if(count==0){
                     studyTimePassed+=100;
 
@@ -144,6 +143,7 @@ public class MyCountDownTimer extends Service {
             }
 
             @Override
+            // här ska du in
             public void onFinish() {
                 Log.d("Values of totC", String.valueOf(totalcount));
                 Log.d("Value of reps", String.valueOf(reps));
@@ -154,18 +154,13 @@ public class MyCountDownTimer extends Service {
                 if(totalcount<reps) {
                     count = (count + 1) % 2;
 
-                    if (count == 1) {
+                    if (count == 1) { // här  vill du att en notification att studietiden är slut
                         totalcount ++;
+                        insertIntoDataBase(studyTimePassed);
+                        studyTimePassed = 0;
                         studyTimer = timerFunction(pauseTime, 100);
-                        sendMessage(pauseTime);
-                        if(activityIsRunning){
-                        mHandler.sendEmptyMessage(1);}
-                    } else if (count == 0) {
+                    } else if (count == 0) {  // här  vill du att en notification att pausetiden är slut
                         studyTimer = timerFunction(studyTime, 100);
-                        sendMessage(studyTime);
-                        if(activityIsRunning) {
-                            mHandler.sendEmptyMessage(2);
-                        }
                     }
                     studyTimer.start();
                 }
@@ -206,8 +201,19 @@ public class MyCountDownTimer extends Service {
     private void insertIntoDataBase(long millisPassed) {
         long inserted = dbAdapter.insertSession(ccode, utils.getCurrWeekNumber(), milliSecondsToMin(millisPassed));
         if (inserted > 0 && getBaseContext() != null) {
-            Toast toast = Toast.makeText(getBaseContext(), "Added session!", Toast.LENGTH_SHORT);
-            toast.show();
+
+            Cursor sessions = dbAdapter.getSessions(utils.getCurrWeekNumber());
+            while (sessions.moveToNext()){
+                String timestamp = sessions.getString(sessions.getColumnIndex("timestamp"));
+                int minutes = sessions.getInt(sessions.getColumnIndex("minutes"));
+                String course = sessions.getString(sessions.getColumnIndex("_ccode"));
+                Log.d("timer", "session added: "+timestamp);
+                Log.d("timer", "session minutes: "+minutes);
+                Log.d("timer", "session course: "+course);
+            }
+
+            //Toast toast = Toast.makeText(getBaseContext(), "Added session!", Toast.LENGTH_SHORT);
+            //toast.show();
         } else if (getBaseContext() != null) {
             Toast toast = Toast.makeText(getBaseContext(), "Failed to add a Session", Toast.LENGTH_SHORT);
             toast.show();

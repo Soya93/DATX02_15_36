@@ -317,6 +317,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
 
         protected void onPostExecute(String file_url) {
+
             taskListfromWeb = (FlowLayout) findViewById(R.id.taskListfromWeb);
                     Iterator it = assignmetsHashMap.entrySet().iterator();
                     while (it.hasNext()) {

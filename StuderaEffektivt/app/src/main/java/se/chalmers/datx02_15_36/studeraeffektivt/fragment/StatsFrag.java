@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 /*
 import com.github.mikephil.charting.charts.LineChart;
@@ -23,25 +21,17 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.LargeValueFormatter;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.IntegerValueFormatter;
@@ -71,8 +61,8 @@ public class StatsFrag extends Fragment {
         }
         utils = new Utils();
 
-        insertTestDataToDB("DDD111");
-        insertTestDataToDB2("APA777");
+        //insertTestDataToDB("DDD111");
+        //insertTestDataToDB2("APA777");
 
         Log.d("stats", "there is data: "+thereIsData());
         if(thereIsData()) {
@@ -92,7 +82,7 @@ public class StatsFrag extends Fragment {
         spinner.setSelection(0);
         Log.i("DB", "initial selection: "+spinner.getSelectedItem());
 
-        instantiatePieHours();
+        instantiatePieMinutes();
         instantiatePieAssignments();
         instantiateLineChart();
     }
@@ -187,22 +177,22 @@ public class StatsFrag extends Fragment {
         return cols;
     }
 
-    private void instantiatePieHours(){
+    private void instantiatePieMinutes(){
         pieHours = (PieChart) rootView.findViewById(R.id.pie_hours);
         pieHours.setNoDataTextDescription("TIMMAR DU LAGT");
 
         //Set up pie chart data
-        Log.d("stats", "pieHours spent: "+getHoursSpent());
-        Log.d("stats", "pieHours left: "+getHoursLeft());
+        Log.d("stats", "pieHours spent: "+ getMinutesSpent());
+        Log.d("stats", "pieHours left: "+ getMinutesLeft());
 
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
-        Entry hoursDone = new Entry(getHoursSpent(),0);
-        Entry hoursLeft = new Entry(getHoursLeft(),1);
+        Entry hoursDone = new Entry(getMinutesSpent(),0);
+        Entry hoursLeft = new Entry(getMinutesLeft(),1);
         pieEntries.add(hoursDone);
         pieEntries.add(hoursLeft);
 
         int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
-        PieDataSet pieDataSet = new PieDataSet(pieEntries, "Timmar");
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, "Minuter");
         pieDataSet.setColors(colors);
         pieDataSet.setValueFormatter(new IntegerValueFormatter());
 
@@ -217,7 +207,7 @@ public class StatsFrag extends Fragment {
 
         //Style pie chart data
         pieHours.setDescription("");
-        pieHours.setCenterText("Timmar");
+        pieHours.setCenterText("Minuter");
         pieHours.setDrawHoleEnabled(true);
         pieHours.setHoleColorTransparent(true);
         pieHours.getLegend().setEnabled(false);
@@ -293,17 +283,17 @@ public class StatsFrag extends Fragment {
         }
     }
 
-    private int getHoursSpent(){
+    private int getMinutesSpent(){
         setSelectedCourse();
-        return (dbAdapter.getSpentTime(currCourse)/60);
+        return (dbAdapter.getSpentTime(currCourse));
     }
 
-    private int getHoursLeft(){
-        return ((dbAdapter.getTimeOnCourse(currCourse)/60)-(dbAdapter.getSpentTime(currCourse)/60));
+    private int getMinutesLeft(){
+        return (dbAdapter.getTimeOnCourse(currCourse) - dbAdapter.getSpentTime(currCourse));
     }
 
-    private int getHoursTotal(){
-        return (dbAdapter.getTimeOnCourse(currCourse)/60);
+    private int getMinutesTotal(){
+        return dbAdapter.getTimeOnCourse(currCourse);
     }
 
     private int getAssDone(){
