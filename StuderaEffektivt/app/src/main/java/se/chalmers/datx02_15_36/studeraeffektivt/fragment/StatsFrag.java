@@ -53,6 +53,8 @@ public class StatsFrag extends Fragment {
     private DBAdapter dbAdapter;
     private Utils utils;
 
+    private boolean hasInit;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,6 +73,7 @@ public class StatsFrag extends Fragment {
         }else{
             rootView = inflater.inflate(R.layout.activity_stats_empty, container, false);
         }
+        hasInit = true;
 
         return rootView;
     }
@@ -302,7 +305,6 @@ public class StatsFrag extends Fragment {
     }
 
     private int getAssDone(){
-
         return dbAdapter.getDoneAssignments(currCourse).getCount();
     }
 
@@ -413,11 +415,10 @@ public class StatsFrag extends Fragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        rootView = this.getView();
+    public void updateView(){
         if(isCourses()) {
+            setCourses();
+            spinner.setSelection(0);
             drawCharts();
         }
     }
@@ -426,5 +427,9 @@ public class StatsFrag extends Fragment {
         instantiatePieMinutes();
         instantiatePieAssignments();
         instantiateLineChart();
+    }
+
+    public boolean hasInit(){
+        return hasInit;
     }
 }
