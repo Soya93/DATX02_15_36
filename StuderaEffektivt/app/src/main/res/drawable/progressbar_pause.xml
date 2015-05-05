@@ -6,7 +6,10 @@
             android:shape="ring"
             android:thicknessRatio="30.0"
             android:useLevel="false">
+            <solid android:color="#000000"/>
+            <!--
             <solid android:color="#B6B6B6"/>
+            -->
 
 
         </shape>
@@ -17,11 +20,14 @@
             android:shape="ring"
             android:thicknessRatio="30.0"
             android:useLevel="true">
+            <solid android:color="@color/pink" />
+            <!--
             <gradient
                 android:startColor="#009688"
                 android:endColor="#B2DFDB"
                 android:centerColor="#009688"
                 android:type="sweep" />
+                -->
         </shape>
     </item>
 </layer-list>
