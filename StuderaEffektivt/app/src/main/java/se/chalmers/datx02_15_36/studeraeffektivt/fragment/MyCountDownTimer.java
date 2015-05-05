@@ -206,7 +206,8 @@ public class MyCountDownTimer extends Service {
     private void insertIntoDataBase(long millisPassed) {
         long inserted = dbAdapter.insertSession(ccode, utils.getCurrWeekNumber(), milliSecondsToMin(millisPassed));
         if (inserted > 0 && getBaseContext() != null) {
-
+            Toast toast = Toast.makeText(getBaseContext(), "Added session!", Toast.LENGTH_SHORT);
+            toast.show();
         } else if (getBaseContext() != null) {
             Toast toast = Toast.makeText(getBaseContext(), "Failed to add a Session", Toast.LENGTH_SHORT);
             toast.show();

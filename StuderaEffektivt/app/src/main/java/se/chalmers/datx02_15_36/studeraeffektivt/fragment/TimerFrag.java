@@ -51,7 +51,8 @@ public class TimerFrag extends Fragment {
 
     private ImageButton startButton;
 
-    private int buttonId = R.drawable.ic_start2;
+
+    private int buttonId = R.drawable.ic_action_play;
     private boolean hasBeenPaused = false;
 
     private TextView textView;
@@ -197,7 +198,7 @@ public class TimerFrag extends Fragment {
             long temp = sharedPref.getLong("timeLeft", -1);
         }
         if(!isMyServiceRunning(MyCountDownTimer.class)) {
-            startButton.setImageResource(R.drawable.ic_start2);
+            startButton.setImageResource(R.drawable.ic_action_play);
         }
 
         getTimeFromSettings();
@@ -283,7 +284,6 @@ public class TimerFrag extends Fragment {
 
     public void setSelectedCourse() {
 
-
     }
 
 
@@ -291,17 +291,17 @@ public class TimerFrag extends Fragment {
         if (hasBeenStarted()) {
             spinner.setEnabled(false);
             sendDataToService();
-            buttonId = R.drawable.ic_pause;
+            buttonId = R.drawable.ic_action_pause;
             startButton.setImageResource(buttonId);
         } else if (hasBeenPaused()) {
             hasBeenPaused = true;
             serviceHandler.sendEmptyMessage(0);
-            buttonId = R.drawable.ic_start2;
+            buttonId = R.drawable.ic_action_play;
             startButton.setImageResource(buttonId);
 
         } else if (hasBeenRestarted()) {
             serviceHandler.sendEmptyMessage(1);
-            buttonId = R.drawable.ic_pause;
+            buttonId = R.drawable.ic_action_pause;
             startButton.setImageResource(buttonId);
         }
 
@@ -320,16 +320,15 @@ public class TimerFrag extends Fragment {
     }
 
     private boolean hasBeenStarted() {
-        return buttonId == R.drawable.ic_start2 && !hasBeenPaused;
+        return buttonId == R.drawable.ic_action_play && !hasBeenPaused;
     }
 
     private boolean hasBeenPaused() {
-        return buttonId == R.drawable.ic_pause;
+        return buttonId == R.drawable.ic_action_pause;
     }
 
     private boolean hasBeenRestarted() {
-        return buttonId == R.drawable.ic_start2 && hasBeenPaused;
-
+        return buttonId == R.drawable.ic_action_play && hasBeenPaused;
     }
 
     public void startSetTimerView() {
@@ -354,7 +353,8 @@ public class TimerFrag extends Fragment {
     public void resetTimer() {
         if(isMyServiceRunning(MyCountDownTimer.class)) {
             serviceHandler.sendEmptyMessage(2);
-            buttonId = R.drawable.ic_start2;
+
+            buttonId = R.drawable.ic_action_play;
             hasBeenPaused = false;
             progressBar.setProgress(1000);
             startButton.setImageResource(buttonId);

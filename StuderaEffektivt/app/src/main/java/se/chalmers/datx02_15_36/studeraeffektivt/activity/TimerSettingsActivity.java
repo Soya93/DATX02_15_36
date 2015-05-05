@@ -84,7 +84,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.save_event) {
-           //TODO add save settings;
+           this.finish();
             return true;
         }else if (id == android.R.id.home){
             this.finish();
