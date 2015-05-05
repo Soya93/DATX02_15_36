@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.common.SignInButton;
 
@@ -49,18 +50,34 @@ public class LoginActivity extends Activity implements OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        boolean hasAlreadyLoggedIn = true;
 
-        logInHandler = new LogInHandler(this.getApplicationContext());
+        if(hasAlreadyLoggedIn) {
 
-        mPlusSignInButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
-        mPlusSignInButton.setSize(SignInButton.SIZE_STANDARD);
-        mPlusSignInButton.setColorScheme(SignInButton.COLOR_LIGHT);
-        mPlusSignInButton.setOnClickListener(this);
+            mPlusSignInButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
+            mPlusSignInButton.setSize(SignInButton.SIZE_STANDARD);
+            mPlusSignInButton.setColorScheme(SignInButton.COLOR_LIGHT);
+            this.setGooglePlusButtonText(mPlusSignInButton, "Logga in med ditt google konto");
+            mPlusSignInButton.setOnClickListener(this);
+        } else {
+            //Do not show this window at all, just kill this screen
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            this.finish();
+        }
+    }
 
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        mEmailView.getBackground().setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_IN);
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.getBackground().setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_IN);
+    protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
+        // Find the TextView that is inside of the SignInButton and set its text
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText(buttonText);
+                return;
+            }
+        }
     }
 
     @Override
@@ -68,17 +85,6 @@ public class LoginActivity extends Activity implements OnClickListener{
 
         switch(v.getId()) {
             case R.id.plus_sign_in_button:
-
-                String email = mEmailView.getText().toString();
-                String password = mPasswordView.getText().toString();
-
-                logInHandler.writeToFile(email, password);
-
-                email = logInHandler.getEmail();
-                password = logInHandler.getPassword();
-
-                //TODO: Actually verify and log in to the account specified.
-
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
         }
