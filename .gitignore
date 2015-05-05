@@ -8,3 +8,9 @@ taskArtifacts/
 dex-cache/
 intermediates/
 
+
+*.properties
+
+*.iml
+
+*.iml

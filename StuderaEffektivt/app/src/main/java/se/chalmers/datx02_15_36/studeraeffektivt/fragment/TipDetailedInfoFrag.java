@@ -1,7 +1,11 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,7 @@ import android.widget.TextView;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.IO.TipHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 
 /**
  * A class displaying the text of an studytechnique tip.
@@ -20,14 +25,16 @@ public class TipDetailedInfoFrag extends Fragment {
     private View view;
     private Bundle bundleFromPreviousFragment;
     private String tipName;
+    private String previousTitle;
     private TipHandler tipHandler;
+    android.support.v7.app.ActionBar actionBar;
 
-    /**
-     * Instansiates the view with the name of the tip as a header and
-     * invokes a method for getting the text for the tip
-     *
-     * @param savedInstanceState
-     */
+  /**
+   * Instansiates the view with the name of the tip as a header and
+   * invokes a method for getting the text for the tip
+   *
+   * @param savedInstanceState
+   */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,10 +43,16 @@ public class TipDetailedInfoFrag extends Fragment {
         this.view = rootView;
         bundleFromPreviousFragment = this.getArguments();
         tipName = bundleFromPreviousFragment.getString("key", "");
+        previousTitle = bundleFromPreviousFragment.getString("PreviousTitle", "");
+
+        Log.i("OnCreate prev", previousTitle);
+
         initComponents();
         tipHandler = new TipHandler(this.getActivity().getApplicationContext());
-
         tipViewInfoText.setText(getTipInfoText(tipName));
+
+        actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+        actionBar.setTitle(tipName);
 
         return rootView;
     }
@@ -62,7 +75,10 @@ public class TipDetailedInfoFrag extends Fragment {
         return tipHandler.readFromFile(tipName.replaceAll("ö", "o_").replaceAll("Ö", "O_").replaceAll("å", "a_").replaceAll("Å", "A_").replaceAll("ä", "_a").replaceAll("Ä", "_A"));
     }
 
-    public void destroy() {
-        this.onDestroyView();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i("Prev", previousTitle);
+        actionBar.setTitle(previousTitle);
     }
 }
