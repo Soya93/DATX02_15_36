@@ -194,7 +194,11 @@ public class DBAdapter {
                 + " = '" + ccode + "'", null, null, null, null);
 
         cursor.moveToFirst();
-        return cursor.getInt(0);
+        if (cursor.getCount() == 0 || cursor.getInt(0) == 0) {
+            return 53;
+        }else{
+            return cursor.getInt(0);
+        }
     }
 
     public int getSpentTime(String ccode) {
@@ -210,7 +214,7 @@ public class DBAdapter {
             cursor.close();
             return i;
         } else {
-            return -1;
+            return 0;
         }
     }
 
@@ -228,7 +232,7 @@ public class DBAdapter {
             return i;
         } else {
             cursor.close();
-            return -1;
+            return 0;
         }
     }
 

@@ -64,12 +64,10 @@ public class StatsFrag extends Fragment {
         //insertTestDataToDB("DDD111");
         //insertTestDataToDB2("APA777");
 
-        Log.d("stats", "there is data: "+thereIsData());
-        if(thereIsData()) {
+        if(isCourses()) {
             rootView = inflater.inflate(R.layout.activity_stats, container, false);
             instantiateView();
         }else{
-
             rootView = inflater.inflate(R.layout.activity_stats_empty, container, false);
         }
 
@@ -94,7 +92,6 @@ public class StatsFrag extends Fragment {
         Entry hoursInWeek;
         //For each course
         ArrayList<Entry> hoursInCourse;
-        int color = Color.parseColor("#B3E5FC");
         //Just enhance it with adding course identifier
         LineDataSet setOfHoursInCourse;
 
@@ -108,10 +105,11 @@ public class StatsFrag extends Fragment {
         while( courses.moveToNext() ){
             String ccode = courses.getString(courses.getColumnIndex("_ccode"));
             int smallestWeek = dbAdapter.getSmallestWeek(ccode);
+            Log.d("lineChart", "smallestWeek: "+smallestWeek);
             hoursInCourse = new ArrayList<>();
 
             int i = 0;
-            for(int w=smallestWeek; w<Utils.getCurrWeekNumber(); w++){
+            for(int w=smallestWeek; w<=Utils.getCurrWeekNumber(); w++){
 
                 if(c == 0){
                     weeks.add("v. "+w);
@@ -120,14 +118,14 @@ public class StatsFrag extends Fragment {
                 Cursor mins = dbAdapter.getMinutes(w, ccode);
                 if(mins.getCount() == 0){
                     hoursInWeek = new Entry(0, i);
-                    Log.d("lineChart", "week: "+w+", course: "+ccode+", hours 0 getMinutes().getCount() is 0");
+                    Log.d("lineChart", "getMinutes().getCount() is 0, week: "+w+", course: "+ccode);
                 }else {
-                    int hours = 0;
+                    int minutes = 0;
                     while (mins.moveToNext()) {
-                        hours += (mins.getInt(0) / 60);
+                        minutes += mins.getInt(0);
                     }
-                    Log.d("lineChart", "week: "+w+", course: "+ccode+", hours in course and week: " + hours);
-                    hoursInWeek = new Entry(hours, i);
+                    Log.d("lineChart", "week: "+w+", course: "+ccode+", hours in course and week: " + minutes);
+                    hoursInWeek = new Entry(minutes, i);
 
                 }
                 hoursInCourse.add(hoursInWeek);
@@ -139,7 +137,7 @@ public class StatsFrag extends Fragment {
             setOfHoursInCourse = new LineDataSet(hoursInCourse, ccode);
 
             int[] cols = getColors();
-            color = cols[c%cols.length];
+            int color = cols[c%cols.length];
             setOfHoursInCourse.setColor(color);
 
             setsOfHoursInCourses.add(setOfHoursInCourse);
@@ -186,8 +184,8 @@ public class StatsFrag extends Fragment {
         Log.d("stats", "pieHours left: "+ getMinutesLeft());
 
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
-        Entry hoursDone = new Entry(getMinutesSpent(),0);
         Entry hoursLeft = new Entry(getMinutesLeft(),1);
+        Entry hoursDone = new Entry(getMinutesSpent(),0);
         pieEntries.add(hoursDone);
         pieEntries.add(hoursLeft);
 
@@ -284,12 +282,19 @@ public class StatsFrag extends Fragment {
     }
 
     private int getMinutesSpent(){
-        setSelectedCourse();
+        setSelectedCourse(); //take this away
         return (dbAdapter.getSpentTime(currCourse));
     }
 
     private int getMinutesLeft(){
-        return (dbAdapter.getTimeOnCourse(currCourse) - dbAdapter.getSpentTime(currCourse));
+        int total = dbAdapter.getTimeOnCourse(currCourse);
+        int spent = dbAdapter.getSpentTime(currCourse);
+
+        if (total <= spent){
+            return 0;
+        }else {
+            return total - dbAdapter.getSpentTime(currCourse);
+        }
     }
 
     private int getMinutesTotal(){
@@ -306,7 +311,7 @@ public class StatsFrag extends Fragment {
         return (assignments-doneAssignments);
     }
 
-    private boolean thereIsData(){
+    private boolean isCourses(){
         Cursor courses = dbAdapter.getCourses();
         if( courses.getCount() == 0 ){
             return false;
@@ -316,7 +321,7 @@ public class StatsFrag extends Fragment {
 
     public void onStart(){
         super.onStart();
-        if (thereIsData()) {
+        if (isCourses()) {
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
