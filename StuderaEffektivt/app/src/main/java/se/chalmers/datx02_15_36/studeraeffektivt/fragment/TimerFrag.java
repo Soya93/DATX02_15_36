@@ -283,7 +283,6 @@ public class TimerFrag extends Fragment {
 
     public void setSelectedCourse() {
 
-
     }
 
 
