@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.app.ActivityManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -126,7 +127,7 @@ public class MyCountDownTimer extends Service {
     private void sendMessage(long countDownTime) {
         Message msg = mHandler.obtainMessage();
         bundle.putLong("timePassed", countDownTime);
-        bundle.putInt("Phace",count);
+        bundle.putInt("Phace", count);
         msg.setData(bundle);
         mHandler.sendMessage(msg);
     }
@@ -165,24 +166,8 @@ public class MyCountDownTimer extends Service {
                         insertIntoDataBase(studyTimePassed);
                         studyTimePassed = 0;
                         studyTimer = timerFunction(pauseTime, 100);
-                        NotificationCompat.Builder mBuilder =
-                                new NotificationCompat.Builder(getApplication())
-                                        .setSmallIcon(R.drawable.ic_timer)
-                                        .setContentTitle("StudieCoach")
-                                        .setContentText("Dags för paus");
-                        Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplication());
-                        stackBuilder.addParentStack(MainActivity.class);
-                        stackBuilder.addNextIntent(resultIntent);
-                        PendingIntent resultPendingIntent =
-                                stackBuilder.getPendingIntent(
-                                        0,
-                                        PendingIntent.FLAG_UPDATE_CURRENT
-                                );
-                        mBuilder.setContentIntent(resultPendingIntent);
-                        NotificationManager mNotificationManager =
-                                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        mNotificationManager.notify(60, mBuilder.build());
+                       
+
                     } else if (count == 0) {  // här  vill du att en notification att pausetiden är slut
                         studyTimer = timerFunction(studyTime, 100);
                         NotificationCompat.Builder mBuilder =
@@ -207,7 +192,7 @@ public class MyCountDownTimer extends Service {
                     studyTimer.start();
                 }
                 else {
-                   onDestroy();
+                   stopSelf();
                 }
 
             }
@@ -265,6 +250,7 @@ public class MyCountDownTimer extends Service {
     private int milliSecondsToMin(long milliSeconds) {
         return ((int) milliSeconds / 1000 / 60);
     }
+
 
 
 
