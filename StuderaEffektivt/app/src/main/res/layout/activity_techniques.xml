@@ -45,7 +45,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_12"
                 android:id="@+id/button12"
-                android:drawableRight="@drawable/where_to_study_tiny"
+                android:drawableLeft="@drawable/where_to_study_tiny"
                 android:background="?android:attr/selectableItemBackground" />
 
             <View
@@ -75,7 +75,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_14"
                 android:id="@+id/button14"
-                android:drawableRight="@drawable/where_to_study_tiny"
+                android:drawableLeft="@drawable/where_to_study_tiny"
                 android:background="?android:attr/selectableItemBackground" />
 
             <View
@@ -105,7 +105,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_16"
                 android:id="@+id/button16"
-                android:drawableRight="@drawable/where_to_study_tiny"
+                android:drawableLeft="@drawable/where_to_study_tiny"
                 android:background="?android:attr/selectableItemBackground" />
 
             <View
@@ -135,7 +135,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_18"
                 android:id="@+id/button18"
-                android:drawableRight="@drawable/where_to_study_tiny"
+                android:drawableLeft="@drawable/where_to_study_tiny"
                 android:background="?android:attr/selectableItemBackground" />
         </LinearLayout>
     </ScrollView>

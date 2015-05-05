@@ -45,7 +45,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_2"
                 android:id="@+id/button2"
-                android:drawableRight="@drawable/wiki_in_hands"
+                android:drawableLeft="@drawable/wiki_in_hands"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <View
@@ -75,7 +75,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_4"
                 android:id="@+id/button4"
-                android:drawableRight="@drawable/take_what_you_need_and_nothing_else"
+                android:drawableLeft="@drawable/take_what_you_need_and_nothing_else"
                 android:background="?android:attr/selectableItemBackground" />
 
             <View
@@ -105,7 +105,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_6"
                 android:id="@+id/button6"
-                android:drawableRight="@drawable/schedule"
+                android:drawableLeft="@drawable/schedule"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <View
@@ -135,7 +135,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_8"
                 android:id="@+id/button8"
-                android:drawableRight="@drawable/helathy_and_balanced"
+                android:drawableLeft="@drawable/helathy_and_balanced"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <View
@@ -165,7 +165,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_10"
                 android:id="@+id/button10"
-                android:drawableRight="@drawable/motivation"
+                android:drawableLeft="@drawable/motivation"
                 android:background="?android:attr/selectableItemBackground"/>
 
         </LinearLayout>
