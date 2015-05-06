@@ -396,7 +396,6 @@ public class EventActivity extends ActionBarActivity {
 
     public void openDatePickerDialog(final boolean isStart) {
 
-        setCurrentTime();
         DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 
             // when dialog box is closed, below method will be called.
@@ -406,7 +405,7 @@ public class EventActivity extends ActionBarActivity {
 
                 if (isStart) {
                     startYear = selectedYear;
-                    startMonth = selectedMonth; //+ 1;
+                    startMonth = selectedMonth;
                     startDay = selectedDay;
                     calStart.set(startYear, startMonth, startDay);
 
@@ -428,7 +427,7 @@ public class EventActivity extends ActionBarActivity {
                     }
                 } else {
                     endYear = selectedYear;
-                    endMonth = selectedMonth; //+ 1;
+                    endMonth = selectedMonth;
                     endDay = selectedDay;
                     if (endDay <= startDay && endMonth == startMonth && endYear == startYear || startMonth > endMonth || startYear > endYear) {
                         endDay = startDay;
@@ -461,8 +460,6 @@ public class EventActivity extends ActionBarActivity {
 
     public void openTimePickerDialog(final boolean isStart) {
 
-        setCurrentTime();
-
         TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
 
             @Override
@@ -480,6 +477,7 @@ public class EventActivity extends ActionBarActivity {
                     boolean startsWithZero = start.length() == 1;
                     if (endHour <= startHour || startsWithZero && endHour >= startHour) {
                         endHour = startHour + 1;
+                        endMinute = startMinute;
                         calEnd.set(Calendar.HOUR_OF_DAY, endHour);
                         calEnd.set(Calendar.MINUTE, endMinute);
                         endTime.setText(timeFormat.format(new Date(calEnd.getTimeInMillis())));

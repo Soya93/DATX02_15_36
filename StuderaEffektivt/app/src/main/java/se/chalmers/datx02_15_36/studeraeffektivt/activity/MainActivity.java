@@ -38,6 +38,7 @@ public class MainActivity extends ActionBarActivity {
     public static SubActionButton button2;
     public static SubActionButton button3;
     public static SubActionButton button4;
+    public static FloatingActionMenu actionMenu;
     private View.OnClickListener fabHandler;
     private Drawable primaryColorDrawable;
 
@@ -137,7 +138,7 @@ public class MainActivity extends ActionBarActivity {
         button4.setTag(4);
         button4.setOnClickListener(fabHandler);
 
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
+        actionMenu = new FloatingActionMenu.Builder(this)
                 .addSubActionView(button4)
                 .addSubActionView(button3)
                 .addSubActionView(button2)
@@ -261,6 +262,9 @@ public class MainActivity extends ActionBarActivity {
                 }
                 if((position == 3) && statsFrag.hasInit()) {
                     statsFrag.updateView();
+                }
+                if((position == 1) && calendarFrag.hasInit()) {
+                    calendarFrag.updateView();
                 }
             }
 
