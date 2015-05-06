@@ -76,6 +76,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private ArrayList<CalendarsFilterItem> calendarsList;
     private CalendarsFilterAdapter ad;
     private SharedPreferences sharedPref;
+    private boolean hasInit;
 
 
 
@@ -94,7 +95,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         visibleCalendars = new LinkedList<>(cals.keySet());
         calendarsList = calendarModel.getCalendarFilters();
 
-
+        hasInit = true;
 
         this.initComponents();
         return view;
@@ -143,6 +144,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         fabHandler = new View.OnClickListener() {
 
             public void onClick(View v) {
+                updateView();
+                
                 if (v.getTag() == button1.getTag()) {
                     openAddEvent();
                 } else if (v.getTag() == button2.getTag()) {
@@ -625,6 +628,16 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     public CalendarModel getCalendarModel() {
         return calendarModel;
+    }
+
+    public void updateView() {
+        if(MainActivity.actionMenu.isOpen()) {
+            MainActivity.actionMenu.toggle(false);
+        }
+    }
+
+    public boolean hasInit(){
+        return hasInit;
     }
 
 }
