@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 /*
 import com.github.mikephil.charting.charts.LineChart;
@@ -32,7 +33,6 @@ import com.github.mikephil.charting.data.PieDataSet;
 import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -51,6 +51,8 @@ public class StatsFrag extends Fragment {
     private PieChart pieAssignments;
     private LineChart lineChart;
 
+    private TextView noDataView;
+
     private DBAdapter dbAdapter;
     private Utils utils;
 
@@ -60,7 +62,6 @@ public class StatsFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_stats, container, false);
 
         if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
@@ -70,7 +71,12 @@ public class StatsFrag extends Fragment {
 
         //insertTestDataToDB("DDD111");
         //insertTestDataToDB2("APA777");
-        instantiateView(getMinutesSpent(), getMinutesLeft(), getAssDone(), getAssLeft());
+
+        rootView = inflater.inflate(R.layout.activity_stats, container, false);
+        instantiateView(getHoursSpent(), getMinutesLeft(), getAssDone(), getAssLeft());
+        if (!isCourses()) {
+            hideCharts();
+        }
         hasInit = true;
 
         return rootView;
@@ -78,6 +84,8 @@ public class StatsFrag extends Fragment {
 
     private void instantiateView(int hoursDone, int hoursLeft, int assesDone, int assesLeft){
         spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
+
+        noDataView = (TextView) rootView.findViewById(R.id.stats_empty);
 
         Log.i("IsNull", spinner.equals(null) + "");
 
@@ -88,15 +96,24 @@ public class StatsFrag extends Fragment {
         drawCharts();
     }
 
-    private void emptyCharts(){
-        lineChart = (LineChart) rootView.findViewById(R.id.line_hours);
+    private void hideCharts(){
         lineChart.setVisibility(View.INVISIBLE);
-
-        pieHours = (PieChart) rootView.findViewById(R.id.pie_hours);
         pieHours.setVisibility(View.INVISIBLE);
-
-        pieAssignments = (PieChart) rootView.findViewById(R.id.pie_assignments);
         pieAssignments.setVisibility(View.INVISIBLE);
+    }
+
+    private void showCharts(){
+        lineChart.setVisibility(View.VISIBLE);
+        pieHours.setVisibility(View.VISIBLE);
+        pieAssignments.setVisibility(View.VISIBLE);
+    }
+
+    private void hideNoDataView(){
+        noDataView.setVisibility(View.INVISIBLE);
+    }
+
+    private void showNoDataView(){
+        noDataView.setVisibility(View.VISIBLE);
     }
 
     private void instantiateLineChart(){
@@ -190,13 +207,13 @@ public class StatsFrag extends Fragment {
         return cols;
     }
 
-    private void instantiatePieMinutes(int hoursDone, int hoursLeft){
+    private void instantiatePieHours(int hoursDone, int hoursLeft){
         pieHours = (PieChart) rootView.findViewById(R.id.pie_hours);
         pieHours.setNoDataTextDescription("TIMMAR DU LAGT");
         pieHours.setVisibility(View.VISIBLE);
 
         //Set up pie chart data
-        Log.d("stats", "pieHours spent: "+ getMinutesSpent());
+        Log.d("stats", "pieHours spent: "+ getHoursSpent());
         Log.d("stats", "pieHours left: "+ getMinutesLeft());
 
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
@@ -206,7 +223,7 @@ public class StatsFrag extends Fragment {
         pieEntries.add(hoursDoneEntry);
 
         int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
-        PieDataSet pieDataSet = new PieDataSet(pieEntries, "Minuter");
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, "Timmar");
         pieDataSet.setColors(colors);
         pieDataSet.setValueFormatter(new IntegerValueFormatter());
 
@@ -221,7 +238,7 @@ public class StatsFrag extends Fragment {
 
         //Style pie chart data
         pieHours.setDescription("");
-        pieHours.setCenterText("Minuter");
+        pieHours.setCenterText("Timmar");
         pieHours.setDrawHoleEnabled(true);
         pieHours.setHoleColorTransparent(true);
         pieHours.getLegend().setEnabled(false);
@@ -299,18 +316,18 @@ public class StatsFrag extends Fragment {
         drawCharts();
     }
 
-    private int getMinutesSpent(){
-        return (dbAdapter.getSpentTime(currCourse));
+    private int getHoursSpent(){
+        return ( (dbAdapter.getSpentTime(currCourse)/60) );
     }
 
     private int getMinutesLeft(){
-        int total = dbAdapter.getTimeOnCourse(currCourse);
-        int spent = dbAdapter.getSpentTime(currCourse);
+        int total = (dbAdapter.getTimeOnCourse(currCourse)/60);
+        int spent = (dbAdapter.getSpentTime(currCourse)/60);
 
         if (total <= spent){
             return 0;
         }else {
-            return total - dbAdapter.getSpentTime(currCourse);
+            return total - spent;
         }
     }
 
@@ -452,13 +469,19 @@ public class StatsFrag extends Fragment {
             setCourses();
             spinner.setSelection(0);
             drawCharts();
+        }else{
+            hideCharts();
+            showNoDataView();
         }
     }
 
     private void drawCharts(){
-        instantiatePieMinutes(getMinutesSpent(), getMinutesLeft());
+        instantiatePieHours(getHoursSpent(), getMinutesLeft());
         instantiatePieAssignments(getAssDone(), getAssLeft());
         instantiateLineChart();
+
+        hideNoDataView();
+        showCharts();
     }
 
     public boolean hasInit(){

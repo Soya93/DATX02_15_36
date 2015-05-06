@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="As soon as you add courses \n and study with the timer \n you will be able to watch \n your progress here!"
+        android:text="Lägg till kurser och uppgifter \n lös sedan uppgifter och logga tid med timern \n så får du se din utveckling här!"
         android:id="@+id/stats_empty"
         android:textAlignment="center"
         android:gravity="center"
