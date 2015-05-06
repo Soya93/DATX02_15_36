@@ -76,6 +76,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private ArrayList<CalendarsFilterItem> calendarsList;
     private CalendarsFilterAdapter ad;
     private SharedPreferences sharedPref;
+    private boolean hasInit;
 
 
 
@@ -94,7 +95,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         visibleCalendars = new LinkedList<>(cals.keySet());
         calendarsList = calendarModel.getCalendarFilters();
 
-
+        hasInit = true;
 
         this.initComponents();
         return view;
@@ -143,6 +144,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         fabHandler = new View.OnClickListener() {
 
             public void onClick(View v) {
+                updateView();
+                
                 if (v.getTag() == button1.getTag()) {
                     openAddEvent();
                 } else if (v.getTag() == button2.getTag()) {
@@ -393,12 +396,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 endTime.setTimeInMillis(cur.getLong(CalendarUtils.EVENT_END));
 
 
-                if (cur.getInt(CalendarUtils.ALL_DAY) == 1) {
-                    startTime.set(Calendar.HOUR_OF_DAY, 0);
-                    startTime.set(Calendar.MINUTE, 0);
-                    endTime.set(Calendar.HOUR_OF_DAY, 23);
-                    endTime.set(Calendar.MINUTE, 59);
-                }
+
 
                 int color = cur.getInt(CalendarUtils.EVENT_COLOR);
                 if (color == 0) {
@@ -408,8 +406,19 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
                 event.setColor(color);
 
+                if (cur.getInt(CalendarUtils.ALL_DAY) == 1) {
 
-                eventList.add(event);
+
+                    startTime.set(Calendar.HOUR_OF_DAY, 0);
+                    startTime.set(Calendar.MINUTE, 0);
+                    endTime.set(Calendar.HOUR_OF_DAY, 23);
+                    endTime.set(Calendar.MINUTE, 59);
+
+
+                    eventList.add(event);
+                }
+
+
             }
 
         }
@@ -619,6 +628,16 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     public CalendarModel getCalendarModel() {
         return calendarModel;
+    }
+
+    public void updateView() {
+        if(MainActivity.actionMenu.isOpen()) {
+            MainActivity.actionMenu.toggle(false);
+        }
+    }
+
+    public boolean hasInit(){
+        return hasInit;
     }
 
 }

@@ -429,6 +429,9 @@ public class StudyTaskActivity extends ActionBarActivity {
                 studyTask.getStatus()
         );
 
+        Cursor asses = dbAdapter.getAssignments();
+        Log.d("ass", "asses in db: "+asses.getCount()+" course: "+studyTask.getCourseCode());
+
     }
 
     private class AddToWebDatabase extends AsyncTask<String, Void, Void> {

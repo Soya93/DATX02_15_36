@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/image_calendar"
-            android:src="@drawable/ic_cal1"
+            android:src="@drawable/ic_cal2"
             android:layout_column="1"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
@@ -199,8 +199,8 @@
             android:id="@+id/image_location"
             android:src="@drawable/ic_communication_location_on"
             android:layout_column="1"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
             android:paddingLeft="0dp"
             android:paddingRight="15dp" />
 
@@ -212,8 +212,8 @@
             android:id="@+id/location_input"
             android:layout_column="3"
             android:gravity="center_vertical"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
             android:layout_gravity="center_vertical" />
     </TableRow>
 
@@ -237,8 +237,8 @@
             android:id="@+id/image_notification"
             android:src="@drawable/ic_social_notifications"
             android:layout_column="1"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
             android:paddingLeft="0dp"
             android:paddingRight="15dp" />
 
@@ -252,8 +252,8 @@
             android:hint="Lägg till notifikation"
             android:onClick="goToTextView"
             android:layout_column="3"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical" />
     </TableRow>
@@ -277,8 +277,8 @@
             android:id="@+id/image_description"
             android:src="@drawable/ic_action_subject"
             android:layout_column="1"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
             android:paddingLeft="0dp"
             android:paddingRight="15dp" />
 
@@ -291,7 +291,7 @@
             android:background="@null"
             android:layout_column="3"
             android:gravity="center_vertical"
-            android:paddingTop="10dp"
+            android:paddingTop="5dp"
             android:paddingBottom="10dp"
             android:layout_gravity="center_vertical" />
     </TableRow>
