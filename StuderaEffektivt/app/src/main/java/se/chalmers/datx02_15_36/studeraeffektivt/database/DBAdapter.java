@@ -124,7 +124,7 @@ public class DBAdapter {
         ContentValues cv = new ContentValues();
 
         String nullString = null;
-        cv.put(dbHelper.ASSIGNMENTS_status, nullString);
+        cv.put(dbHelper.ASSIGNMENTS_status, AssignmentStatus.UNDONE.toString());
 
         try {
             return db.update(dbHelper.TABLE_ASSIGNMENTS, cv, dbHelper.ASSIGNMENTS__id + "=" + assignmentId, null);

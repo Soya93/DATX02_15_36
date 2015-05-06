@@ -77,8 +77,16 @@ public class StudyTask extends CheckBox{
 
                 if (buttonView.isChecked()) {
                     dbAdapter.setDone(getStudyTask().getIdNr());
-                } else {
+                    Toast.makeText(StudyTask.this.getContext(),"Uppgiften avbockad!",Toast.LENGTH_SHORT).show();
+
+                }
+                else if (!buttonView.isChecked()) {
                     dbAdapter.setUndone(getStudyTask().getIdNr());
+                    Toast.makeText(StudyTask.this.getContext(),"Uppgiften inte avbockad!",Toast.LENGTH_SHORT).show();
+
+                }
+                else{
+                    Toast.makeText(StudyTask.this.getContext(),"Uppgiften är varken avbockad eller urbockad av någon anledning!",Toast.LENGTH_SHORT).show();
                 }
             }
         });

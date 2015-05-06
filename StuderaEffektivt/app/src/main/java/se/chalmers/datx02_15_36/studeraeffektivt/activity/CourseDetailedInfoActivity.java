@@ -230,7 +230,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     public void initComponents() {
-        taskButton = (Button) findViewById(R.id.taskButton);
+       // taskButton = (Button) findViewById(R.id.taskButton);
         taskButton.setOnClickListener(myOnlyhandler);
 
         kursDetaljer = (TextView) findViewById(R.id.kursDetaljer);
