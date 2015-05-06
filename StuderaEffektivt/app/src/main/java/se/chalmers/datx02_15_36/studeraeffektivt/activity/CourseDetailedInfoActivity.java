@@ -393,7 +393,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                                layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
                            }
                        });
-                        taskListfromWeb.addView(test,taskListfromWeb.getChildCount()+1);
+                        taskListfromWeb.addView(test,taskListfromWeb.getChildCount());
 
                             /*
                         taskListfromWeb.addTasksFromWeb(test.getIdNr(), test.getCourseCode(),
