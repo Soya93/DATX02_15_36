@@ -1,6 +1,7 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -167,6 +168,20 @@ public class MyCountDownTimer extends Service {
                         insertIntoDataBase(studyTimePassed);
                         studyTimePassed = 0;
                         studyTimer = timerFunction(pauseTime, 100);
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        PendingIntent pIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, 0);
+
+                        // Build notification
+                        // Actions are just fake
+                        Notification noti = new Notification.Builder(getBaseContext())
+                                .setContentTitle("StudieCoach")
+                                .setContentText("Dags att plugga").setSmallIcon(R.drawable.ic_timer)
+                                .setContentIntent(pIntent).build();
+                        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                        // hide the notification after its selected
+                        noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+                        notificationManager.notify(0, noti);
 
 
                     } else if (count == 0) {  // här  vill du att en notification att pausetiden är slut
