@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -74,6 +75,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private AlertDialog alertDialog;
     private ArrayList<CalendarsFilterItem> calendarsList;
     private CalendarsFilterAdapter ad;
+    private SharedPreferences sharedPref;
 
 
 
@@ -265,14 +267,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         eventActivity.setCalendarFrag(this);
         Intent intent = new Intent(getActivity(), eventActivity.getClass());
         intent.putExtra("isInAddMode", true);
-        intent.putExtra("calID", 1);        // is the home calendar
-        List<String> calNames = new LinkedList<>(calendarModel.getCalendarInfo(cr).values());
-        for (String s : calNames) {
-            Log.i("CalFrag: ", s);
-        }
-
-        intent.putExtra("calName", calendarModel.getCalendarsMap().get(1L)); //get name of the home calendar
-        intent.putExtra("color", calendarModel.getCalIdAndColorMap().get(1L));  //get the color of the home calendar
+        sharedPref = getActivity().getSharedPreferences("calendarPref", Context.MODE_PRIVATE);
+        Long homeCalID = sharedPref.getLong("homeCalID", 1L); // 1 is some value if it fails to read??
+        intent.putExtra("calID", homeCalID);        // is the home calendar
+        intent.putExtra("calName", calendarModel.getCalendarsMap().get(homeCalID)); //get name of the home calendar
+        intent.putExtra("color", calendarModel.getCalIdAndColorMap().get(homeCalID));  //get the color of the home calendar
         startActivity(intent);
     }
 
@@ -304,9 +303,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         intent.putExtra("startTime", 0L);
         intent.putExtra("endTime", 0L);
         intent.putExtra("title", "Repititonspass för " + week);
-        intent.putExtra("calID", 1);        // 1 är hem kalender
-        intent.putExtra("calName", calendarModel.getCalendarsMap().get(1L));
-        intent.putExtra("color", calendarModel.getCalIdAndColorMap().get(1L));
+        sharedPref = getActivity().getSharedPreferences("calendarPref", Context.MODE_PRIVATE);
+        Long homeCalID = sharedPref.getLong("homeCalID", 1L); // 1 is some value if it fails to read??
+        intent.putExtra("calID", homeCalID);        // is the home calendar
+        intent.putExtra("calName", calendarModel.getCalendarsMap().get(homeCalID));     //get name of the home calendar
+        intent.putExtra("color", calendarModel.getCalIdAndColorMap().get(homeCalID));
         startActivity(intent);
     }
 
@@ -524,7 +525,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 mWeekView.setNumberOfVisibleDays(numberOfVisibleDays);
                 Calendar newDate = mWeekView.getFirstVisibleDay();
 
-                Log.i("prevNumOfVisDays",previousNumberOfVisibleDays + "");
+                Log.i("prevNumOfVisDays", previousNumberOfVisibleDays + "");
                 Log.i("NumOfVisDays", numberOfVisibleDays + "");
 
 
