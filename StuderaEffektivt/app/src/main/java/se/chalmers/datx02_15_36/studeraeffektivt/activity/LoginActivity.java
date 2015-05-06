@@ -4,21 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.google.android.gms.common.SignInButton;
-
-import se.chalmers.datx02_15_36.studeraeffektivt.IO.LogInHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarChoiceItem;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
+
 
 /**
  * A login screen that offers login via email/password and via Google+ sign in.
@@ -50,6 +49,8 @@ public class LoginActivity extends Activity implements OnClickListener{
     private View mSignOutButtons;
     private View mLoginFormView;
     boolean hasAlreadyLoggedIn;
+    private CalendarModel calendarModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,9 @@ public class LoginActivity extends Activity implements OnClickListener{
         setContentView(R.layout.activity_login);
         sharedPref = getSharedPreferences(prefName, Context.MODE_PRIVATE);
         hasAlreadyLoggedIn = sharedPref.getBoolean("hasLoggedIn", false);
+
+        calendarModel = new CalendarModel();
+
 
 
         if(!hasAlreadyLoggedIn) {
@@ -71,6 +75,11 @@ public class LoginActivity extends Activity implements OnClickListener{
             startActivity(intent);
             this.finish();
         }
+
+        //Find the users home calendar
+        sharedPref = getSharedPreferences("calendarPref", Context.MODE_PRIVATE);
+        calendarModel.findHomeCal(getContentResolver(), sharedPref);
+
     }
 
     protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
@@ -111,4 +120,6 @@ public class LoginActivity extends Activity implements OnClickListener{
 
         }
     }
+
+
 }
