@@ -31,6 +31,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -52,6 +53,8 @@ public class StatsFrag extends Fragment {
     private DBAdapter dbAdapter;
     private Utils utils;
 
+    private boolean hasInit;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,12 +73,16 @@ public class StatsFrag extends Fragment {
         }else{
             rootView = inflater.inflate(R.layout.activity_stats_empty, container, false);
         }
+        hasInit = true;
 
         return rootView;
     }
 
     private void instantiateView(){
         spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
+
+        Log.i("IsNull", spinner.equals(null) + "");
+
         setCourses();
         spinner.setSelection(0);
         Log.i("DB", "initial selection: "+spinner.getSelectedItem());
@@ -186,8 +193,8 @@ public class StatsFrag extends Fragment {
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
         Entry hoursLeft = new Entry(getMinutesLeft(),1);
         Entry hoursDone = new Entry(getMinutesSpent(),0);
-        pieEntries.add(hoursDone);
         pieEntries.add(hoursLeft);
+        pieEntries.add(hoursDone);
 
         int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "Minuter");
@@ -226,8 +233,8 @@ public class StatsFrag extends Fragment {
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
         Entry assesDone = new Entry(getAssDone(),0);
         Entry assesLeft = new Entry(getAssLeft(),1);
-        pieEntries.add(assesDone);
         pieEntries.add(assesLeft);
+        pieEntries.add(assesDone);
 
         int[] colors = {Color.parseColor("#e5e5e5"), Color.parseColor("#B3E5FC")};
 
@@ -279,10 +286,10 @@ public class StatsFrag extends Fragment {
             String[] parts = temp.split(" ");
             this.currCourse = parts[0];
         }
+        drawCharts();
     }
 
     private int getMinutesSpent(){
-        setSelectedCourse(); //take this away
         return (dbAdapter.getSpentTime(currCourse));
     }
 
@@ -297,16 +304,13 @@ public class StatsFrag extends Fragment {
         }
     }
 
-    private int getMinutesTotal(){
-        return dbAdapter.getTimeOnCourse(currCourse);
-    }
-
     private int getAssDone(){
         return dbAdapter.getDoneAssignments(currCourse).getCount();
     }
 
     private int getAssLeft(){
         int assignments = dbAdapter.getAssignments(currCourse).getCount();
+        Log.d("ass", "total amount of asses: "+assignments);
         int doneAssignments = dbAdapter.getDoneAssignments(currCourse).getCount();
         return (assignments-doneAssignments);
     }
@@ -321,7 +325,7 @@ public class StatsFrag extends Fragment {
 
     public void onStart(){
         super.onStart();
-        if (isCourses()) {
+        if (isCourses() && spinner != null) {
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -409,5 +413,23 @@ public class StatsFrag extends Fragment {
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void updateView(){
+        if(isCourses()) {
+            setCourses();
+            spinner.setSelection(0);
+            drawCharts();
+        }
+    }
+
+    private void drawCharts(){
+        instantiatePieMinutes();
+        instantiatePieAssignments();
+        instantiateLineChart();
+    }
+
+    public boolean hasInit(){
+        return hasInit;
     }
 }

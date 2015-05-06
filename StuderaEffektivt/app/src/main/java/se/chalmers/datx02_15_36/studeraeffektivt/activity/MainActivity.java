@@ -30,6 +30,7 @@ public class MainActivity extends ActionBarActivity {
 
     private HomeFrag homeFrag;
     private CalendarFrag calendarFrag;
+    private StatsFrag statsFrag;
     private TimerFrag timerFrag;
     private Drawable tabResetIcon;
     public static FloatingActionButton actionButton;
@@ -78,6 +79,7 @@ public class MainActivity extends ActionBarActivity {
         homeFrag.setContentResolver(this.getContentResolver());
         homeFrag.setCalendarFrag(calendarFrag);
 
+        statsFrag = (StatsFrag) mAdapter.getItem(3);
 
         // listener for FAB menu
         FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
@@ -158,7 +160,7 @@ public class MainActivity extends ActionBarActivity {
         calUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
         Drawable timerUns = getResources().getDrawable( R.drawable.ic_timer).mutate();
         timerUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
-        Drawable statsUns = getResources().getDrawable( R.drawable.ic_pilegraph).mutate();
+        final Drawable statsUns = getResources().getDrawable( R.drawable.ic_pilegraph).mutate();
         statsUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
         Drawable myProfileUns = getResources().getDrawable(R.drawable.ic_action).mutate();
         myProfileUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
@@ -257,6 +259,9 @@ public class MainActivity extends ActionBarActivity {
                 if(position == 0) {
                     homeFrag.setTodaysEvents();
                 }
+                if((position == 3) && statsFrag.hasInit()) {
+                    statsFrag.updateView();
+                }
             }
 
             @Override
@@ -294,7 +299,11 @@ public class MainActivity extends ActionBarActivity {
         timerFrag.settingsTimer();
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewPager = (ViewPager) findViewById(R.id.pager);
+    }
 }
 
 

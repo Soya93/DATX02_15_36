@@ -429,7 +429,6 @@ public class StudyTaskActivity extends ActionBarActivity {
                 studyTask.getStatus()
         );
 
-       // Log.d("Lägga till element i databas: ", "" + dbAdapter.getAssignments().getCount());
     }
 
     private class AddToWebDatabase extends AsyncTask<String, Void, Void> {

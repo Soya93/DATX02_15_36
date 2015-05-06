@@ -1,5 +1,5 @@
 <resources>
-    <string name="title_activity_login">Logga in med google konto</string>
+    <string name="title_activity_login">Tryck på knappen nedan för att godkänna att du loggar in med det google kontot du har på mobilen</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -12,4 +12,5 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+
 </resources>
