@@ -320,7 +320,7 @@ public class MyProfileFrag extends Fragment {
             }
         }else{
            // courseList.add("Det finns för tillfället inga kurser, lägg till en kurs genom att trycka på knappen ovan");
-            courseList.add(createCourse("Courses", new Course("Inga kurser.", "Du har för närvarande inga kurser, lägg till genom att klicka på knappen ovan!")));
+            courseList.add(createCourse("Courses", new Course("lägg till genom att klicka på knappen ovan!", "Du har för närvarande inga kurser")));
             listOfCourses.setEnabled(false);
         }
 
