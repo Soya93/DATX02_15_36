@@ -104,7 +104,18 @@ public class CalendarModel {
             item.setLocationS(cur.getString(CalendarUtils.LOCATION));
 
             if (cur.getInt(CalendarUtils.ALL_DAY) == 1) {
-                eventsToday.add(item);
+                long eventStartInMillis = cur.getInt(CalendarUtils.EVENT_BEGIN);
+                Calendar eventCal = Calendar.getInstance();
+                eventCal.setTimeInMillis(eventStartInMillis);
+
+                if(cal.get(Calendar.DATE) == eventCal.get(Calendar.DATE)) {
+                    eventsToday.add(item);
+                }
+                //don't add event if not starting today...
+
+                //all day event has bug so goes from 2am-2am the next day...
+
+                //eventsToday.add(item);
             } else if (!CalendarUtils.startTimeHasPassed(startTime)) {
                 eventsToday.add(item);
 
