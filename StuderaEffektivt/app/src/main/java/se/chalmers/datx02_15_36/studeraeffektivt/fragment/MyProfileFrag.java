@@ -315,12 +315,13 @@ public class MyProfileFrag extends Fragment {
                 //
                 courseList.add(0,createCourse("Courses", new Course(cname, ccode)));
                 simpleAdapter.notifyDataSetChanged();
+                listOfCourses.setEnabled(true);
 
             }
         }else{
            // courseList.add("Det finns för tillfället inga kurser, lägg till en kurs genom att trycka på knappen ovan");
-            courseList.add(createCourse("Courses", new Course("Inga kurser.", "")));
-
+            courseList.add(createCourse("Courses", new Course("Inga kurser.", "Du har för närvarande inga kurser, lägg till genom att klicka på knappen ovan!")));
+            listOfCourses.setEnabled(false);
         }
 
     }
