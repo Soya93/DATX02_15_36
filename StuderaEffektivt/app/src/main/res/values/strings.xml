@@ -51,8 +51,8 @@
     <string name="header_techniques">Studietekniker</string>
 
     <!-- Tasks -->
-    <string name="type_button_text_reading"><u>RÄKNEUPPGIFT</u></string>
-    <string name="type_button_text_other"><u>LÄSANVISNING</u></string>
+    <string name="type_button_text_reading"><u>LÄSANVISNING</u></string>
+    <string name="type_button_text_other"><u>RÄKNEUPPGIFT</u></string>
 
     <string name="type_title">TYP AV UPPGIFT\n\<font size="10">Klicka för att ändra</font></string>
 

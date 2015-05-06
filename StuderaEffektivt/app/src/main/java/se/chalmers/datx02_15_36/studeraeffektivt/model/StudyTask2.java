@@ -6,10 +6,12 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.Random;
 
+import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -66,7 +68,7 @@ public class StudyTask2 extends CheckBox {
     }
 
     public void initCheckbox() {
-        this.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        /*this.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -74,11 +76,10 @@ public class StudyTask2 extends CheckBox {
                 if (buttonView.isChecked()) {
                     addToDatabase();
                     Toast.makeText(StudyTask2.this.getContext(), "Uppgiften har sparats", Toast.LENGTH_SHORT).show();
-
                 } else {
                 }
             }
-        });
+        });*/
 
     }
 
