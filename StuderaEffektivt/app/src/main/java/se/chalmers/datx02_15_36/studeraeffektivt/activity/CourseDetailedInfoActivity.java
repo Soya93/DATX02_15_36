@@ -79,6 +79,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private SubActionButton button3;
     private SubActionButton button4;
     private Switch isActiveSwitch;
+    private boolean hasFetchedBefore = false;
 
 
     private String courseCode;
@@ -104,7 +105,17 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 //        fillActivity(courseCode, courseName);
         initComponents();
         layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+        taskListfromWeb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutWithinScrollViewOfTasks.removeAllViews();
+                layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+            }
+        });
 
+        TextView textView1 = new TextView(this);
+        textView1.setText("Du har inte hämtat uppgifter från webben!");
+        taskListfromWeb.addView(textView1);
         isActiveSwitch = (Switch) findViewById(R.id.isActiveSwitch);
         isActiveSwitch.setChecked(true); //TODO hämta från databas
         if(isActiveSwitch.isChecked()){
@@ -278,6 +289,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         kursDetaljer = (TextView) findViewById(R.id.kursDetaljer);
 
         layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
+        taskListfromWeb = (FlowLayout) findViewById(R.id.taskListfromWeb);
 
     }
 
@@ -293,12 +305,14 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     public void goToTasks(View v) {
 
+
         Intent i = new Intent(this, StudyTaskActivity.class);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);
     }
 
     public void getAssignmetsFromWeb(View v) {
+        if(!hasFetchedBefore)
         new GetAllAssignments().execute(courseCode);
 
     }
@@ -365,16 +379,29 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
 
         protected void onPostExecute(String file_url) {
-
-            taskListfromWeb = (FlowLayout) findViewById(R.id.taskListfromWeb);
+           hasFetchedBefore =true;
+                    taskListfromWeb.removeAllViews();
                     Iterator it = assignmetsHashMap.entrySet().iterator();
                     while (it.hasNext()) {
                         Map.Entry pair = (Map.Entry) it.next();
                         StudyTask2 test = (StudyTask2) pair.getValue();
+
+                       test.setOnClickListener(new View.OnClickListener() {
+                           @Override
+                           public void onClick(View v) {
+                               layoutWithinScrollViewOfTasks.removeAllViews();
+                               layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+                           }
+                       });
+                        taskListfromWeb.addView(test,taskListfromWeb.getChildCount()+1);
+
+                            /*
                         taskListfromWeb.addTasksFromWeb(test.getIdNr(), test.getCourseCode(),
                                 test.getChapter(), test.getWeek(), test.getTaskString(), test.getStartPage(),
                                 test.getEndPage(), "UNDONE", "READ", dbAdapter);
+
                         it.remove(); // avoids a ConcurrentModificationException
+                        */
                     }
 
             }

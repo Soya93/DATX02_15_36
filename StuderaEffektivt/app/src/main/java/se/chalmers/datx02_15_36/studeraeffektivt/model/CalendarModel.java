@@ -3,6 +3,8 @@ package se.chalmers.datx02_15_36.studeraeffektivt.model;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
@@ -32,6 +34,9 @@ public class CalendarModel {
     private ArrayList<CalendarsFilterItem> calendarWritersPermissions;
     private Map<Long, String> calendarsMap;
     private Map<Long, Integer> calIdAndColorMap;
+    private SharedPreferences sharedPref;
+    private String prefNameID = "homeCalID";
+    private String prefName = "homeCalName";
 
 
     public CalendarModel() {
@@ -405,6 +410,34 @@ public class CalendarModel {
 
     public Map<Long, Integer> getCalIdAndColorMap() {
         return calIdAndColorMap;
+    }
+
+
+
+    public void findHomeCal(ContentResolver cr, SharedPreferences calPref) {
+        Cursor c = getCalendarCursor(cr);
+        String homeCalName = "Hittade ingen kalender";
+        Long homeCalId = 1L;
+
+        while (c.moveToNext()) {
+            String name = c.getString(CalendarUtils.CALENDAR_NAME);
+            Long id = c.getLong(CalendarUtils.CALENDAR_ID);
+            if(name.contains("gmail.com")) {
+                homeCalName = name;
+                homeCalId = id;
+                break;
+            }
+        }
+
+       // write values to shared preferences
+        SharedPreferences.Editor editor = calPref.edit();
+        editor.putLong("homeCalID", homeCalId);
+        editor.putString("homeCalName", homeCalName);
+        editor.apply();
+
+
+
+
     }
 
 }
