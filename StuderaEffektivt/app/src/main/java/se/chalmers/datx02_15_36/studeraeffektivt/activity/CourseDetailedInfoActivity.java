@@ -385,7 +385,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                     while (it.hasNext()) {
                         Map.Entry pair = (Map.Entry) it.next();
                         StudyTask2 test = (StudyTask2) pair.getValue();
-                        /*
+
                        test.setOnClickListener(new View.OnClickListener() {
                            @Override
                            public void onClick(View v) {
@@ -393,14 +393,15 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                                layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
                            }
                        });
-                        taskListfromWeb.addView(test);
-                        */
+                        taskListfromWeb.addView(test,taskListfromWeb.getChildCount()+1);
 
+                            /*
                         taskListfromWeb.addTasksFromWeb(test.getIdNr(), test.getCourseCode(),
                                 test.getChapter(), test.getWeek(), test.getTaskString(), test.getStartPage(),
                                 test.getEndPage(), "UNDONE", "READ", dbAdapter);
 
                         it.remove(); // avoids a ConcurrentModificationException
+                        */
                     }
 
             }
