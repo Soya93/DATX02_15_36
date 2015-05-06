@@ -236,7 +236,7 @@
             <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
+            android:inputType="text"
             android:hint="@string/task_string_hint"
             android:digits="0123456789,-."
             android:id="@+id/taskInput"
