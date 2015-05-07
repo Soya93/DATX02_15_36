@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -105,7 +106,7 @@ public class GetAssignmetsFromWeb extends ActionBarActivity {
             String jsonStr = sh.makeServiceCall(URL_CONNECTION, ServiceHandler.POST, params);
             if (jsonStr != null) {
                 try {
-                    //Log.e("BAJS",jsonStr);
+                    Log.d(jsonStr,"jsonStr");
                     JSONObject jsonObj = new JSONObject(jsonStr);
                     // Getting JSON Array node
                     JSONArray assignmetsList = jsonObj.getJSONArray("assignments");
@@ -150,17 +151,23 @@ public class GetAssignmetsFromWeb extends ActionBarActivity {
         protected void onPostExecute(String file_url) {
             taskListfromWeb.removeAllViews();
             Iterator it = assignmetsHashMap.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry) it.next();
-                StudyTask2 test = (StudyTask2) pair.getValue();
+            if(it.hasNext()) {
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry) it.next();
+                    StudyTask2 test = (StudyTask2) pair.getValue();
 
-                taskListfromWeb.addTasksFromWeb(test.getIdNr(), test.getCourseCode(),
-                        test.getChapter(), test.getWeek(), test.getTaskString(), test.getStartPage(),
-                        test.getEndPage(), "UNDONE", "READ", dbAdapter);
-                it.remove();
+                    taskListfromWeb.addTasksFromWeb(test.getIdNr(), test.getCourseCode(),
+                            test.getChapter(), test.getWeek(), test.getTaskString(), test.getStartPage(),
+                            test.getEndPage(), "UNDONE", test.getType().toString(), dbAdapter);
+                    it.remove();
 
+                }
             }
-
+            else{
+                TextView textView1 = new TextView(getBaseContext());
+                textView1.setText("Finns inga uppgifter att hämta.");
+                taskListfromWeb.addView(textView1);
+            }
         }
 
 
