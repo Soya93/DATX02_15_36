@@ -35,18 +35,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 public class CourseActivity extends ActionBarActivity {
 
     private ListView listOfCourses;
-    private Button addButton;
-    private Button addButtonInner;
-    private EditText nameEditText;
-    private EditText codeEditText;
     public static List<Map<String, Course>> courseList = new ArrayList<Map<String, Course>>();
     SimpleAdapter simpleAdpt;
-    LinearLayout popUp;
-    private int selected;
-    private ViewGroup container;
-    private Bundle bundleFromPreviousFragment;
-    private Bundle bundleToNextFragment;
-    private int containerId;
 
     //The access point of the database.
     private DBAdapter dbAdapter;
@@ -59,13 +49,10 @@ public class CourseActivity extends ActionBarActivity {
         simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
         listOfCourses.setAdapter(simpleAdpt);
 
-        getSupportActionBar().setTitle("Mina Kurser");
+        getSupportActionBar().setTitle("Mina inaktiva Kurser");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         android.support.v7.app.ActionBar bar = getSupportActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
-
-
-
 
         //Create the database access point but check if the context is null first.
         if (this != null) {
@@ -92,7 +79,7 @@ public class CourseActivity extends ActionBarActivity {
     public void showCourseList() {
         courseList.clear();
 
-        Cursor cursor = dbAdapter.getCourses();
+        Cursor cursor = dbAdapter.getDoneCourses();
         Log.d("DB", "cursor.getCount() är "+cursor.getCount());
         if (cursor.getCount() > 0){
             String ccode = "";
@@ -103,8 +90,8 @@ public class CourseActivity extends ActionBarActivity {
                 courseList.add(createCourse("Courses", new Course(cname, ccode)));
             }
         }else{
-            courseList.add(createCourse("Courses", new Course("Inga kurser.", "")));
-
+            courseList.add(createCourse("Courses", new Course("dina aktiva kurser kan du se på föregående sida!", "Du har för närvarande inga inaktiva kurser kurser")));
+            listOfCourses.setEnabled(false);
         }
     }
 
@@ -115,56 +102,12 @@ public class CourseActivity extends ActionBarActivity {
         return newCourse;
     }
 
-    public void setAddButton() {
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (popUp.getVisibility() == View.INVISIBLE) {
-                    popUp.setVisibility(View.VISIBLE);
-                    addButton.setText("Show");
-                } else {
-                    popUp.setVisibility(View.INVISIBLE);
-                    addButton.setText("Lägg till kurs");
-                }
-            }
-        });
-
-    }
-
-    public void setAddButtonInner() {
-        addButtonInner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popUp.setVisibility(View.INVISIBLE);
-                addButton.setText("Lägg till kurs");
-
-                long id = dbAdapter.insertCourse(codeEditText.getText().toString(), nameEditText.getText().toString());
-                Log.d("DB", "id: " + id);
-                if (id > 0 && this != null) {
-                    showCourseList();
-
-                    Toast toast = Toast.makeText(getApplicationContext(), codeEditText.getText().toString() + " succesfully added", Toast.LENGTH_SHORT);
-                    toast.show();
-                } else if (this != null) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Failed to add course" + codeEditText.getText().toString(), Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-
-            }
-
-        });
-    }
-
     public void setListOfCourses() {
         listOfCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v, int position, long id) {
 
                 HashMap courseMap = (HashMap) parent.getItemAtPosition(position);
                 Course course1 = (Course) courseMap.get("Courses");
-                selected = (int) courseList.indexOf(courseMap);
-                bundleToNextFragment.putInt("containerId", ((ViewGroup) container.getParent()).getId());
-                bundleToNextFragment.putInt("kurs", courseList.indexOf(courseMap));
-                bundleToNextFragment.putString("CourseCode", course1.getCourseCode());
                 goToDetails(course1);
             }
         });
@@ -178,29 +121,11 @@ public class CourseActivity extends ActionBarActivity {
         intent.putExtra("CourseName", course.getCourseName());
         startActivity(intent);
 
-        /*Fragment fragment = new CourseDetailedInfoFrag();
-        //Fragment fragment = new StudyTaskFragment();
-
-        fragment.setArguments(bundle);
-        FragmentManager fragmentManager = this.getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.add(containerId, fragment, "detailedcoursefragment");
-        fragmentTransaction.hide(this);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();*/
     }
 
     public void initComponents() {
-        addButton = (Button) findViewById(R.id.addButton);
         listOfCourses = (ListView) findViewById(R.id.listView);
-        popUp = (LinearLayout) findViewById(R.id.linLayout);
-        addButtonInner = (Button) findViewById(R.id.addButtonInner);
-        nameEditText = (EditText) findViewById(R.id.nameEditText);
-        codeEditText = (EditText) findViewById(R.id.codeEditText);
 
-        setAddButton();
-        setAddButtonInner();
         setListOfCourses();
     }
 }

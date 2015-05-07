@@ -162,7 +162,7 @@ public class TimerFrag extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    private void getTimeFromSettings() {
+    private void getTimeFromTimerSettings() {
         sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
         int studyMin = sharedPref.getInt("studyMin", -1);
         int studyHour = sharedPref.getInt("studyHour", -1);
@@ -181,6 +181,32 @@ public class TimerFrag extends Fragment {
             default_pauseTime = new Time(pauseHour, pauseMin);
         }
 
+
+    }
+
+    public void getViewFromSharedPref() {
+        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+
+        phaceInt = sharedPref.getInt("Phace", -1);
+        int buttonTemp = sharedPref.getInt("buttonImage", -1);
+        if (buttonTemp > 0) {
+            buttonId = buttonTemp;
+            startButton.setImageResource(buttonId);
+        }
+        if(!isMyServiceRunning(MyCountDownTimer.class)) {
+            startButton.setImageResource(R.drawable.ic_action_play);
+        }
+        hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
+        Log.d("hasbeenPause",String.valueOf(hasBeenPaused));
+        if (hasBeenPaused) {
+          long timeLeft = sharedPref.getLong("timeLeft",-1);
+            Log.d("timeLeft",String.valueOf(timeLeft));
+            setTimerView(timeLeft);
+        }
+        else{
+              startSetTimerView();
+        }
+
     }
 
 
@@ -192,25 +218,9 @@ public class TimerFrag extends Fragment {
             getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
         }
 
-        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
-
-        phaceInt = sharedPref.getInt("Phace", -1);
-        int buttonTemp = sharedPref.getInt("buttonImage", -1);
-        if (buttonTemp > 0) {
-            buttonId = buttonTemp;
-            startButton.setImageResource(buttonId);
-        }
-        hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
-        if (hasBeenPaused) {
-
-        }
-        if(!isMyServiceRunning(MyCountDownTimer.class)) {
-            startButton.setImageResource(R.drawable.ic_action_play);
-        }
         isActivyRunning = true;
-
-        getTimeFromSettings();
-        startSetTimerView();
+        getTimeFromTimerSettings();
+        getViewFromSharedPref();
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -223,13 +233,13 @@ public class TimerFrag extends Fragment {
 
             }
         });
-
+            Log.d("Text", textView.getText().toString());
 
     }
     public void onResume() {
         super.onResume();
-        getTimeFromSettings();
-        startSetTimerView();
+        getTimeFromTimerSettings();
+      //  startSetTimerView();
 
     }
 
@@ -264,7 +274,7 @@ public class TimerFrag extends Fragment {
 
 
         taskSwitch.setChecked(true);
-        assignmentType = AssignmentType.OTHER;
+        assignmentType = AssignmentType.READ;
         spinner.setSelection(0);
 
         if(spinner.getSelectedItem()!=null) {
@@ -368,7 +378,9 @@ public class TimerFrag extends Fragment {
 
     public void resetTimer() {
         if(isMyServiceRunning(MyCountDownTimer.class)) {
-            serviceHandler.sendEmptyMessage(2);
+            Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
+            getActivity().stopService(i);
+            getActivity().unbindService(sc);
 
             buttonId = R.drawable.ic_action_play;
             hasBeenPaused = false;
@@ -377,7 +389,7 @@ public class TimerFrag extends Fragment {
             progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
             startSetTimerView();
         }
-
+        Log.i(String.valueOf(isMyServiceRunning(MyCountDownTimer.class)), "is service running");
 
     }
 
@@ -436,6 +448,7 @@ public class TimerFrag extends Fragment {
 
     public void updateTaskList(AssignmentType assignmentType, int week) {
         taskList.removeAllViews();
+
 
         taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
 
