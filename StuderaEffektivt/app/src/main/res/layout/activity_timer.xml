@@ -30,7 +30,8 @@
             android:shadowDx="1.0"
             android:shadowDy="2.0"
             android:shadowRadius="3.0"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:paddingTop="23dp" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -40,7 +41,8 @@
             android:gravity="center"
             android:max="1000"
             android:progress="1000"
-            android:progressDrawable="@drawable/progressbar_study" />
+            android:progressDrawable="@drawable/progressbar_study"
+            android:paddingTop="30dp" />
 
 
     </RelativeLayout>
