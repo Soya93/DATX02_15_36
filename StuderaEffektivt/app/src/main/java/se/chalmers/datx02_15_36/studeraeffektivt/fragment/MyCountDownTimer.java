@@ -43,6 +43,7 @@ public class MyCountDownTimer extends Service {
     private final int ACTIVITY_NOT_RUNNING = 3;
 
 
+
     private long studyTime,pauseTime;
     private int reps;
     private long timeUntilFinished;
@@ -76,7 +77,6 @@ public class MyCountDownTimer extends Service {
                 case ACTIVITY_NOT_RUNNING:
                     activityIsRunning = false;
                     break;
-
             }
 
         }
@@ -124,6 +124,7 @@ public class MyCountDownTimer extends Service {
         }
         studyTimer.cancel();
 
+
     }
 
     private void sendMessage(long countDownTime) {
@@ -165,32 +166,24 @@ public class MyCountDownTimer extends Service {
 
                     if (count == 1) { // här  vill du att en notification att studietiden är slut
                         totalcount ++;
+                        if(ccode!= null)
                         insertIntoDataBase(studyTimePassed);
                         studyTimePassed = 0;
                         studyTimer = timerFunction(pauseTime, 100);
-                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                        PendingIntent pIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, 0);
 
-                        // Build notification
-                        // Actions are just fake
-                        Notification noti = new Notification.Builder(getBaseContext())
-                                .setContentTitle("StudieCoach")
-                                .setContentText("Dags att plugga").setSmallIcon(R.drawable.ic_timer)
-                                .setContentIntent(pIntent).build();
-                        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                        // hide the notification after its selected
-                        noti.flags |= Notification.FLAG_AUTO_CANCEL;
-
-                        notificationManager.notify(0, noti);
-
+                        showPauseNotification();
 
                     } else if (count == 0) {  // här  vill du att en notification att pausetiden är slut
                         studyTimer = timerFunction(studyTime, 100);
+                        showStudyNotification();
                     }
                     studyTimer.start();
                 }
                 else {
-                   stopSelf();
+                    if(activityIsRunning){
+                        mHandler.sendEmptyMessage(1);
+                    }
+                    stopSelf();
                 }
 
             }
@@ -224,6 +217,7 @@ public class MyCountDownTimer extends Service {
 
 
     private void insertIntoDataBase(long millisPassed) {
+        Log.d(ccode, "ccode");
         long inserted = dbAdapter.insertSession(ccode, utils.getCurrWeekNumber(), milliSecondsToMin(millisPassed));
         if (inserted > 0 && getBaseContext() != null) {
 
@@ -251,7 +245,47 @@ public class MyCountDownTimer extends Service {
 
 
 
-    private void showNotification() {
+    private void showPauseNotification() {
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplication());
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(intent);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+                this)
+                .setSmallIcon(R.drawable.ic_study_coach)
+                .setContentTitle("StudieCoach")
+                .setContentText("Dags för paus!"
+                );
+
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        mBuilder.setStyle(inboxStyle);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, mBuilder.build());
+
+
+    }
+
+    private void showStudyNotification(){
+        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, 0);
+
+        Notification noti = new Notification.Builder(getBaseContext())
+                .setContentTitle("StudieCoach")
+                .setContentText("Dags att plugga").setSmallIcon(R.drawable.ic_timer)
+                .setContentIntent(pIntent).build();
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplication());
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(intent);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        // hide the notification after its selected
+        noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+        notificationManager.notify(0, noti);
 
     }
 
