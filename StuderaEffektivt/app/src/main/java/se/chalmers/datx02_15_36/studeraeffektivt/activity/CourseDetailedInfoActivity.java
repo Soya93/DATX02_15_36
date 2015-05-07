@@ -110,12 +110,12 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
      //   Log.i("CourseDetailedInfo course status", status);
 
-        isActiveSwitch.setChecked(status.toLowerCase().equals("undone"));
+        /*isActiveSwitch.setChecked(status.toLowerCase().equals("undone"));
         if(isActiveSwitch.isChecked()){
             isActiveSwitch.setText("Pågående");
         }else {
             isActiveSwitch.setText("Avslutad");
-        }
+        }*/
 
         isActiveSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -124,13 +124,13 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                                          boolean isChecked) {
 
                 if (isChecked) {
-                    isActiveSwitch.setText("Pågående");
+                    //isActiveSwitch.setText("Pågående");
                     dbAdapter.setCourseUndone(courseCode);
                     String status = dbAdapter.getCourseStatus(courseCode);
                    // Log.i("CourseDetailedInfo set course undone", status);
 
                 } else {
-                    isActiveSwitch.setText("Avslutad");
+                    //isActiveSwitch.setText("Avslutad");
                     dbAdapter.setCourseDone(courseCode);
                     String status = dbAdapter.getCourseStatus(courseCode);
                    // Log.i("CourseDetailedInfo set course done", status);
