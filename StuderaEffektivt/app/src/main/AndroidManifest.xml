@@ -122,6 +122,11 @@
             android:label="@string/title_activity_course_details"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".activity.CourseActivity"
+            android:label="@string/title_activity_course"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

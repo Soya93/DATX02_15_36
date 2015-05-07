@@ -26,6 +26,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import java.util.Map;
 
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
+    import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.TechsNTipsActivity;
@@ -66,6 +67,7 @@ public class MyProfileFrag extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    /*
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -74,6 +76,8 @@ public class MyProfileFrag extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment fifthTapFragment.
      */
+    /*
+
     // TODO: Rename and change types and number of parameters
     public static FifthTabFrag newInstance(String param1, String param2) {
         FifthTabFrag fragment = new FifthTabFrag();
@@ -84,6 +88,7 @@ public class MyProfileFrag extends Fragment {
 
         return fragment;
     }
+    */
 
     public MyProfileFrag() {
         // Required empty public constructor
@@ -212,13 +217,19 @@ public class MyProfileFrag extends Fragment {
                 initDialogToAddCourse();
                 break;
             case R.id.prevCourses:
-                fragment = new CourseFrag();
+
+                Intent iCourse = new Intent(getActivity(), CourseActivity.class);
+                //i.putExtra("CourseCode", courseCode);
+                startActivity(iCourse);
+                /*
+                fragment = new CourseActivity();
                 fragment.setArguments(bundle);
                 fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "coursefragment");
                 fragmentTransaction.hide(this);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
+                */
                 break;
             case R.id.addTask:
                 Intent i = new Intent(getActivity(), StudyTaskActivity.class);
@@ -304,7 +315,7 @@ public class MyProfileFrag extends Fragment {
     public void updateCourses(){
         courseList.clear();
 
-        Cursor cursor = dbAdapter.getCourses();
+        Cursor cursor = dbAdapter.getOngoingCourses();
         if (cursor.getCount() > 0){
             String ccode = "";
             String cname = "";
