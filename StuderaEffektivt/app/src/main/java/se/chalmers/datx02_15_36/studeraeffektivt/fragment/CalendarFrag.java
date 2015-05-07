@@ -37,6 +37,7 @@ import java.util.Map;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.EventActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.RepetitionActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarsFilterAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
@@ -430,30 +431,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     }
 
     public void addRepetitionSession() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        //the notificationAlternatives
-        // String[] alternatives = {"LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8"};
-        final String[] alternatives = new String[7];
-        int currentWeek = Utils.getCurrWeekNumber();
-        for (int i = 7, j = 0; i >= 0 && j < alternatives.length; i--, j++) {
-            int newWeek = currentWeek - i;
-            Log.i("newWeek", newWeek + "");
-            alternatives[j] = "Vecka " + newWeek;
-        }
-
-        builder.setTitle("Välj en vecka att repetera")
-                .setItems(alternatives, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //TODO hämta några randomAssignments uppgifter
-                        //TODO visa vilken vecka det är nu???
-                        String tasks = "";
-                        String week = alternatives[which];
-                        openAddRepetition(week);
-                    }
-                });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        Intent i = new Intent(getActivity(), RepetitionActivity.class);
+        startActivity(i);
     }
 
     public void changeVisibleCalendars() {
