@@ -1,13 +1,21 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,7 +24,10 @@ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
+import java.util.Calendar;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
 //import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CourseDetailedInfoFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.HomeFrag;
@@ -24,6 +35,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.fragment.StatsFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TimerFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.TabAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.RepetitionReminder;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -81,6 +94,8 @@ public class MainActivity extends ActionBarActivity {
         homeFrag.setCalendarFrag(calendarFrag);
 
         statsFrag = (StatsFrag) mAdapter.getItem(3);
+
+        TimeToRemind();
 
         // listener for FAB menu
         FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
@@ -308,6 +323,60 @@ public class MainActivity extends ActionBarActivity {
         super.onResume();
         viewPager = (ViewPager) findViewById(R.id.pager);
     }
+
+    public void TimeToRemind(){
+        //if(Utils.getCurrWeekNumber() == Calendar.MONDAY){
+            RepetitionReminder repetitionReminder = new RepetitionReminder();
+            repetitionReminder.setDBAdapter(new DBAdapter(this));
+
+            String message = repetitionReminder.reminderMessage();
+            if(repetitionReminder.haveAnyToRepeat()){
+                for(String course: repetitionReminder.getCoursesToRepeat()){
+                    message = message + " " + course;
+                }
+            }
+
+            //Notificationstuff
+            Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplication());
+            stackBuilder.addParentStack(MainActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent =
+                    stackBuilder.getPendingIntent(
+                            0,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+                    this)
+                    .setSmallIcon(R.drawable.ic_study_coach)
+                    .setContentTitle("StudieCoach")
+                    .setContentText("Ny studievecka"
+
+
+            );
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+            inboxStyle.addLine(message);
+            mBuilder.setStyle(inboxStyle);
+            mBuilder.setContentIntent(resultPendingIntent);
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(0, mBuilder.build());
+
+      /* NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(getApplication())
+                            .setSmallIcon(R.drawable.ic_study_coach)
+                            .setContentTitle("StudieCoach")
+                            .setContentText("Ny vecka")
+                            .setSubText(message);
+
+
+            mBuilder.setContentIntent(resultPendingIntent);
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(0, mBuilder.build());*/
+        // }
+    }
+
 }
 
 
