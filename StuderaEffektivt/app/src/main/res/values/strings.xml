@@ -93,6 +93,9 @@
     <string name="title_activity_techs_ntips">TechsNTipsActivity</string>
     <string name="title_activity_timersettings">TimerSettings</string>
     <string name="title_activity_getAssignmetsFromWeb">GetWebAssignmets</string>
+    <string name="course_off">Pågående</string>
+    <string name="course_on">Avslutad</string>
+
     <string name="title_activity_repetition">RepetitionActivity</string>
 
     <string name="hello_world">Hello world!</string>

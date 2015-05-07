@@ -53,6 +53,7 @@ public class TimerFrag extends Fragment {
     private ImageButton stopButton;
     private ImageButton pauseButton;
 
+    private boolean isInitialized;
     private int buttonId = R.drawable.ic_action_play;
     private boolean hasBeenPaused = false;
 
@@ -147,8 +148,6 @@ public class TimerFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
         instantiate();
-
-
         return rootView;
     }
 
@@ -234,8 +233,6 @@ public class TimerFrag extends Fragment {
     public void onResume() {
         super.onResume();
         getTimeFromTimerSettings();
-      //  startSetTimerView();
-
     }
 
     private void instantiateButtons() {
@@ -267,9 +264,8 @@ public class TimerFrag extends Fragment {
         week = Utils.getCurrWeekNumber();
         textViewWeek.setText("Vecka " + String.valueOf(week));
 
-
-        taskSwitch.setChecked(true);
-        assignmentType = AssignmentType.READ;
+        initButtons();
+        assignmentType = AssignmentType.OTHER;
         spinner.setSelection(0);
 
         if(spinner.getSelectedItem()!=null) {
@@ -277,8 +273,7 @@ public class TimerFrag extends Fragment {
             updateTaskList(assignmentType, week);
         }
 
-        initButtons();
-
+        isInitialized = true;
 
     }
 
@@ -383,16 +378,12 @@ public class TimerFrag extends Fragment {
             getActivity().stopService(i);
             getActivity().unbindService(sc);
         }
-        Log.i(String.valueOf(isMyServiceRunning(MyCountDownTimer.class)), "is service running");
-
     }
-
 
     public void settingsTimer() {
         resetTimer();
         Intent i = new Intent(getActivity(), TimerSettingsActivity.class);
         startActivity(i);
-
     }
 
     public void onDestroyView() {
@@ -411,7 +402,6 @@ public class TimerFrag extends Fragment {
         handler.removeMessages(0);
         handler.removeMessages(1);
         handler.removeMessages(2);
-
     }
 
     private void saveFragmentState() {
@@ -441,18 +431,15 @@ public class TimerFrag extends Fragment {
 
 
     public void updateTaskList(AssignmentType assignmentType, int week) {
+
         taskList.removeAllViews();
-
-
         taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
 
         if(taskList.isEmpty()){
             TextView textView1 = new TextView(getActivity());
             textView1.setText("Ingen uppgift av den här typen för den valda veckan");
             taskList.addView(textView1);
-
         }
-
     }
 
     public void initButtons() {
@@ -520,6 +507,13 @@ public class TimerFrag extends Fragment {
         Drawable backDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_left).mutate();
         backDrawable.setColorFilter(Color.parseColor("#757575"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         previousWeek.setBackground(backDrawable);
+    }
+    public boolean hasInit(){
+        return isInitialized;
+    }
+
+    public void updateView(){
+        updateTaskList(assignmentType, week);
     }
 
 }
