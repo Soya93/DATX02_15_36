@@ -355,10 +355,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         int year = CalendarUtils.YEAR;
         int month = CalendarUtils.MONTH;
         Calendar cal = Calendar.getInstance();
-        cal.set(year, month - 1, 1);
+        cal.set(year - 1, month, 1);
         long startDay = cal.getTimeInMillis();
-        int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        cal.set(year, month, daysInMonth);
+        cal.set(year + 1, month +1, 1);
         long endDay = cal.getTimeInMillis();
 
         Cursor cur = calendarModel.getEventsCursor(cr, startDay, endDay);
@@ -581,7 +580,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     private void onTodayClick() {
         mWeekView.goToToday();
-        mWeekView.goToHour(CalendarUtils.HOUR > 16 ? 16 : CalendarUtils.HOUR - 1);
+        if(CalendarUtils.HOUR != 0) {
+            mWeekView.goToHour(CalendarUtils.HOUR > 16 ? 16 : CalendarUtils.HOUR - 1);
+        }
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
     }

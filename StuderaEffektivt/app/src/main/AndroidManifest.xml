@@ -49,6 +49,7 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
         <activity
@@ -131,6 +132,16 @@
             android:name=".activity.RepetitionActivity"
             android:label="@string/title_activity_repetition" >
         </activity>
+
+        <receiver android:name=".util.NotificationBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".util.NotificationService"
+            android:exported="false" />
     </application>
 
 </manifest>
