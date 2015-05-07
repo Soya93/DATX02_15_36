@@ -63,7 +63,8 @@
     <string name="chapter_title">KAPITEL</string>
     <string name="week_title">VECKA</string>
     <string name="task_info_title">uppgiftsinformation</string>
-    <string name="saved_tasks_title">Sparade uppgifter</string>
+    <string name="saved_tasks_other_title">Sparade Räkneuppgifter</string>
+    <string name="saved_tasks_read_title">Sparade Läsanvisningar</string>
 
     <string name="task_title"><font size="15">UPPGIFTSNUMMER </font></string>
     <string name="task_string_hint"><font size="15">ex: 1&#8211;5 eller 1,2,3</font></string>
@@ -73,7 +74,7 @@
     <!-- Colours -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="grey">#e4e4e4</color>
+    <color name="grey">#e5e5e5</color>
     <color name="pink">#CA1F5B</color>
     <color name="purple">#5E229B</color>
     <color name="green">#78CF20</color>

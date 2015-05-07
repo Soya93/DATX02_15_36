@@ -162,7 +162,7 @@ public class TimerFrag extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    private void getTimeFromSettings() {
+    private void getTimeFromTimerSettings() {
         sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
         int studyMin = sharedPref.getInt("studyMin", -1);
         int studyHour = sharedPref.getInt("studyHour", -1);
@@ -181,6 +181,32 @@ public class TimerFrag extends Fragment {
             default_pauseTime = new Time(pauseHour, pauseMin);
         }
 
+
+    }
+
+    public void getViewFromSharedPref() {
+        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+
+        phaceInt = sharedPref.getInt("Phace", -1);
+        int buttonTemp = sharedPref.getInt("buttonImage", -1);
+        if (buttonTemp > 0) {
+            buttonId = buttonTemp;
+            startButton.setImageResource(buttonId);
+        }
+        if(!isMyServiceRunning(MyCountDownTimer.class)) {
+            startButton.setImageResource(R.drawable.ic_action_play);
+        }
+        hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
+        Log.d("hasbeenPause",String.valueOf(hasBeenPaused));
+        if (hasBeenPaused) {
+          long timeLeft = sharedPref.getLong("timeLeft",-1);
+            Log.d("timeLeft",String.valueOf(timeLeft));
+            setTimerView(timeLeft);
+        }
+        else{
+              startSetTimerView();
+        }
+
     }
 
 
@@ -192,25 +218,9 @@ public class TimerFrag extends Fragment {
             getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
         }
 
-        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
-
-        phaceInt = sharedPref.getInt("Phace", -1);
-        int buttonTemp = sharedPref.getInt("buttonImage", -1);
-        if (buttonTemp > 0) {
-            buttonId = buttonTemp;
-            startButton.setImageResource(buttonId);
-        }
-        hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
-        if (hasBeenPaused) {
-
-        }
-        if(!isMyServiceRunning(MyCountDownTimer.class)) {
-            startButton.setImageResource(R.drawable.ic_action_play);
-        }
         isActivyRunning = true;
-
-        getTimeFromSettings();
-        startSetTimerView();
+        getTimeFromTimerSettings();
+        getViewFromSharedPref();
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -223,13 +233,13 @@ public class TimerFrag extends Fragment {
 
             }
         });
-
+            Log.d("Text", textView.getText().toString());
 
     }
     public void onResume() {
         super.onResume();
-        getTimeFromSettings();
-        startSetTimerView();
+        getTimeFromTimerSettings();
+      //  startSetTimerView();
 
     }
 
@@ -264,7 +274,7 @@ public class TimerFrag extends Fragment {
 
 
         taskSwitch.setChecked(true);
-        assignmentType = AssignmentType.OTHER;
+        assignmentType = AssignmentType.READ;
         spinner.setSelection(0);
 
         if(spinner.getSelectedItem()!=null) {
@@ -368,7 +378,9 @@ public class TimerFrag extends Fragment {
 
     public void resetTimer() {
         if(isMyServiceRunning(MyCountDownTimer.class)) {
-            serviceHandler.sendEmptyMessage(2);
+            Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
+            getActivity().stopService(i);
+            getActivity().unbindService(sc);
 
             buttonId = R.drawable.ic_action_play;
             hasBeenPaused = false;
@@ -377,7 +389,7 @@ public class TimerFrag extends Fragment {
             progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
             startSetTimerView();
         }
-
+        Log.i(String.valueOf(isMyServiceRunning(MyCountDownTimer.class)), "is service running");
 
     }
 
@@ -437,6 +449,7 @@ public class TimerFrag extends Fragment {
     public void updateTaskList(AssignmentType assignmentType, int week) {
         taskList.removeAllViews();
 
+
         taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
 
         if(taskList.isEmpty()){
@@ -480,12 +493,21 @@ public class TimerFrag extends Fragment {
             }
         });
 
+        //The color of the taskSwitch
         int colorOn = Color.parseColor("#33b5e5");
         int colorOff = Color.parseColor("#33b5e5");
         StateListDrawable thumbStates = new StateListDrawable();
         thumbStates.addState(new int[]{android.R.attr.state_checked}, new ColorDrawable(colorOn));
         thumbStates.addState(new int[]{}, new ColorDrawable(colorOff)); // this one has to come last
         taskSwitch.setThumbDrawable(thumbStates);
+
+        /*/The color of the taskSwitches background/track
+        int color1 = Color.parseColor("#B3E5FC");
+        int color2 = Color.parseColor("#B3E5FC");
+        StateListDrawable trackStates = new StateListDrawable();
+        trackStates.addState(new int[]{android.R.attr.state_checked}, new ColorDrawable(color1));
+        trackStates.addState(new int[]{}, new ColorDrawable(color2)); // this one has to come last
+        taskSwitch.setTrackDrawable(trackStates);*/
 
         Drawable backDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_left).mutate();
         backDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
