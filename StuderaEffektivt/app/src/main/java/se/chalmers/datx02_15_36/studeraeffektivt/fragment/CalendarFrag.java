@@ -111,17 +111,17 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         backButton = (Button) view.findViewById(R.id.cal_back_button);
         Drawable backDrawable = getResources().getDrawable(R.drawable.ic_navigation_chevron_left).mutate();
-        backDrawable.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        backDrawable.setColorFilter(Color.parseColor("#757575"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         backButton.setBackground(backDrawable);
 
         forwardButton = (Button) view.findViewById(R.id.cal_forward_button);
         Drawable forwardDrawable = getResources().getDrawable(R.drawable.ic_navigation_chevron_right).mutate();
-        forwardDrawable.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        forwardDrawable.setColorFilter(Color.parseColor("#757575"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         forwardButton.setBackground(forwardDrawable);
 
         goToTodayButton = (Button) view.findViewById(R.id.go_to_today_button);
-        Drawable todayDrawable = getResources().getDrawable(R.drawable.ic_device_access_time).mutate();
-        todayDrawable.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        Drawable todayDrawable = getResources().getDrawable(R.drawable.ic_idag).mutate();
+        todayDrawable.setColorFilter(Color.parseColor("#757575"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         goToTodayButton.setBackground(todayDrawable);
 
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
@@ -299,21 +299,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         startActivity(intent);
     }
 
-    private void openAddRepetition(String week) {
-        eventActivity = new EventActivity();
-        eventActivity.setCalendarFrag(this);
-        Intent intent = new Intent(getActivity(), eventActivity.getClass());
-        intent.putExtra("isInAddMode", true);
-        intent.putExtra("startTime", 0L);
-        intent.putExtra("endTime", 0L);
-        intent.putExtra("title", "Repititonspass för " + week);
-        sharedPref = getActivity().getSharedPreferences("calendarPref", Context.MODE_PRIVATE);
-        Long homeCalID = sharedPref.getLong("homeCalID", 1L); // 1 is some value if it fails to read??
-        intent.putExtra("calID", homeCalID);        // is the home calendar
-        intent.putExtra("calName", calendarModel.getCalendarsMap().get(homeCalID));     //get name of the home calendar
-        intent.putExtra("color", calendarModel.getCalIdAndColorMap().get(homeCalID));
-        startActivity(intent);
-    }
 
     @Override
     public void onEventLongPress(final WeekViewEvent weekViewEvent, RectF rectF) {
