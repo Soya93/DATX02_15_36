@@ -103,8 +103,8 @@ public class CourseActivity extends ActionBarActivity {
                 courseList.add(createCourse("Courses", new Course(cname, ccode)));
             }
         }else{
-            courseList.add(createCourse("Courses", new Course("Inga kurser.", "")));
-
+            courseList.add(createCourse("Courses", new Course("lägg till genom att klicka på knappen ovan!", "Du har för närvarande inga kurser")));
+            listOfCourses.setEnabled(false);
         }
     }
 
@@ -162,9 +162,6 @@ public class CourseActivity extends ActionBarActivity {
                 HashMap courseMap = (HashMap) parent.getItemAtPosition(position);
                 Course course1 = (Course) courseMap.get("Courses");
                 selected = (int) courseList.indexOf(courseMap);
-                bundleToNextFragment.putInt("containerId", ((ViewGroup) container.getParent()).getId());
-                bundleToNextFragment.putInt("kurs", courseList.indexOf(courseMap));
-                bundleToNextFragment.putString("CourseCode", course1.getCourseCode());
                 goToDetails(course1);
             }
         });
