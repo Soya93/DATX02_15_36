@@ -92,7 +92,7 @@ public class CourseActivity extends ActionBarActivity {
     public void showCourseList() {
         courseList.clear();
 
-        Cursor cursor = dbAdapter.getCourses();
+        Cursor cursor = dbAdapter.getDoneCourses();
         Log.d("DB", "cursor.getCount() är "+cursor.getCount());
         if (cursor.getCount() > 0){
             String ccode = "";
