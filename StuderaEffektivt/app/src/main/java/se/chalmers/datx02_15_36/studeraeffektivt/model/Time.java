@@ -36,7 +36,8 @@ public class Time {
     public String getString () {
         String minutes= String.format("%02d", this.min);
         String hours = String.format("%02d",this.hour);
-        return hours + ":" + minutes;
+        String seconds = String.format("%02d",this.seconds);
+        return hours + ":" + minutes + ":" + seconds;
     }
 
     public String getTimeWithSecondsString() {
