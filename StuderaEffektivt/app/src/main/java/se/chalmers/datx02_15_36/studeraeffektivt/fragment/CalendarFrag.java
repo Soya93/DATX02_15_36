@@ -299,21 +299,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         startActivity(intent);
     }
 
-    private void openAddRepetition(String week) {
-        eventActivity = new EventActivity();
-        eventActivity.setCalendarFrag(this);
-        Intent intent = new Intent(getActivity(), eventActivity.getClass());
-        intent.putExtra("isInAddMode", true);
-        intent.putExtra("startTime", 0L);
-        intent.putExtra("endTime", 0L);
-        intent.putExtra("title", "Repititonspass för " + week);
-        sharedPref = getActivity().getSharedPreferences("calendarPref", Context.MODE_PRIVATE);
-        Long homeCalID = sharedPref.getLong("homeCalID", 1L); // 1 is some value if it fails to read??
-        intent.putExtra("calID", homeCalID);        // is the home calendar
-        intent.putExtra("calName", calendarModel.getCalendarsMap().get(homeCalID));     //get name of the home calendar
-        intent.putExtra("color", calendarModel.getCalIdAndColorMap().get(homeCalID));
-        startActivity(intent);
-    }
 
     @Override
     public void onEventLongPress(final WeekViewEvent weekViewEvent, RectF rectF) {
