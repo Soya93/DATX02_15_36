@@ -50,7 +50,7 @@ public class GetAssignmetsFromWeb extends ActionBarActivity {
         courseName = getIntent().getStringExtra("CourseName");
         courseCode = getIntent().getStringExtra("CourseCode");
         taskListfromWeb = (FlowLayout) findViewById(R.id.taskListfromWeb);
-        actionBar.setTitle(courseName);
+        actionBar.setTitle("Hämta uppgifter " + courseName);
         if (this != null) {
             dbAdapter = new DBAdapter(this);
         }

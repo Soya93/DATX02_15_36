@@ -68,6 +68,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private View view;
     private Bundle bundleFromPreviousFragment;
     private FlowLayout layoutWithinScrollViewOfTasks;
+    private FlowLayout layoutWithinScrollViewOfOther;
     private View.OnClickListener fabHandler;
     private FloatingActionButton actionButton;
     private SubActionButton button1;
@@ -85,7 +86,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("onCreate","hejalex");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_details);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -108,7 +108,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         String status = dbAdapter.getCourseStatus(courseCode);
 
-        Log.i("CourseDetailedInfo course status", status);
+     //   Log.i("CourseDetailedInfo course status", status);
 
         isActiveSwitch.setChecked(status.toLowerCase().equals("undone"));
         if(isActiveSwitch.isChecked()){
@@ -127,13 +127,13 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                     isActiveSwitch.setText("Pågående");
                     dbAdapter.setCourseUndone(courseCode);
                     String status = dbAdapter.getCourseStatus(courseCode);
-                    Log.i("CourseDetailedInfo set course undone", status);
+                   // Log.i("CourseDetailedInfo set course undone", status);
 
                 } else {
                     isActiveSwitch.setText("Avslutad");
                     dbAdapter.setCourseDone(courseCode);
                     String status = dbAdapter.getCourseStatus(courseCode);
-                    Log.i("CourseDetailedInfo set course done", status);
+                   // Log.i("CourseDetailedInfo set course done", status);
                 }
 
 
@@ -233,29 +233,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_details);
 
-        View rootView = inflater.inflate(R.layout.activity_course_details, container, false);
-        this.view = rootView;
-
-
-
-        //bundleFromPreviousFragment = this.getArguments();
-        //selectedCourse = bundleFromPreviousFragment.getInt("kurs");
-        //courseCode = bundleFromPreviousFragment.getString("CourseCode");
-        //courseName = bundleFromPreviousFragment.getString("CourseName");
-        //Course course = CourseFrag.courseList.get(selectedCourse).get("Courses");
-
-        //Create the database access point but check if the context is null first.
-
-
-        fillActivity(courseCode, courseName);
-
-        return rootView;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -280,22 +258,20 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void fillActivity(String courseCode, String courseName) {
-        kursDetaljer.setText(courseCode + " - " + courseName);
-    }
-
     public void initComponents() {
 
         kursDetaljer = (TextView) findViewById(R.id.kursDetaljer);
 
         layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
 
+        layoutWithinScrollViewOfOther = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfOther);
+
     }
 
     public void onResume() {
         super.onResume();
-        Log.d("onstart","heje");
         layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+        layoutWithinScrollViewOfOther.addTasksFromDatabase(dbAdapter,courseCode,AssignmentType.OTHER);
 
     }
 
