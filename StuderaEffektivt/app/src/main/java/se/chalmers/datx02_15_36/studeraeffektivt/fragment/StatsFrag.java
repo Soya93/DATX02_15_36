@@ -112,7 +112,15 @@ public class StatsFrag extends Fragment {
         noDataView.setVisibility(View.INVISIBLE);
     }
 
+    private void showNoCourseView(){
+        Log.d("stats", "in showNoCourseView");
+        noDataView.setText("Lägg till kurser och uppgifter \n lös sedan uppgifter och logga tid med timern \n så får du se din utveckling här!");
+        noDataView.setVisibility(View.VISIBLE);
+    }
+
     private void showNoDataView(){
+        Log.d("stats", "in showNoDataView");
+        noDataView.setText("Lös uppgifter och logga tid med timern \n så får du se din utveckling här!");
         noDataView.setVisibility(View.VISIBLE);
     }
 
@@ -465,13 +473,18 @@ public class StatsFrag extends Fragment {
     }
 
     public void updateView(){
-        if(isCourses()) {
+        //Course has data
+        if(courseHasSessions() && courseHasAsses()) {
             setCourses();
             spinner.setSelection(0);
             drawCharts();
-        }else{
+        //Course is empty
+        }else if (isCourses()){
             hideCharts();
             showNoDataView();
+        //No courses
+        }else{
+            showNoCourseView();
         }
     }
 

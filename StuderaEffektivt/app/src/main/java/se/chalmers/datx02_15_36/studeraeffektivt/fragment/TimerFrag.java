@@ -481,12 +481,21 @@ public class TimerFrag extends Fragment {
             }
         });
 
+        //The color of the taskSwitch
         int colorOn = Color.parseColor("#33b5e5");
         int colorOff = Color.parseColor("#33b5e5");
         StateListDrawable thumbStates = new StateListDrawable();
         thumbStates.addState(new int[]{android.R.attr.state_checked}, new ColorDrawable(colorOn));
         thumbStates.addState(new int[]{}, new ColorDrawable(colorOff)); // this one has to come last
         taskSwitch.setThumbDrawable(thumbStates);
+
+        /*/The color of the taskSwitches background/track
+        int color1 = Color.parseColor("#B3E5FC");
+        int color2 = Color.parseColor("#B3E5FC");
+        StateListDrawable trackStates = new StateListDrawable();
+        trackStates.addState(new int[]{android.R.attr.state_checked}, new ColorDrawable(color1));
+        trackStates.addState(new int[]{}, new ColorDrawable(color2)); // this one has to come last
+        taskSwitch.setTrackDrawable(trackStates);*/
 
         Drawable backDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_left).mutate();
         backDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!

@@ -68,18 +68,20 @@ public class StudyTask2 extends CheckBox {
     }
 
     public void initCheckbox() {
-        /*this.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        this.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-// TODO Auto-generated method stub
+
                 if (buttonView.isChecked()) {
                     addToDatabase();
-                    Toast.makeText(StudyTask2.this.getContext(), "Uppgiften har sparats", Toast.LENGTH_SHORT).show();
+
                 } else {
+                    deleteFromDatabase();
+
                 }
             }
-        });*/
+        });
 
     }
 
@@ -134,6 +136,10 @@ public class StudyTask2 extends CheckBox {
                 getStatus()
         );
 
+    }
+
+    public void deleteFromDatabase() {
+        dbAdapter.deleteAssignment(getIdNr());
     }
 
 

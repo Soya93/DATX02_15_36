@@ -74,7 +74,7 @@
     <!-- Colours -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="grey">#e4e4e4</color>
+    <color name="grey">#e5e5e5</color>
     <color name="pink">#CA1F5B</color>
     <color name="purple">#5E229B</color>
     <color name="green">#78CF20</color>
@@ -92,5 +92,6 @@
     <string name="title_activity_detailed_info">DetailedInfoActivity</string>
     <string name="title_activity_techs_ntips">TechsNTipsActivity</string>
     <string name="title_activity_timersettings">TimerSettings</string>
+    <string name="title_activity_getAssignmetsFromWeb">GetWebAssignmets</string>
 
 </resources>

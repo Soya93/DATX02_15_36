@@ -92,6 +92,11 @@
             android:label="@string/title_activity_event"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".activity.GetAssignmetsFromWeb"
+            android:label="@string/title_activity_getAssignmetsFromWeb"
+            android:screenOrientation="portrait">
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -115,6 +120,11 @@
         <activity
             android:name=".activity.CourseDetailedInfoActivity"
             android:label="@string/title_activity_course_details"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".activity.CourseActivity"
+            android:label="@string/title_activity_course"
             android:screenOrientation="portrait">
         </activity>
     </application>
