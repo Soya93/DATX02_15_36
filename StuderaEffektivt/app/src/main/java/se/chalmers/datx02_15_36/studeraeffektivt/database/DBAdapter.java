@@ -293,6 +293,15 @@ public class DBAdapter {
         return db.query(dbHelper.TABLE_COURSES, null, null, null, null, null, null);
     }
 
+    /**
+     * Get all ongoing courses.
+     */
+    public Cursor getOngoingCourses() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = dbHelper.COURSES_cstatus + " = '" + AssignmentStatus.UNDONE.toString() + "'";
+        return db.query(dbHelper.TABLE_COURSES, null, selection, null, null, null, null);
+    }
+
     /*The DBHelper class*/
     public static class DBHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "pluggapp.db";

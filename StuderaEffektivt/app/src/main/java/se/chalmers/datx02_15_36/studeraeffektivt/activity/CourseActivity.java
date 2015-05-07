@@ -1,11 +1,15 @@
-package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
+package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,9 +29,10 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 
 
-public class CourseFrag extends Fragment {
+public class CourseActivity extends ActionBarActivity {
 
     private ListView listOfCourses;
     private Button addButton;
@@ -37,7 +42,6 @@ public class CourseFrag extends Fragment {
     public static List<Map<String, Course>> courseList = new ArrayList<Map<String, Course>>();
     SimpleAdapter simpleAdpt;
     LinearLayout popUp;
-    private View view;
     private int selected;
     private ViewGroup container;
     private Bundle bundleFromPreviousFragment;
@@ -47,30 +51,39 @@ public class CourseFrag extends Fragment {
     //The access point of the database.
     private DBAdapter dbAdapter;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.activity_course, container, false);
-        this.container = container;
-        this.view = rootView;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_course);
         initComponents();
-        bundleFromPreviousFragment = this.getArguments();
-        containerId = bundleFromPreviousFragment.getInt("containerId");
-        bundleToNextFragment = new Bundle();
-        simpleAdpt = new SimpleAdapter(this.getActivity(), courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
+        simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
         listOfCourses.setAdapter(simpleAdpt);
+
+        getSupportActionBar().setTitle("Mina Kurser");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        android.support.v7.app.ActionBar bar = getSupportActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
 
 
 
 
         //Create the database access point but check if the context is null first.
-        if (getActivity() != null) {
-            dbAdapter = new DBAdapter(getActivity());
+        if (this != null) {
+            dbAdapter = new DBAdapter(this);
         }
         showCourseList();
+    }
 
-        return rootView;
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -127,13 +140,13 @@ public class CourseFrag extends Fragment {
 
                 long id = dbAdapter.insertCourse(codeEditText.getText().toString(), nameEditText.getText().toString());
                 Log.d("DB", "id: " + id);
-                if (id > 0 && getActivity() != null) {
+                if (id > 0 && this != null) {
                     showCourseList();
 
-                    Toast toast = Toast.makeText(getActivity(), codeEditText.getText().toString() + " succesfully added", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), codeEditText.getText().toString() + " succesfully added", Toast.LENGTH_SHORT);
                     toast.show();
-                } else if (getActivity() != null) {
-                    Toast toast = Toast.makeText(getActivity(), "Failed to add course" + codeEditText.getText().toString(), Toast.LENGTH_SHORT);
+                } else if (this != null) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Failed to add course" + codeEditText.getText().toString(), Toast.LENGTH_SHORT);
                     toast.show();
                 }
 
@@ -160,7 +173,7 @@ public class CourseFrag extends Fragment {
 
     public void goToDetails(Course course) {
 
-        Intent intent = new Intent(getActivity(), CourseDetailedInfoActivity.class);
+        Intent intent = new Intent(this, CourseDetailedInfoActivity.class);
         intent.putExtra("CourseCode", course.getCourseCode());
         intent.putExtra("CourseName", course.getCourseName());
         startActivity(intent);
@@ -179,12 +192,12 @@ public class CourseFrag extends Fragment {
     }
 
     public void initComponents() {
-        addButton = (Button) view.findViewById(R.id.addButton);
-        listOfCourses = (ListView) view.findViewById(R.id.listView);
-        popUp = (LinearLayout) view.findViewById(R.id.linLayout);
-        addButtonInner = (Button) view.findViewById(R.id.addButtonInner);
-        nameEditText = (EditText) view.findViewById(R.id.nameEditText);
-        codeEditText = (EditText) view.findViewById(R.id.codeEditText);
+        addButton = (Button) findViewById(R.id.addButton);
+        listOfCourses = (ListView) findViewById(R.id.listView);
+        popUp = (LinearLayout) findViewById(R.id.linLayout);
+        addButtonInner = (Button) findViewById(R.id.addButtonInner);
+        nameEditText = (EditText) findViewById(R.id.nameEditText);
+        codeEditText = (EditText) findViewById(R.id.codeEditText);
 
         setAddButton();
         setAddButtonInner();
