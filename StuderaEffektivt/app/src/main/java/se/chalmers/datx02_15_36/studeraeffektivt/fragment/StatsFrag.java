@@ -369,7 +369,7 @@ public class StatsFrag extends Fragment {
     }
 
     private boolean courseHasSessions(){
-        if (currCourse != null) {
+        if (currCourse != null && isCourses()) {
             Cursor sessions = dbAdapter.getSessions();
             while (sessions.moveToNext()) {
                 if (sessions.getString(sessions.getColumnIndex("_ccode")).equals(currCourse)) {
