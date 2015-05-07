@@ -53,7 +53,6 @@ public class TimerFrag extends Fragment {
     private ImageButton stopButton;
     private ImageButton pauseButton;
 
-
     private int buttonId = R.drawable.ic_action_play;
     private boolean hasBeenPaused = false;
 
@@ -493,9 +492,15 @@ public class TimerFrag extends Fragment {
             }
         });
 
-        //The color of the taskSwitch
-        int colorOn = Color.parseColor("#33b5e5");
-        int colorOff = Color.parseColor("#33b5e5");
+        colorSwitch();
+
+        colorNextButtonGrey();
+        colorPrevButtonGrey();
+    }
+
+    private void colorSwitch(){
+        int colorOn = Color.parseColor("#757575");
+        int colorOff = Color.parseColor("#757575");
         StateListDrawable thumbStates = new StateListDrawable();
         thumbStates.addState(new int[]{android.R.attr.state_checked}, new ColorDrawable(colorOn));
         thumbStates.addState(new int[]{}, new ColorDrawable(colorOff)); // this one has to come last
@@ -508,29 +513,18 @@ public class TimerFrag extends Fragment {
         trackStates.addState(new int[]{android.R.attr.state_checked}, new ColorDrawable(color1));
         trackStates.addState(new int[]{}, new ColorDrawable(color2)); // this one has to come last
         taskSwitch.setTrackDrawable(trackStates);*/
-
-        Drawable backDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_left).mutate();
-        backDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
-        previousWeek.setBackground(backDrawable);
-
-        Drawable forwardDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_right).mutate();
-        forwardDrawable.setColorFilter(Color.parseColor("#33b5e5"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
-        nextWeek.setBackground(forwardDrawable);
-
-
-
     }
 
+    private void colorNextButtonGrey(){
+        Drawable forwardDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_right).mutate();
+        forwardDrawable.setColorFilter(Color.parseColor("#757575"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        nextWeek.setBackground(forwardDrawable);
+    }
 
-
-
-
-
-
-
-
-
-
-
+    private void colorPrevButtonGrey(){
+        Drawable backDrawable = getResources().getDrawable( R.drawable.ic_navigation_chevron_left).mutate();
+        backDrawable.setColorFilter(Color.parseColor("#757575"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        previousWeek.setBackground(backDrawable);
+    }
 
 }
