@@ -263,18 +263,15 @@ public class TimerFrag extends Fragment {
         textViewWeek.setText("Vecka " + String.valueOf(week));
 
 
-        taskSwitch.setChecked(true);
-        assignmentType = AssignmentType.READ;
+        taskSwitch.setChecked(false);
+        assignmentType = AssignmentType.OTHER;
         spinner.setSelection(0);
 
         if(spinner.getSelectedItem()!=null) {
             setSelectedCourse();
             updateTaskList(assignmentType, week);
         }
-
         initButtons();
-
-
     }
 
     private void setCourses() {
