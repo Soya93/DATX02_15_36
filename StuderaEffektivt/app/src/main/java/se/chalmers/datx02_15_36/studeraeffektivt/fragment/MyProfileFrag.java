@@ -117,6 +117,12 @@ public class MyProfileFrag extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        initOnResume();
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -163,6 +169,13 @@ public class MyProfileFrag extends Fragment {
         setListOfCourses();
 
 
+    }
+
+    public void initOnResume(){
+        simpleAdapter = new SimpleAdapter(this.getActivity(), courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
+        listOfCourses.setAdapter(simpleAdapter);
+        updateCourses();
+        setListOfCourses();
     }
 
     View.OnClickListener myOnlyhandler = new View.OnClickListener() {
