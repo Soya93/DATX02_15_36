@@ -17,5 +17,10 @@ public class Utils {
         return calendar.get(Calendar.WEEK_OF_YEAR);
     }
 
+    public static int getCurrWeekDay(){
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
 
 }
