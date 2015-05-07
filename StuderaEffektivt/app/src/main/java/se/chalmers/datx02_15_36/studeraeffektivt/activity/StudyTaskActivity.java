@@ -454,6 +454,9 @@ public class StudyTaskActivity extends ActionBarActivity {
             listOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
         }
 
+        taskInput.setText("");
+        taskParts.setText("");
+
     }
 
     private class AddToWebDatabase extends AsyncTask<String, Void, Void> {
