@@ -244,13 +244,13 @@ public class StudyTaskActivity extends ActionBarActivity {
 
             if(listOfTasks.isEmpty()){
                 TextView textView = new TextView(this);
-                textView.setText("Du har för närvaranade inga uppgifter av den här typen för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
+                textView.setText("Du har för närvaranade inga räkneuppgifter för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
                 textView.setPadding(15,5,15,5);
                 listOfTasks.addView(textView);
             }
             if(listOfReadAssignments.isEmpty()){
                 TextView textView = new TextView(this);
-                textView.setText("Du har för närvaranade inga uppgifter av den här typen för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
+                textView.setText("Du har för närvaranade inga läsanvisningar för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
                 textView.setPadding(15,5,15,5);
                 listOfReadAssignments.addView(textView);
             }

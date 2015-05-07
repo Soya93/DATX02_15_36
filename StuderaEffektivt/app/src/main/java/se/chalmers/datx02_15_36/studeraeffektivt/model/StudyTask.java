@@ -117,7 +117,10 @@ public class StudyTask extends CheckBox{
 
                         if(flowLayout.isEmpty()){
                             TextView textView = new TextView(getContext());
-                            textView.setText("Du har för närvaranade inga uppgifter av den här typen för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
+                            if(type==AssignmentType.OTHER)
+                                textView.setText("Du har för närvaranade räkneuppgifter för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
+                            else
+                                textView.setText("Du har för närvaranade inga läsanvisningar för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
                             textView.setPadding(15,5,15,5);
                             flowLayout.addView(textView);
                         }
