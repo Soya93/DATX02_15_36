@@ -368,7 +368,9 @@ public class TimerFrag extends Fragment {
 
     public void resetTimer() {
         if(isMyServiceRunning(MyCountDownTimer.class)) {
-            serviceHandler.sendEmptyMessage(2);
+            Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
+            getActivity().stopService(i);
+            getActivity().unbindService(sc);
 
             buttonId = R.drawable.ic_action_play;
             hasBeenPaused = false;
@@ -377,7 +379,7 @@ public class TimerFrag extends Fragment {
             progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
             startSetTimerView();
         }
-
+        Log.i(String.valueOf(isMyServiceRunning(MyCountDownTimer.class)), "is service running");
 
     }
 
