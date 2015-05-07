@@ -34,12 +34,43 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/savedTaskLabel"
+        android:layout_below="@+id/infoLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/saved_tasks_other_title"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:textColor="#03A9F4"
+            android:layout_weight="0.5"
+            />
+
+        <TextView
+
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/saved_tasks_read_title"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:textColor="#03A9F4"
+            android:layout_weight="0.5"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:baselineAligned="false"
         android:id="@+id/fourthLayout"
-        android:layout_below="@+id/infoLayout"
+        android:layout_below="@+id/savedTaskLabel"
         android:layout_centerHorizontal="true"
         android:weightSum="1">
 
