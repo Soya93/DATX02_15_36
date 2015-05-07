@@ -145,7 +145,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
             public void onClick(View v) {
                 updateView();
-                
+
                 if (v.getTag() == button1.getTag()) {
                     openAddEvent();
                 } else if (v.getTag() == button2.getTag()) {
