@@ -85,6 +85,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("onCreate","hejalex");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_details);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -100,7 +101,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
 //        fillActivity(courseCode, courseName);
         initComponents();
-        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+
 
 
         isActiveSwitch = (Switch) findViewById(R.id.isActiveSwitch);
@@ -276,6 +277,13 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         kursDetaljer = (TextView) findViewById(R.id.kursDetaljer);
 
         layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
+
+    }
+
+    public void onResume() {
+        super.onResume();
+        Log.d("onstart","heje");
+        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
 
     }
 
