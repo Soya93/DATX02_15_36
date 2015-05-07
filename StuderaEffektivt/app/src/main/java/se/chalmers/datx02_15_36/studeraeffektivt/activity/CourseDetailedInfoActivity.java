@@ -78,6 +78,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private Switch isActiveSwitch;
     private boolean hasFetchedBefore = false;
 
+    private boolean isInitialized;
 
     private String courseCode;
     private String courseName;
@@ -102,7 +103,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 //        fillActivity(courseCode, courseName);
         initComponents();
 
-
+        isInitialized = true;
 
         isActiveSwitch = (Switch) findViewById(R.id.isActiveSwitch);
 
@@ -233,7 +234,15 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        layoutWithinScrollViewOfTasks.removeAllViews();
+        layoutWithinScrollViewOfOther.removeAllViews();
+        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+        layoutWithinScrollViewOfOther.addTasksFromDatabase(dbAdapter,courseCode,AssignmentType.OTHER);
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -270,9 +279,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     public void onResume() {
         super.onResume();
-        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
-        layoutWithinScrollViewOfOther.addTasksFromDatabase(dbAdapter,courseCode,AssignmentType.OTHER);
-
     }
 
     public void deleteCourse(View v) {
@@ -342,7 +348,4 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         alert.show();
     }
-
-
-
 }

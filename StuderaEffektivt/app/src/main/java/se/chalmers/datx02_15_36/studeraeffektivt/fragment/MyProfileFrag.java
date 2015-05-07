@@ -54,6 +54,8 @@ public class MyProfileFrag extends Fragment {
     private ViewGroup container;
     private View view;
 
+    private boolean isInitialized;
+
     private EditText editTextCoursecode;
     private EditText editTextCoursename;
 
@@ -319,5 +321,4 @@ public class MyProfileFrag extends Fragment {
 
         return newCourse;
     }
-
 }
