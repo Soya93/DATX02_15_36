@@ -264,7 +264,7 @@ public class TimerFrag extends Fragment {
 
 
         taskSwitch.setChecked(true);
-        assignmentType = AssignmentType.OTHER;
+        assignmentType = AssignmentType.READ;
         spinner.setSelection(0);
 
         if(spinner.getSelectedItem()!=null) {
@@ -436,6 +436,7 @@ public class TimerFrag extends Fragment {
 
     public void updateTaskList(AssignmentType assignmentType, int week) {
         taskList.removeAllViews();
+
 
         taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
 
