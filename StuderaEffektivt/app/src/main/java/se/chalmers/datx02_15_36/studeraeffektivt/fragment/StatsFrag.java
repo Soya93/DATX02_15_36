@@ -160,12 +160,12 @@ public class StatsFrag extends Fragment {
                     hoursInWeek = new Entry(0, i);
                     Log.d("lineChart", "getMinutes().getCount() is 0, week: "+w+", course: "+ccode);
                 }else {
-                    int minutes = 0;
+                    int hours = 0;
                     while (mins.moveToNext()) {
-                        minutes += mins.getInt(0);
+                        hours += (mins.getInt(0)/60);
                     }
-                    Log.d("lineChart", "week: "+w+", course: "+ccode+", hours in course and week: " + minutes);
-                    hoursInWeek = new Entry(minutes, i);
+                    Log.d("lineChart", "week: "+w+", course: "+ccode+", hours in course and week: " + hours);
+                    hoursInWeek = new Entry(hours, i);
 
                 }
                 hoursInCourse.add(hoursInWeek);

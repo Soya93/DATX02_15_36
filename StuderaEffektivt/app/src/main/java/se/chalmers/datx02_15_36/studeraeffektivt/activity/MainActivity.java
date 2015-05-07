@@ -83,7 +83,6 @@ public class MainActivity extends ActionBarActivity {
         calendarFrag = (CalendarFrag) mAdapter.getItem(1);
         calendarFrag.setContentResolver(this.getContentResolver());
 
-
         homeFrag = (HomeFrag) mAdapter.getItem(0);
         homeFrag.setContentResolver(this.getContentResolver());
         homeFrag.setCalendarFrag(calendarFrag);
