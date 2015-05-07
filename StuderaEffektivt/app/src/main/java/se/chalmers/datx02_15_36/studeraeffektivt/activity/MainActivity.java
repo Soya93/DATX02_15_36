@@ -276,6 +276,9 @@ public class MainActivity extends ActionBarActivity {
                 if((position == 1) && calendarFrag.hasInit()) {
                     calendarFrag.updateView();
                 }
+                if((position == 2) && timerFrag.hasInit()) {
+                    timerFrag.updateView();
+                }
             }
 
             @Override
