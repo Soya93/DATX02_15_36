@@ -110,8 +110,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
      //   Log.i("CourseDetailedInfo course status", status);
 
-        /*isActiveSwitch.setChecked(status.toLowerCase().equals("undone"));
-        if(isActiveSwitch.isChecked()){
+        isActiveSwitch.setChecked(status.toLowerCase().equals("undone"));
+        /*if(isActiveSwitch.isChecked()){
             isActiveSwitch.setText("Pågående");
         }else {
             isActiveSwitch.setText("Avslutad");
