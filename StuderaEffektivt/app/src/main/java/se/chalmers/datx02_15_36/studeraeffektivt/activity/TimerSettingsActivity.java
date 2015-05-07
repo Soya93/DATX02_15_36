@@ -194,7 +194,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
         final View dialogView = inflater.inflate(R.layout.dialog, null);
         np = (NumberPicker) dialogView.findViewById(R.id.numberPicker1);
         np.setMaxValue(10);
-        np.setMinValue(0);
+        np.setMinValue(1);
         np.setWrapSelectorWheel(false);
 
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {

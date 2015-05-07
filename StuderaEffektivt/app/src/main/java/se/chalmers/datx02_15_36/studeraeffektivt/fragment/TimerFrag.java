@@ -65,9 +65,7 @@ public class TimerFrag extends Fragment {
     private ImageButton nextWeek;
 
     public static final int TIMER_1 = 0;
-    public static final int CHANGE_COLOR_0 = 1;
-    public static final int CHANGE_COLOR_1 = 2;
-    public static final int TIMER_FINISHED = 3;
+    public static final int TIMER_FINISHED = 1;
 
     private TextView textViewWeek;
 
@@ -115,8 +113,6 @@ public class TimerFrag extends Fragment {
                     }
                     setTimerView(serviceInt);
                     break;
-
-
                 case TIMER_FINISHED:
                     resetTimer();
                     break;
@@ -376,17 +372,16 @@ public class TimerFrag extends Fragment {
     }
 
     public void resetTimer() {
+        buttonId = R.drawable.ic_action_play;
+        hasBeenPaused = false;
+        progressBar.setProgress(1000);
+        startButton.setImageResource(buttonId);
+        progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
+        startSetTimerView();
         if(isMyServiceRunning(MyCountDownTimer.class)) {
             Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
             getActivity().stopService(i);
             getActivity().unbindService(sc);
-
-            buttonId = R.drawable.ic_action_play;
-            hasBeenPaused = false;
-            progressBar.setProgress(1000);
-            startButton.setImageResource(buttonId);
-            progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
-            startSetTimerView();
         }
         Log.i(String.valueOf(isMyServiceRunning(MyCountDownTimer.class)), "is service running");
 
