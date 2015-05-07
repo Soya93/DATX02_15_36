@@ -145,7 +145,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
             public void onClick(View v) {
                 updateView();
-                
+
                 if (v.getTag() == button1.getTag()) {
                     openAddEvent();
                 } else if (v.getTag() == button2.getTag()) {
@@ -444,7 +444,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setTitle("Välj en vecka att repetera")
                 .setItems(alternatives, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        //TODO hämta några random uppgifter
+                        //TODO hämta några randomAssignments uppgifter
                         //TODO visa vilken vecka det är nu???
                         String tasks = "";
                         String week = alternatives[which];

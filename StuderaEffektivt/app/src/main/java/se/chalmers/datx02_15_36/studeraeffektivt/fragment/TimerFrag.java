@@ -92,6 +92,8 @@ public class TimerFrag extends Fragment {
     private SharedPreferences sharedPref;
     private String prefName = "ButtonPref";
 
+    private boolean isActivyRunning = false;
+
 
     private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
@@ -101,14 +103,17 @@ public class TimerFrag extends Fragment {
                     Bundle b = msg.getData();
                     serviceInt = b.getLong("timePassed", -1);
                     phaceInt = b.getInt("Phace", -1);
-                    if(phaceInt == 0){
-                        progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
-                    }
+                    if(isActivyRunning) {
+                        if (phaceInt == 0) {
+                            progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+                            progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
+                        }
 
-                    if(phaceInt == 1){
-                        progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_pause));
+                        if (phaceInt == 1) {
+                            progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+                            progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_pause));
+                        }
                     }
-
                     setTimerView(serviceInt);
                     break;
 
@@ -202,6 +207,7 @@ public class TimerFrag extends Fragment {
         if(!isMyServiceRunning(MyCountDownTimer.class)) {
             startButton.setImageResource(R.drawable.ic_action_play);
         }
+        isActivyRunning = true;
 
         getTimeFromSettings();
         startSetTimerView();
@@ -392,6 +398,7 @@ public class TimerFrag extends Fragment {
         }
 
         saveFragmentState();
+        isActivyRunning = false;
     }
 
     private void removeMessages() {
