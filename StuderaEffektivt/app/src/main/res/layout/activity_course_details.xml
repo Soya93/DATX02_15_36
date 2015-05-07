@@ -20,25 +20,6 @@
             android:id="@+id/layoutWithinScrollViewOfTasks"></se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
     </ScrollView>
 
-    <ScrollView
-           android:layout_width="fill_parent"
-           android:layout_height="fill_parent"
-           android:id="@+id/taskScrollView"
-           android:layout_weight="0.42"
-           android:layout_alignParentLeft="true"
-           android:layout_below="@+id/scrollViewOfTasks"
-           android:layout_centerVertical="true">
-
-           <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
-               android:layout_width="fill_parent"
-               android:layout_height="wrap_content"
-               android:orientation="horizontal"
-               android:clickable="true"
-               android:id="@+id/taskListfromWeb">
-           </se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
-
-       </ScrollView>
-
 
     <LinearLayout
         android:id="@+id/infoLayout"
