@@ -1,11 +1,13 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.model;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -102,13 +104,27 @@ public class StudyTask extends CheckBox{
                 //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        if(getStudyTask().getType() == AssignmentType.READ)
+                        /*if(getStudyTask().getType() == AssignmentType.READ)
                             ((FlowLayout)getParent()).removeView(getStudyTask());
                         else
-                            ((FlowLayout)getParent()).removeView(getStudyTask());
+                            ((FlowLayout)getParent()).removeView(getStudyTask());*/
 
                         dbAdapter.deleteAssignment(getStudyTask().getIdNr());
                         Toast.makeText(StudyTask.this.getContext(),"Uppgift borttagen",Toast.LENGTH_SHORT).show();
+                        FlowLayout flowLayout = (FlowLayout)getParent();
+                        flowLayout.removeAllViews();
+                        flowLayout.addTasksFromDatabase(dbAdapter, courseCode, type);
+
+                        if(flowLayout.isEmpty()){
+                            TextView textView = new TextView(getContext());
+                            if(type==AssignmentType.OTHER)
+                                textView.setText("Du har för närvaranade räkneuppgifter för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
+                            else
+                                textView.setText("Du har för närvaranade inga läsanvisningar för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
+                            textView.setPadding(15,5,15,5);
+                            flowLayout.addView(textView);
+                        }
+                        //flowLayout.updateDatabase(type, courseCode);
                         return true;
                     }
                 });

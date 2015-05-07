@@ -302,6 +302,12 @@ public class DBAdapter {
         return db.query(dbHelper.TABLE_COURSES, null, selection, null, null, null, null);
     }
 
+    public Cursor getDoneCourses() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = dbHelper.COURSES_cstatus + " = '" + AssignmentStatus.DONE.toString() + "'";
+        return db.query(dbHelper.TABLE_COURSES, null, selection, null, null, null, null);
+    }
+
     /*The DBHelper class*/
     public static class DBHelper extends SQLiteOpenHelper {
         private static final String DATABASE_NAME = "pluggapp.db";

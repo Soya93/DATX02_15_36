@@ -76,19 +76,6 @@ public class MyProfileFrag extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment fifthTapFragment.
      */
-    /*
-
-    // TODO: Rename and change types and number of parameters
-    public static FifthTabFrag newInstance(String param1, String param2) {
-        FifthTabFrag fragment = new FifthTabFrag();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-
-        return fragment;
-    }
-    */
 
     public MyProfileFrag() {
         // Required empty public constructor
@@ -116,7 +103,6 @@ public class MyProfileFrag extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_my_profile, container, false);
         this.view = rootView;
         this.container = container;
-        //currentlyShown = this;
         bundleToNextFragment = new Bundle();
         Log.d("FifthTabFrag ", "currentlyshown = fifthtabfragment");
         initComponents();
@@ -130,23 +116,6 @@ public class MyProfileFrag extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-
-    /*@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }*/
-
-    /*@Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }*/
 
     /**
      * This interface must be implemented by activities that contain this
@@ -166,9 +135,6 @@ public class MyProfileFrag extends Fragment {
     private void initComponents() {
         addCourseButton = (Button) view.findViewById(R.id.addCourse);
         addCourseButton.setOnClickListener(myOnlyhandler);
-
-        //addButtonInner = (Button) view.findViewById(R.id.addButtonInner);
-        //addButtonInner.setOnClickListener(myOnlyhandler);
 
         seePrevCoursesButton= (Button) view.findViewById(R.id.prevCourses);
         seePrevCoursesButton.setOnClickListener(myOnlyhandler);
@@ -203,14 +169,9 @@ public class MyProfileFrag extends Fragment {
     private void goToButtonView(Button b) {
 
         int id = b.getId();
-        Fragment fragment;
 
         Bundle bundle = new Bundle();
-        //bundle.putString("key", (String)b.getText());
         bundle.putInt("containerId", ((ViewGroup) container.getParent()).getId());
-
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         switch (id) {
             case R.id.addCourse:
@@ -219,44 +180,21 @@ public class MyProfileFrag extends Fragment {
             case R.id.prevCourses:
 
                 Intent iCourse = new Intent(getActivity(), CourseActivity.class);
-                //i.putExtra("CourseCode", courseCode);
                 startActivity(iCourse);
-                /*
-                fragment = new CourseActivity();
-                fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "coursefragment");
-                fragmentTransaction.hide(this);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
-                */
                 break;
             case R.id.addTask:
                 Intent i = new Intent(getActivity(), StudyTaskActivity.class);
-                //i.putExtra("CourseCode", courseCode);
                 startActivity(i);
-                /*fragment = new MyProfileFrag();
-                fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "myprofilefrag");
-                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
                 break;
             case R.id.tips:
                 Intent it = new Intent(getActivity(), TechsNTipsActivity.class);
                 it.putExtra("ActivityTitle", "Studietips");
                 startActivity(it);
-                /*fragment = new TipFrag();
-                fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");*/
-                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);
                 break;
             case R.id.techniques:
                 Intent its = new Intent(getActivity(), TechsNTipsActivity.class);
                 its.putExtra("ActivityTitle", "Studietekniker");
                 startActivity(its);
-                /*fragment = new TechniquesFrag();
-                fragment.setArguments(bundle);
-                fragmentTransaction.add(((ViewGroup) container.getParent()).getId(), fragment, "tipfragment");
-                //fragmentTransaction.replace(((ViewGroup) container.getParent()).getId(), fragment);*/
                 break;
         }
     }
@@ -322,15 +260,12 @@ public class MyProfileFrag extends Fragment {
             while (cursor.moveToNext()) {
                 ccode = cursor.getString(0);
                 cname = cursor.getString(1);
-                //courseList.add();
-                //
                 courseList.add(0,createCourse("Courses", new Course(cname, ccode)));
                 simpleAdapter.notifyDataSetChanged();
                 listOfCourses.setEnabled(true);
 
             }
         }else{
-           // courseList.add("Det finns för tillfället inga kurser, lägg till en kurs genom att trycka på knappen ovan");
             courseList.add(createCourse("Courses", new Course("lägg till genom att klicka på knappen ovan!", "Du har för närvarande inga kurser")));
             listOfCourses.setEnabled(false);
         }
@@ -343,9 +278,6 @@ public class MyProfileFrag extends Fragment {
 
                 HashMap courseMap = (HashMap) parent.getItemAtPosition(position);
                 Course course1 = (Course) courseMap.get("Courses");
-               // bundleToNextFragment.putInt("kurs", courseList.indexOf(courseMap));
-                //bundleToNextFragment.putString("CourseName", course1.courseName);
-                //bundleToNextFragment.putString("CourseCode", course1.getCourseCode());
                 goToDetails(course1);
             }
         });
@@ -359,17 +291,6 @@ public class MyProfileFrag extends Fragment {
         intent.putExtra("CourseName", course.getCourseName());
         startActivity(intent);
 
-        /*Fragment fragment = new CourseDetailedInfoFrag();
-        //Fragment fragment = new StudyTaskFragment();
-
-        fragment.setArguments(bundle);
-        FragmentManager fragmentManager = this.getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.add(container.getId(), fragment, "detailedcoursefragment");
-        fragmentTransaction.hide(this);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();*/
     }
 
     private HashMap<String, Course> createCourse(String key, Course course) {

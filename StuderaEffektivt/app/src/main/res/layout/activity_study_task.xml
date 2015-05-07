@@ -65,7 +65,6 @@
 
     <View
         android:id="@+id/typeLayout"
-        android:layout_below="@+id/courseLayout"
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:background="#c0c0c0"
@@ -77,7 +76,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/firstLayout"
-        android:layout_below="@+id/typeLayout"
         android:baselineAligned="false"
         android:weightSum="1.0">
 
@@ -236,7 +234,7 @@
             <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
+            android:inputType="text"
             android:hint="@string/task_string_hint"
             android:digits="0123456789,-."
             android:id="@+id/taskInput"
@@ -292,16 +290,36 @@
         android:layout_gravity="center_vertical"
         />
 
+            <LinearLayout
+                android:id="@+id/savedTaskLabel"
+                android:layout_below="@+id/line3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
     <TextView
-        android:id="@+id/savedTaskTitle"
-        android:layout_below="@+id/line3"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/saved_tasks_title"
+        android:text="@string/saved_tasks_other_title"
         android:gravity="center"
-        android:textSize="17sp"
+        android:textSize="13sp"
         android:textColor="#03A9F4"
+        android:layout_weight="0.5"
         />
+
+    <TextView
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/saved_tasks_read_title"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:textColor="#03A9F4"
+        android:layout_weight="0.5"
+        />
+
+    </LinearLayout>
 
     <!--<TextView
         android:id="@+id/savedTaskTitle"
@@ -321,8 +339,6 @@
         android:layout_height="fill_parent"
         android:baselineAligned="false"
         android:id="@+id/fourthLayout"
-        android:layout_below="@+id/savedTaskTitle"
-        android:layout_centerHorizontal="true"
         android:weightSum="1">
 
 
