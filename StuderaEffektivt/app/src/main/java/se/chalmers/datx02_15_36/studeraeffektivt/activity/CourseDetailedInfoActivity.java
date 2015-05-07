@@ -105,7 +105,12 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
 
         isActiveSwitch = (Switch) findViewById(R.id.isActiveSwitch);
-        isActiveSwitch.setChecked(true); //TODO hämta från databas
+
+        String status = dbAdapter.getCourseStatus(courseCode);
+
+        Log.i("CourseDetailedInfo course status", status);
+
+        isActiveSwitch.setChecked(status.toLowerCase().equals("undone"));
         if(isActiveSwitch.isChecked()){
             isActiveSwitch.setText("Pågående");
         }else {
@@ -120,10 +125,17 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
                 if (isChecked) {
                     isActiveSwitch.setText("Pågående");
+                    dbAdapter.setCourseUndone(courseCode);
+                    String status = dbAdapter.getCourseStatus(courseCode);
+                    Log.i("CourseDetailedInfo set course undone", status);
+
                 } else {
                     isActiveSwitch.setText("Avslutad");
+                    dbAdapter.setCourseDone(courseCode);
+                    String status = dbAdapter.getCourseStatus(courseCode);
+                    Log.i("CourseDetailedInfo set course done", status);
                 }
-                //TODO update status in database
+
 
             }
         });

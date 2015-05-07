@@ -31,6 +31,7 @@ public class DBAdapter {
         try {
             cv.put(dbHelper.COURSES__ccode, courseCode);
             cv.put(dbHelper.COURSES_cname, courseName);
+            cv.put(dbHelper.COURSES_cstatus, AssignmentStatus.UNDONE.toString()); //set course as ongoing
 
             return db.insert(dbHelper.TABLE_COURSES, null, cv);
         } catch (Exception e) {
@@ -42,10 +43,48 @@ public class DBAdapter {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         try{
-            return db.delete(dbHelper.TABLE_COURSES, dbHelper.COURSES__ccode + "=" + ccode, null);
+            return db.delete(dbHelper.TABLE_COURSES, dbHelper.COURSES__ccode + " = '"+ ccode + "'", null);
         }catch (Exception e){
             return -1;
         }
+    }
+    // Avslutad kurs
+    public long setCourseDone(String ccode) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(dbHelper.COURSES_cstatus, AssignmentStatus.DONE.toString());
+
+        try {
+            return db.update(dbHelper.TABLE_COURSES, cv, dbHelper.COURSES__ccode + " = '" + ccode + "'", null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+    //Pågående kurs
+    public long setCourseUndone(String ccode) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(dbHelper.COURSES_cstatus, AssignmentStatus.UNDONE.toString());
+
+        try {
+            return db.update(dbHelper.TABLE_COURSES, cv, dbHelper.COURSES__ccode + " = '"+ ccode + "'", null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+    public String getCourseStatus(String ccode) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String selection = dbHelper.COURSES__ccode + " = '" + ccode + "'";
+        Cursor cursor = db.query(dbHelper.TABLE_COURSES, null, selection, null, null, null, null);
+        cursor.moveToNext();
+        Log.d(selection+"", "database");
+        Log.i("Database", cursor.getString(2));
+        return cursor.getString(2);
     }
 
     public long insertSession(String courseCode, int week, int minutes) {
@@ -110,7 +149,7 @@ public class DBAdapter {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         try{
-            return db.delete(dbHelper.TABLE_ASSIGNMENTS, dbHelper.ASSIGNMENTS__id+" = "+id, null);
+            return db.delete(dbHelper.TABLE_ASSIGNMENTS, dbHelper.ASSIGNMENTS__id+ "=" +id, null);
         }catch (Exception e){
             return -1;
         }
@@ -263,6 +302,7 @@ public class DBAdapter {
         private static final String TABLE_COURSES = "COURSES";
         private static final String COURSES__ccode = "_ccode";
         private static final String COURSES_cname = "cname";
+        private static final String COURSES_cstatus = "cstatus";
 
         //Variables for the Sessions table.
         private static final String TABLE_SESSIONS = "SESSIONS";
@@ -300,7 +340,8 @@ public class DBAdapter {
             //Creation of schemas and initial insert of data.
             db.execSQL("CREATE TABLE " + TABLE_COURSES + " ("
                     + COURSES__ccode + " VARCHAR(50) PRIMARY KEY, "
-                    + COURSES_cname + " VARCHAR(50))");
+                    + COURSES_cname + " VARCHAR(50), "
+                    + COURSES_cstatus + " VARCHAR(50))");
 
             db.execSQL("CREATE TABLE " + TABLE_SESSIONS + " ("
                     + SESSIONS__id + " INTEGER PRIMARY KEY, "
