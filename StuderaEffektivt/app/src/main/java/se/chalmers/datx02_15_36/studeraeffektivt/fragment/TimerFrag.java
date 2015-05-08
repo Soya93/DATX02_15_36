@@ -259,6 +259,8 @@ public class TimerFrag extends Fragment {
         nextWeek = (ImageButton) rootView.findViewById(R.id.nextWeek);
         textViewWeek = (TextView) rootView.findViewById(R.id.textViewWeek);
 
+        taskSwitch.setVisibility(View.VISIBLE);
+
         setCourses();
 
         week = Utils.getCurrWeekNumber();
