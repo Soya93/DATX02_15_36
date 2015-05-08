@@ -34,6 +34,8 @@ public class RepetitionActivity extends ActionBarActivity {
     private CalendarModel calendarModel;
     private Spinner weekSpinner;
     private Spinner courseSpinner;
+    public static Context cntxofParent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,9 @@ public class RepetitionActivity extends ActionBarActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Repetition");
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
+
+        cntxofParent = RepetitionActivity.this;
+
         weekSpinner = (Spinner) findViewById(R.id.weekSpinner);
         courseSpinner = (Spinner) findViewById(R.id.courseSpinner);
 
@@ -130,7 +135,8 @@ public class RepetitionActivity extends ActionBarActivity {
             EventActivity eventActivity = new EventActivity();
            // eventActivity.setCalendarFrag(this);
             Intent intent = new Intent(this, eventActivity.getClass());
-            intent.putExtra("isInAddMode", true);
+            intent.putExtra("isInAddMode", false);
+            intent.putExtra("isInRepMode", true);
             intent.putExtra("startTime", 0L);
             intent.putExtra("endTime", 0L);
             intent.putExtra("title", "Repetitonspass för " + selectedWeek + " " + selectedCourse);
@@ -145,5 +151,7 @@ public class RepetitionActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
 }

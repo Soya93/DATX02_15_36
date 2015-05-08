@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="se.chalmers.datx02_15_36.studeraeffektivt.activity.RepetitionActivity">
 
-    <item android:id="@+id/save_event"
-        android:title="Spara"
+    <item android:id="@+id/next_event"
+        android:title="Nästa"
         app:showAsAction="ifRoom"
         />
 

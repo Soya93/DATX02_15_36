@@ -1,5 +1,6 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -70,6 +71,7 @@ public class EventActivity extends ActionBarActivity {
     private AlertDialog alertDialog;
     private MenuItem item;
     private long itemID;
+    private Activity repetitionActivity;
 
 
     Map<Integer, String> notificationAlternativesMap = new LinkedHashMap<>();
@@ -82,6 +84,7 @@ public class EventActivity extends ActionBarActivity {
     private CalendarFrag calendarFrag;
     private long eventID;
     private boolean isInAddMode;
+    private boolean isInRepMode;
 
     //Setting variables for the time/datepicker
     private int startYear;
@@ -106,9 +109,13 @@ public class EventActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+
+        repetitionActivity = (Activity) RepetitionActivity.cntxofParent;
+
         calendarFrag = new CalendarFrag();
         calendarModel = new CalendarModel();
         isInAddMode = getIntent().getBooleanExtra("isInAddMode", true);
+        isInRepMode = getIntent().getBooleanExtra("isInRepMode", false);
         eventID = getIntent().getLongExtra("eventID", 0L);
         startTimeMillis = getIntent().getLongExtra("startTime", 0L);
         endTimeMillis = getIntent().getLongExtra("endTime", 0L);
@@ -128,7 +135,9 @@ public class EventActivity extends ActionBarActivity {
         String title;
         if (isInAddMode) {
             title = "Ny händelse";
-        } else {
+        } else if(isInRepMode){
+            title = "Nytt Repetitonspass";
+        }else {
             title = "Redigera händelse";
         }
 
@@ -142,7 +151,7 @@ public class EventActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
 
-        if(isInAddMode) {
+        if(isInAddMode || isInRepMode) {
             getMenuInflater().inflate(R.menu.menu_event_add, menu);
         }else {
             getMenuInflater().inflate(R.menu.menu_event, menu);
@@ -233,7 +242,7 @@ public class EventActivity extends ActionBarActivity {
         notification.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP);
 
 
-        if (isInAddMode) {
+        if (isInAddMode || isInRepMode) {
             // get the current time and date for start and stop
             setCurrentTime();
 
@@ -517,8 +526,9 @@ public class EventActivity extends ActionBarActivity {
         location = ((EditText) findViewById(R.id.location_input)).getText().toString();
         description = ((EditText) findViewById(R.id.description_input)).getText().toString();
 
-        if (isInAddMode) {
+        if (isInAddMode || isInRepMode) {
             calendarFrag.getCalendarModel().addEventAuto(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, calendarID, notification, isAllDayEvent);
+            repetitionActivity.finish();
             onBackPressed();
             CharSequence text = "Händelsen " + title + " har skapats";
             int duration = Toast.LENGTH_SHORT;
