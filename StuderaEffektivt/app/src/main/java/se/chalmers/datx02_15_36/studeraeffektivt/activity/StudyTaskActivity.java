@@ -135,6 +135,8 @@ public class StudyTaskActivity extends ActionBarActivity {
         weekSpinner = (Spinner) findViewById(R.id.weekSpinner);
         readOrTaskAssignment = (ToggleButton) findViewById(R.id.readOrTaskAssignment);
 
+        readOrTaskAssignment.setChecked(true);
+
         Integer[] chapterItems = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50};
        /* String[] chapterItems = new String[]{"Kap 1", "Kapitel 2", "Kap 3", "Kap 4", "Kap 5", "Kap 6", "Kap 7", "Kap 8", "Kap 9", "Kap 10",
                 "Kap 11", "Kap 12", "Kap 13", "Kap 14", "Kap 15", "Kap 16", "Kap 17", "Kap 18", "Kap 19", "Kap 20",

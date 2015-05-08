@@ -141,7 +141,7 @@ public class FlowLayout extends ViewGroup {
         for (Object value : treeMap.values()) {
             ArrayList<StudyTask> a = (ArrayList) value;
             TextView kapitelText = new TextView(this.getContext());
-            kapitelText.setText("KAPITEL " + a.get(0).getChapter());
+            kapitelText.setText("  KAPITEL " + a.get(0).getChapter());
             int width = this.getWidth();
             kapitelText.setWidth(width);
             this.addView(kapitelText);
@@ -368,7 +368,7 @@ public class FlowLayout extends ViewGroup {
         for (Object value : treeMap.values()) {
             ArrayList<StudyTask2> a = (ArrayList) value;
             TextView kapitelText = new TextView(this.getContext());
-            kapitelText.setText("KAPITEL " + a.get(0).getChapter());
+            kapitelText.setText("  KAPITEL " + a.get(0).getChapter());
             int width = this.getWidth();
             kapitelText.setWidth(width);
             this.addView(kapitelText);

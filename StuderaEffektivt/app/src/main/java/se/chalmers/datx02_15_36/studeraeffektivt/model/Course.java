@@ -41,7 +41,7 @@ public class Course {
     }
 
     public String toString(){
-        return courseCode + " - " + courseName;
+        return courseCode + " " + courseName;
     }
 
     public String getCourseCode(){
