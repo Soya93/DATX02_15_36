@@ -115,16 +115,16 @@ public class TimerSettingsActivity extends ActionBarActivity {
                         show();
                         break;
                     case 1: {
-                        new TimePickerDialog(TimerSettingsActivity.this,
+                       new TimePickerDialog(TimerSettingsActivity.this,
                                 d,
-                                mSelectedHour, mSelectedMinutes,
+                               studyTime.getHour(), studyTime.getMin(),
                                 true).show();
                     }
                     break;
                     case 2: {
                         new TimePickerDialog(TimerSettingsActivity.this,
                                 t,
-                                mSelectedHour, mSelectedMinutes,
+                                pauseTime.getHour(), pauseTime.getMin(),
                                 true).show();
                     }
                     break;
@@ -218,6 +218,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
 
 
 
