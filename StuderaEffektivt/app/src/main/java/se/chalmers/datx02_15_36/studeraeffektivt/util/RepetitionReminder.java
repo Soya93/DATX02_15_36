@@ -15,24 +15,29 @@ public class RepetitionReminder {
 
 
     private DBAdapter dbAdapter;
-    private List <String> coursesToRepeat;
+    private ArrayList <String> coursesToRepeat;
 
     public RepetitionReminder() {
     }
 
-    public String reminderMessage(){
+    public ArrayList<String> reminderMessage(){
+        ArrayList <String> messages = new ArrayList<>();
         if(hasCourses()) {
             if (haveAnyToRepeat()) {
-                return coursesToRepeat.size() == 1 ? "Du har följande kurs att repetera" : "Du har följande kurser att repetera";
+                messages.add(coursesToRepeat.size() == 1 ? "Du har följande kurs att repetera" : "Du har följande kurser att repetera");
             } else {
-                return "Du har inga uppgifter att repetera och borde kanske därför göra några";
+                messages.add("Du har inga uppgifter att repetera");
+                messages.add("och borde kanske därför göra några.");
+                messages.add("Vill du lägga till några uppgifter?");
             }
         } else {
-            return "Du har inga kurser. Vill du lägga till en kurs?";
+            messages.add("Du har inga kurser");
+            messages.add("Vill du lägga till en kurs?");
         }
+        return messages;
     }
 
-    public List<String> getCoursesToRepeat(){
+    public ArrayList<String> getCoursesToRepeat(){
         return coursesToRepeat;
     }
 
@@ -84,14 +89,11 @@ public class RepetitionReminder {
         this.dbAdapter = dbAdapter;
     }
 
-    private boolean hasCourses() {
+    public boolean hasCourses() {
         Cursor courses = dbAdapter.getCourses();
-        if (courses.getCount() == 0) {
-            return false;
-        }
-        return true;
+        return courses.getCount() > 0;
     }
-    private Cursor getCourses() {
+    public Cursor getCourses() {
         return dbAdapter.getCourses();
     }
 
@@ -116,13 +118,5 @@ public class RepetitionReminder {
         }
         return randomAssignments;
     }
-        //If has courses and did tasks before in it
-        //Randomize tasks from that course - DONE
-
-        //Else if has courses but did not have any tasks to repeat
-        //Tell the user that he/she does not have
-
-        //Else has no courses
-        //Tell the user that there are no courses to repeat, and ask if they want to repeat.
 }
 

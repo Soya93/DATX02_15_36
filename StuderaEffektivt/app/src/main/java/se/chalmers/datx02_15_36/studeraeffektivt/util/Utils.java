@@ -23,4 +23,10 @@ public class Utils {
         return calendar.get(Calendar.DAY_OF_WEEK);
     }
 
+    public static int getHourNow(){
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        return calendar.get(Calendar.HOUR_OF_DAY);
+    }
+
 }
