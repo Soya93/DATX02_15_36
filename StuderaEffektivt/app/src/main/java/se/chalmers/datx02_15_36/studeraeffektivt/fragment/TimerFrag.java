@@ -221,6 +221,8 @@ public class TimerFrag extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setSelectedCourse();
+                taskList.removeAllViews();
+                taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -278,6 +280,8 @@ public class TimerFrag extends Fragment {
         if(spinner.getSelectedItem()!=null) {
             setSelectedCourse();
             updateTaskList(assignmentType, week);
+        }else {
+
         }
 
         isInitialized = true;
@@ -291,10 +295,15 @@ public class TimerFrag extends Fragment {
         Cursor cursor = dbAdapter.getCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
-        while (cursor.moveToNext()) {
-            String ccode = cursor.getString(ccodeColumn);
-            String cname = cursor.getString(cnameColumn);
-            adapter.add(ccode + " " + cname);
+        if(cursor.getCount()>0) {
+            while (cursor.moveToNext()) {
+                String ccode = cursor.getString(ccodeColumn);
+                String cname = cursor.getString(cnameColumn);
+                adapter.add(ccode + " " + cname);
+            }
+        }
+        else{
+            adapter.add("Inga tillagda kurser");
         }
 
     }
