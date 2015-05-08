@@ -10,20 +10,14 @@
         android:id="@+id/courseLayout"
         android:orientation="vertical"
         android:weightSum="1.0"
+        android:layout_centerHorizontal="true"
         >
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/courselabel"
-            android:text="@string/course_title"
-
-            />
 
         <Spinner
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:id="@+id/courseSpinner"
+            android:layout_gravity="center_horizontal"
             />
 
     </LinearLayout>
