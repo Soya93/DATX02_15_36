@@ -1,27 +1,37 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
-
+import java.util.ArrayList;
+import java.util.List;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
@@ -31,6 +41,9 @@ import se.chalmers.datx02_15_36.studeraeffektivt.fragment.StatsFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TimerFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.TabAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.NotificationBroadcastReceiver;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.NotificationReceiver;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.NotificationService;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.RepetitionReminder;
 
 
@@ -49,6 +62,8 @@ public class MainActivity extends ActionBarActivity {
     public static FloatingActionMenu actionMenu;
     private View.OnClickListener fabHandler;
     private Drawable primaryColorDrawable;
+    public NotificationBroadcastReceiver testReceiver;
+
 
     /**
      * Called when the activity is first created.
@@ -88,8 +103,6 @@ public class MainActivity extends ActionBarActivity {
         homeFrag.setCalendarFrag(calendarFrag);
 
         statsFrag = (StatsFrag) mAdapter.getItem(3);
-
-        TimeToRemind();
 
         // listener for FAB menu
         FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
@@ -315,23 +328,48 @@ public class MainActivity extends ActionBarActivity {
         timerFrag.settingsTimer();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        viewPager = (ViewPager) findViewById(R.id.pager);
+
+    /*Notification related stuff begins here */
+
+    public void onlyWhenInAppReminder() {
+        // if(Utils.getCurrWeekNumber() == Calendar.MONDAY && Utils.getHourNow() >= 8){
+        RepetitionReminder repetitionReminder = new RepetitionReminder();
+        repetitionReminder.setDBAdapter(new DBAdapter(this));
+
+        List<String> message = repetitionReminder.reminderMessage();
+
+        Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplication());
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplication())
+                        .setSmallIcon(R.drawable.ic_study_coach)
+                        .setContentTitle("StudieCoach")
+                        .setContentText("Ny vecka")
+                        .setSubText(message.get(0));
+
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(0, mBuilder.build());
+    //}
+
     }
 
+
     public void TimeToRemind(){
-        //if(Utils.getCurrWeekNumber() == Calendar.MONDAY){
+       // if(Utils.getCurrWeekNumber() == Calendar.MONDAY && Utils.getHourNow() >= 8){
             RepetitionReminder repetitionReminder = new RepetitionReminder();
             repetitionReminder.setDBAdapter(new DBAdapter(this));
 
-            String message = repetitionReminder.reminderMessage();
-            if(repetitionReminder.haveAnyToRepeat()){
-                for(String course: repetitionReminder.getCoursesToRepeat()){
-                    message = message + " " + course;
-                }
-            }
+            List<String> message = repetitionReminder.reminderMessage();
 
             //Notificationstuff
             Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
@@ -344,36 +382,119 @@ public class MainActivity extends ActionBarActivity {
                             PendingIntent.FLAG_UPDATE_CURRENT
                     );
 
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                    this)
-                    .setSmallIcon(R.drawable.ic_study_coach)
-                    .setContentTitle("StudieCoach")
-                    .setContentText("Ny studievecka"
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+                this)
+                .setSmallIcon(R.drawable.ic_study_coach)
+                .setContentTitle("StudieCoach")
+                .setContentText("Ny studievecka");
+        NotificationCompat.InboxStyle inboxStyle =
+                new NotificationCompat.InboxStyle();
+
+        if(!message.isEmpty()){
+            for(String text: message)
+            inboxStyle.addLine(text);
+        }
+
+        if(repetitionReminder.hasCourses()) {
+            /*String[] courses = new String[repetitionReminder.getCoursesToRepeat().size()];
+            int i = 0;
+            for (String course : repetitionReminder.getCoursesToRepeat()) {
+                courses[i] = course;
+                i++;
+            }
+              for (int j=0; i < courses.length; j++) {
+                inboxStyle.addLine(courses[j]);
+            }
+            */
+
+            mBuilder.addAction(R.drawable.ic_av_loop, "Ja", resultPendingIntent);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("Go_To_Cal", true);
+            resultIntent.putExtras(bundle);
+            //resultIntent.setAction("Go_To_Cal");
+
+            inboxStyle.addLine("Vill du skapa ett repetitionspass?");
+            Cursor courses = repetitionReminder.getCourses();
+
+            while (courses.moveToNext()) {
+                Log.i("courses", courses.getString(courses.getColumnIndex("_ccode")));
+                inboxStyle.addLine(courses.getString(courses.getColumnIndex("_ccode")));
+            }
 
 
-            );
-            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-            inboxStyle.addLine(message);
+        } else {
+            //resultIntent.setAction("Go_To_Main");
             mBuilder.setStyle(inboxStyle);
             mBuilder.setContentIntent(resultPendingIntent);
             NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.notify(0, mBuilder.build());
-
-      /* NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(getApplication())
-                            .setSmallIcon(R.drawable.ic_study_coach)
-                            .setContentTitle("StudieCoach")
-                            .setContentText("Ny vecka")
-                            .setSubText(message);
-
-
-            mBuilder.setContentIntent(resultPendingIntent);
-            NotificationManager mNotificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(0, mBuilder.build());*/
-        // }
+        }
     }
 
+    // Launching the service
+    public void onStartService() {
+        testReceiver = new NotificationBroadcastReceiver();
+        // if(Utils.getCurrWeekNumber() == Calendar.MONDAY && Utils.getHourNow() >= 8){
+        RepetitionReminder repetitionReminder = new RepetitionReminder();
+        repetitionReminder.setDBAdapter(new DBAdapter(this));
+
+        ArrayList<String> message = repetitionReminder.reminderMessage();
+        Intent i = new Intent(this, NotificationService.class);
+
+        if(repetitionReminder.hasCourses()){
+            i.putExtra("numOfCourses", repetitionReminder.getCoursesToRepeat().size());
+
+            ArrayList<String> courses = repetitionReminder.getCoursesToRepeat();
+            i.putStringArrayListExtra("courses", courses);
+        }
+
+        //i.putExtra("foo", "bar");
+        i.putStringArrayListExtra("messages", message);
+        i.putExtra("hascourses", repetitionReminder.hasCourses());
+        startService(i);
+        //}
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Register for the particular broadcast based on ACTION string
+        IntentFilter filter = new IntentFilter(NotificationService.ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(testReceiver, filter);
+        // or `registerReceiver(testReceiver, filter)` for a normal broadcast
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister the listener when the application is paused
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(testReceiver);
+        // or `unregisterReceiver(testReceiver)` for a normal broadcast
+    }
+
+    private void setNotificationAlarm()
+    {
+        Intent intent = new Intent(getApplicationContext() , NotificationBroadcastReceiver.class);
+        PendingIntent pendingIntent  = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 , pendingIntent);
+        Log.d("ME", "Alarm started");
+    }
+
+    public void startAlert() {
+        Intent intent = new Intent(this, NotificationBroadcastReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 234324243, intent, 0);
+
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+                + (2 * 1000), pendingIntent);
+        Toast.makeText(this, "Alarm set in " + 2 + " seconds",
+                Toast.LENGTH_LONG).show();
+    }
 }
+
 
 
