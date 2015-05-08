@@ -251,6 +251,13 @@ public class TimerFrag extends Fragment {
     private void instantiate() {
         instantiateButtons();
         textView = (TextView) rootView.findViewById(R.id.textView);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(),TimerSettingsActivity.class);
+                startActivity(i);
+            }
+        });
         spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         taskList = (FlowLayout) rootView.findViewById(R.id.taskList);
