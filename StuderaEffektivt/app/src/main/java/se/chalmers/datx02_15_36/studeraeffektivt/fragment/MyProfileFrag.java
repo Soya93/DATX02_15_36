@@ -288,7 +288,7 @@ public class MyProfileFrag extends Fragment {
 
             }
         }else{
-            courseList.add(createCourse("Courses", new Course("lägg till genom att klicka på knappen ovan!", "Du har för närvarande inga kurser")));
+            courseList.add(createCourse("Courses", new Course("lägg till en kurs genom att klicka på knappen ovan!", "Du har för närvarande inga kurser, ")));
             listOfCourses.setEnabled(false);
         }
 

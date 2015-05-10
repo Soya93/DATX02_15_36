@@ -90,7 +90,7 @@ public class CourseActivity extends ActionBarActivity {
                 courseList.add(createCourse("Courses", new Course(cname, ccode)));
             }
         }else{
-            courseList.add(createCourse("Courses", new Course("dina aktiva kurser kan du se på föregående sida!", "Du har för närvarande inga inaktiva kurser kurser")));
+            courseList.add(createCourse("Courses", new Course("inaktivera kurser gör du i den specifika kursen på föregående sida!", "Här hamnar dina inaktiva kurser, ")));
             listOfCourses.setEnabled(false);
         }
     }
