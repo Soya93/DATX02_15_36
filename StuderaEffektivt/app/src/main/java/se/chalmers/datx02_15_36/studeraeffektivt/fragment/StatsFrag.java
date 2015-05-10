@@ -140,7 +140,7 @@ public class StatsFrag extends Fragment {
         ArrayList<String> weeks = new ArrayList<>();
         LineData data;
 
-        Cursor courses = dbAdapter.getCourses();
+        Cursor courses = dbAdapter.getOngoingCourses();
         int c = 0;
         while( courses.moveToNext() ){
             String ccode = courses.getString(courses.getColumnIndex("_ccode"));
@@ -304,7 +304,7 @@ public class StatsFrag extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        Cursor cursor = dbAdapter.getCourses();
+        Cursor cursor = dbAdapter.getOngoingCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
         while (cursor.moveToNext()) {
@@ -351,7 +351,7 @@ public class StatsFrag extends Fragment {
     }
 
     private boolean isCourses(){
-        Cursor courses = dbAdapter.getCourses();
+        Cursor courses = dbAdapter.getOngoingCourses();
         if( courses.getCount() == 0 ){
             return false;
         }

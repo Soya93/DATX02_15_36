@@ -63,7 +63,6 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
  * Created by SoyaPanda on 15-03-06.
  */
 public class CourseDetailedInfoActivity extends ActionBarActivity {
-    private TextView kursDetaljer;
     private int selectedCourse;
     private View view;
     private Bundle bundleFromPreviousFragment;
@@ -269,8 +268,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     public void initComponents() {
 
-        kursDetaljer = (TextView) findViewById(R.id.kursDetaljer);
-
         layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
 
         layoutWithinScrollViewOfOther = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfOther);
@@ -292,6 +289,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                         Cursor cur = dbAdapter.getCourses();
                         while(cur.moveToNext()) {
                         }
+                        Toast.makeText(getApplicationContext(), courseName + " borttagen",
+                                Toast.LENGTH_LONG).show();
                         finish();
                         break;
 
