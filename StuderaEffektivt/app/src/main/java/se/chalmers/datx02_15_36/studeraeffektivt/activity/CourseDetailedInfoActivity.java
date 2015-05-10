@@ -282,14 +282,30 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     public void deleteCourse(View v) {
-        dbAdapter.deleteCourse(courseCode);
-        Cursor cur = dbAdapter.getCourses();
-        while(cur.moveToNext()) {
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        dbAdapter.deleteCourse(courseCode);
+                        Cursor cur = dbAdapter.getCourses();
+                        while(cur.moveToNext()) {
+                        }
+                        finish();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Är du säker på att du vill ta bort kursen? Uppgifter och statistik kommer att raderas!").setPositiveButton("Ja", dialogClickListener)
+                .setNegativeButton("Nej", dialogClickListener).show();
         }
-
-
-        this.finish();
-    }
 
     public void goToTasks(View v) {
 
