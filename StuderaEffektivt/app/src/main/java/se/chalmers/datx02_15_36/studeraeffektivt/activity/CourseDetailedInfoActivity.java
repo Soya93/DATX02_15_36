@@ -164,15 +164,16 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
                 if (v.getTag() == button1.getTag()) {
                     //delete course
-                    deleteCourse(v);
+                    deleteCourse();
                 } else if (v.getTag() == button2.getTag()) {
+                    //Time to spend om course
                     chooseTimeOnCourseDialog();
                 } else if (v.getTag() == button3.getTag()) {
                     //download tasks
-                    getAssignmetsFromWeb(v);
+                    getAssignmetsFromWeb();
                 } else if (v.getTag() == button4.getTag()) {
                     //Add tasks
-                    goToTasks(v);
+                    goToTasks();
                 }
 
             }
@@ -261,6 +262,14 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         if (id == android.R.id.home) {
             this.finish();
             return true;
+        }else if( id == R.id.action_delete) {
+            deleteCourse();
+        }else if (id == R.id.action_time_on_course){
+            chooseTimeOnCourseDialog();
+        }else if (id == R.id.action_download){
+            getAssignmetsFromWeb();
+        }else if(id == R.id.action_add) {
+            goToTasks();
         }
 
         return super.onOptionsItemSelected(item);
@@ -278,7 +287,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         super.onResume();
     }
 
-    public void deleteCourse(View v) {
+    public void deleteCourse() {
 
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
@@ -306,15 +315,13 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 .setNegativeButton("Nej", dialogClickListener).show();
         }
 
-    public void goToTasks(View v) {
-
-
+    public void goToTasks() {
         Intent i = new Intent(this, StudyTaskActivity.class);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);
     }
 
-    public void getAssignmetsFromWeb(View v) {
+    public void getAssignmetsFromWeb() {
       Intent i = new Intent (this,GetAssignmetsFromWeb.class);
         i.putExtra("CourseName",courseName);
         i.putExtra("CourseCode",courseCode);

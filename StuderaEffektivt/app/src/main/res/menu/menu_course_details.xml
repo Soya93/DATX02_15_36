@@ -3,4 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="se.chalmers.datx02_15_36.studeraeffektivt.view.CourseDetails">
 
+    <item android:id="@+id/action_add" android:title="Lägg till uppgifter"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_download" android:title="Ladda ner uppgifter"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_time_on_course" android:title="Ställ in tid/vecka"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_delete" android:title="Ta bort kurs"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>
