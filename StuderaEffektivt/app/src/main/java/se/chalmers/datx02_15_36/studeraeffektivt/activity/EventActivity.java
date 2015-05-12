@@ -528,7 +528,9 @@ public class EventActivity extends ActionBarActivity {
 
         if (isInAddMode || isInRepMode) {
             calendarFrag.getCalendarModel().addEventAuto(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, calendarID, notification, isAllDayEvent);
-            repetitionActivity.finish();
+            if (isInRepMode) {
+                repetitionActivity.finish();
+            }
             onBackPressed();
             CharSequence text = "Händelsen " + title + " har skapats";
             int duration = Toast.LENGTH_SHORT;
