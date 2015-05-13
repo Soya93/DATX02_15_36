@@ -226,7 +226,15 @@ public class StudyTaskActivity extends ActionBarActivity {
         while (cursor.moveToNext()) {
             String ccode = cursor.getString(ccodeColumn);
             String cname = cursor.getString(cnameColumn);
-            adapter.add(ccode + "-" + cname);
+            if(ccode.equals(getIntent().getStringExtra("CourseCode")))
+                adapter.insert(ccode + "-" + cname,0);
+            else
+                adapter.insert(ccode + "-" + cname,adapter.getCount());
+
+            /*if(ccode == getIntent().getStringExtra("CourseCode"))
+                adapter.add(ccode + "-" + cname);
+            else
+                adapter.add(ccode + "-" + cname);*/
         }
 
     }
