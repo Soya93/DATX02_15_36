@@ -9,6 +9,8 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_time_on_course" android:title="Ställ in tid/vecka"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_activate" android:title="Markera som avslutad"
+        android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_delete" android:title="Ta bort kurs"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>

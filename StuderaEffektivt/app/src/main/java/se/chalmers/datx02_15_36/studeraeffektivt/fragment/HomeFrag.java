@@ -38,7 +38,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private CalendarFrag calendarFrag;
     private boolean hasInit = false;
     private FloatingActionButton homeFAB;
-    private List<String> todaysEventsTitles;
     private ContentResolver cr;
     private ListView listView;
     private ArrayList<HomeEventItem> eventsList;
@@ -54,7 +53,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         initComponents(rootView);
         eventsList = getEvents();
 
-        if(hasSynced) {
+        if(hasSynced && ! eventsList.isEmpty()) {
             syncText.setVisibility(View.INVISIBLE);
         }
 
@@ -117,10 +116,16 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
     public void setTodaysEvents() {
         hasSynced = true;
-        syncText.setVisibility(View.INVISIBLE);
+
         ArrayList<HomeEventItem> visibleEventList = new ArrayList<>();
         eventsList = getEvents();
         List<Long> visibleCalendars = calendarFrag.getVisibleCalendars();
+
+        if(eventsList.isEmpty()) {
+            syncText.setText("Du har inga planerade händesler idag!");
+        }else {
+            syncText.setVisibility(View.INVISIBLE);
+        }
 
         for (int i = 0; i < eventsList.size(); i++) {
             if (visibleCalendars.contains(eventsList.get(i).getCalId())) {

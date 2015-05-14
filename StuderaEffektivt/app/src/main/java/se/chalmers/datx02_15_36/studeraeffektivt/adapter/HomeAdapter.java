@@ -84,7 +84,7 @@ public class HomeAdapter extends ArrayAdapter<HomeEventItem> {
         //5. Change color of the calendar image according to the color of the event
         int color = itemsArrayList.get(position).getColor();
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
-        Drawable myIcon = context.getResources().getDrawable( R.drawable.ic_cal1).mutate();
+        Drawable myIcon = context.getResources().getDrawable( R.drawable.ic_cal2).mutate();
         myIcon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         imageView.setImageDrawable(myIcon);
 
