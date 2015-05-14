@@ -244,6 +244,7 @@
             android:layout_weight="0.5">
 
             <TextView
+                android:id="@+id/taskPartsLabel"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/part_title"
@@ -263,6 +264,7 @@
             android:hint="@string/part_string_hint"
             android:digits="abcdefghijklmnopqrstuvwxy"
             android:id="@+id/taskParts"
+            android:singleLine="true"
             android:layout_gravity="left|bottom"
             android:layout_marginLeft="15dp"
             android:layout_weight="0.5"
