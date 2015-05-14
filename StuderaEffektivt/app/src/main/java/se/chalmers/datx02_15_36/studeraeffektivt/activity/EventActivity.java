@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -33,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +42,11 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarChoiceItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 
 public class EventActivity extends ActionBarActivity {
     private CalendarModel calendarModel;
+    private CalendarView calendarView;
     private TextView startDate;
     private TextView startTime;
     private TextView endDate;
@@ -54,7 +54,7 @@ public class EventActivity extends ActionBarActivity {
     private TextView titleView;
     private TextView locationView;
     private TextView descriptionView;
-    private TextView calendarView;
+    private TextView calendarTextView;
     private TextView notificationView;
     private String title;
     private String location;
@@ -114,6 +114,7 @@ public class EventActivity extends ActionBarActivity {
 
         calendarFrag = new CalendarFrag();
         calendarModel = new CalendarModel();
+        calendarView = new CalendarView();
         isInAddMode = getIntent().getBooleanExtra("isInAddMode", true);
         isInRepMode = getIntent().getBooleanExtra("isInRepMode", false);
         eventID = getIntent().getLongExtra("eventID", 0L);
@@ -174,7 +175,7 @@ public class EventActivity extends ActionBarActivity {
             this.finish();
             return true;
         } else if (id == R.id.delete_event) {
-            deleteEvent(eventID, title, getContentResolver());
+            openDeleteDialog(title, eventID);
             return true;
         }
 
@@ -199,9 +200,9 @@ public class EventActivity extends ActionBarActivity {
         descriptionView = (TextView) findViewById(R.id.description_input);
         descriptionView.setText(description);
 
-        calendarView = (TextView) findViewById(R.id.calendar_lable_input);
-        calendarView.setText(calendarName);
-        calendarView.setOnClickListener(myTextViewHandler);
+        calendarTextView = (TextView) findViewById(R.id.calendar_lable_input);
+        calendarTextView.setText(calendarName);
+        calendarTextView.setOnClickListener(myTextViewHandler);
 
         startDate = (TextView) findViewById(R.id.start_date_input);
         startDate.setOnClickListener(myTextViewHandler);
@@ -389,7 +390,7 @@ public class EventActivity extends ActionBarActivity {
                 CalendarsFilterItem cfi = filterItemsList.get(position);
                 calendarID = cfi.getCalID();
                 calendarName = cfi.getTitle();
-                calendarView.setText(calendarName);
+                calendarTextView.setText(calendarName);
                 setActionBarColor(cfi.getColor());
                 Log.i("EventActivity", title + " id: "+ id);
                 alertDialog.dismiss();
@@ -601,6 +602,25 @@ public class EventActivity extends ActionBarActivity {
 
         CalendarUtils.cal.set(endYear, endMonth, endDay, endHour, endMinute);
         endTimeMillis = CalendarUtils.cal.getTimeInMillis();
+    }
 
+    private void openDeleteDialog(String eventName, final long eventID) {
+        AlertDialog.Builder builder = calendarView.updateDeleteInfoView(eventName, this);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                deleteEvent(eventID, title, getContentResolver());
+            }
+        });
+
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // Cancel
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

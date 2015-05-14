@@ -23,6 +23,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.CourseView;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 /**
@@ -45,6 +46,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
 
     private DBAdapter dbAdapter;
+    private CourseView courseView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
 
         isActiveCourse = (status.toLowerCase().equals("undone"));
+        courseView = new CourseView();
 
     }
 
@@ -136,7 +139,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         } else if (id == R.id.action_add) {
             goToTasks();
         } else if (id == R.id.action_activate) {
-            changeStatus();
+            openConfirmChangeStatusDialog();
         }
 
         return super.onOptionsItemSelected(item);
@@ -154,7 +157,30 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         super.onResume();
     }
 
+    private void openConfirmChangeStatusDialog() {
+        AlertDialog.Builder builder = courseView.confirmCourseStatusView(courseName, isActiveCourse, this);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                changeStatus();
+            }
+        });
+
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // Cancel
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
     private void changeStatus() {
+
+
+
         if (!isActiveCourse) {
             // mark as ongoing
             dbAdapter.setCourseUndone(courseCode);
