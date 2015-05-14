@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -61,6 +62,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     private Spinner courseSpinner;
     private Spinner weekSpinner;
     private ToggleButton readOrTaskAssignment;
+    private TextView taskPartsLabel;
 
     private String courseCode;
     private String URL_CONNECTION = "http://studiecoachchalmers.se/insertassignmets.php";
@@ -134,6 +136,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         courseSpinner = (Spinner) findViewById(R.id.courseSpinner);
         weekSpinner = (Spinner) findViewById(R.id.weekSpinner);
         readOrTaskAssignment = (ToggleButton) findViewById(R.id.readOrTaskAssignment);
+        taskPartsLabel = (TextView) findViewById(R.id.taskPartsLabel);
 
         readOrTaskAssignment.setChecked(true);
 
@@ -182,6 +185,20 @@ public class StudyTaskActivity extends ActionBarActivity {
 
             }
         });
+
+        readOrTaskAssignment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    taskParts.setVisibility(View.VISIBLE);
+                    taskPartsLabel.setVisibility(View.VISIBLE);
+                }
+                else{
+                    taskParts.setVisibility(View.GONE);
+                    taskPartsLabel.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     /*View.OnClickListener myOnlyhandler = new View.OnClickListener() {
@@ -226,7 +243,15 @@ public class StudyTaskActivity extends ActionBarActivity {
         while (cursor.moveToNext()) {
             String ccode = cursor.getString(ccodeColumn);
             String cname = cursor.getString(cnameColumn);
-            adapter.add(ccode + "-" + cname);
+            if(ccode.equals(getIntent().getStringExtra("CourseCode")))
+                adapter.insert(ccode + "-" + cname,0);
+            else
+                adapter.insert(ccode + "-" + cname,adapter.getCount());
+
+            /*if(ccode == getIntent().getStringExtra("CourseCode"))
+                adapter.add(ccode + "-" + cname);
+            else
+                adapter.add(ccode + "-" + cname);*/
         }
 
     }

@@ -244,6 +244,7 @@
             android:layout_weight="0.5">
 
             <TextView
+                android:id="@+id/taskPartsLabel"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/part_title"
