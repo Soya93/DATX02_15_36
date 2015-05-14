@@ -287,7 +287,7 @@ public class EventActivity extends ActionBarActivity {
     }
 
     private void setNotificationMapValues() {
-        notificationAlternativesMap.put(-1, "Ingen");
+        notificationAlternativesMap.put(-1, "Lägg till påminelse");
         notificationAlternativesMap.put(0, "Vid start");
         notificationAlternativesMap.put(1, "1 minut");
         notificationAlternativesMap.put(5, "5 minuter");
