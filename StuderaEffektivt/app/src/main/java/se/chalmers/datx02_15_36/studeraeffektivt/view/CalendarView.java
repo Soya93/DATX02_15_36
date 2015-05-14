@@ -70,9 +70,9 @@ public class CalendarView {
     public AlertDialog.Builder updateDeleteInfoView(String event, Activity act){
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         LayoutInflater inflater = act.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
+        final View dialogView = inflater.inflate(R.layout.confirm_dialog, null);
 
-        TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.event_name_label);
+        TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.confirm_text);
         if (eventNameLabel != null) {
             eventNameLabel.setText("Vill du verkligen ta bort " + event + "?");
         }
