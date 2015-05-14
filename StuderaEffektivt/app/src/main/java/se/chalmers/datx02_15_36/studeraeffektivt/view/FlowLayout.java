@@ -36,8 +36,8 @@ public class FlowLayout extends ViewGroup {
 
     private HashMap<Integer, ArrayList<StudyTask>> hashMapOfStudyTasks;
     private HashMap<Integer, ArrayList<StudyTask>> hashMapOfReadingAssignments;
-    private HashMap<Integer, ArrayList<StudyTask2>> hashMapOfStudyTasks2;
-    private HashMap<Integer, ArrayList<StudyTask2>> hashMapOfReadingAssignments2;
+    private HashMap<Integer, ArrayList<StudyTask2>> hashMapOfStudyTasks2 = new HashMap<>();
+    private HashMap<Integer, ArrayList<StudyTask2>> hashMapOfReadingAssignments2 = new HashMap<>();
 
     public FlowLayout(Context context) {
         super(context);
@@ -305,11 +305,10 @@ public class FlowLayout extends ViewGroup {
         return (this.getChildCount()<1);
     }
 
-    public void addTasksFromWeb(int id, String courseCode, int chapter, int week, String assNr,
-                                int startPage, int stopPage, String status, String type, DBAdapter dbAdapter) {
+    public void addTasksFromWeb( String courseCode, int chapter, int week, String assNr,
+                                int startPage, int stopPage, String status, String type,DBAdapter dbAdapter) {
 
-        hashMapOfStudyTasks2 = new HashMap<>();
-        hashMapOfReadingAssignments2 = new HashMap<>();
+
 
         AssignmentStatus assignmentStatus;
         AssignmentType assignmentType;
@@ -354,25 +353,28 @@ public class FlowLayout extends ViewGroup {
                 hashMapOfReadingAssignments2.put(studyTask.getChapter(), a);
             }
         }
+    }
 
-        if(hashMapOfStudyTasks2!=null)
-            addMap2(hashMapOfStudyTasks2);
-        if(hashMapOfReadingAssignments2!=null)
-            addMap2(hashMapOfReadingAssignments2);
+    public HashMap<Integer, ArrayList<StudyTask2>> getReadHashMapOfStudyTasks2() {
+        return this.hashMapOfReadingAssignments2;
     }
 
 
-    public void addMap2(HashMap<Integer, ArrayList<StudyTask2>> hashMap){
+    public HashMap<Integer, ArrayList<StudyTask2>> getOtherHashMapOfStudyTask2(){
+        return this.hashMapOfStudyTasks2;
+    }
+
+    public void addReadAssignmets(){
         Map<Integer, ArrayList> treeMap;
-        treeMap = new TreeMap<Integer, ArrayList>(hashMap);
+        treeMap = new TreeMap<Integer, ArrayList>(hashMapOfReadingAssignments2);
         for (Object value : treeMap.values()) {
             ArrayList<StudyTask2> a = (ArrayList) value;
+            Log.d("sizeofMap",a.size()+"");
             TextView kapitelText = new TextView(this.getContext());
             kapitelText.setText("  KAPITEL " + a.get(0).getChapter());
             int width = this.getWidth();
             kapitelText.setWidth(width);
             this.addView(kapitelText);
-            Log.d("HEJALEX","jgjkdgm");
             int counter = this.getChildCount();
             for(int i = 0; i < a.size(); i++){
 
@@ -388,5 +390,38 @@ public class FlowLayout extends ViewGroup {
                 }
             }
         }
+        hashMapOfReadingAssignments2.clear();
     }
+
+    public void addOtherAssignmets(){
+        Map<Integer, ArrayList> treeMap;
+        treeMap = new TreeMap<Integer, ArrayList>(hashMapOfStudyTasks2);
+        for (Object value : treeMap.values()) {
+            ArrayList<StudyTask2> a = (ArrayList) value;
+            Log.d("sizeofMap",a.size()+"");
+            TextView kapitelText = new TextView(this.getContext());
+            kapitelText.setText("  KAPITEL " + a.get(0).getChapter());
+            int width = this.getWidth();
+            kapitelText.setWidth(width);
+            this.addView(kapitelText);
+            int counter = this.getChildCount();
+            for(int i = 0; i < a.size(); i++){
+
+                if(a.get(i).getParent()!=null){
+                    ((ViewGroup) a.get(i).getParent()).removeView(a.get(i));
+                }
+                if(!a.get(i).isChecked()) {
+                    this.addView(a.get(i), counter);
+                    counter++;
+                }
+                else{
+                    this.addView(a.get(i),counter);
+                }
+            }
+        }
+        hashMapOfStudyTasks2.clear();
+    }
+
+
+
 }

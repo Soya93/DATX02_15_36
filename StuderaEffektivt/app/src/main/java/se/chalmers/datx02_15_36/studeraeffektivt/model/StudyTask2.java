@@ -54,10 +54,6 @@ public class StudyTask2 extends CheckBox {
         this.status = status;
         this.type = type;
 
-        if (status == AssignmentStatus.DONE) {
-            this.setChecked(true);
-        }
-
         if (type == AssignmentType.READ) {
             setText(startPage + "-" + endPage);
         } else {
