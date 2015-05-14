@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.apache.http.NameValuePair;
@@ -21,9 +22,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.TreeMap;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask2;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -40,24 +44,29 @@ public class GetAssignmetsFromWeb extends ActionBarActivity {
     private String courseCode;
     private String URL_CONNECTION = "http://studiecoachchalmers.se/getassignmets2.php";
     private DBAdapter dbAdapter;
-    private FlowLayout taskListfromWeb;
-    private HashMap<Integer, StudyTask2> assignmetsHashMap = new HashMap<>();
+    private FlowLayout taskListfromWebOther;
+    private FlowLayout taskListfromWebRead;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_getassignmetsfromweb);
+        taskListfromWebOther = (FlowLayout) findViewById(R.id.taskListfromWebOther);
+        taskListfromWebRead = (FlowLayout) findViewById(R.id.taskListfromWebRead);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         courseName = getIntent().getStringExtra("CourseName");
         courseCode = getIntent().getStringExtra("CourseCode");
-        taskListfromWeb = (FlowLayout) findViewById(R.id.taskListfromWeb);
+
         actionBar.setTitle("Hämta uppgifter " + courseName);
         if (this != null) {
             dbAdapter = new DBAdapter(this);
         }
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
 
+
         new GetAllAssignments().execute(courseCode);
+
+
     }
 
     @Override
@@ -78,12 +87,18 @@ public class GetAssignmetsFromWeb extends ActionBarActivity {
         if (id == R.id.save_event) {
             this.finish();
             return true;
-        }else if (id == android.R.id.home){
+        } else if (id == android.R.id.home) {
             this.finish();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onStart() {
+        super.onStart();
+
+
     }
 
 
@@ -101,12 +116,13 @@ public class GetAssignmetsFromWeb extends ActionBarActivity {
 
 
             ServiceHandler sh = new ServiceHandler();
+            int count = 0;
 
 
             String jsonStr = sh.makeServiceCall(URL_CONNECTION, ServiceHandler.POST, params);
             if (jsonStr != null) {
                 try {
-                    Log.d(jsonStr,"jsonStr");
+                    Log.d(jsonStr, "jsonStr");
                     JSONObject jsonObj = new JSONObject(jsonStr);
                     // Getting JSON Array node
                     JSONArray assignmetsList = jsonObj.getJSONArray("assignments");
@@ -124,18 +140,17 @@ public class GetAssignmetsFromWeb extends ActionBarActivity {
                         String endPage = c.getString("endPage");
                         String type = c.getString("type");
                         String status = c.getString("status");
-                        AssignmentType status1;
-                        if (status.equals("READ")) {
-                            status1 = AssignmentType.READ;
-                        } else {
-                            status1 = AssignmentType.OTHER;
 
+                        if (type.equals("OTHER")) {
+                            taskListfromWebOther.addTasksFromWeb(returnedCod, Integer.parseInt(chapter),
+                                    Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), status, type, dbAdapter);
+                            count++;
+                            Log.d("count", String.valueOf(count));
                         }
-                        StudyTask2 studyTask2 = new StudyTask2(getBaseContext(), returnedCod, Integer.parseInt(chapter),
-                                Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), dbAdapter, status1
-                                , AssignmentStatus.UNDONE);
-                        assignmetsHashMap.put(studyTask2.getIdNr(), studyTask2);
-
+                        else {
+                            taskListfromWebRead.addTasksFromWeb(returnedCod, Integer.parseInt(chapter),
+                                    Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), status, type, dbAdapter);
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -149,27 +164,19 @@ public class GetAssignmetsFromWeb extends ActionBarActivity {
 
 
         protected void onPostExecute(String file_url) {
-            taskListfromWeb.removeAllViews();
-            Iterator it = assignmetsHashMap.entrySet().iterator();
-            if(it.hasNext()) {
-                while (it.hasNext()) {
-                    Map.Entry pair = (Map.Entry) it.next();
-                    StudyTask2 test = (StudyTask2) pair.getValue();
 
-                    taskListfromWeb.addTasksFromWeb(test.getIdNr(), test.getCourseCode(),
-                            test.getChapter(), test.getWeek(), test.getTaskString(), test.getStartPage(),
-                            test.getEndPage(), "UNDONE", test.getType().toString(), dbAdapter);
-                    it.remove();
+            taskListfromWebOther.addOtherAssignmets();
+            taskListfromWebRead.addReadAssignmets();
 
-                }
-            }
-            else{
-                TextView textView1 = new TextView(getBaseContext());
-                textView1.setText("Finns inga uppgifter att hämta.");
-                taskListfromWeb.addView(textView1);
-            }
         }
 
 
     }
+
+
 }
+
+
+
+
+
