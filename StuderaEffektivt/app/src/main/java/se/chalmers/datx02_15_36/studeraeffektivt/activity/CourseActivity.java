@@ -49,7 +49,7 @@ public class CourseActivity extends ActionBarActivity {
         simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
         listOfCourses.setAdapter(simpleAdpt);
 
-        getSupportActionBar().setTitle("Mina inaktiva Kurser");
+        getSupportActionBar().setTitle("Mina avslutade Kurser");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         android.support.v7.app.ActionBar bar = getSupportActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
@@ -90,7 +90,7 @@ public class CourseActivity extends ActionBarActivity {
                 courseList.add(createCourse("Courses", new Course(cname, ccode)));
             }
         }else{
-            courseList.add(createCourse("Courses", new Course("inaktivera kurser gör du i den specifika kursen på föregående sida!", "Här hamnar dina inaktiva kurser, ")));
+            courseList.add(createCourse("Courses", new Course("avsluta kurser gör du i den specifika kursen på föregående sida!", "Här hamnar dina avslutade kurser, ")));
             listOfCourses.setEnabled(false);
         }
     }
