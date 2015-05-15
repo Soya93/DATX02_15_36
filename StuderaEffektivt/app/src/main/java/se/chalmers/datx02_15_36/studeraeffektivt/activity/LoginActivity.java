@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.google.android.gms.common.SignInButton;
@@ -41,13 +42,9 @@ public class LoginActivity extends Activity implements OnClickListener{
     };
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mEmailLoginFormView;
-    private SignInButton mPlusSignInButton;
-    private View mSignOutButtons;
-    private View mLoginFormView;
+
+    private Button mPlusSignInButton;
+
     boolean hasAlreadyLoggedIn;
     private CalendarModel calendarModel;
 
@@ -64,10 +61,8 @@ public class LoginActivity extends Activity implements OnClickListener{
 
 
         if(!hasAlreadyLoggedIn) {
-            mPlusSignInButton = (SignInButton) findViewById(R.id.plus_sign_in_button);
-            mPlusSignInButton.setSize(SignInButton.SIZE_STANDARD);
-            mPlusSignInButton.setColorScheme(SignInButton.COLOR_LIGHT);
-            this.setGooglePlusButtonText(mPlusSignInButton, "Logga in med ditt google konto");
+            mPlusSignInButton = (Button) findViewById(R.id.sign_in_button);
+
             mPlusSignInButton.setOnClickListener(this);
         } else {
             //Do not show this window at all, just kill this screen
@@ -98,7 +93,7 @@ public class LoginActivity extends Activity implements OnClickListener{
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
-            case R.id.plus_sign_in_button:
+            case R.id.sign_in_button:
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
 
