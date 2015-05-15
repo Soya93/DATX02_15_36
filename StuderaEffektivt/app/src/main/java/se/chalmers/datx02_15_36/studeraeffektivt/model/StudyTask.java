@@ -74,7 +74,7 @@ public class StudyTask extends CheckBox{
             setText(taskString);
         }
         buttonView = (CompoundButton) this.getRootView();
-        
+
         if(isChecked()){
             Drawable checked = getResources().getDrawable(R.drawable.ic_toggle_check_box);
             checked.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
