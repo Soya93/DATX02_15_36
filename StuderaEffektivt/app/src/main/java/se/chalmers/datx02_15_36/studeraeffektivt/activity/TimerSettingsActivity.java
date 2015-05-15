@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TimePicker;
@@ -49,20 +50,20 @@ public class TimerSettingsActivity extends ActionBarActivity {
     private NumberPicker np;
 
     TimePickerDialog.OnTimeSetListener d = new TimePickerDialog.OnTimeSetListener() {
-                public void onTimeSet(TimePicker view, int hourOfDay,
-                                      int minute) {
-                    if (minute > 0) {
-                        studyTime = new Time(hourOfDay, minute);
-                        mapping.put(1, studyTime);
-                        updateView();
-                    }
-                }
-            };
+        public void onTimeSet(TimePicker view, int hourOfDay,
+                              int minute) {
+            if (minute > 0) {
+                studyTime = new Time(hourOfDay, minute);
+                mapping.put(1, studyTime);
+                updateView();
+            }
+        }
+    };
 
     TimePickerDialog.OnTimeSetListener t = new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay,
                               int minute) {
-            if(minute >0) {
+            if (minute > 0) {
                 pauseTime = new Time(hourOfDay, minute);
                 mapping.put(2, pauseTime);
                 updateView();
@@ -73,7 +74,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-            getMenuInflater().inflate(R.menu.menu_timer, menu);
+        getMenuInflater().inflate(R.menu.menu_timer, menu);
         return true;
     }
 
@@ -86,9 +87,9 @@ public class TimerSettingsActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.save_event) {
-           this.finish();
+            this.finish();
             return true;
-        }else if (id == android.R.id.home){
+        } else if (id == android.R.id.home) {
             this.finish();
             return true;
         }
@@ -117,9 +118,9 @@ public class TimerSettingsActivity extends ActionBarActivity {
                         show();
                         break;
                     case 1: {
-                       new TimePickerDialog(TimerSettingsActivity.this,
+                        new TimePickerDialog(TimerSettingsActivity.this,
                                 d,
-                               studyTime.getHour(), studyTime.getMin(),
+                                studyTime.getHour(), studyTime.getMin(),
                                 true).show();
                     }
                     break;
@@ -151,7 +152,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
         editor.putInt("studyMin", studyTime.getMin());
         editor.putInt("pauseHour", pauseTime.getHour());
         editor.putInt("pauseMin", pauseTime.getMin());
-        editor.putInt("reps",mapping.get(0).getMin());
+        editor.putInt("reps", mapping.get(0).getMin());
         editor.apply();
 
     }
@@ -170,21 +171,22 @@ public class TimerSettingsActivity extends ActionBarActivity {
         int studyHour = sharedPref.getInt("studyHour", 0);
         int pauseMin = sharedPref.getInt("pauseMin", -1);
         int pauseHour = sharedPref.getInt("pauseHour", 0);
-        int reps = sharedPref.getInt("reps",-1);
+        int reps = sharedPref.getInt("reps", -1);
         initDefaultValues();
 
 
-        if (studyMin != -1  ) {
+        if (studyMin != -1) {
             studyTime = new Time(studyHour, studyMin);
-            mapping.put(1, studyTime);}
+            mapping.put(1, studyTime);
+        }
 
-        if(pauseMin != -1){
-                pauseTime = new Time(pauseHour, pauseMin);
-                mapping.put(2, pauseTime);
-            }
-         if(reps != -1) {
-             mapping.put(0, new Time(0, reps));
-         }
+        if (pauseMin != -1) {
+            pauseTime = new Time(pauseHour, pauseMin);
+            mapping.put(2, pauseTime);
+        }
+        if (reps != -1) {
+            mapping.put(0, new Time(0, reps));
+        }
 
 
     }
@@ -209,19 +211,26 @@ public class TimerSettingsActivity extends ActionBarActivity {
         });
 
         builder.setView(dialogView);
-        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 updateView();
-
             }
-
         });
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                }
+        );
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
     }
-
-
 
 
 }

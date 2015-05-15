@@ -102,6 +102,14 @@ public class MyProfileFrag extends Fragment {
         if(getActivity() != null){
             dbAdapter = new DBAdapter(getActivity());
         }
+        /*
+
+        editTextCoursecode.getBackground().setColorFilter(Color.parseColor(Constants.primaryDarkColor), PorterDuff.Mode.SRC_ATOP);
+        editTextCoursename.getBackground().setColorFilter(Color.parseColor(Constants.primaryDarkColor), PorterDuff.Mode.SRC_ATOP);
+
+        Drawable cursor = getResources().getDrawable(R.drawable.ic_content_remove);
+        cursor.setColorFilter(Color.parseColor(Constants.primaryDarkColor), PorterDuff.Mode.SRC_ATOP);
+       */
 
     }
 
@@ -267,6 +275,12 @@ public class MyProfileFrag extends Fragment {
         });
 
         d.show();
+
+
+        Button okButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = d.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
 
         editTextCoursecode = (EditText) d.findViewById(R.id.codeEditText);
         editTextCoursename = (EditText) d.findViewById(R.id.nameEditText);

@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -139,6 +140,11 @@ public class StudyTaskActivity extends ActionBarActivity {
         taskPartsLabel = (TextView) findViewById(R.id.taskPartsLabel);
 
         readOrTaskAssignment.setChecked(true);
+        taskInput.getBackground().setColorFilter(Color.parseColor(Constants.lightGreyColor), PorterDuff.Mode.SRC_ATOP);
+        taskParts.getBackground().setColorFilter(Color.parseColor(Constants.lightGreyColor), PorterDuff.Mode.SRC_ATOP);
+
+
+
 
         Integer[] chapterItems = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50};
        /* String[] chapterItems = new String[]{"Kap 1", "Kapitel 2", "Kap 3", "Kap 4", "Kap 5", "Kap 6", "Kap 7", "Kap 8", "Kap 9", "Kap 10",

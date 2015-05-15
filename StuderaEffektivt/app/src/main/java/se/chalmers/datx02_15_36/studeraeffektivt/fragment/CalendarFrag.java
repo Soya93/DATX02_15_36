@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.alamkanak.weekview.WeekView;
@@ -263,6 +264,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
     }
 
     //Opens an dialog when pressing the buttom for adding a new event
@@ -320,6 +326,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
     }
 
     //Removes an event from the calendar
@@ -461,6 +472,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         alertDialog = builder.create();
         alertDialog.show();
 
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -481,7 +497,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setTitle("Antalet dagar i vyn");
         builder.setSingleChoiceItems(choices, index, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int selected) {
-
                 numberOfVisibleDays = Integer.parseInt((choices[selected]));
             }
         });
@@ -544,6 +559,14 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+
+
+
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
     }
 
     private int getIndexOfVisibleDays() {
