@@ -129,11 +129,8 @@ public class TimerFrag extends Fragment {
             timerService.setHandler(handler);
             timerService.setActivityIsRunning();
             serviceHandler = timerService.getServiceHandler();
-
-
         }
-
-        @Override
+         @Override
         public void onServiceDisconnected(ComponentName name) {
             timerService = null;
         }
@@ -152,10 +149,6 @@ public class TimerFrag extends Fragment {
     }
 
 
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
     private void getTimeFromTimerSettings() {
         sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
         int studyMin = sharedPref.getInt("studyMin", -1);
@@ -163,11 +156,8 @@ public class TimerFrag extends Fragment {
         int pauseMin = sharedPref.getInt("pauseMin", -1);
         int pauseHour = sharedPref.getInt("pauseHour", -1);
         reps = sharedPref.getInt("REPS",1);
-
-
         default_studyTime = new Time(0, 25);
         default_pauseTime = new Time(0, 5);
-
         if (studyMin != -1 ) {
             default_studyTime = new Time(studyHour, studyMin);
         }
@@ -178,44 +168,29 @@ public class TimerFrag extends Fragment {
 
     }
 
-    public void getViewFromSharedPref() {
-        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
-
-        phaceInt = sharedPref.getInt("Phace", -1);
-        int buttonTemp = sharedPref.getInt("buttonImage", -1);
-        if (buttonTemp > 0) {
-            buttonId = buttonTemp;
-            startButton.setImageResource(buttonId);
-        }
-        if(!isMyServiceRunning(MyCountDownTimer.class)) {
-            startButton.setImageResource(R.drawable.ic_action_play);
-        }
-        hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
-        Log.d("hasbeenPause",String.valueOf(hasBeenPaused));
-        if (hasBeenPaused) {
-          long timeLeft = sharedPref.getLong("timeLeft",-1);
-            Log.d("timeLeft",String.valueOf(timeLeft));
-            setTimerView(timeLeft);
-        }
-        else{
-              startSetTimerView();
-        }
-
-    }
-
 
     public void onStart() {
         super.onStart();
-        startButton.setImageResource(buttonId);
+        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
         if (isMyServiceRunning(MyCountDownTimer.class)) {
             Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
             getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
+            isActivyRunning = true;
+            hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
+            startButton.setImageResource(R.drawable.ic_action_pause);
+            if (hasBeenPaused) {
+                startButton.setImageResource(R.drawable.ic_action_play);
+                long timeLeft = sharedPref.getLong("timeLeft", -1);
+                Log.d("timeLeft", String.valueOf(timeLeft));
+                setTimerView(timeLeft);
+            }
         }
+          else{
+                startButton.setImageResource(R.drawable.ic_action_play);
+                 getTimeFromTimerSettings();
+                startSetTimerView();
 
-        isActivyRunning = true;
-        getTimeFromTimerSettings();
-        getViewFromSharedPref();
-
+            }
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -232,6 +207,7 @@ public class TimerFrag extends Fragment {
             Log.d("Text", textView.getText().toString());
 
     }
+
     public void onResume() {
         super.onResume();
         getTimeFromTimerSettings();
@@ -322,6 +298,8 @@ public class TimerFrag extends Fragment {
 
 
     public void startTimer() {
+        Log.d("buttonId",String.valueOf(buttonId == R.drawable.ic_action_play));
+        Log.d("hasbeenPause",String.valueOf(hasBeenPaused));
         if (hasBeenStarted()) {
             spinner.setEnabled(false);
             sendDataToService();
@@ -358,7 +336,7 @@ public class TimerFrag extends Fragment {
     }
 
     private boolean hasBeenPaused() {
-        return buttonId == R.drawable.ic_action_pause;
+        return buttonId == R.drawable.ic_action_pause ;
     }
 
     private boolean hasBeenRestarted() {
