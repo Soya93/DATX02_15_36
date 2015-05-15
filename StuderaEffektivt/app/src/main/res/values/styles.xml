@@ -28,6 +28,9 @@
         <item name="actionModeSplitBackground">@drawable/cab_background_bottom_pluggapp</item>
         <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Pluggapp</item>
         <item name="android:statusBarColor">@color/primaryDarkColor</item>
+        <item name="android:colorAccent">@color/secondaryColor</item>
+        <item name="android:colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="android:colorPrimary">@color/primaryColor</item>
 
         <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.Pluggapp.Widget</item>
@@ -73,5 +76,6 @@
         <item name="android:buttonStyle">?android:borderlessButtonStyle</item>
 
     </style>
+
 
 </resources>

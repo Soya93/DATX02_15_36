@@ -4,27 +4,19 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.Outline;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewOutlineProvider;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.melnykov.fab.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.HomeAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeEventItem;
@@ -94,8 +86,10 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                syncText.setVisibility(View.INVISIBLE);
-                hasSynced = true;
+                if(! eventsList.isEmpty()) {
+                    syncText.setVisibility(View.INVISIBLE);
+                }
+                //hasSynced = true;
                 swipeLayout.setRefreshing(false);
                 setTodaysEvents();
             }
