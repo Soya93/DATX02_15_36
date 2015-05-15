@@ -9,5 +9,6 @@ public class Constants {
     public static final String primaryDarkColor = "#0288D1";
     public static final String lightGreyColor = "#939393";
     public static final String darkGreyColor = "#494646";
+    public static final String timerPauseColor = "#CCCCFF";
 
 }
