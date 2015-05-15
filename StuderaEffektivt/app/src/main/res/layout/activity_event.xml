@@ -30,7 +30,7 @@
             android:inputType="textCapSentences|textMultiLine"
             android:maxLines ="4"
             android:maxLength ="2000"
-            android:hint="Event Titel"
+            android:hint="Händelsens titel"
             android:background="@null"
             android:scrollHorizontally="false"
             android:id="@+id/title_input"
