@@ -101,18 +101,8 @@ public class TimerFrag extends Fragment {
                     Bundle b = msg.getData();
                     serviceInt = b.getLong("timePassed", -1);
                     phaceInt = b.getInt("Phace", -1);
-                    if(isActivyRunning) {
-                        if (phaceInt == 0) {
-                            progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-                            progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
-                        }
-
-                        if (phaceInt == 1) {
-                            progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-                            progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_pause));
-                        }
-                    }
-                    setTimerView(serviceInt);
+                    if(isActivyRunning){
+                    setTimerView(serviceInt);}
                     break;
                 case TIMER_FINISHED:
                     resetTimer();
@@ -144,6 +134,7 @@ public class TimerFrag extends Fragment {
         if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
         }
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         instantiate();
         return rootView;
     }
@@ -171,19 +162,33 @@ public class TimerFrag extends Fragment {
 
     public void onStart() {
         super.onStart();
+        getTimeFromTimerSettings();
         sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        isActivyRunning = true;
         if (isMyServiceRunning(MyCountDownTimer.class)) {
             Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
             getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
-            isActivyRunning = true;
+            long timeLeft = sharedPref.getLong("timeLeft", -1);
+
             hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
+            buttonId = sharedPref.getInt("buttonId",1);
+            Log.d("onstart", String.valueOf(hasBeenPaused));
             startButton.setImageResource(R.drawable.ic_action_pause);
-            if (hasBeenPaused) {
+            if (hasBeenPaused && (buttonId == R.drawable.ic_action_play )) {
                 startButton.setImageResource(R.drawable.ic_action_play);
-                long timeLeft = sharedPref.getLong("timeLeft", -1);
+                phaceInt = sharedPref.getInt("phaceInt",-1);
+                Log.d("phaceIntStart",String.valueOf(phaceInt));
                 Log.d("timeLeft", String.valueOf(timeLeft));
+
                 setTimerView(timeLeft);
+
             }
+            if (buttonId == R.drawable.ic_action_pause){
+                startButton.setImageResource(R.drawable.ic_action_pause);
+
+
+            }
+
         }
           else{
                 startButton.setImageResource(R.drawable.ic_action_play);
@@ -352,11 +357,12 @@ public class TimerFrag extends Fragment {
         Time t = Time.setTimeFromMilliSeconds(secondsUntilFinished);
 
         if (phaceInt == 0) {
+            progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
             progressBar.setProgress((int) (secondsUntilFinished * 1000 / default_studyTime.timeToMillisSeconds()));
-
             textView.setText(t.getTimeWithSecondsString());
         }
         if (phaceInt == 1) {
+            progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_pause));
             progressBar.setProgress((int) ((secondsUntilFinished * 1000 / default_pauseTime.timeToMillisSeconds())));
             textView.setText(t.getTimeWithSecondsString());
         }
@@ -403,13 +409,15 @@ public class TimerFrag extends Fragment {
     private void saveFragmentState() {
         sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("buttonImage", buttonId);
         editor.putBoolean("hasPaused", hasBeenPaused);
-        editor.putInt("Phace", phaceInt);
+        editor.putInt("buttonId",buttonId);
+
 
 
         if (hasBeenPaused) {
             editor.putLong("timeLeft", serviceInt);
+            Log.d("phaceIntDestroy",String.valueOf(phaceInt));
+            editor.putInt("phaceInt", phaceInt);
         }
         editor.apply();
     }
