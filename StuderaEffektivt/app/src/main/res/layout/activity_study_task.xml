@@ -1,24 +1,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="se.chalmers.datx02_15_36.studeraeffektivt.fragment.StudyTaskFragment">
 
     <LinearLayout
+        android:id="@+id/courseLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:id="@+id/courseLayout"
-        android:orientation="vertical"
-        android:weightSum="1.0"
         android:layout_centerHorizontal="true"
-        >
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:weightSum="1.0">
 
         <Spinner
+            android:id="@+id/courseSpinner"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
-            android:id="@+id/courseSpinner"
-            android:layout_gravity="center_horizontal"
-            />
+            android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
 
@@ -56,331 +55,309 @@
             android:orientation="vertical">
 
 
+            <View
+                android:id="@+id/typeLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_gravity="center_vertical"
+                android:background="#c0c0c0" />
 
-    <View
-        android:id="@+id/typeLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#c0c0c0"
-        android:layout_gravity="center_vertical"
-        />
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/firstLayout"
-        android:baselineAligned="false"
-        android:weightSum="1.0">
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1"
-            android:layout_weight="0.5">
-
-            <TextView
+            <LinearLayout
+                android:id="@+id/firstLayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/chapterLabel"
-                android:text="@string/chapter_title"
-                android:textSize="17sp"
-                android:layout_weight="0.5"
-                android:layout_marginRight="5dp"
-                android:gravity="right"
-                android:textAlignment="gravity"
-                android:layout_gravity="center"
-                />
+                android:baselineAligned="false"
+                android:orientation="vertical"
+                android:weightSum="1.0">
 
-            <Spinner
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/chapterLabel"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.5"
+                        android:gravity="right"
+                        android:text="@string/chapter_title"
+                        android:textAlignment="gravity"
+                        android:textSize="17sp" />
+
+                    <Spinner
+                        android:id="@+id/chapterSpinner"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="0.5" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/weekLabel"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.5"
+                        android:gravity="right"
+                        android:text="@string/week_title"
+                        android:textAlignment="gravity"
+                        android:textSize="17sp" />
+
+                    <Spinner
+                        android:id="@+id/weekSpinner"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="0.5" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/typeLabel"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.5"
+                        android:gravity="right"
+                        android:text="@string/type_title"
+                        android:textAlignment="gravity"
+                        android:textSize="17sp" />
+
+                    <ToggleButton
+                        android:id="@+id/readOrTaskAssignment"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="0.5"
+                        android:background="@null"
+                        android:gravity="left|center"
+                        android:textAlignment="gravity"
+                        android:textColor="#03A9F4"
+                        android:textOff="@string/type_button_text_reading"
+                        android:textOn="@string/type_button_text_other" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--<LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/chapterSpinner"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="0.5"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_weight="0.5">
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/weekLabel"
-            android:text="@string/week_title"
-            android:textSize="17sp"
-            android:layout_weight="0.5"
-            android:layout_marginRight="5dp"
-            android:gravity="right"
-            android:textAlignment="gravity"
-            android:layout_gravity="center"
-            />
-
-            <Spinner
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/weekSpinner"
-                android:layout_weight="0.5"
-                android:layout_marginLeft="5dp"
-                />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:weightSum="1"
-        android:layout_weight="0.5">
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/typeLabel"
-            android:text="@string/type_title"
-            android:textSize="17sp"
-            android:layout_marginRight="5dp"
-            android:gravity="right"
-            android:textAlignment="gravity"
-            android:layout_gravity="center"
-            android:layout_weight="0.5"
-            />
-
-        <ToggleButton
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/readOrTaskAssignment"
-            android:textOff="@string/type_button_text_reading"
-            android:textOn="@string/type_button_text_other"
-            android:layout_weight="0.5"
-            android:layout_gravity="center"
-            android:gravity="left|center"
-            android:textAlignment="gravity"
-            android:layout_marginLeft="15dp"
-            android:textColor="#03A9F4"
-            android:background="@null"/>
-
-    </LinearLayout>
-    </LinearLayout>
-
-    <!--<LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:id="@+id/infoLyout"
-        android:layout_below="@+id/firstLayout"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/task_info_title"
-            android:gravity="center"
-            android:textSize="17sp"
-            android:textColor="#03A9F4"
-            style="?android:attr/listSeparatorTextViewStyle"
-            />
-
-    </LinearLayout>-->
-
-    <View
-        android:id="@+id/infoLyout"
-        android:layout_below="@+id/firstLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#c0c0c0"
-        android:layout_gravity="center_vertical"
-        />
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:id="@+id/secondLayout"
-        android:layout_below="@+id/infoLyout"
-        android:weightSum="1.0">
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1"
-            android:layout_weight="0.5">
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/task_title"
-                android:textSize="17sp"
-                android:layout_weight="0.5"
-                android:layout_marginRight="5dp"
-                android:gravity="right"
-                android:textAlignment="gravity"
-                android:layout_gravity="center"
-                />
-
-            <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="@string/task_string_hint"
-            android:digits="0123456789,-."
-            android:id="@+id/taskInput"
-           android:singleLine="true"
-            android:layout_marginLeft="15dp"
-            android:layout_weight="0.5"
-            />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_weight="0.5">
-
-            <TextView
-                android:id="@+id/taskPartsLabel"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/part_title"
-                android:textSize="17sp"
-                android:layout_weight="0.5"
-                android:layout_marginRight="5dp"
-                android:gravity="right"
-                android:textAlignment="gravity"
-                android:layout_gravity="center"
-                />
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:hint="@string/part_string_hint"
-            android:digits="abcdefghijklmnopqrstuvwxy"
-            android:id="@+id/taskParts"
-            android:singleLine="true"
-            android:layout_gravity="left|bottom"
-            android:layout_marginLeft="15dp"
-            android:layout_weight="0.5"
-            />
-
-    </LinearLayout>
-
-
-</LinearLayout>
-
-
-
-    <View
-        android:id="@+id/line3"
-        android:layout_below="@+id/secondLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#c0c0c0"
-        android:layout_gravity="center_vertical"
-        />
-
-        <LinearLayout
-            android:id="@+id/savedTaskLabel"
-            android:layout_below="@+id/line3"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/saved_tasks_other_title"
-        android:gravity="center"
-        android:textSize="13sp"
-        android:textColor="#03A9F4"
-        android:layout_weight="0.5"
-        />
-
-    <TextView
-
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/saved_tasks_read_title"
-        android:gravity="center"
-        android:textSize="13sp"
-        android:textColor="#03A9F4"
-        android:layout_weight="0.5"
-        />
-
-    </LinearLayout>
-
-    <!--<TextView
-        android:id="@+id/savedTaskTitle"
-        android:layout_below="@+id/secondLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/saved_tasks_title"
-        android:gravity="center"
-        android:textSize="17sp"
-        android:textColor="#03A9F4"
-        style="?android:attr/listSeparatorTextViewStyle"
-        />-->
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:baselineAligned="false"
-        android:id="@+id/fourthLayout"
-        android:weightSum="1">
-
-
-
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:id="@+id/scrollViewOfTasks"
-        android:layout_weight="0.5"
-         >
-
-        <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/layoutWithinScrollViewOfTasks">
-            </se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
-
-    </ScrollView>
-
-        <View
-            android:id="@+id/lineBetweenScrollviews"
-            android:layout_width="2dp"
-            android:layout_height="fill_parent"
-            android:background="#c0c0c0"
-            android:layout_gravity="center_vertical"
-            />
-
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:id="@+id/scrollViewOfReadingAssigmnents"
-        android:layout_weight="0.5"
-        >
-
-           <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:orientation="horizontal"
-                android:id="@+id/layoutWithinScrollViewOfReadingAssignments">
-                </se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
+                android:id="@+id/infoLyout"
+                android:layout_below="@+id/firstLayout"
+                android:gravity="center">
 
-    </ScrollView>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/task_info_title"
+                    android:gravity="center"
+                    android:textSize="17sp"
+                    android:textColor="#03A9F4"
+                    style="?android:attr/listSeparatorTextViewStyle"
+                    />
 
-    </LinearLayout>
+            </LinearLayout>-->
+
+            <View
+                android:id="@+id/infoLyout"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/firstLayout"
+                android:layout_gravity="center_vertical"
+                android:background="#c0c0c0" />
+
+            <LinearLayout
+                android:id="@+id/secondLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/infoLyout"
+                android:baselineAligned="false"
+                android:orientation="vertical"
+                android:weightSum="1.0">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.5"
+                        android:gravity="right"
+                        android:text="@string/task_title"
+                        android:textAlignment="gravity"
+                        android:textSize="17sp" />
+
+                    <EditText
+                        android:id="@+id/taskInput"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="0.5"
+                        android:digits="0123456789,-."
+                        android:hint="@string/task_string_hint"
+                        android:inputType="text"
+                        android:singleLine="true"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/taskPartsLabel"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.5"
+                        android:gravity="right"
+                        android:text="@string/part_title"
+                        android:textAlignment="gravity"
+                        android:textSize="17sp" />
+
+                    <EditText
+                        android:id="@+id/taskParts"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|bottom"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="0.5"
+                        android:digits="abcdefghijklmnopqrstuvwxy"
+                        android:ems="10"
+                        android:hint="@string/part_string_hint"
+                        android:inputType="text"
+                        android:singleLine="true" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <View
+                android:id="@+id/line3"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/secondLayout"
+                android:layout_gravity="center_vertical"
+                android:background="#c0c0c0" />
+
+            <LinearLayout
+                android:id="@+id/savedTaskLabel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/line3"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:text="@string/saved_tasks_other_title"
+                    android:textColor="#03A9F4"
+                    android:textSize="13sp" />
+
+                <TextView
+
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:text="@string/saved_tasks_read_title"
+                    android:textColor="#03A9F4"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <!--<TextView
+                android:id="@+id/savedTaskTitle"
+                android:layout_below="@+id/secondLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/saved_tasks_title"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:textColor="#03A9F4"
+                style="?android:attr/listSeparatorTextViewStyle"
+                />-->
+
+            <LinearLayout
+                android:id="@+id/fourthLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+
+                <ScrollView
+                    android:id="@+id/scrollViewOfTasks"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="0.5">
+
+                    <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
+                        android:id="@+id/layoutWithinScrollViewOfTasks"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"></se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
+
+                </ScrollView>
+
+                <View
+                    android:id="@+id/lineBetweenScrollviews"
+                    android:layout_width="2dp"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center_vertical"
+                    android:background="#c0c0c0" />
+
+                <ScrollView
+                    android:id="@+id/scrollViewOfReadingAssigmnents"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="0.5">
+
+                    <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
+                        android:id="@+id/layoutWithinScrollViewOfReadingAssignments"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"></se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
+
+                </ScrollView>
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
