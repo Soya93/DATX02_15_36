@@ -14,16 +14,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true">
 
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/isActiveSwitch"
-            android:textOff="@string/course_off"
-            android:textOn="@string/course_on"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:checked="false" />
-
 
     </RelativeLayout>
 

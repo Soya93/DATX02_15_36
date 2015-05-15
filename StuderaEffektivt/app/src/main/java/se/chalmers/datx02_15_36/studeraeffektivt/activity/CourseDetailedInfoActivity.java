@@ -12,6 +12,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -175,6 +176,11 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
     }
 
     private void changeStatus() {
@@ -226,6 +232,13 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Är du säker på att du vill ta bort kursen? Uppgifter och statistik kommer att raderas!").setPositiveButton("Ja", dialogClickListener)
                 .setNegativeButton("Nej", dialogClickListener).show();
+
+        AlertDialog alertDialog = builder.create();
+
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
     }
 
     public void goToTasks() {
@@ -280,6 +293,12 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             }
         });
 
+        AlertDialog alertDialog = alert.create();
         alert.show();
+
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
     }
 }

@@ -6,5 +6,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.util;
 public class Constants {
     public static final String primaryColor ="#33b5e5";
     public static final String secondaryColor ="#B3E5FC";
+    public static final String primaryDarkColor = "#0288D1";
 
 }

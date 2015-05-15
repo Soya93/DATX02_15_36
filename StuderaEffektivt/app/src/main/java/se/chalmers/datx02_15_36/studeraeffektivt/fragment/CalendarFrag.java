@@ -263,6 +263,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
     }
 
     //Opens an dialog when pressing the buttom for adding a new event
@@ -320,6 +325,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
     }
 
     //Removes an event from the calendar
@@ -461,6 +471,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         alertDialog = builder.create();
         alertDialog.show();
 
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -544,6 +559,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
     }
 
     private int getIndexOfVisibleDays() {
