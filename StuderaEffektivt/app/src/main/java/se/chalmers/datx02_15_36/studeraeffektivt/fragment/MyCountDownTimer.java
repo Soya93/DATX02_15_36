@@ -49,6 +49,7 @@ public class MyCountDownTimer extends Service {
     private long timeUntilFinished;
     private int totalcount=0;
     private int count=0;
+    private int startId;
 
     private Bundle bundle = new Bundle();
     private final IBinder iBinder = new MCDTBinder();
@@ -98,10 +99,12 @@ public class MyCountDownTimer extends Service {
         reps= intent.getIntExtra("REPS",1);
         Log.d("Values of reps ", String.valueOf(reps));
         ccode= intent.getStringExtra("CCODE");
+        this.startId = startId;
         dbAdapter = new DBAdapter(getBaseContext());
         utils = new Utils();
         startCountDown();
         return START_NOT_STICKY;
+
     }
 
     public void setHandler (Handler handler){
@@ -118,13 +121,12 @@ public class MyCountDownTimer extends Service {
     }
 
     public void onDestroy () {
-        super.onDestroy();
+
         if(count==0 ){
             insertIntoDataBase(studyTimePassed);
         }
         studyTimer.cancel();
-
-
+        super.onDestroy();
     }
 
     private void sendMessage(long countDownTime) {
@@ -170,7 +172,6 @@ public class MyCountDownTimer extends Service {
                         insertIntoDataBase(studyTimePassed);
                         studyTimePassed = 0;
                         studyTimer = timerFunction(pauseTime, 100);
-
                         showPauseNotification();
 
                     } else if (count == 0) {  // här  vill du att en notification att pausetiden är slut
@@ -183,7 +184,7 @@ public class MyCountDownTimer extends Service {
                     if(activityIsRunning){
                         mHandler.sendEmptyMessage(1);
                     }
-                    stopSelf();
+                    stopSelf(startId);
                 }
 
             }
