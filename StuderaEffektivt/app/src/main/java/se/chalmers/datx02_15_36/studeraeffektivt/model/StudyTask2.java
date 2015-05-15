@@ -2,6 +2,9 @@ package se.chalmers.datx02_15_36.studeraeffektivt.model;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -15,6 +18,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 /**
@@ -30,6 +34,7 @@ public class StudyTask2 extends CheckBox {
     private int startPage;
     private int endPage;
     private int id;
+    private CompoundButton buttonView;
     DBAdapter dbAdapter;
 
     AssignmentType type;
@@ -59,6 +64,17 @@ public class StudyTask2 extends CheckBox {
         } else {
             setText(taskString);
         }
+        buttonView = (CompoundButton) this.getRootView();
+
+        if(isChecked()){
+            Drawable checked = getResources().getDrawable(R.drawable.ic_toggle_check_box);
+            checked.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
+            buttonView.setButtonDrawable(checked);
+        }else {
+            Drawable unchecked = getResources().getDrawable(R.drawable.ic_toggle_check_box_outline_blank);
+            unchecked.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP);
+            buttonView.setButtonDrawable(unchecked);
+        }
 
         initCheckbox();
     }
@@ -70,9 +86,14 @@ public class StudyTask2 extends CheckBox {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (buttonView.isChecked()) {
+                    Drawable checked = getResources().getDrawable(R.drawable.ic_toggle_check_box);
+                    checked.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
+                    buttonView.setButtonDrawable(checked);
                     addToDatabase();
-
                 } else {
+                    Drawable unchecked = getResources().getDrawable(R.drawable.ic_toggle_check_box_outline_blank);
+                    unchecked.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP);
+                    buttonView.setButtonDrawable(unchecked);
                     deleteFromDatabase();
 
                 }
