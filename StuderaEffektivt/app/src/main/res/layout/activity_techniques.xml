@@ -77,7 +77,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_14"
                 android:id="@+id/button14"
-                android:drawableLeft="@drawable/where_to_study_tiny"
+                android:drawableLeft="@drawable/imagery_"
                 android:background="?android:attr/selectableItemBackground" />
 
             <View
@@ -92,7 +92,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_15"
                 android:id="@+id/button15"
-                android:drawableLeft="@drawable/where_to_study_tiny"
+                android:drawableLeft="@drawable/rereading_"
                 android:background="?android:attr/selectableItemBackground" />
 
             <View
@@ -107,7 +107,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_16"
                 android:id="@+id/button16"
-                android:drawableLeft="@drawable/where_to_study_tiny"
+                android:drawableLeft="@drawable/practice_testing_"
                 android:background="?android:attr/selectableItemBackground" />
 
             <View
@@ -122,7 +122,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_17"
                 android:id="@+id/button17"
-                android:drawableLeft="@drawable/where_to_study_tiny"
+                android:drawableLeft="@drawable/distributed_practice_"
                 android:background="?android:attr/selectableItemBackground" />
 
             <View

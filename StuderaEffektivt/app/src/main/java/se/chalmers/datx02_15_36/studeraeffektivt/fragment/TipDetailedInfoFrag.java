@@ -52,14 +52,13 @@ public class TipDetailedInfoFrag extends Fragment {
         Log.i("OnCreate prev", previousTitle);
 
         filename = tipName;
-
-        filename = tipName.replace("-", "_");
+        if(filename.contains("-")){
+            filename = filename.replace("-", "_");
+        }
         filename = filename.toLowerCase();
 
         initComponents();
-        tipHandler = new TipHandler(this.getActivity().getApplicationContext());
-        tipViewInfoText.setText(getTipInfoText(filename));
-        tipViewHeader.setText(tipName);
+
 
         actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
         actionBar.setTitle(tipName);
@@ -72,8 +71,15 @@ public class TipDetailedInfoFrag extends Fragment {
         tipViewHeader = (TextView) view.findViewById(R.id.tipHeader);
         tipImage = (ImageView) view.findViewById(R.id.tipImage);
 
-        String uri = "@drawable/" + filename + "_.png";
-        Log.i("drawable", uri);
+        tipHandler = new TipHandler(this.getActivity().getApplicationContext());
+
+        tipViewInfoText.setText(getTipInfoText(filename));
+        tipViewHeader.setText(tipName);
+
+        if(filename.contains(" ")){
+            filename = filename.replace(" ", "_");
+        }
+
         int imageResource = getResources().getIdentifier(filename+"_", "drawable", getActivity().getPackageName());
         tipImage.setImageResource(imageResource);
     }
