@@ -245,7 +245,7 @@ public class MainActivity extends ActionBarActivity {
                         tab.setIcon(getResources().getDrawable( R.drawable.ic_timer).mutate());
                         break;
                     case 3:
-                        tab.setIcon( getResources().getDrawable( R.drawable.ic_action_trending_up).mutate());
+                        tab.setIcon(getResources().getDrawable( R.drawable.ic_action_trending_up).mutate());
                         break;
                     case 4:
                         tab.setIcon(getResources().getDrawable( R.drawable.ic_action).mutate());

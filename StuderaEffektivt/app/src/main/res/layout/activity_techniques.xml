@@ -45,8 +45,10 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_12"
                 android:id="@+id/button12"
-                android:drawableLeft="@drawable/where_to_study_tiny"
-                android:background="?android:attr/selectableItemBackground" />
+                android:drawableLeft="@drawable/self_explanation_"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="false"
+                android:elegantTextHeight="false" />
 
             <View
                 android:layout_width="fill_parent"
