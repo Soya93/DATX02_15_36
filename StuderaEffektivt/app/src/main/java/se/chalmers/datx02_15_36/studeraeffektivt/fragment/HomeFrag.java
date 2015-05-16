@@ -116,7 +116,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         List<Long> visibleCalendars = calendarFrag.getVisibleCalendars();
 
         if(eventsList.isEmpty()) {
-            syncText.setText("Inga planerade händesler idag!");
+            syncText.setText("Inga planerade händelser idag!");
         }else {
             syncText.setVisibility(View.INVISIBLE);
         }
