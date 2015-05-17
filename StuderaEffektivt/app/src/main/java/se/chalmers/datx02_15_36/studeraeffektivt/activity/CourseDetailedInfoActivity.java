@@ -214,9 +214,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         dbAdapter.deleteCourse(courseCode);
-                        Cursor cur = dbAdapter.getCourses();
-                        while (cur.moveToNext()) {
-                        }
+                        dbAdapter.deleteAssignments(courseCode);
                         Toast.makeText(getApplicationContext(), courseName + " borttagen",
                                 Toast.LENGTH_LONG).show();
                         finish();
@@ -234,6 +232,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 .setNegativeButton("Nej", dialogClickListener).show();
 
         AlertDialog alertDialog = builder.create();
+        alertDialog.show();
 
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
@@ -252,8 +251,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         i.putExtra("CourseName", courseName);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);
-
-
     }
 
 
