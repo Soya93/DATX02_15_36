@@ -401,6 +401,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
                 WeekViewEvent event = new WeekViewEvent(id, eventName, startTime, endTime);
                 event.setColor(color);
+                Log.i("event", eventName);
 
                 if (cur.getInt(CalendarUtils.ALL_DAY) == 1) {
 
@@ -410,11 +411,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                     endTime.set(Calendar.HOUR_OF_DAY, 23);
                     endTime.set(Calendar.MINUTE, 59);
 
-
-                    eventList.add(event);
                 }
-
-
+                eventList.add(event);
             }
 
         }
