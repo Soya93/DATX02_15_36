@@ -208,28 +208,24 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     public void deleteCourse() {
 
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        dbAdapter.deleteCourse(courseCode);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Är du säker på att du vill ta bort kursen? Uppgifter och statistik kommer att raderas!");
+
+        builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                dbAdapter.deleteCourse(courseCode);
                         dbAdapter.deleteAssignments(courseCode);
                         Toast.makeText(getApplicationContext(), courseName + " borttagen",
                                 Toast.LENGTH_LONG).show();
                         finish();
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
-                        break;
-                }
             }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Är du säker på att du vill ta bort kursen? Uppgifter och statistik kommer att raderas!").setPositiveButton("Ja", dialogClickListener)
-                .setNegativeButton("Nej", dialogClickListener).show();
+        });
+           builder.setNegativeButton("Nej", new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int whichButton) {
+                   //No button clicked
+            }
+        });
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
