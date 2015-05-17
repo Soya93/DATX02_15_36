@@ -307,6 +307,14 @@ public class MainActivity extends ActionBarActivity {
             actionBar.addTab(actionBar.newTab().setIcon(tabIcon)
                     .setTabListener(tabListener));
         }
+
+        //Didnt work T_T
+        if(savedInstanceState!=null) {
+            savedInstanceState.getBoolean("goToTimer", false);
+            if (savedInstanceState.getBoolean("goToTimer", false)) {
+                actionBar.setSelectedNavigationItem(2);
+            }
+        }
     }
 
     @Override

@@ -477,12 +477,16 @@ public class StatsFrag extends Fragment {
     }
 
     public void updateView(){
-        //Course has data
+        //Course has both sessions and assignments
         if(courseHasSessions() && courseHasAsses()) {
             setCourses();
             spinner.setSelection(0);
             drawCharts();
-        //Course is empty
+        //Course has both sessions but no assignments
+        }else if(courseHasSessions()) {
+                setCourses();
+                spinner.setSelection(0);
+                drawSessionsChart();
         }else if (isCourses()){
             hideCharts();
             showNoDataView();
@@ -492,11 +496,17 @@ public class StatsFrag extends Fragment {
         }
     }
 
+    private void drawSessionsChart(){
+        instantiatePieAssignments(getAssDone(), getAssLeft());
+        hideNoDataView();
+        pieHours.setVisibility(View.VISIBLE);
+    }
+
+
     private void drawCharts(){
         instantiatePieHours(getHoursSpent(), getMinutesLeft());
         instantiatePieAssignments(getAssDone(), getAssLeft());
         instantiateLineChart();
-
         hideNoDataView();
         showCharts();
     }
