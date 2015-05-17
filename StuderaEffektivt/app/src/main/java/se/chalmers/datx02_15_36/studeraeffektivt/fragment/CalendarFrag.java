@@ -23,14 +23,18 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +75,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private SubActionButton button4;
     private Button backButton;
     private Button forwardButton;
-    private Button goToTodayButton;
+    private TextView goToTodayButton;
     int numberOfVisibleDays;
     private View.OnClickListener fabHandler;
     private AlertDialog alertDialog;
@@ -120,10 +124,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         forwardDrawable.setColorFilter(Color.parseColor("#757575"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         forwardButton.setBackground(forwardDrawable);
 
-        goToTodayButton = (Button) view.findViewById(R.id.go_to_today_button);
-        Drawable todayDrawable = getResources().getDrawable(R.drawable.ic_idag).mutate();
-        todayDrawable.setColorFilter(Color.parseColor("#757575"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
-        goToTodayButton.setBackground(todayDrawable);
+        goToTodayButton = (TextView) view.findViewById(R.id.go_to_today_button);
+        SimpleDateFormat formatter = new SimpleDateFormat(" d MMMM");
+        goToTodayButton.setText(formatter.format(new Date()));
+
+        //Drawable todayDrawable = getResources().getDrawable(R.drawable.ic_idag).mutate();
+        //todayDrawable.setColorFilter(Color.parseColor("#757575"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        //goToTodayButton.setBackground(todayDrawable);
 
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {

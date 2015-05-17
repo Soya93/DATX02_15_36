@@ -307,10 +307,14 @@ public class StatsFrag extends Fragment {
         Cursor cursor = dbAdapter.getOngoingCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
-        while (cursor.moveToNext()) {
-            String ccode = cursor.getString(ccodeColumn);
-            String cname = cursor.getString(cnameColumn);
-            adapter.add(ccode + " " + cname);
+        if(cursor.getCount()>0) {
+            while (cursor.moveToNext()) {
+                String ccode = cursor.getString(ccodeColumn);
+                String cname = cursor.getString(cnameColumn);
+                adapter.add(ccode + " " + cname);
+            }
+        } else{
+                adapter.add("Inga tillagda kurser");
         }
     }
 

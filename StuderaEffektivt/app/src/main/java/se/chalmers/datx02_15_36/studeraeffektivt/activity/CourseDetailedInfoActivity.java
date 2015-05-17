@@ -112,12 +112,16 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_course_details, menu);
         this.menu = menu;
+        updateText();
+        return true;
+    }
+
+    private void updateText(){
         if(isActiveCourse){
             menu.getItem(3).setTitle("Markera som avslutad");
         }else {
             menu.getItem(3).setTitle("Markera som pågående");
         }
-        return true;
     }
 
     @Override
@@ -142,6 +146,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         } else if (id == R.id.action_activate) {
             openConfirmChangeStatusDialog();
         }
+        updateText();
 
         return super.onOptionsItemSelected(item);
     }
