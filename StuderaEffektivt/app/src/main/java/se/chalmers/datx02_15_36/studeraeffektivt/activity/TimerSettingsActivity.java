@@ -144,6 +144,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
     }
 
 
+
     public void onPause() {
         super.onPause();
         sharedPref = getSharedPreferences(prefName, Context.MODE_PRIVATE);

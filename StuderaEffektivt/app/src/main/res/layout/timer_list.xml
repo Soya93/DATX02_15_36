@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp" >
+    android:padding="10dp"
+    android:rowCount="2"
+    android:columnCount="2">
 
     <TextView
         android:id="@+id/settings_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="25dp"
-        android:textSize="25dp" />
+        android:textSize="25dp"
+        android:layout_row="0"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp" />
 
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="25dp"
-        android:textSize="25dp" />
+        android:textSize="25dp"
+        android:layout_row="0"
+        android:layout_column="1"
+        android:layout_gravity="right"
+        android:paddingRight="25dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp" />
 
-</LinearLayout>
+</GridLayout>
