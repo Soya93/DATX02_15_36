@@ -28,10 +28,12 @@
         <item name="actionModeSplitBackground">@drawable/cab_background_bottom_pluggapp</item>
         <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Pluggapp</item>
         <item name="android:statusBarColor">@color/primaryDarkColor</item>
-        <item name="android:colorAccent">@color/secondaryColor</item>
-        <item name="android:colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="android:colorPrimary">@color/primaryColor</item>
- 
+        <item name="colorAccent">@color/primaryDarkColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+
+
+
 
 
 

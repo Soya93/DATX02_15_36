@@ -42,6 +42,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarChoiceItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 
 public class EventActivity extends ActionBarActivity {
