@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/tip_button_1"
                 android:id="@+id/button1"
-                android:drawableLeft="@drawable/where_to_study_tiny"
+                android:drawableLeft="@drawable/var_skall_man_studera_"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <View
@@ -45,7 +45,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_2"
                 android:id="@+id/button2"
-                android:drawableLeft="@drawable/wiki_in_hands"
+                android:drawableLeft="@drawable/hur_skall_man_ta_sig_an_sina_studier_"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <View
@@ -60,7 +60,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_3"
                 android:id="@+id/button3"
-                android:drawableLeft="@drawable/set_of_mind"
+                android:drawableLeft="@drawable/hur_hamnar_man_i_r_att_sinnesst_amning_"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <View
@@ -75,7 +75,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_4"
                 android:id="@+id/button4"
-                android:drawableLeft="@drawable/take_what_you_need_and_nothing_else"
+                android:drawableLeft="@drawable/ta_med_dig_allt_du_beho_ver__och_inte_det_du_inte_beho_ver_"
                 android:background="?android:attr/selectableItemBackground" />
 
             <View
@@ -90,7 +90,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_5"
                 android:id="@+id/button5"
-                android:drawableLeft="@drawable/schedule"
+                android:drawableLeft="@drawable/o_va_sj_alv_eller_med_v_anner_"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <View
@@ -105,7 +105,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_6"
                 android:id="@+id/button6"
-                android:drawableLeft="@drawable/schedule"
+                android:drawableLeft="@drawable/se_till_att_du_har_ett_schema_du_klarar_av_"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <View
@@ -120,7 +120,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_7"
                 android:id="@+id/button7"
-                android:drawableLeft="@drawable/take_breaks"
+                android:drawableLeft="@drawable/ta_pauser__och_belo_na_dig_sj_alv_"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <View
@@ -135,7 +135,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_8"
                 android:id="@+id/button8"
-                android:drawableLeft="@drawable/helathy_and_balanced"
+                android:drawableLeft="@drawable/lev_ett_nyttigt_och_balanserat_liv_"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <View
@@ -150,7 +150,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_9"
                 android:id="@+id/button9"
-                android:drawableLeft="@drawable/reflect"
+                android:drawableLeft="@drawable/reflektera_o_ver_studierna_"
                 android:background="?android:attr/selectableItemBackground"/>
 
             <View
@@ -165,7 +165,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_10"
                 android:id="@+id/button10"
-                android:drawableLeft="@drawable/motivation"
+                android:drawableLeft="@drawable/motivation_"
                 android:background="?android:attr/selectableItemBackground"/>
 
         </LinearLayout>

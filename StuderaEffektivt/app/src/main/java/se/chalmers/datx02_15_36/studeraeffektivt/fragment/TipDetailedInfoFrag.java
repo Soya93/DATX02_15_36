@@ -82,8 +82,20 @@ public class TipDetailedInfoFrag extends Fragment {
             filename = filename.replace(" ", "_");
         }
 
+        if(filename.contains(",")){
+            filename = filename.replace(",", "_");
+        }
+
+        filename = convertSwedishLetters(filename);
+
         int imageResource = getResources().getIdentifier(filename, "drawable", getActivity().getPackageName());
         tipImage.setImageResource(imageResource);
+    }
+
+
+    private String convertSwedishLetters(String text){
+        return text.replaceAll("ö", "o_").replaceAll("Ö", "O_").replaceAll("å", "a_").
+                replaceAll("Å", "A_").replaceAll("ä", "_a").replaceAll("Ä", "_A");
     }
 
 
@@ -94,7 +106,7 @@ public class TipDetailedInfoFrag extends Fragment {
      * @return
      */
     public String getTipInfoText(String tipName) {
-        return tipHandler.readFromFile(tipName.replaceAll("ö", "o_").replaceAll("Ö", "O_").replaceAll("å", "a_").replaceAll("Å", "A_").replaceAll("ä", "_a").replaceAll("Ä", "_A"));
+        return tipHandler.readFromFile(convertSwedishLetters(tipName));
     }
 
     @Override

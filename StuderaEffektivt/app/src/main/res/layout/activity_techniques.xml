@@ -30,7 +30,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_11"
                 android:id="@+id/button11"
-                android:drawableLeft="@drawable/where_to_study_tiny"
+                android:drawableLeft="@drawable/elaborate_interrogation_"
                 android:background="?android:attr/selectableItemBackground" />
 
             <View
@@ -62,7 +62,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_13"
                 android:id="@+id/button13"
-                android:drawableLeft="@drawable/where_to_study_tiny"
+                android:drawableLeft="@drawable/summarization_"
                 android:background="?android:attr/selectableItemBackground" />
 
             <View
@@ -137,7 +137,7 @@
                 android:layout_height="80dp"
                 android:text="@string/tip_button_18"
                 android:id="@+id/button18"
-                android:drawableLeft="@drawable/where_to_study_tiny"
+                android:drawableLeft="@drawable/interleaved_practice_"
                 android:background="?android:attr/selectableItemBackground" />
         </LinearLayout>
     </ScrollView>
