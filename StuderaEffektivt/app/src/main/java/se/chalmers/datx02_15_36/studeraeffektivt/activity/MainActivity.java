@@ -183,9 +183,9 @@ public class MainActivity extends ActionBarActivity {
         calUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
         Drawable timerUns = getResources().getDrawable( R.drawable.ic_timer).mutate();
         timerUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
-        final Drawable statsUns = getResources().getDrawable( R.drawable.ic_action_trending_up).mutate();
+        Drawable statsUns = getResources().getDrawable( R.drawable.ic_action_trending_up).mutate();
         statsUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
-        Drawable myProfileUns = getResources().getDrawable(R.drawable.ic_action).mutate();
+        Drawable myProfileUns = getResources().getDrawable(R.drawable.ic_examhat).mutate();
         myProfileUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
 
 
@@ -245,10 +245,10 @@ public class MainActivity extends ActionBarActivity {
                         tab.setIcon(getResources().getDrawable( R.drawable.ic_timer).mutate());
                         break;
                     case 3:
-                        tab.setIcon( getResources().getDrawable( R.drawable.ic_action_trending_up).mutate());
+                        tab.setIcon(getResources().getDrawable( R.drawable.ic_action_trending_up).mutate());
                         break;
                     case 4:
-                        tab.setIcon(getResources().getDrawable( R.drawable.ic_action).mutate());
+                        tab.setIcon(getResources().getDrawable( R.drawable.ic_examhat).mutate());
                         break;
                     default:
                         break;

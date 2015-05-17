@@ -112,7 +112,7 @@ public class MyCountDownTimer extends Service {
     }
 
    public void startCountDown() {
-       timerFunction(studyTime,100);
+       timerFunction(studyTime,50);
        studyTimer.start();
    }
 
@@ -143,12 +143,13 @@ public class MyCountDownTimer extends Service {
 
             public void onTick(long millisUntilFinished) {
                 timeUntilFinished=millisUntilFinished; // if user wants to pause timer;
-                if(activityIsRunning){
-                sendMessage((int)millisUntilFinished);}
                 if(count==0){
-                    studyTimePassed+=100;
+                    studyTimePassed+=50;
 
                 }
+                if(activityIsRunning){
+                sendMessage((int)millisUntilFinished);}
+
 
                 Log.d("Time utilfinished" , String.valueOf(millisUntilFinished/1000));
                 Log.d("Values of reps ", String.valueOf(reps));
@@ -169,13 +170,14 @@ public class MyCountDownTimer extends Service {
                     if (count == 1) { // här  vill du att en notification att studietiden är slut
                         totalcount ++;
                         if(ccode!= null)
-                        insertIntoDataBase(studyTimePassed);
+                            Log.d("onfinish", studyTime+"");
+                        insertIntoDataBase(studyTime);
                         studyTimePassed = 0;
-                        studyTimer = timerFunction(pauseTime, 100);
+                        studyTimer = timerFunction(pauseTime, 50);
                         showPauseNotification();
 
                     } else if (count == 0) {  // här  vill du att en notification att pausetiden är slut
-                        studyTimer = timerFunction(studyTime, 100);
+                        studyTimer = timerFunction(studyTime, 50);
                         showStudyNotification();
                     }
                     studyTimer.start();
@@ -219,6 +221,9 @@ public class MyCountDownTimer extends Service {
 
     private void insertIntoDataBase(long millisPassed) {
         Log.d(ccode, "ccode");
+        millisPassed = millisPassed * 60; ///TODO: This is to make it in hours instead of minutes, for the show ;D
+        Log.d("databas", "millispassed: "+ milliSecondsToMin(millisPassed));
+
         long inserted = dbAdapter.insertSession(ccode, utils.getCurrWeekNumber(), milliSecondsToMin(millisPassed));
         if (inserted > 0 && getBaseContext() != null) {
 

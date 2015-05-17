@@ -2,6 +2,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.IO.TipHandler;
@@ -22,10 +24,12 @@ public class TipDetailedInfoFrag extends Fragment {
 
     private TextView tipViewInfoText;
     private TextView tipViewHeader;
+    private ImageView tipImage;
     private View view;
     private Bundle bundleFromPreviousFragment;
     private String tipName;
     private String previousTitle;
+    private String filename;
     private TipHandler tipHandler;
     android.support.v7.app.ActionBar actionBar;
 
@@ -47,9 +51,14 @@ public class TipDetailedInfoFrag extends Fragment {
 
         Log.i("OnCreate prev", previousTitle);
 
+        filename = tipName;
+        if(filename.contains("-")){
+            filename = filename.replace("-", "_");
+        }
+        filename = filename.toLowerCase();
+
         initComponents();
-        tipHandler = new TipHandler(this.getActivity().getApplicationContext());
-        tipViewInfoText.setText(getTipInfoText(tipName));
+
 
         actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
         actionBar.setTitle(tipName);
@@ -60,8 +69,19 @@ public class TipDetailedInfoFrag extends Fragment {
     private void initComponents() {
         tipViewInfoText = (TextView) view.findViewById(R.id.tipViewInfoText);
         tipViewHeader = (TextView) view.findViewById(R.id.tipHeader);
+        tipImage = (ImageView) view.findViewById(R.id.tipImage);
 
+        tipHandler = new TipHandler(this.getActivity().getApplicationContext());
+
+        tipViewInfoText.setText(getTipInfoText(filename));
         tipViewHeader.setText(tipName);
+
+        if(filename.contains(" ")){
+            filename = filename.replace(" ", "_");
+        }
+
+        int imageResource = getResources().getIdentifier(filename+"_", "drawable", getActivity().getPackageName());
+        tipImage.setImageResource(imageResource);
     }
 
 
