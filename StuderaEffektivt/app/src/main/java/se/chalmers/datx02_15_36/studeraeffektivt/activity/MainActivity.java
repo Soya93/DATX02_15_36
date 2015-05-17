@@ -308,7 +308,7 @@ public class MainActivity extends ActionBarActivity {
                     .setTabListener(tabListener));
         }
 
-        //Didnt work T_T
+        //Didnt work T_T Wanted to redirect from a timer notification
         if(savedInstanceState!=null) {
             savedInstanceState.getBoolean("goToTimer", false);
             if (savedInstanceState.getBoolean("goToTimer", false)) {

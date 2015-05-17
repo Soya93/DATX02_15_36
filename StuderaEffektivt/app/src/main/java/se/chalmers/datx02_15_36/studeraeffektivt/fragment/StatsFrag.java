@@ -69,8 +69,8 @@ public class StatsFrag extends Fragment {
 
         utils = new Utils();
 
-        //insertTestDataToDB("DDD111");
-        //insertTestDataToDB2("APA777");
+
+        //insertCourseDatorteknik();
 
         rootView = inflater.inflate(R.layout.activity_stats, container, false);
         instantiateView(getHoursSpent(), getMinutesLeft(), getAssDone(), getAssLeft());
@@ -81,6 +81,15 @@ public class StatsFrag extends Fragment {
 
         return rootView;
     }
+
+    private void insertCourseDatorteknik(){
+        insertTestDataToDB("EDA432");
+    }
+
+    private void insertFakeData2() {
+        insertTestDataToDB2("APA777");
+    }
+
 
     private void instantiateView(int hoursDone, int hoursLeft, int assesDone, int assesLeft){
         spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
@@ -402,7 +411,7 @@ public class StatsFrag extends Fragment {
 
     private void insertTestDataToDB(String course) {
         //Insert course
-        long idCourse = dbAdapter.insertCourse(course, "Default Course");
+        long idCourse = dbAdapter.insertCourse(course, "Datorteknik");
         if (idCourse > 0) {
             Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
         } else {
