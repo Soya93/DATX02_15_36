@@ -282,14 +282,14 @@ public class MainActivity extends ActionBarActivity {
                 if(position == 0) {
                     homeFrag.setTodaysEvents();
                 }
-                if((position == 3) && statsFrag.hasInit()) {
-                    statsFrag.updateView();
-                }
                 if((position == 1) && calendarFrag.hasInit()) {
                     calendarFrag.updateView();
                 }
                 if((position == 2) && timerFrag.hasInit()) {
                     timerFrag.updateView();
+                }
+                if((position == 3) && statsFrag.hasInit()) {
+                    statsFrag.updateView();
                 }
             }
 

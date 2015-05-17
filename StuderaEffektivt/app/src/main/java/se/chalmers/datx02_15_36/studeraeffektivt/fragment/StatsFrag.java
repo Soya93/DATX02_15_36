@@ -66,10 +66,7 @@ public class StatsFrag extends Fragment {
         if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
         }
-
         utils = new Utils();
-
-
         //insertCourseDatorteknik();
 
         rootView = inflater.inflate(R.layout.activity_stats, container, false);
@@ -93,15 +90,9 @@ public class StatsFrag extends Fragment {
 
     private void instantiateView(int hoursDone, int hoursLeft, int assesDone, int assesLeft){
         spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
-
         noDataView = (TextView) rootView.findViewById(R.id.stats_empty);
-
-        Log.i("IsNull", spinner.equals(null) + "");
-
         setCourses();
         spinner.setSelection(0);
-        Log.i("DB", "initial selection: "+spinner.getSelectedItem());
-
         drawCharts();
     }
 
@@ -486,15 +477,12 @@ public class StatsFrag extends Fragment {
     }
 
     public void updateView(){
+        setCourses();
         //Course has both sessions and assignments
-        if(courseHasSessions() && courseHasAsses()) {
-            setCourses();
-            spinner.setSelection(0);
+        if(isCourses() && courseHasSessions() && courseHasAsses()) {
             drawCharts();
         //Course has both sessions but no assignments
-        }else if(courseHasSessions()) {
-                setCourses();
-                spinner.setSelection(0);
+        }else if(isCourses() && courseHasSessions()) {
                 drawSessionsChart();
         }else if (isCourses()){
             hideCharts();
