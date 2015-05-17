@@ -255,17 +255,17 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
 
     private void chooseTimeOnCourseDialog() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        alert.setTitle("Hur många timmar vill du lägga på kursen per vecka?");
+        builder.setTitle("Hur många timmar vill du lägga på kursen per vecka?");
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
         input.setText("0");
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        alert.setView(input);
+        builder.setView(input);
 
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
                 Log.d("course", "add " + value + " minutes to " + courseCode);
@@ -284,14 +284,15 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             }
         });
 
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // Canceled.
             }
         });
 
-        AlertDialog alertDialog = alert.create();
-        alert.show();
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
 
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
