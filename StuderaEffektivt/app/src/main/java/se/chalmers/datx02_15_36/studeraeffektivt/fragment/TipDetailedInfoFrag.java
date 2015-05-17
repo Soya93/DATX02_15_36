@@ -73,6 +73,8 @@ public class TipDetailedInfoFrag extends Fragment {
 
         tipHandler = new TipHandler(this.getActivity().getApplicationContext());
 
+        filename = filename+"_";
+
         tipViewInfoText.setText(getTipInfoText(filename));
         tipViewHeader.setText(tipName);
 
@@ -80,7 +82,7 @@ public class TipDetailedInfoFrag extends Fragment {
             filename = filename.replace(" ", "_");
         }
 
-        int imageResource = getResources().getIdentifier(filename+"_", "drawable", getActivity().getPackageName());
+        int imageResource = getResources().getIdentifier(filename, "drawable", getActivity().getPackageName());
         tipImage.setImageResource(imageResource);
     }
 
