@@ -159,6 +159,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     private void openConfirmChangeStatusDialog() {
+        Log.i("Confirm dialog", "open");
         AlertDialog.Builder builder = courseView.confirmCourseStatusView(courseName, isActiveCourse, this);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -184,22 +185,19 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     private void changeStatus() {
-
-
-
         if (!isActiveCourse) {
             // mark as ongoing
             dbAdapter.setCourseUndone(courseCode);
-            isActiveCourse = false;
-            menu.getItem(3).setTitle("Markera som pågående");
+            isActiveCourse = true;
+            menu.getItem(3).setTitle("Markera som avslutad");
             String status = dbAdapter.getCourseStatus(courseCode);
             Log.i("CourseDetailedInfo set course undone", status);
 
         } else {
             // mark as completed
             dbAdapter.setCourseDone(courseCode);
-            isActiveCourse = true;
-            menu.getItem(3).setTitle("Markera som avslutad");
+            isActiveCourse = false;
+            menu.getItem(3).setTitle("Markera som pågående");
             String status = dbAdapter.getCourseStatus(courseCode);
             Log.i("CourseDetailedInfo set course done", status);
         }
