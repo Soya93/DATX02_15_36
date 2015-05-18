@@ -254,9 +254,14 @@ public class MyProfileFrag extends Fragment {
                             toast.show();
                         }
                         else {
-                            dbAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
-                            Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
-                            toast.show();
+                            long result = dbAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
+                            if(result > 0) {
+                                Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
+                                toast.show();
+                            } else {
+                                Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + "s kurskod är upptagen!", Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
                             updateCourses();
                             d.dismiss();
                         }
