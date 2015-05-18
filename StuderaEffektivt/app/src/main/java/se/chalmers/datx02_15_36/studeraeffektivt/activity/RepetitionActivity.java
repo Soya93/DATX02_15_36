@@ -45,7 +45,7 @@ public class RepetitionActivity extends ActionBarActivity {
     private TextView tasklabel;
     public static Context cntxofParent;
     private DBAdapter dbAdapter;
-    private String prevCourse;
+    private String prevCourse = "";
     private String prevWeek;
     private boolean hasAlreadyGeneratedForThisCourse = false;
     private boolean canRepeat;
@@ -138,7 +138,6 @@ public class RepetitionActivity extends ActionBarActivity {
             }
         });
         courseSpinner.setSelection(0);
-        prevCourse = courseSpinner.getSelectedItem().toString();
         weekSpinner.setSelection(0);
         //prevWeek = weekSpinner.getSelectedItem().toString();
         setRandomTasksView();
@@ -148,20 +147,18 @@ public class RepetitionActivity extends ActionBarActivity {
         selectedCourse = courseSpinner.getSelectedItem().toString();
         selectedWeek = weekSpinner.getSelectedItem().toString().toLowerCase();
 
-        if(canRepeat && !hasAlreadyGeneratedForThisCourse) {
+        if(canRepeat && !prevCourse.equals(selectedCourse)) { //&& prevWeek.equals(selectedWeek)
             String[] splitCourseCodeFromName = (selectedCourse.split(" "));
             String courseCode = splitCourseCodeFromName[0];
             String[] splitWeekTextFromNr = (selectedWeek.split(" "));
             int week = Integer.parseInt(splitWeekTextFromNr[1]);
 
+            taskTextView.setText("");
             //for (String task : getRandomAssingments(courseCode,week)) { TODO: ange veckor
             for (String task : getRandomAssingments(courseCode)) {
                 taskTextView.setText(taskTextView.getText().toString() + task + "\n");
             }
             taskTextView.setText(taskTextView.getText().toString());
-            if(prevCourse.equals(selectedCourse)){ //&& prevWeek.equals(selectedWeek)
-                hasAlreadyGeneratedForThisCourse = true;
-            }
             prevCourse = selectedCourse;
         }
     }
