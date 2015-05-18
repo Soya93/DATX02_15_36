@@ -35,9 +35,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.EventActivity;
@@ -93,13 +95,25 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         this.view = inflater.inflate(R.layout.activity_calendar, container, false);
         calendarModel = new CalendarModel();
 
-
-
         numberOfVisibleDays = 5;
 
         Map<Long, String> cals = calendarModel.getCalendarInfo(cr);
         visibleCalendars = new LinkedList<>(cals.keySet());
+
+        sharedPref = getActivity().getSharedPreferences("calendarFilter", Context.MODE_PRIVATE);
+        Set<String> visibleCalSet = sharedPref.getStringSet("visibleCalendars", null);
+
         calendarsList = calendarModel.getCalendarFilters();
+
+        if(visibleCalSet!=null) {
+            //Log.i("CalendarFrag", "gettingSharedPrefAdding");
+            for (String id : visibleCalSet) {
+                visibleCalendars.add(Long.parseLong(id));
+                //Log.i("CalendarFrag", "List_adding" + " string:" + id + " long:" + Long.parseLong(id));
+            }
+        }
+
+        //Log.i("CalendarFrag","gettingSharedPrefAdding");
 
         hasInit = true;
 
@@ -214,6 +228,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         button2.setOnClickListener(fabHandler);
         button3.setOnClickListener(fabHandler);
         button4.setOnClickListener(fabHandler);
+
+        mWeekView.notifyDatasetChanged();
     }
 
     @Override
@@ -461,8 +477,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                         }
                     } else {
                         visibleCalendars.remove(calIDs.get(i));
+                        //Log.i("CalendarFrag", "removed " + calIDs.get(i));
                     }
                 }
+                //Log.i("CalendarFrag", "updatedfilter");
+                //updateFilterSharedPreferences();
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
                 alertDialog.dismiss();
@@ -547,12 +566,12 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
                 }*/
 
-                Log.i("NewDate", newDate.get(Calendar.DAY_OF_MONTH) + "");
+                //Log.i("NewDate", newDate.get(Calendar.DAY_OF_MONTH) + "");
 
                 mWeekView.goToDate(newDate);
 
 
-                Log.i("NewDate mWeekView", mWeekView.getFirstVisibleDay().get(Calendar.DAY_OF_MONTH) + "" );
+                //Log.i("NewDate mWeekView", mWeekView.getFirstVisibleDay().get(Calendar.DAY_OF_MONTH) + "" );
 
 
                 mWeekView.goToHour(CalendarUtils.HOUR > 16 ? 16 : CalendarUtils.HOUR - 1);
@@ -635,4 +654,29 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         return hasInit;
     }
 
+
+    //Dunno why it does not work..it saves it correctly in the model but the objects are still drawn in the calendar :(
+    private void updateFilterSharedPreferences(){
+        //Log.i("CalendarFrag", "updateSP");
+        sharedPref = getActivity().getSharedPreferences("calendarFilter", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        Set<String> visibleCalSet = new HashSet<>();
+
+        //Log.i("CalendarFrag", "visiblecalendars= " + visibleCalendars.equals(null));
+
+        for(Long id: visibleCalendars){
+            visibleCalSet.add(id.toString());
+            //Log.i("CalendarFrag", "SP_adding" + " long:" + id + " string:"+ id.toString());
+        }
+        editor.putStringSet("visibleCalendars",visibleCalSet);
+        editor.apply();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //Log.i("CalendarFrag", "pause");
+        updateFilterSharedPreferences();
+    }
 }

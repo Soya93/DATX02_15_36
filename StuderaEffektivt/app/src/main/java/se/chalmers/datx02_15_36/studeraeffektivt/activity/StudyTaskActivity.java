@@ -87,12 +87,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         if (this != null) {
             dbAdapter = new DBAdapter(this);
         }
-
-
-
         initComponents();
-
-
     }
 
     @Override
@@ -422,7 +417,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                     StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "read", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
                     addToDatabase(studyTask);
-                    new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
+                    new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"","ReadAssignment",
                             start+"",end+"","READ","UNDONE");
                     //addToListOfTasks(studyTask);
                 }

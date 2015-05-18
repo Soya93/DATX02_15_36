@@ -28,7 +28,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/saved_tasks_other_title"
+            android:text="Sparade Läsanvisningar"
             android:gravity="center"
             android:textSize="13sp"
             android:textColor="#03A9F4"
@@ -39,7 +39,7 @@
 
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/saved_tasks_read_title"
+            android:text="Sparade Räkneuppgifter"
             android:gravity="center"
             android:textSize="13sp"
             android:textColor="#03A9F4"
