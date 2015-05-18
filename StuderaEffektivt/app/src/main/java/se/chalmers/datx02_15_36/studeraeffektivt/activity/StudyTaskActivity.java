@@ -471,7 +471,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         );
 
         Cursor asses = dbAdapter.getAssignments();
-        Log.d("ass", "asses in db: "+asses.getCount()+" course: "+studyTask.getCourseCode());
+        Log.d("ass", "asses in db: "+asses.getCount()+" course: "+studyTask.getType());
 
         if(studyTask.getType().equals(AssignmentType.READ)){
             listOfReadAssignments.removeAllViews();

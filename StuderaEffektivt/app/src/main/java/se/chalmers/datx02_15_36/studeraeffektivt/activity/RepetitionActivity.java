@@ -147,7 +147,7 @@ public class RepetitionActivity extends ActionBarActivity {
         selectedCourse = courseSpinner.getSelectedItem().toString();
         selectedWeek = weekSpinner.getSelectedItem().toString().toLowerCase();
 
-        if(canRepeat && !prevCourse.equals(selectedCourse)) { //&& prevWeek.equals(selectedWeek)
+        if(canRepeat && !prevCourse.equals(selectedCourse)) { //&& !prevWeek.equals(selectedWeek)
             String[] splitCourseCodeFromName = (selectedCourse.split(" "));
             String courseCode = splitCourseCodeFromName[0];
             String[] splitWeekTextFromNr = (selectedWeek.split(" "));
@@ -158,6 +158,7 @@ public class RepetitionActivity extends ActionBarActivity {
             for (String task : getRandomAssingments(courseCode)) {
                 taskTextView.setText(taskTextView.getText().toString() + task + "\n");
             }
+            //}
             taskTextView.setText(taskTextView.getText().toString());
             prevCourse = selectedCourse;
         }
@@ -269,7 +270,7 @@ public class RepetitionActivity extends ActionBarActivity {
 
         while (doneAssignments.moveToNext()) {
             String taskInfo = "Kapitel: " + doneAssignments.getString(doneAssignments.getColumnIndex("chapter"));
-            if(doneAssignments.getString(doneAssignments.getColumnIndex("type")).equals(AssignmentType.READ)){
+            if(doneAssignments.getString(doneAssignments.getColumnIndex("type")).equals("READ")){
                 taskInfo =  taskInfo + " läs sid " + doneAssignments.getInt(doneAssignments.getColumnIndex("startPage")) + "-" +
                         doneAssignments.getInt(doneAssignments.getColumnIndex("stopPage"));
             } else {
