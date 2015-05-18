@@ -112,12 +112,16 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_course_details, menu);
         this.menu = menu;
+        updateText();
+        return true;
+    }
+
+    private void updateText(){
         if(isActiveCourse){
             menu.getItem(3).setTitle("Markera som avslutad");
         }else {
             menu.getItem(3).setTitle("Markera som pågående");
         }
-        return true;
     }
 
     @Override
@@ -142,6 +146,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         } else if (id == R.id.action_activate) {
             openConfirmChangeStatusDialog();
         }
+        updateText();
 
         return super.onOptionsItemSelected(item);
     }
@@ -206,32 +211,27 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     public void deleteCourse() {
 
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        dbAdapter.deleteCourse(courseCode);
-                        Cursor cur = dbAdapter.getCourses();
-                        while (cur.moveToNext()) {
-                        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Är du säker på att du vill ta bort kursen? Uppgifter och statistik kommer att raderas!");
+
+        builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                dbAdapter.deleteCourse(courseCode);
+                        dbAdapter.deleteAssignments(courseCode);
                         Toast.makeText(getApplicationContext(), courseName + " borttagen",
                                 Toast.LENGTH_LONG).show();
                         finish();
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
-                        break;
-                }
             }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Är du säker på att du vill ta bort kursen? Uppgifter och statistik kommer att raderas!").setPositiveButton("Ja", dialogClickListener)
-                .setNegativeButton("Nej", dialogClickListener).show();
+        });
+           builder.setNegativeButton("Nej", new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int whichButton) {
+                   //No button clicked
+            }
+        });
 
         AlertDialog alertDialog = builder.create();
+        alertDialog.show();
 
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
@@ -250,23 +250,21 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         i.putExtra("CourseName", courseName);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);
-
-
     }
 
 
     private void chooseTimeOnCourseDialog() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        alert.setTitle("Hur många timmar vill du lägga på kursen per vecka?");
+        builder.setTitle("Hur många timmar vill du lägga på kursen per vecka?");
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
         input.setText("0");
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        alert.setView(input);
+        builder.setView(input);
 
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
                 Log.d("course", "add " + value + " minutes to " + courseCode);
@@ -285,14 +283,15 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             }
         });
 
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // Canceled.
             }
         });
 
-        AlertDialog alertDialog = alert.create();
-        alert.show();
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
 
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));

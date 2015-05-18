@@ -282,14 +282,14 @@ public class MainActivity extends ActionBarActivity {
                 if(position == 0) {
                     homeFrag.setTodaysEvents();
                 }
-                if((position == 3) && statsFrag.hasInit()) {
-                    statsFrag.updateView();
-                }
                 if((position == 1) && calendarFrag.hasInit()) {
                     calendarFrag.updateView();
                 }
                 if((position == 2) && timerFrag.hasInit()) {
                     timerFrag.updateView();
+                }
+                if((position == 3) && statsFrag.hasInit()) {
+                    statsFrag.updateView();
                 }
             }
 
@@ -306,6 +306,14 @@ public class MainActivity extends ActionBarActivity {
         for (Drawable tabIcon : ICONS) {
             actionBar.addTab(actionBar.newTab().setIcon(tabIcon)
                     .setTabListener(tabListener));
+        }
+
+        //Didnt work T_T Wanted to redirect from a timer notification
+        if(savedInstanceState!=null) {
+            savedInstanceState.getBoolean("goToTimer", false);
+            if (savedInstanceState.getBoolean("goToTimer", false)) {
+                actionBar.setSelectedNavigationItem(2);
+            }
         }
     }
 

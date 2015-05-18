@@ -66,11 +66,8 @@ public class StatsFrag extends Fragment {
         if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
         }
-
         utils = new Utils();
-
-        //insertTestDataToDB("DDD111");
-        //insertTestDataToDB2("APA777");
+        //insertCourseDatorteknik();
 
         rootView = inflater.inflate(R.layout.activity_stats, container, false);
         instantiateView(getHoursSpent(), getMinutesLeft(), getAssDone(), getAssLeft());
@@ -82,17 +79,20 @@ public class StatsFrag extends Fragment {
         return rootView;
     }
 
+    private void insertCourseDatorteknik(){
+        insertTestDataToDB("EDA432");
+    }
+
+    private void insertFakeData2() {
+        insertTestDataToDB2("APA777");
+    }
+
+
     private void instantiateView(int hoursDone, int hoursLeft, int assesDone, int assesLeft){
         spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
-
         noDataView = (TextView) rootView.findViewById(R.id.stats_empty);
-
-        Log.i("IsNull", spinner.equals(null) + "");
-
         setCourses();
         spinner.setSelection(0);
-        Log.i("DB", "initial selection: "+spinner.getSelectedItem());
-
         drawCharts();
     }
 
@@ -307,10 +307,14 @@ public class StatsFrag extends Fragment {
         Cursor cursor = dbAdapter.getOngoingCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
-        while (cursor.moveToNext()) {
-            String ccode = cursor.getString(ccodeColumn);
-            String cname = cursor.getString(cnameColumn);
-            adapter.add(ccode + " " + cname);
+        if(cursor.getCount()>0) {
+            while (cursor.moveToNext()) {
+                String ccode = cursor.getString(ccodeColumn);
+                String cname = cursor.getString(cnameColumn);
+                adapter.add(ccode + " " + cname);
+            }
+        } else{
+                adapter.add("Inga tillagda kurser");
         }
     }
 
@@ -398,7 +402,7 @@ public class StatsFrag extends Fragment {
 
     private void insertTestDataToDB(String course) {
         //Insert course
-        long idCourse = dbAdapter.insertCourse(course, "Default Course");
+        long idCourse = dbAdapter.insertCourse(course, "Datorteknik");
         if (idCourse > 0) {
             Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
         } else {
@@ -473,12 +477,13 @@ public class StatsFrag extends Fragment {
     }
 
     public void updateView(){
-        //Course has data
-        if(courseHasSessions() && courseHasAsses()) {
-            setCourses();
-            spinner.setSelection(0);
+        setCourses();
+        //Course has both sessions and assignments
+        if(isCourses() && courseHasSessions() && courseHasAsses()) {
             drawCharts();
-        //Course is empty
+        //Course has both sessions but no assignments
+        }else if(isCourses() && courseHasSessions()) {
+                drawSessionsChart();
         }else if (isCourses()){
             hideCharts();
             showNoDataView();
@@ -488,11 +493,17 @@ public class StatsFrag extends Fragment {
         }
     }
 
+    private void drawSessionsChart(){
+        instantiatePieAssignments(getAssDone(), getAssLeft());
+        hideNoDataView();
+        pieHours.setVisibility(View.VISIBLE);
+    }
+
+
     private void drawCharts(){
         instantiatePieHours(getHoursSpent(), getMinutesLeft());
         instantiatePieAssignments(getAssDone(), getAssLeft());
         instantiateLineChart();
-
         hideNoDataView();
         showCharts();
     }

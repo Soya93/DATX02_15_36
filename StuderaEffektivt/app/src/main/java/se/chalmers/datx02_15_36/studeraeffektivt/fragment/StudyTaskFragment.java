@@ -99,14 +99,9 @@ public class StudyTaskFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_study_task, container, false);
         this.view = rootView;
-
-
-
         initComponents();
 
         bundleFromPreviousFragment = this.getArguments();
-
-
 
         //Create the database access point but check if the context is null first.
         if (getActivity() != null) {

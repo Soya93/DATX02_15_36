@@ -254,6 +254,9 @@ public class MyCountDownTimer extends Service {
     private void showPauseNotification() {
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("goToTimer", true);
+        intent.putExtras(bundle);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplication());
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(intent);
@@ -262,7 +265,7 @@ public class MyCountDownTimer extends Service {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 this)
-                .setSmallIcon(R.drawable.ic_study_coach)
+                .setSmallIcon(R.drawable.ic_studie_coach)
                 .setContentTitle("StudieCoach")
                 .setContentText("Dags för paus!"
                 );
@@ -278,6 +281,9 @@ public class MyCountDownTimer extends Service {
 
     private void showStudyNotification(){
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("goToTimer", true);
+        intent.putExtras(bundle);
         PendingIntent pIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, 0);
 
         Notification noti = new Notification.Builder(getBaseContext())

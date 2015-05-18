@@ -155,6 +155,19 @@ public class DBAdapter {
         }
     }
 
+
+    public void deleteAssignments(String ccode) {
+        Cursor cur = getAssignments(ccode);
+
+        while (cur.moveToNext()){
+            try {
+                deleteAssignment(cur.getColumnIndex("ASSIGNMENTS__id"));
+            } catch (Exception e) {
+            }
+        }
+    }
+
+
     public long setDone(int assignmentId){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();

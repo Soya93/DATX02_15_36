@@ -11,14 +11,14 @@
         android:text="Välj kurs att repetera"
         android:id="@+id/textView5"
         android:paddingTop="25dp"
-        android:paddingBottom="10dp"
-        android:layout_gravity="center_horizontal" />
+        android:paddingLeft="15dp"
+        android:paddingBottom="10dp" />
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingBottom="30dp"
         android:spinnerMode="dialog"
         android:id="@+id/courseSpinner" />
 
@@ -29,15 +29,35 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Välj vecka att repetera"
         android:paddingTop="10dp"
+        android:paddingLeft="15dp"
         android:paddingBottom="10dp"
-        android:id="@+id/textView7"
-        android:layout_gravity="center_horizontal" />
+        android:id="@+id/textView7" />
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="30dp"
         android:spinnerMode="dialog"
         android:id="@+id/weekSpinner" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Utvalda repetitionuppgifter"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:id="@+id/textView4" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp"
+        android:id="@+id/textView8" />
 
 </LinearLayout>

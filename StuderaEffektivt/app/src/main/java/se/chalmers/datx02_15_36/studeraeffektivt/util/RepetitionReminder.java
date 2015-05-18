@@ -62,19 +62,42 @@ public class RepetitionReminder {
     }
 
     public List <Integer> getRandomAssingments(String courseCode) {
-        if(canRepeatCourse(courseCode)) {
+        Cursor doneAssignments = dbAdapter.getAssignments(courseCode);//dbAdapter.getDoneAssignments(courseCode);
+        List<Integer> finishedAssignments = new ArrayList<>();
+
+        while (doneAssignments.moveToNext()) {
+            finishedAssignments.add(doneAssignments.getColumnIndex("_id"));
+        }
+        return randomAssignments(finishedAssignments);
+    }
+
+    public List <Integer> getRandomAssingments(String courseCode, int week) {
             Cursor doneAssignments = dbAdapter.getDoneAssignments(courseCode);
             List<Integer> finishedAssignments = new ArrayList<>();
 
             while (doneAssignments.moveToNext()) {
-                if (doneAssignments.getInt(doneAssignments.getColumnIndex("week")) == Utils.getCurrWeekNumber() - 2) {
-                    finishedAssignments.add(doneAssignments.getColumnIndex("_id"));
-                }
+                //if (doneAssignments.getInt(doneAssignments.getColumnIndex("week")) == week) {
+                finishedAssignments.add(doneAssignments.getColumnIndex("_id"));
+                //}
+            }
+            return finishedAssignments;
+            //return randomAssignments(finishedAssignments);
+    }
+
+    public List <Integer> getRandomWeekAssingments(String courseCode) {
+        if(canRepeatCourse(courseCode)) {
+
+            Cursor doneAssignments = dbAdapter.getAssignments(courseCode);//dbAdapter.getDoneAssignments(courseCode);
+            List<Integer> finishedAssignments = new ArrayList<>();
+
+            while (doneAssignments.moveToNext()) {
+                //if (doneAssignments.getInt(doneAssignments.getColumnIndex("week")) == Utils.getCurrWeekNumber() - 2) {
+                finishedAssignments.add(doneAssignments.getColumnIndex("_id"));
+                //}
             }
             return randomAssignments(finishedAssignments);
 
         }
-        //TODO: add exception or somehting?
         return null;
     }
 
