@@ -61,6 +61,12 @@ public class CourseActivity extends ActionBarActivity {
         showCourseList();
     }
 
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+        showCourseList();
+        Log.i("avslutade kurser", "onresume");
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -78,7 +84,7 @@ public class CourseActivity extends ActionBarActivity {
      */
     public void showCourseList() {
         courseList.clear();
-
+        Log.d("courseList", "cursorList.size är "+courseList.size());
         Cursor cursor = dbAdapter.getDoneCourses();
         Log.d("DB", "cursor.getCount() är "+cursor.getCount());
         if (cursor.getCount() > 0){
@@ -89,10 +95,12 @@ public class CourseActivity extends ActionBarActivity {
                 cname = cursor.getString(1);
                 courseList.add(createCourse("Courses", new Course(cname, ccode)));
             }
+            simpleAdpt.notifyDataSetChanged();
         }else{
             courseList.add(createCourse("Courses", new Course("avsluta kurser gör du i den specifika kursen på föregående sida!", "Här hamnar dina avslutade kurser, ")));
             listOfCourses.setEnabled(false);
         }
+
     }
 
     private HashMap<String, Course> createCourse(String key, Course course) {

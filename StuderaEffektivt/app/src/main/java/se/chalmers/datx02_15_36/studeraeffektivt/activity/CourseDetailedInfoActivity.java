@@ -164,7 +164,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     private void openConfirmChangeStatusDialog() {
-        Log.i("Confirm dialog", "open");
         AlertDialog.Builder builder = courseView.confirmCourseStatusView(courseName, isActiveCourse, this);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
