@@ -160,10 +160,10 @@ public class MyCountDownTimer extends Service {
             public void onFinish() {
                 Log.d("Values of totC", String.valueOf(totalcount));
                 Log.d("Value of reps", String.valueOf(reps));
-               // Vibrator vi = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                Vibrator vi = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-                //vi.vibrate(2000);
-                //sendMessage(0);
+                vi.vibrate(2000);
+                sendMessage(0);
                 if(totalcount<reps) {
                     count = (count + 1) % 2;
 
