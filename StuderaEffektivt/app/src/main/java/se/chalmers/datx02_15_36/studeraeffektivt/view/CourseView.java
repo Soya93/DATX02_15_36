@@ -16,10 +16,10 @@ public class CourseView {
     public AlertDialog.Builder confirmCourseStatusView(String course, boolean isActive, Activity act){
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         LayoutInflater inflater = act.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.confirm_dialog, null);
+        View dialogView = inflater.inflate(R.layout.confirm_dialog, null);
         String status;
         if(isActive) {
-            status = "avslutas";
+            status = "avslutad";
         }else {
             status = "pågående";
         }

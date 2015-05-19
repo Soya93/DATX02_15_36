@@ -42,13 +42,9 @@ public class RepetitionActivity extends ActionBarActivity {
     private Spinner weekSpinner;
     private Spinner courseSpinner;
     private TextView taskTextView;
-    private TextView tasklabel;
     public static Context cntxofParent;
     private DBAdapter dbAdapter;
-    private String prevCourse;
-    private String prevWeek;
-    private boolean hasAlreadyGeneratedForThisCourse = false;
-    private boolean canRepeat;
+    private String prevCourse = "";
 
 
     @Override
@@ -64,14 +60,11 @@ public class RepetitionActivity extends ActionBarActivity {
 
         weekSpinner = (Spinner) findViewById(R.id.weekSpinner);
         courseSpinner = (Spinner) findViewById(R.id.courseSpinner);
-        tasklabel = (TextView) findViewById(R.id.textView4);
         taskTextView = (TextView) findViewById(R.id.textView8);
-        tasklabel.setVisibility(View.GONE);
 
         calendarModel = new CalendarModel();
         calendarModel.getCalendarInfo(getContentResolver());
 
-        final String[] alternatives = new String[7];
         int currentWeek = Utils.getCurrWeekNumber();
 
 
@@ -81,49 +74,45 @@ public class RepetitionActivity extends ActionBarActivity {
                 android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         courseSpinner.setAdapter(adapter2);
-        Cursor cursor = dbAdapter.getCourses();
-        int cnameColumn = cursor.getColumnIndex("cname");
-        int ccodeColumn = cursor.getColumnIndex("_ccode");
+        Cursor coursesCursor = dbAdapter.getCourses();
+        int cnameColumn = coursesCursor.getColumnIndex("cname");
+        int ccodeColumn = coursesCursor.getColumnIndex("_ccode");
+        int hasAssignments = 0;
 
-        if (cursor.getCount() > 0) {
-            String ccode = "";
-            while (cursor.moveToNext()) {
-                ccode = cursor.getString(ccodeColumn);
-                String cname = cursor.getString(cnameColumn);
+        if (coursesCursor.getCount() > 0) {
+            while (coursesCursor.moveToNext()) {
+                String ccode = coursesCursor.getString(ccodeColumn);
+                String cname = coursesCursor.getString(cnameColumn);
                 adapter2.add(ccode + " " + cname);
+                if(dbAdapter.getDoneAssignments(ccode).getCount()>1){
+                    hasAssignments++;
+                }
             }
-            if(dbAdapter.getDoneAssignments(ccode).getCount()<1){
-                canRepeat = false;
+            if(hasAssignments < 1){
                 noAssignmentsForCourse();
             }
         } else {
             adapter2.add("Inga tillagda kurser");
             if (dbAdapter.getAssignments().getCount() < 1) {
-                canRepeat = false;
                 noCourses();
             }
         }
-        canRepeat = true;
-        tasklabel.setVisibility(View.VISIBLE);
 
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        Log.i("calendarFrag", weekSpinner.toString());
-        Log.i("calendarFrag", adapter.toString());
         weekSpinner.setAdapter(adapter);
-        for (int i = 7, j = 0; i >= 0 && j < alternatives.length; i--, j++) {
-            int newWeek = currentWeek - i;
-            Log.i("newWeek", newWeek + "");
-            adapter.add("Vecka " + newWeek);
-            alternatives[j] = "Vecka " + newWeek;
+        for (int i = 7, j = 0; i >= 0 && j < 7; i--, j++) {
+            adapter.add("Vecka " + (currentWeek - i));
+            //adapter.add("Vecka " + (currentWeek);     //For testing of getting assignments from a specific week
         }
+
         weekSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setRandomTasksView();
+                //setRandomTasksView();
+                setRandomTasksWithWeekView();     //For random assignments of a specific week
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -131,87 +120,59 @@ public class RepetitionActivity extends ActionBarActivity {
         });
         courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setRandomTasksView();
+                //setRandomTasksView();
+                setRandomTasksWithWeekView(); //For random assignments of a specific week
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
         courseSpinner.setSelection(0);
-        prevCourse = courseSpinner.getSelectedItem().toString();
         weekSpinner.setSelection(0);
-        //prevWeek = weekSpinner.getSelectedItem().toString();
-        setRandomTasksView();
+        //setRandomTasksView();
+        setRandomTasksWithWeekView(); //For random assignments of a specific week
     }
 
-    private void setRandomTasksView(){
+    private void addEventToCalendar(){
         selectedCourse = courseSpinner.getSelectedItem().toString();
         selectedWeek = weekSpinner.getSelectedItem().toString().toLowerCase();
+        String courseName = (selectedCourse.split(" "))[1];
 
-        if(canRepeat && !hasAlreadyGeneratedForThisCourse) {
-            String[] splitCourseCodeFromName = (selectedCourse.split(" "));
-            String courseCode = splitCourseCodeFromName[0];
-            String[] splitWeekTextFromNr = (selectedWeek.split(" "));
-            int week = Integer.parseInt(splitWeekTextFromNr[1]);
+        //Cal
+        EventActivity eventActivity = new EventActivity();
+        Intent intent = new Intent(this, eventActivity.getClass());
+        intent.putExtra("isInAddMode", false);
+        intent.putExtra("isInRepMode", true);
+        intent.putExtra("startTime", 0L);
+        intent.putExtra("endTime", 0L);
+        intent.putExtra("description", "Utvalda repetitionsuppgifter: \n" + taskTextView.getText());
+        intent.putExtra("title", "Repetitonspass för " + selectedWeek + " av " + courseName);
+        SharedPreferences sharedPref = this.getSharedPreferences("calendarPref", Context.MODE_PRIVATE);
+        Long homeCalID = sharedPref.getLong("homeCalID", 1L); // 1 is some value if it fails to read??
+        intent.putExtra("calID", homeCalID);        // is the home calendar
+        intent.putExtra("calName", calendarModel.getCalendarsMap().get(homeCalID));     //get name of the home calendar
+        intent.putExtra("color", calendarModel.getCalIdAndColorMap().get(homeCalID));
+        startActivity(intent);
+    }
 
-            //for (String task : getRandomAssingments(courseCode,week)) { TODO: ange veckor
-            for (String task : getRandomAssingments(courseCode)) {
+    //Sets random tasks to a course with respect to the chosen week
+    private void setRandomTasksWithWeekView(){
+        selectedCourse = courseSpinner.getSelectedItem().toString();
+        selectedWeek = weekSpinner.getSelectedItem().toString().toLowerCase();
+        String courseCode = (selectedCourse.split(" "))[0];
+        String courseName = (selectedCourse.split(" "))[1];
+        int week = Integer.parseInt((selectedWeek.split(" "))[1]);
+
+        if(hasFinishedAssignments(courseCode, week)){
+            taskTextView.setText("");
+            for (String task : getRandomAssingments(courseCode,week)) {
                 taskTextView.setText(taskTextView.getText().toString() + task + "\n");
             }
             taskTextView.setText(taskTextView.getText().toString());
-            if(prevCourse.equals(selectedCourse)){ //&& prevWeek.equals(selectedWeek)
-                hasAlreadyGeneratedForThisCourse = true;
-            }
-            prevCourse = selectedCourse;
-        }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_repetition, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == android.R.id.home) {
-            this.finish();
-            return true;
         } else {
-            selectedCourse = courseSpinner.getSelectedItem().toString();
-            selectedWeek = weekSpinner.getSelectedItem().toString().toLowerCase();
-            String [] splitCourseCodeFromName = (selectedCourse.split(" "));
-            String courseName = splitCourseCodeFromName[1];
-
-            //Cal
-            EventActivity eventActivity = new EventActivity();
-            Intent intent = new Intent(this, eventActivity.getClass());
-            intent.putExtra("isInAddMode", false);
-            intent.putExtra("isInRepMode", true);
-            intent.putExtra("startTime", 0L);
-            intent.putExtra("endTime", 0L);
-            intent.putExtra("description", "Utvalda repetitionsuppgifter: \n" + taskTextView.getText());
-            intent.putExtra("title", "Repetitonspass för " + selectedWeek + " av " + courseName);
-            SharedPreferences sharedPref = this.getSharedPreferences("calendarPref", Context.MODE_PRIVATE);
-            Long homeCalID = sharedPref.getLong("homeCalID", 1L); // 1 is some value if it fails to read??
-            intent.putExtra("calID", homeCalID);        // is the home calendar
-            intent.putExtra("calName", calendarModel.getCalendarsMap().get(homeCalID));     //get name of the home calendar
-            intent.putExtra("color", calendarModel.getCalIdAndColorMap().get(homeCalID));
-            startActivity(intent);
-
+            taskTextView.setText("Det finns inga repetitionsuppgifter. Du måste ha avklarade uppgifter från vecka " +  week + " i " + courseName + " för att skapa ett repetitionspass för den");
         }
-
-        return super.onOptionsItemSelected(item);
     }
-
 
     private void noCourses() {
         final AlertDialog d = new AlertDialog.Builder(this)
@@ -265,20 +226,35 @@ public class RepetitionActivity extends ActionBarActivity {
         d.show();
     }
 
-    //Returns random assignments of the course
-    public List<String> getRandomAssingments(String courseCode) {
-        Cursor doneAssignments = dbAdapter.getDoneAssignments(courseCode); //dbAdapter.getAssignments(courseCode);
+    private boolean hasFinishedAssignments(String courseCode, int week){
+        Cursor doneAssignments = dbAdapter.getDoneAssignments(courseCode);
+        int nbrOfDoneAssignments = 0;
+
+        while (doneAssignments.moveToNext()) {
+            if (doneAssignments.getInt(doneAssignments.getColumnIndex("week")) == week) {
+                nbrOfDoneAssignments++;
+            }
+        }
+        return nbrOfDoneAssignments > 0;
+    }
+
+
+    //Returns random finished assignments of the course from a specific week
+    private List <String> getRandomAssingments(String courseCode, int week) {
+        Cursor doneAssignments = dbAdapter.getDoneAssignments(courseCode);
         List<String> finishedAssignments = new ArrayList<>();
 
         while (doneAssignments.moveToNext()) {
             String taskInfo = "Kapitel: " + doneAssignments.getString(doneAssignments.getColumnIndex("chapter"));
-            if(doneAssignments.getString(doneAssignments.getColumnIndex("type")).equals(AssignmentType.READ)){
-                taskInfo =  taskInfo + " läs sid " + doneAssignments.getInt(doneAssignments.getColumnIndex("startPage")) + "-" +
-                        doneAssignments.getInt(doneAssignments.getColumnIndex("stopPage"));
-            } else {
-                taskInfo = taskInfo + " uppgift " + doneAssignments.getString(doneAssignments.getColumnIndex("assNr"));
+            if (doneAssignments.getInt(doneAssignments.getColumnIndex("week")) == week) {
+                if(doneAssignments.getString(doneAssignments.getColumnIndex("type")).equals(AssignmentType.READ)){
+                    taskInfo =  taskInfo + " läs sid " + doneAssignments.getInt(doneAssignments.getColumnIndex("startPage")) + "-" +
+                            doneAssignments.getInt(doneAssignments.getColumnIndex("stopPage"));
+                } else {
+                    taskInfo = taskInfo + " uppgift " + doneAssignments.getString(doneAssignments.getColumnIndex("assNr"));
+                }
+                finishedAssignments.add(taskInfo);
             }
-            finishedAssignments.add(taskInfo);
         }
         return randomAssignments(finishedAssignments);
     }
@@ -299,24 +275,59 @@ public class RepetitionActivity extends ActionBarActivity {
         return randomAssignments;
     }
 
-    //Returns random finished assignments of the course from a specific week
-    public List <String> getRandomAssingments(String courseCode, int week) {
-        Cursor doneAssignments = dbAdapter.getDoneAssignments(courseCode);
+    //Sets random tasks to a course without respect to the chosen week
+    private void setRandomTasksView(){
+        selectedCourse = courseSpinner.getSelectedItem().toString();
+        selectedWeek = weekSpinner.getSelectedItem().toString().toLowerCase();
+
+        if(!prevCourse.equals(selectedCourse)) {
+            String courseCode = (selectedCourse.split(" "))[0];
+
+            taskTextView.setText("");
+            for (String task : getRandomAssingments(courseCode)) {
+                taskTextView.setText(taskTextView.getText().toString() + task + "\n");
+            }
+            taskTextView.setText(taskTextView.getText().toString());
+            prevCourse = selectedCourse;
+        }
+    }
+
+
+    //Returns random assignments of the course
+    private List<String> getRandomAssingments(String courseCode) {
+        Cursor doneAssignments = dbAdapter.getDoneAssignments(courseCode); //dbAdapter.getAssignments(courseCode);
         List<String> finishedAssignments = new ArrayList<>();
 
         while (doneAssignments.moveToNext()) {
             String taskInfo = "Kapitel: " + doneAssignments.getString(doneAssignments.getColumnIndex("chapter"));
-            if (doneAssignments.getInt(doneAssignments.getColumnIndex("week")) == week) {
-                if(doneAssignments.getString(doneAssignments.getColumnIndex("type")).equals(AssignmentType.READ)){
-                    taskInfo =  taskInfo + " läs sid " + doneAssignments.getInt(doneAssignments.getColumnIndex("startPage")) + "-" +
-                            doneAssignments.getInt(doneAssignments.getColumnIndex("stopPage"));
-                } else {
-                    taskInfo = taskInfo + " uppgift " + doneAssignments.getString(doneAssignments.getColumnIndex("assNr"));
-                }
-                finishedAssignments.add(taskInfo);
+            if(doneAssignments.getString(doneAssignments.getColumnIndex("type")).equals("READ")){
+                taskInfo =  taskInfo + " läs sid " + doneAssignments.getInt(doneAssignments.getColumnIndex("startPage")) + "-" +
+                        doneAssignments.getInt(doneAssignments.getColumnIndex("stopPage"));
+            } else {
+                taskInfo = taskInfo + " uppgift " + doneAssignments.getString(doneAssignments.getColumnIndex("assNr"));
             }
+            finishedAssignments.add(taskInfo);
         }
         return randomAssignments(finishedAssignments);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_repetition, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            this.finish();
+            return true;
+        } else {
+            addEventToCalendar();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
 

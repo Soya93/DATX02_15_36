@@ -65,7 +65,7 @@ public class NotificationService extends IntentService {
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                     getApplicationContext())
-                    .setSmallIcon(R.drawable.ic_study_coach)
+                    .setSmallIcon(R.drawable.ic_studie_coach)
                     .setContentTitle("StudieCoach")
                     .setContentText("Ny studievecka");
             NotificationCompat.InboxStyle inboxStyle =
