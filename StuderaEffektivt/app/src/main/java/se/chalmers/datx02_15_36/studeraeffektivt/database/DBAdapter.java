@@ -203,7 +203,8 @@ public class DBAdapter {
             cv.put(dbHelper.TIMEONCOURSE__ccode, ccode);
             cv.put(dbHelper.TIMEONCOURSE_time, minutes);
 
-            return db.insert(dbHelper.TABLE_TIMEONCOURSE, null, cv);
+            return db.update(dbHelper.TABLE_TIMEONCOURSE, cv, null, null);
+            //return db.insert(dbHelper.TABLE_TIMEONCOURSE, null, cv);
         } catch (Exception e) {
             return -1;
         }
