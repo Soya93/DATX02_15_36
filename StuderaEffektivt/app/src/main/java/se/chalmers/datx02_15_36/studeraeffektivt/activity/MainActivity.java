@@ -358,7 +358,7 @@ public class MainActivity extends ActionBarActivity {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplication())
-                        .setSmallIcon(R.drawable.ic_study_coach)
+                        .setSmallIcon(R.drawable.ic_studie_coach)
                         .setContentTitle("StudieCoach")
                         .setContentText("Ny vecka")
                         .setSubText(message.get(0));
@@ -393,7 +393,7 @@ public class MainActivity extends ActionBarActivity {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 this)
-                .setSmallIcon(R.drawable.ic_study_coach)
+                .setSmallIcon(R.drawable.ic_studie_coach)
                 .setContentTitle("StudieCoach")
                 .setContentText("Ny studievecka");
         NotificationCompat.InboxStyle inboxStyle =
