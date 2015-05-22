@@ -11,14 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-/*
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.PieChart;
-*/
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -34,11 +28,14 @@ import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.IntegerValueFormatter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.OneDecimalFormatter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
+
+/*
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+*/
 
 public class StatsFrag extends Fragment {
 
@@ -68,6 +65,8 @@ public class StatsFrag extends Fragment {
         }
         utils = new Utils();
         //insertCourseDatorteknik();
+        insertTestDataToDB("EDA432");
+        insertTestDataToDB2("TMV200");
 
         rootView = inflater.inflate(R.layout.activity_stats, container, false);
         instantiateView(getHoursSpent(), getMinutesLeft(), getAssDone(), getAssLeft());
@@ -79,7 +78,7 @@ public class StatsFrag extends Fragment {
         return rootView;
     }
 
-    private void insertCourseDatorteknik(){
+    private void insertCourseDatorteknik() {
         insertTestDataToDB("EDA432");
     }
 
@@ -88,7 +87,7 @@ public class StatsFrag extends Fragment {
     }
 
 
-    private void instantiateView(int hoursDone, int hoursLeft, int assesDone, int assesLeft){
+    private void instantiateView(int hoursDone, int hoursLeft, int assesDone, int assesLeft) {
         spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
         noDataView = (TextView) rootView.findViewById(R.id.stats_empty);
         setCourses();
@@ -96,35 +95,35 @@ public class StatsFrag extends Fragment {
         drawCharts();
     }
 
-    private void hideCharts(){
+    private void hideCharts() {
         lineChart.setVisibility(View.INVISIBLE);
         pieHours.setVisibility(View.INVISIBLE);
         pieAssignments.setVisibility(View.INVISIBLE);
     }
 
-    private void showCharts(){
+    private void showCharts() {
         lineChart.setVisibility(View.VISIBLE);
         pieHours.setVisibility(View.VISIBLE);
         pieAssignments.setVisibility(View.VISIBLE);
     }
 
-    private void hideNoDataView(){
+    private void hideNoDataView() {
         noDataView.setVisibility(View.INVISIBLE);
     }
 
-    private void showNoCourseView(){
+    private void showNoCourseView() {
         Log.d("stats", "in showNoCourseView");
         noDataView.setText("Lägg till kurser och uppgifter \n lös sedan uppgifter och logga tid med timern \n så får du se din utveckling här!");
         noDataView.setVisibility(View.VISIBLE);
     }
 
-    private void showNoDataView(){
+    private void showNoDataView() {
         Log.d("stats", "in showNoDataView");
         noDataView.setText("Lös uppgifter och logga tid med timern \n så får du se din utveckling här!");
         noDataView.setVisibility(View.VISIBLE);
     }
 
-    private void instantiateLineChart(){
+    private void instantiateLineChart() {
         lineChart = (LineChart) rootView.findViewById(R.id.line_hours);
         lineChart.setVisibility(View.VISIBLE);
 
@@ -142,29 +141,29 @@ public class StatsFrag extends Fragment {
 
         Cursor courses = dbAdapter.getOngoingCourses();
         int c = 0;
-        while( courses.moveToNext() ){
+        while (courses.moveToNext()) {
             String ccode = courses.getString(courses.getColumnIndex("_ccode"));
             int smallestWeek = dbAdapter.getSmallestWeek(ccode);
-            Log.d("lineChart", "smallestWeek: "+smallestWeek);
+            Log.d("lineChart", "smallestWeek: " + smallestWeek);
             hoursInCourse = new ArrayList<>();
 
             int i = 0;
-            for(int w=smallestWeek; w<=Utils.getCurrWeekNumber(); w++){
+            for (int w = smallestWeek; w <= Utils.getCurrWeekNumber(); w++) {
 
-                if(c == 0){
-                    weeks.add("v. "+w);
+                if (c == 0) {
+                    weeks.add("v. " + w);
                 }
 
                 Cursor mins = dbAdapter.getMinutes(w, ccode);
-                if(mins.getCount() == 0){
+                if (mins.getCount() == 0) {
                     hoursInWeek = new Entry(0, i);
-                    Log.d("lineChart", "getMinutes().getCount() is 0, week: "+w+", course: "+ccode);
-                }else {
+                    Log.d("lineChart", "getMinutes().getCount() is 0, week: " + w + ", course: " + ccode);
+                } else {
                     int hours = 0;
                     while (mins.moveToNext()) {
-                        hours += (mins.getInt(0)/60);
+                        hours += (mins.getInt(0) / 60);
                     }
-                    Log.d("lineChart", "week: "+w+", course: "+ccode+", hours in course and week: " + hours);
+                    Log.d("lineChart", "week: " + w + ", course: " + ccode + ", hours in course and week: " + hours);
                     hoursInWeek = new Entry(hours, i);
 
                 }
@@ -177,12 +176,12 @@ public class StatsFrag extends Fragment {
             setOfHoursInCourse = new LineDataSet(hoursInCourse, ccode);
 
             int[] cols = getColors();
-            int color = cols[c%cols.length];
+            int color = cols[c % cols.length];
             setOfHoursInCourse.setColor(color);
 
             setsOfHoursInCourses.add(setOfHoursInCourse);
             c++;
-            Log.d("lineChart", "weeks.length: "+weeks.size()+" dataSet.length: "+setOfHoursInCourse.getEntryCount());
+            Log.d("lineChart", "weeks.length: " + weeks.size() + " dataSet.length: " + setOfHoursInCourse.getEntryCount());
         }
 
         data = new LineData(weeks, setsOfHoursInCourses);
@@ -207,7 +206,7 @@ public class StatsFrag extends Fragment {
 
     }
 
-    private int[] getColors(){
+    private int[] getColors() {
         int[] cols = {Color.parseColor("#B3E5FC"), Color.parseColor("#56c8fc"),
                 Color.parseColor("#d9f1fc"), Color.parseColor("#00a2ed"), Color.parseColor("#0083bf"),
                 Color.parseColor("#32a6db"), Color.parseColor("#1a719a")};
@@ -215,18 +214,18 @@ public class StatsFrag extends Fragment {
         return cols;
     }
 
-    private void instantiatePieHours(int hoursDone, int hoursLeft){
+    private void instantiatePieHours(int hoursDone, int hoursLeft) {
         pieHours = (PieChart) rootView.findViewById(R.id.pie_hours);
         pieHours.setNoDataTextDescription("TIMMAR DU LAGT");
         pieHours.setVisibility(View.VISIBLE);
 
         //Set up pie chart data
-        Log.d("stats", "pieHours spent: "+ getHoursSpent());
-        Log.d("stats", "pieHours left: "+ getMinutesLeft());
+        Log.d("stats", "pieHours spent: " + getHoursSpent());
+        Log.d("stats", "pieHours left: " + getMinutesLeft());
 
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
-        Entry hoursLeftEntry = new Entry(hoursLeft,1);
-        Entry hoursDoneEntry = new Entry(hoursDone,0);
+        Entry hoursLeftEntry = new Entry(hoursLeft, 1);
+        Entry hoursDoneEntry = new Entry(hoursDone, 0);
         pieEntries.add(hoursLeftEntry);
         pieEntries.add(hoursDoneEntry);
 
@@ -241,7 +240,7 @@ public class StatsFrag extends Fragment {
         pieLabels.add("Kvar");
         pieLabels.add("Klara");
 
-        PieData pieData = new PieData(pieLabels,pieDataSet);
+        PieData pieData = new PieData(pieLabels, pieDataSet);
         pieHours.setData(pieData);
 
         //Style pie chart data
@@ -256,18 +255,18 @@ public class StatsFrag extends Fragment {
         pieHours.invalidate();
     }
 
-    private void instantiatePieAssignments(int assesDone, int assesLeft){
+    private void instantiatePieAssignments(int assesDone, int assesLeft) {
         pieAssignments = (PieChart) rootView.findViewById(R.id.pie_assignments);
         pieAssignments.setNoDataTextDescription("UPPGIFTER DU GJORT");
         pieAssignments.setVisibility(View.VISIBLE);
 
         //Set up pie chart data
-        Log.d("BAJS", "pieAsses done: "+getAssDone());
-        Log.d("BAJS", "pieAsses left: "+getAssLeft());
+        Log.d("BAJS", "pieAsses done: " + getAssDone());
+        Log.d("BAJS", "pieAsses left: " + getAssLeft());
 
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
-        Entry assesDoneEntry = new Entry(assesDone,0);
-        Entry assesLeftEntry = new Entry(assesLeft,1);
+        Entry assesDoneEntry = new Entry(assesDone, 0);
+        Entry assesLeftEntry = new Entry(assesLeft, 1);
         pieEntries.add(assesLeftEntry);
         pieEntries.add(assesDoneEntry);
 
@@ -283,7 +282,7 @@ public class StatsFrag extends Fragment {
         pieLabels.add("Kvar");
         pieLabels.add("Klara");
 
-        PieData pieData = new PieData(pieLabels,pieDataSet);
+        PieData pieData = new PieData(pieLabels, pieDataSet);
 
         pieAssignments.setData(pieData);
 
@@ -307,20 +306,20 @@ public class StatsFrag extends Fragment {
         Cursor cursor = dbAdapter.getOngoingCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
-        if(cursor.getCount()>0) {
+        if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String ccode = cursor.getString(ccodeColumn);
                 String cname = cursor.getString(cnameColumn);
                 adapter.add(ccode + " " + cname);
             }
-        } else{
-                adapter.add("Inga tillagda kurser");
+        } else {
+            adapter.add("Inga tillagda kurser");
         }
     }
 
-    public void setSelectedCourse(){
+    public void setSelectedCourse() {
         Log.i("DB", "spinner's selected item: " + spinner.getSelectedItem());
-        if(spinner.getSelectedItem() != null){
+        if (spinner.getSelectedItem() != null) {
             String temp = spinner.getSelectedItem().toString();
             String[] parts = temp.split(" ");
             this.currCourse = parts[0];
@@ -328,41 +327,41 @@ public class StatsFrag extends Fragment {
         drawCharts();
     }
 
-    private int getHoursSpent(){
-        return ( (dbAdapter.getSpentTime(currCourse)/60) );
+    private int getHoursSpent() {
+        return ((dbAdapter.getSpentTime(currCourse) / 60));
     }
 
-    private int getMinutesLeft(){
-        int total = (dbAdapter.getTimeOnCourse(currCourse)/60);
-        int spent = (dbAdapter.getSpentTime(currCourse)/60);
+    private int getMinutesLeft() {
+        int total = (dbAdapter.getTimeOnCourse(currCourse) / 60);
+        int spent = (dbAdapter.getSpentTime(currCourse) / 60);
 
-        if (total <= spent){
+        if (total <= spent) {
             return 0;
-        }else {
+        } else {
             return total - spent;
         }
     }
 
-    private int getAssDone(){
+    private int getAssDone() {
         return dbAdapter.getDoneAssignments(currCourse).getCount();
     }
 
-    private int getAssLeft(){
+    private int getAssLeft() {
         int assignments = dbAdapter.getAssignments(currCourse).getCount();
-        Log.d("ass", "total amount of asses: "+assignments);
+        Log.d("ass", "total amount of asses: " + assignments);
         int doneAssignments = dbAdapter.getDoneAssignments(currCourse).getCount();
-        return (assignments-doneAssignments);
+        return (assignments - doneAssignments);
     }
 
-    private boolean isCourses(){
+    private boolean isCourses() {
         Cursor courses = dbAdapter.getOngoingCourses();
-        if( courses.getCount() == 0 ){
+        if (courses.getCount() == 0) {
             return false;
         }
         return true;
     }
 
-    private boolean courseHasAsses(){
+    private boolean courseHasAsses() {
         if (currCourse != null) {
             Cursor asses = dbAdapter.getAssignments(currCourse);
             if (asses.getCount() != 0) {
@@ -372,7 +371,7 @@ public class StatsFrag extends Fragment {
         return false;
     }
 
-    private boolean courseHasSessions(){
+    private boolean courseHasSessions() {
         if (currCourse != null && isCourses()) {
             Cursor sessions = dbAdapter.getSessions();
             while (sessions.moveToNext()) {
@@ -384,7 +383,7 @@ public class StatsFrag extends Fragment {
         return false;
     }
 
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         if (isCourses() && spinner != null) {
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -404,103 +403,103 @@ public class StatsFrag extends Fragment {
         //Insert course
         long idCourse = dbAdapter.insertCourse(course, "Datorteknik");
         if (idCourse > 0) {
-            Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT ).show();
+            //Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT ).show();
         }
 
         //Insert sessions
         long idS1 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 60);
         long idS2 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 120);
-        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-1),300);
-        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-1),30);
-        long idS5 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-2),60);
-        long idS6 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-2),60);
-        if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
+        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 300);
+        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 30);
+        long idS5 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 60);
+        long idS6 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 60);
+        /*if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
             Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         //Insert TimeOnCourse.
         long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
-        if (idTOC>0) {
-            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
+        if (idTOC > 0) {
+            //Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
         }
 
         //Insert Assignments
-        long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        /*long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
             Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
     private void insertTestDataToDB2(String course) {
         //Insert course
-        long idCourse = dbAdapter.insertCourse(course, "Apkursen");
+        long idCourse = dbAdapter.insertCourse(course, "Diskret matematik");
         if (idCourse > 0) {
-            Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
         }
 
         //Insert sessions
-        long idS1 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(),60);
-        long idS2 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(),120);
-        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-1),300);
-        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber()-2),30);
-        if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0) {
+        long idS1 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 60);
+        long idS2 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 120);
+        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 400);
+        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 50);
+        /*if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0) {
             Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         //Insert TimeOnCourse.
         long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
-        if (idTOC>0) {
-            Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
+        if (idTOC > 0) {
+            //Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
         }
 
         //Insert Assignments
-        long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        /*long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
             Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
-    public void updateView(){
+    public void updateView() {
         setCourses();
         //Course has both sessions and assignments
-        if(isCourses() && courseHasSessions() && courseHasAsses()) {
+        if (isCourses() && courseHasSessions() && courseHasAsses()) {
             drawCharts();
-        //Course has both sessions but no assignments
-        }else if(isCourses() && courseHasSessions()) {
-                drawSessionsChart();
-        }else if (isCourses()){
+            //Course has both sessions but no assignments
+        } else if (isCourses() && courseHasSessions()) {
+            drawSessionsChart();
+        } else if (isCourses()) {
             hideCharts();
             showNoDataView();
-        //No courses
-        }else{
+            //No courses
+        } else {
             showNoCourseView();
         }
     }
 
-    private void drawSessionsChart(){
+    private void drawSessionsChart() {
         instantiatePieAssignments(getAssDone(), getAssLeft());
         hideNoDataView();
         pieHours.setVisibility(View.VISIBLE);
     }
 
 
-    private void drawCharts(){
+    private void drawCharts() {
         instantiatePieHours(getHoursSpent(), getMinutesLeft());
         instantiatePieAssignments(getAssDone(), getAssLeft());
         instantiateLineChart();
@@ -508,7 +507,7 @@ public class StatsFrag extends Fragment {
         showCharts();
     }
 
-    public boolean hasInit(){
+    public boolean hasInit() {
         return hasInit;
     }
 }

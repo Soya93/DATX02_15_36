@@ -13,8 +13,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.ArrayMap;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +31,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,7 +46,6 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 
 ;
@@ -95,23 +90,25 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         this.view = inflater.inflate(R.layout.activity_calendar, container, false);
         calendarModel = new CalendarModel();
 
+
         numberOfVisibleDays = 5;
 
         Map<Long, String> cals = calendarModel.getCalendarInfo(cr);
         visibleCalendars = new LinkedList<>(cals.keySet());
 
-        sharedPref = getActivity().getSharedPreferences("calendarFilter", Context.MODE_PRIVATE);
-        Set<String> visibleCalSet = sharedPref.getStringSet("visibleCalendars", null);
+        //Shared preferences stuff
+        //sharedPref = getActivity().getSharedPreferences("calendarFilter", Context.MODE_PRIVATE);
+        //Set<String> visibleCalSet = sharedPref.getStringSet("visibleCalendars", null);
 
         calendarsList = calendarModel.getCalendarFilters();
 
-        if(visibleCalSet!=null) {
+       /* if(visibleCalSet!=null) {
             //Log.i("CalendarFrag", "gettingSharedPrefAdding");
             for (String id : visibleCalSet) {
                 visibleCalendars.add(Long.parseLong(id));
                 //Log.i("CalendarFrag", "List_adding" + " string:" + id + " long:" + Long.parseLong(id));
             }
-        }
+        }*/
 
         //Log.i("CalendarFrag","gettingSharedPrefAdding");
 
@@ -475,6 +472,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                         if (!visibleCalendars.contains(calIDs.get(i))) {
                             visibleCalendars.add(calIDs.get(i));
                         }
+                        
                     } else {
                         visibleCalendars.remove(calIDs.get(i));
                         //Log.i("CalendarFrag", "removed " + calIDs.get(i));
@@ -485,6 +483,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
                 alertDialog.dismiss();
+
             }
         });
 
@@ -677,6 +676,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     public void onPause() {
         super.onPause();
         //Log.i("CalendarFrag", "pause");
-        updateFilterSharedPreferences();
+        //updateFilterSharedPreferences();
     }
 }

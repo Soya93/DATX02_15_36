@@ -10,15 +10,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.melnykov.fab.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.HomeAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeEventItem;
@@ -47,13 +51,12 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         initComponents(rootView);
         eventsList = getEvents();
 
-        if(hasSynced && ! eventsList.isEmpty()) {
+        if (hasSynced && !eventsList.isEmpty()) {
             syncText.setVisibility(View.INVISIBLE);
         }
 
         return rootView;
     }
-
 
 
     private void initComponents(View view) {
@@ -62,8 +65,9 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v.getTag() == homeFAB.getTag()) {
+                    Log.i("homefrag", "button");
                     calendarFrag.changeVisibleCalendars();
-                    onRefresh();
+                    updateView();
                 }
             }
         };
@@ -74,7 +78,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         homeFAB.setType(FloatingActionButton.TYPE_NORMAL);
         homeFAB.setBackgroundColor(Color.parseColor("#ffffff"));
 
-        Drawable calendarIcon = getResources().getDrawable( R.drawable.ic_cal2).mutate();
+        Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
         calendarIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP);
         homeFAB.setImageDrawable(calendarIcon);
         //homeFAB.setBackgroundColor(Color.parseColor(Constants.primaryColor));
@@ -93,14 +97,20 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(! eventsList.isEmpty()) {
-                    syncText.setVisibility(View.INVISIBLE);
-                }
-                //hasSynced = true;
+                updateView();
                 swipeLayout.setRefreshing(false);
-                setTodaysEvents();
+
             }
         }, 5000);
+    }
+
+    public void updateView() {
+        if (!eventsList.isEmpty()) {
+            syncText.setVisibility(View.INVISIBLE);
+        }
+        setTodaysEvents();
+        Log.i("homefrag", "updateview");
+
     }
 
     public void setContentResolver(ContentResolver cr) {
@@ -122,9 +132,9 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         eventsList = getEvents();
         List<Long> visibleCalendars = calendarFrag.getVisibleCalendars();
 
-        if(eventsList.isEmpty()) {
+        if (eventsList.isEmpty()) {
             syncText.setText("Inga planerade händelser idag!");
-        }else {
+        } else {
             syncText.setVisibility(View.INVISIBLE);
         }
 
