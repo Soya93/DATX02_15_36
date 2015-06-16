@@ -107,7 +107,7 @@ public class TimerFrag extends Fragment {
     private boolean isActivyRunning = false;
 
 
-    private Handler handler = new Handler(Looper.getMainLooper()) {
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
@@ -148,8 +148,9 @@ public class TimerFrag extends Fragment {
         if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
         }
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         instantiate();
+        instantiateButtons();
+        setOnClickButtons();
         return rootView;
     }
 
@@ -186,20 +187,15 @@ public class TimerFrag extends Fragment {
 
             hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
             buttonId = sharedPref.getInt("buttonId",1);
-            Log.d("onstart", String.valueOf(hasBeenPaused));
             startButton.setImageResource(R.drawable.ic_action_pause);
             if (hasBeenPaused && (buttonId == R.drawable.ic_action_play )) {
                 startButton.setImageResource(R.drawable.ic_action_play);
                 phaceInt = sharedPref.getInt("phaceInt",-1);
-                Log.d("phaceIntStart",String.valueOf(phaceInt));
-                Log.d("timeLeft", String.valueOf(timeLeft));
-
                 setTimerView(timeLeft);
 
             }
             if (buttonId == R.drawable.ic_action_pause){
                 startButton.setImageResource(R.drawable.ic_action_pause);
-
 
             }
 
@@ -223,7 +219,6 @@ public class TimerFrag extends Fragment {
 
             }
         });
-            Log.d("Text", textView.getText().toString());
 
     }
 
@@ -246,7 +241,6 @@ public class TimerFrag extends Fragment {
     }
 
     private void instantiate() {
-        instantiateButtons();
         textView = (TextView) rootView.findViewById(R.id.textView);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,8 +253,6 @@ public class TimerFrag extends Fragment {
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         taskList = (FlowLayout) rootView.findViewById(R.id.taskList);
         taskSwitch = (Switch) rootView.findViewById(R.id.taskSwitch);
-        previousWeek = (ImageButton) rootView.findViewById(R.id.previousWeek);
-        nextWeek = (ImageButton) rootView.findViewById(R.id.nextWeek);
         textViewWeek = (TextView) rootView.findViewById(R.id.textViewWeek);
 
         taskSwitch.setVisibility(View.VISIBLE);
@@ -270,7 +262,6 @@ public class TimerFrag extends Fragment {
         week = Utils.getCurrWeekNumber();
         textViewWeek.setText("Vecka " + String.valueOf(week));
 
-        initButtons();
         assignmentType = AssignmentType.OTHER;
         spinner.setSelection(0);
 
@@ -280,8 +271,7 @@ public class TimerFrag extends Fragment {
         }else {
 
         }
-
-        isInitialized = true;
+           isInitialized = true;
 
     }
 
@@ -460,7 +450,7 @@ public class TimerFrag extends Fragment {
         }
     }
 
-    public void initButtons() {
+    public void setOnClickButtons() {
 
         taskSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
