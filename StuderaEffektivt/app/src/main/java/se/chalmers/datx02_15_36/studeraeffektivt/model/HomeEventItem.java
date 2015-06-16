@@ -62,7 +62,12 @@ public class HomeEventItem{
     }
 
     public void setLocationS(String locationS) {
-        this.locationS = locationS;
+
+        if(locationS.length() > 20) {
+            this.locationS = locationS.substring(0,20) + "...";
+        } else {
+            this.locationS = locationS;
+        }
     }
 
     public String getTimeToStartS() {

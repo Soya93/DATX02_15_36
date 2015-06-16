@@ -74,16 +74,13 @@ public class StatsFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (getActivity() != null) {
+       if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
         }
         utils = new Utils();
-        //insertCourseDatorteknik();
-        insertTestDataToDB("EDA432");
-        insertTestDataToDB2("TMV200");
 
         rootView = inflater.inflate(R.layout.activity_stats, container, false);
-        instantiateView(getHoursSpent(), getMinutesLeft(), getAssDone(), getAssLeft());
+        instantiateView(getHoursSpent(), getHoursLeft(), getAssDone(), getAssLeft());
         if (!isCourses()) {
             hideCharts();
         }
@@ -235,7 +232,7 @@ public class StatsFrag extends Fragment {
 
         //Set up pie chart data
         Log.d("stats", "pieHours spent: " + getHoursSpent());
-        Log.d("stats", "pieHours left: " + getMinutesLeft());
+        Log.d("stats", "pieHours left: " + getHoursLeft());
 
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
         Entry hoursLeftEntry = new Entry(hoursLeft, 1);
@@ -345,7 +342,7 @@ public class StatsFrag extends Fragment {
         return ((dbAdapter.getSpentTime(currCourse) / 60));
     }
 
-    private int getMinutesLeft() {
+    private int getHoursLeft() {
         int total = (dbAdapter.getTimeOnCourse(currCourse) / 60);
         int spent = (dbAdapter.getSpentTime(currCourse) / 60);
 
@@ -425,8 +422,8 @@ public class StatsFrag extends Fragment {
         //Insert sessions
         long idS1 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 60);
         long idS2 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 120);
-        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 300);
-        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 30);
+        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 240);
+        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 120);
         long idS5 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 60);
         long idS6 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 60);
         /*if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
@@ -455,17 +452,17 @@ public class StatsFrag extends Fragment {
     private void insertTestDataToDB2(String course) {
         //Insert course
         long idCourse = dbAdapter.insertCourse(course, "Diskret matematik");
-        if (idCourse > 0) {
+        /*if (idCourse > 0) {
             //Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
         } else {
             //Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         //Insert sessions
-        long idS1 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 60);
+        //long idS1 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 60);
         long idS2 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 120);
-        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 400);
-        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 50);
+        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 360);
+        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 60);
         /*if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0) {
             Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).show();
         } else {
@@ -474,7 +471,7 @@ public class StatsFrag extends Fragment {
 
         //Insert TimeOnCourse.
         long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
-        if (idTOC > 0) {
+       /* if (idTOC > 0) {
             //Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
         } else {
             //Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
@@ -514,7 +511,7 @@ public class StatsFrag extends Fragment {
 
 
     private void drawCharts() {
-        instantiatePieHours(getHoursSpent(), getMinutesLeft());
+        instantiatePieHours(getHoursSpent(), getHoursLeft());
         instantiatePieAssignments(getAssDone(), getAssLeft());
         instantiateLineChart();
         hideNoDataView();
@@ -523,5 +520,13 @@ public class StatsFrag extends Fragment {
 
     public boolean hasInit() {
         return hasInit;
+    }
+
+
+    public void addFakeData (DBAdapter dbAdapter){
+        this.dbAdapter = dbAdapter;
+        utils = new Utils();
+        insertTestDataToDB("EDA432");
+        insertTestDataToDB2("TMV200");
     }
 }

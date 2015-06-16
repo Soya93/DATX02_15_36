@@ -106,7 +106,7 @@ public class CalendarModel {
                 //set the time for the event
                 item.setTimeS(CalendarView.formatTime(startTime, cur.getLong(CalendarUtils.EVENT_END)));
 
-                //set the time to the start of the event
+                //set the time from now to the start of the event
                 item.setTimeToStartS(CalendarView.formatTimeToEvent(CalendarUtils.getTimeToEventStart(startTime)));
                 CalendarUtils.isOnGoing(startTime, endTime);
                 if (CalendarUtils.isOnGoing(startTime, endTime)) {
@@ -238,7 +238,7 @@ public class CalendarModel {
             int hasWritersPermission = c.getInt(CalendarUtils.CALENDAR_ACCESS_LEVEL);
 
 
-            if (!calendarsMap.containsKey(id) && !calendarsMap.containsValue(name) && isVisible == 1) {
+            if (!calendarsMap.containsKey(id) && !calendarsMap.containsValue(name)) {
                 filterItem.setCalID(id);
                 filterItem.setTitle(name);
 
@@ -260,6 +260,7 @@ public class CalendarModel {
                 int color = c.getInt(CalendarUtils.EVENT_COLOR);
                 color = color == 0 ? c.getInt(CalendarUtils.CALENDAR_COLOR) : color;
                 filterItem.setColor(color);
+                filterItem.setChecked(isVisible == 1);
 
                 choiceItem = filterItem;
                 calendarsMap.put(id, name);
