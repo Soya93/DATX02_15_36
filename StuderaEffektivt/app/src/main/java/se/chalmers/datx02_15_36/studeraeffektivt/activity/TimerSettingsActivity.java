@@ -215,8 +215,6 @@ public class TimerSettingsActivity extends ActionBarActivity {
         np.setMaxValue(10);
         np.setMinValue(1);
         np.setWrapSelectorWheel(false);
-        int lastPicked = mapping.get(0).getMin();
-        np.setValue(lastPicked);
 
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 

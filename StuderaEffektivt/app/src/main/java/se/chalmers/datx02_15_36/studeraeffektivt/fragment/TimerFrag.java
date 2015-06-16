@@ -103,12 +103,11 @@ public class TimerFrag extends Fragment {
     private Handler serviceHandler;
     private SharedPreferences sharedPref;
     private String prefName = "ButtonPref";
-    private View.OnClickListener textViewListner;
 
     private boolean isActivyRunning = false;
 
 
-    private final Handler handler = new Handler(Looper.getMainLooper()) {
+    private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
@@ -149,9 +148,8 @@ public class TimerFrag extends Fragment {
         if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
         }
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         instantiate();
-        instantiateButtons();
-        setOnClickButtons();
         return rootView;
     }
 
@@ -162,7 +160,7 @@ public class TimerFrag extends Fragment {
         int studyHour = sharedPref.getInt("studyHour", -1);
         int pauseMin = sharedPref.getInt("pauseMin", -1);
         int pauseHour = sharedPref.getInt("pauseHour", -1);
-        reps = sharedPref.getInt("reps",1);
+        reps = sharedPref.getInt("REPS",1);
         default_studyTime = new Time(0, 25);
         default_pauseTime = new Time(0, 5);
         if (studyMin != -1 ) {
@@ -188,19 +186,25 @@ public class TimerFrag extends Fragment {
 
             hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
             buttonId = sharedPref.getInt("buttonId",1);
+            Log.d("onstart", String.valueOf(hasBeenPaused));
             startButton.setImageResource(R.drawable.ic_action_pause);
             if (hasBeenPaused && (buttonId == R.drawable.ic_action_play )) {
                 startButton.setImageResource(R.drawable.ic_action_play);
                 phaceInt = sharedPref.getInt("phaceInt",-1);
+                Log.d("phaceIntStart",String.valueOf(phaceInt));
+                Log.d("timeLeft", String.valueOf(timeLeft));
+
                 setTimerView(timeLeft);
+
             }
             if (buttonId == R.drawable.ic_action_pause){
                 startButton.setImageResource(R.drawable.ic_action_pause);
+
+
             }
 
         }
           else{
-                setTextViewClick();
                 startButton.setImageResource(R.drawable.ic_action_play);
                  getTimeFromTimerSettings();
                 startSetTimerView();
@@ -219,6 +223,7 @@ public class TimerFrag extends Fragment {
 
             }
         });
+            Log.d("Text", textView.getText().toString());
 
     }
 
@@ -241,11 +246,21 @@ public class TimerFrag extends Fragment {
     }
 
     private void instantiate() {
+        instantiateButtons();
         textView = (TextView) rootView.findViewById(R.id.textView);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(),TimerSettingsActivity.class);
+                startActivity(i);
+            }
+        });
         spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         taskList = (FlowLayout) rootView.findViewById(R.id.taskList);
         taskSwitch = (Switch) rootView.findViewById(R.id.taskSwitch);
+        previousWeek = (ImageButton) rootView.findViewById(R.id.previousWeek);
+        nextWeek = (ImageButton) rootView.findViewById(R.id.nextWeek);
         textViewWeek = (TextView) rootView.findViewById(R.id.textViewWeek);
 
         taskSwitch.setVisibility(View.VISIBLE);
@@ -255,6 +270,7 @@ public class TimerFrag extends Fragment {
         week = Utils.getCurrWeekNumber();
         textViewWeek.setText("Vecka " + String.valueOf(week));
 
+        initButtons();
         assignmentType = AssignmentType.OTHER;
         spinner.setSelection(0);
 
@@ -264,7 +280,8 @@ public class TimerFrag extends Fragment {
         }else {
 
         }
-           isInitialized = true;
+
+        isInitialized = true;
 
     }
 
@@ -300,7 +317,8 @@ public class TimerFrag extends Fragment {
 
 
     public void startTimer() {
-        textView.setOnClickListener(null);
+        Log.d("buttonId",String.valueOf(buttonId == R.drawable.ic_action_play));
+        Log.d("hasbeenPause",String.valueOf(hasBeenPaused));
         if (hasBeenStarted()) {
             spinner.setEnabled(false);
             sendDataToService();
@@ -369,7 +387,6 @@ public class TimerFrag extends Fragment {
         hasBeenPaused = false;
         progressBar.setProgress(1000);
         startButton.setImageResource(buttonId);
-        setTextViewClick();
         progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
         startSetTimerView();
         if(isMyServiceRunning(MyCountDownTimer.class)) {
@@ -408,6 +425,9 @@ public class TimerFrag extends Fragment {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean("hasPaused", hasBeenPaused);
         editor.putInt("buttonId",buttonId);
+
+
+
         if (hasBeenPaused) {
             editor.putLong("timeLeft", serviceInt);
             Log.d("phaceIntDestroy",String.valueOf(phaceInt));
@@ -440,7 +460,7 @@ public class TimerFrag extends Fragment {
         }
     }
 
-    public void setOnClickButtons() {
+    public void initButtons() {
 
         taskSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -493,17 +513,6 @@ public class TimerFrag extends Fragment {
         trackStates.addState(new int[]{android.R.attr.state_checked}, new ColorDrawable(color1));
         trackStates.addState(new int[]{}, new ColorDrawable(color2)); // this one has to come last
         taskSwitch.setTrackDrawable(trackStates);*/
-    }
-
-    private void setTextViewClick() {
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(),TimerSettingsActivity.class);
-                startActivity(i);
-            }
-        });
-
     }
 
     private void colorNextButtonGrey(){

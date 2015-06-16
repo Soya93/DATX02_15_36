@@ -59,6 +59,7 @@ public class CalendarModel {
         //set end DAY
         endDay = Calendar.getInstance();
         endDay.setTime(futureDate(1));
+        calendarsFilterItems = new ArrayList<>();
         cur = null;
     }
 
@@ -106,7 +107,7 @@ public class CalendarModel {
                 //set the time for the event
                 item.setTimeS(CalendarView.formatTime(startTime, cur.getLong(CalendarUtils.EVENT_END)));
 
-                //set the time from now to the start of the event
+                //set the time to the start of the event
                 item.setTimeToStartS(CalendarView.formatTimeToEvent(CalendarUtils.getTimeToEventStart(startTime)));
                 CalendarUtils.isOnGoing(startTime, endTime);
                 if (CalendarUtils.isOnGoing(startTime, endTime)) {
@@ -205,9 +206,6 @@ public class CalendarModel {
     }
 
     public ArrayList<CalendarsFilterItem> getCalendarFilters() {
-        for(CalendarsFilterItem item: calendarsFilterItems){
-            Log.i("CalendarModel id: ", item.getCalID()+"");
-        }
         return calendarsFilterItems;
     }
 
@@ -238,8 +236,8 @@ public class CalendarModel {
             int hasWritersPermission = c.getInt(CalendarUtils.CALENDAR_ACCESS_LEVEL);
 
 
-            if (!calendarsMap.containsKey(id) && !calendarsMap.containsValue(name)) {
-                filterItem.setCalID(id);
+
+            if (!calendarsMap.containsKey(id) && !calendarsMap.containsValue(name) && isVisible == 1) {
                 filterItem.setTitle(name);
 
                 //only selects the calendars with editing and writeing permssion
@@ -260,7 +258,6 @@ public class CalendarModel {
                 int color = c.getInt(CalendarUtils.EVENT_COLOR);
                 color = color == 0 ? c.getInt(CalendarUtils.CALENDAR_COLOR) : color;
                 filterItem.setColor(color);
-                filterItem.setChecked(isVisible == 1);
 
                 choiceItem = filterItem;
                 calendarsMap.put(id, name);

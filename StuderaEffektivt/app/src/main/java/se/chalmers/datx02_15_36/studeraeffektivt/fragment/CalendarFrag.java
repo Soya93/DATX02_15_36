@@ -27,7 +27,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +68,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
  * A class representing the controller of a calendar object
  */
 public class CalendarFrag extends Fragment implements WeekView.MonthChangeListener,
-        WeekView.EventClickListener, WeekView.EventLongPressListener, WeekView.EmptyViewClickListener {
+        WeekView.EventClickListener, WeekView.EventLongPressListener {
 
     public ContentResolver cr;
     boolean hasOnMonthChange;
@@ -112,30 +111,20 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         visibleCalendars = new LinkedList<>(cals.keySet());
 
         //Shared preferences stuff
-        sharedPref = getActivity().getSharedPreferences("calendarFilter", Context.MODE_PRIVATE);
-        Set<String> visibleCalSet = sharedPref.getStringSet("visibleCalendars", null);
+        //sharedPref = getActivity().getSharedPreferences("calendarFilter", Context.MODE_PRIVATE);
+        //Set<String> visibleCalSet = sharedPref.getStringSet("visibleCalendars", null);
 
         calendarsList = calendarModel.getCalendarFilters();
 
-        if(visibleCalSet!=null) {
-
-            //clear list with viseble calendars and add those from shared preferences.
-            visibleCalendars.clear();
+       /* if(visibleCalSet!=null) {
+            //Log.i("CalendarFrag", "gettingSharedPrefAdding");
             for (String id : visibleCalSet) {
                 visibleCalendars.add(Long.parseLong(id));
-
+                //Log.i("CalendarFrag", "List_adding" + " string:" + id + " long:" + Long.parseLong(id));
             }
+        }*/
 
-
-            //update status on caenderas in the dialog view where calendars are filtered
-            for(CalendarsFilterItem item : calendarsList){
-                if(visibleCalendars.contains(item.getCalID())) {
-                    item.setChecked(true);
-                }else {
-                    item.setChecked(false);
-                }
-            }
-        }
+        //Log.i("CalendarFrag","gettingSharedPrefAdding");
 
         hasInit = true;
 
@@ -220,9 +209,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         // Set long press listener for events.
         mWeekView.setEventLongPressListener(this);
 
-
-        mWeekView.setEmptyViewClickListener(this);
-
         // Set number of visible days in the calendar view
 
         mWeekView.setNumberOfVisibleDays(5);
@@ -262,7 +248,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         super.onResume();
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
-        Log.i("Clanedarfrag", "onResume");
     }
 
     @Override
@@ -508,7 +493,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                     }
                 }
                 //Log.i("CalendarFrag", "updatedfilter");
-                updateFilterSharedPreferences();
+                //updateFilterSharedPreferences();
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
                 alertDialog.dismiss();
@@ -521,6 +506,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             public void onClick(DialogInterface dialog, int id) {
             }
         });
+
 
         builder.setView(view);
         builder.setTitle("Välj kalender");
@@ -547,6 +533,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     public void changeNbrOfDaysDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final String[] choices = {"1", "3", "5"};
+        final int previousNumberOfVisibleDays = numberOfVisibleDays;
         int index = getIndexOfVisibleDays();
 
         builder.setTitle("Antalet dagar i vyn");
@@ -558,6 +545,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
+                Calendar oldDate = mWeekView.getFirstVisibleDay();
+
                 Calendar todayDate = Calendar.getInstance();
                 todayDate.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
 
@@ -565,7 +554,38 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 mWeekView.setNumberOfVisibleDays(numberOfVisibleDays);
                 Calendar newDate = mWeekView.getFirstVisibleDay();
 
+                //Log.i("prevNumOfVisDays", previousNumberOfVisibleDays + "");
+                //Log.i("NumOfVisDays", numberOfVisibleDays + "");
+
+
+              /*  if(previousNumberOfVisibleDays == 1 && numberOfVisibleDays == 3) {
+                    Log.i("NewDate", newDate.get(Calendar.DAY_OF_MONTH) + "");
+
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - (2*(oldDate.get(Calendar.DAY_OF_MONTH) - todayDate.get(Calendar.DAY_OF_MONTH))));
+
+                    Log.i("OldDate", oldDate.get(Calendar.DAY_OF_MONTH) + "");
+
+                    Log.i("todaydate", todayDate.get(Calendar.DAY_OF_MONTH) + "");
+
+
+                    Log.i("NewNewDate", newDate.get(Calendar.DAY_OF_MONTH) + "");
+
+
+                } else if(previousNumberOfVisibleDays == 1 && numberOfVisibleDays == 5) {
+                    newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - (2*2*(oldDate.get(Calendar.DAY_OF_MONTH) - todayDate.get(Calendar.DAY_OF_MONTH))));
+                }
+
+                if(previousNumberOfVisibleDays == 3 && numberOfVisibleDays == 1){
+
+                }*/
+
+                //Log.i("NewDate", newDate.get(Calendar.DAY_OF_MONTH) + "");
+
                 mWeekView.goToDate(newDate);
+
+
+                //Log.i("NewDate mWeekView", mWeekView.getFirstVisibleDay().get(Calendar.DAY_OF_MONTH) + "" );
+
 
                 mWeekView.goToHour(CalendarUtils.HOUR > 16 ? 16 : CalendarUtils.HOUR - 1);
                 hasOnMonthChange = false;
@@ -596,16 +616,24 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     private void onForwardCLick() {
         Calendar newDate = mWeekView.getFirstVisibleDay();
-        newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays);
-        mWeekView.goToDate(newDate);
+        if (numberOfVisibleDays == 1) {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + 1);
+        } else {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays);
+        }
 
+        mWeekView.goToDate(newDate);
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
     }
 
     private void onBackClick() {
         Calendar newDate = mWeekView.getFirstVisibleDay();
-        newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays);
+        if (numberOfVisibleDays == 1) {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - 1);
+        } else {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays);
+        }
 
         mWeekView.goToDate(newDate);
         hasOnMonthChange = false;
@@ -642,14 +670,17 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     //Dunno why it does not work..it saves it correctly in the model but the objects are still drawn in the calendar :(
     private void updateFilterSharedPreferences(){
-
+        //Log.i("CalendarFrag", "updateSP");
         sharedPref = getActivity().getSharedPreferences("calendarFilter", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
         Set<String> visibleCalSet = new HashSet<>();
 
+        //Log.i("CalendarFrag", "visiblecalendars= " + visibleCalendars.equals(null));
+
         for(Long id: visibleCalendars){
             visibleCalSet.add(id.toString());
+            //Log.i("CalendarFrag", "SP_adding" + " long:" + id + " string:"+ id.toString());
         }
         editor.putStringSet("visibleCalendars",visibleCalSet);
         editor.apply();
@@ -661,10 +692,4 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         //Log.i("CalendarFrag", "pause");
         //updateFilterSharedPreferences();
     }
-
-    @Override
-    public void onEmptyViewClicked(Calendar calendar) {
-        Log.i("Empty time", "time: " + calendar.getTime());
-    }
-
 }
