@@ -258,6 +258,7 @@ public class CalendarModel {
                 int color = c.getInt(CalendarUtils.EVENT_COLOR);
                 color = color == 0 ? c.getInt(CalendarUtils.CALENDAR_COLOR) : color;
                 filterItem.setColor(color);
+                filterItem.setChecked(isVisible == 1);
 
                 choiceItem = filterItem;
                 calendarsMap.put(id, name);
