@@ -236,8 +236,8 @@ public class CalendarModel {
             int hasWritersPermission = c.getInt(CalendarUtils.CALENDAR_ACCESS_LEVEL);
 
 
-
-            if (!calendarsMap.containsKey(id) && !calendarsMap.containsValue(name) && isVisible == 1) {
+            if (!calendarsMap.containsKey(id) && !calendarsMap.containsValue(name)) {
+            //if (!calendarsMap.containsKey(id) && !calendarsMap.containsValue(name) && isVisible == 1) {
                 filterItem.setTitle(name);
 
                 //only selects the calendars with editing and writeing permssion
