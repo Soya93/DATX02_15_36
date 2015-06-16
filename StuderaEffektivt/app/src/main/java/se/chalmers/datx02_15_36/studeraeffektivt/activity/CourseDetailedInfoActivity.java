@@ -294,7 +294,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
+                        dbAdapter.deleteCourseAssignmets(courseCode);
                         dbAdapter.deleteCourse(courseCode);
+                        dbAdapter.deleteTimeGoalCourse(courseCode);
                         Cursor cur = dbAdapter.getCourses();
                         while(cur.moveToNext()) {
                         }

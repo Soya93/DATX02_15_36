@@ -155,6 +155,28 @@ public class DBAdapter {
         }
     }
 
+    public long deleteCourseAssignmets(String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "'";
+
+        try{
+            return db.delete(dbHelper.TABLE_ASSIGNMENTS, selection, null);
+        }catch (Exception e){
+            return -1;
+        }
+
+    }
+    public long deleteTimeGoalCourse(String courseId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        try {
+            return db.delete(dbHelper.TABLE_TIMEONCOURSE, dbHelper.ASSIGNMENTS__id + "=" + "'" + courseId + "'", null);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+
     public long setDone(int assignmentId){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
