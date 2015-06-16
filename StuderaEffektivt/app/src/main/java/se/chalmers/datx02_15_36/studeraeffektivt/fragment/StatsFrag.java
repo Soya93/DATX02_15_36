@@ -78,9 +78,9 @@ public class StatsFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
         utils = new Utils();
-        //insertCourseDatorteknik();
+
         rootView = inflater.inflate(R.layout.activity_stats, container, false);
-        instantiateView(getHoursSpent(), getMinutesLeft(), getAssDone(), getAssLeft());
+        instantiateView(getHoursSpent(), getHoursLeft(), getAssDone(), getAssLeft());
         if (!isCourses()) {
             hideCharts();
         }
@@ -232,7 +232,7 @@ public class StatsFrag extends Fragment {
 
         //Set up pie chart data
         Log.d("stats", "pieHours spent: " + getHoursSpent());
-        Log.d("stats", "pieHours left: " + getMinutesLeft());
+        Log.d("stats", "pieHours left: " + getHoursLeft());
 
         ArrayList<Entry> pieEntries = new ArrayList<Entry>();
         Entry hoursLeftEntry = new Entry(hoursLeft, 1);
@@ -342,7 +342,7 @@ public class StatsFrag extends Fragment {
         return ((dbAdapter.getSpentTime(currCourse) / 60));
     }
 
-    private int getMinutesLeft() {
+    private int getHoursLeft() {
         int total = (dbAdapter.getTimeOnCourse(currCourse) / 60);
         int spent = (dbAdapter.getSpentTime(currCourse) / 60);
 
@@ -486,8 +486,6 @@ public class StatsFrag extends Fragment {
         }*/
     }
 
-    //Trying to commit.
-
     public void updateView() {
         setCourses();
         //Course has both sessions and assignments
@@ -513,7 +511,7 @@ public class StatsFrag extends Fragment {
 
 
     private void drawCharts() {
-        instantiatePieHours(getHoursSpent(), getMinutesLeft());
+        instantiatePieHours(getHoursSpent(), getHoursLeft());
         instantiatePieAssignments(getAssDone(), getAssLeft());
         instantiateLineChart();
         hideNoDataView();

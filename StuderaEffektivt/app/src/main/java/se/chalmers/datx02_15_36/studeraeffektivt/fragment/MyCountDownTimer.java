@@ -235,12 +235,13 @@ public class MyCountDownTimer extends Service {
 
     private void insertIntoDataBase(long millisPassed) {
         Log.d(ccode, "ccode");
-        millisPassed = millisPassed * 60; ///TODO: This is to make it in hours instead of minutes, for the show ;D
         Log.d("databas", "millispassed: "+ milliSecondsToMin(millisPassed));
 
         long inserted = dbAdapter.insertSession(ccode, utils.getCurrWeekNumber(), milliSecondsToMin(millisPassed));
         if (inserted > 0 && getBaseContext() != null) {
 
+            Log.d("timer", "session added");
+            /* This lists all sessions with the new óne last
             Cursor sessions = dbAdapter.getSessions(utils.getCurrWeekNumber());
             while (sessions.moveToNext()){
                 String timestamp = sessions.getString(sessions.getColumnIndex("timestamp"));
@@ -249,10 +250,8 @@ public class MyCountDownTimer extends Service {
                 Log.d("timer", "session added: "+timestamp);
                 Log.d("timer", "session minutes: "+minutes);
                 Log.d("timer", "session course: "+course);
-            }
+            }*/
 
-            //Toast toast = Toast.makeText(getBaseContext(), "Added session!", Toast.LENGTH_SHORT);
-            //toast.show();
         } else if (getBaseContext() != null) {
             Toast toast = Toast.makeText(getBaseContext(), "Failed to add a Session", Toast.LENGTH_SHORT);
             toast.show();
