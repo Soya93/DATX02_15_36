@@ -266,7 +266,12 @@ public class TimerFrag extends Fragment {
 
         initButtons();
         assignmentType = AssignmentType.OTHER;
-        spinner.setSelection(0);
+
+        if(getSharedCoursePos() != 22){
+            spinner.setSelection(getSharedCoursePos());
+        }else {
+            spinner.setSelection(0);
+        }
 
         if(spinner.getSelectedItem()!=null) {
             setSelectedCourse();
@@ -532,18 +537,21 @@ public class TimerFrag extends Fragment {
         sharedPref = getActivity().getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(ccodeExtraName, id);
+        editor.commit();
     }
 
     private int getSharedCoursePos(){
         sharedPref = getActivity().getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
-        return sharedPref.getInt(ccodeExtraName, 0);
+        return sharedPref.getInt(ccodeExtraName, 22);
     }
 
     public void updateView(){
         Log.d("sharedcourse", "timer updateview, sharedId: "+ getSharedCoursePos());
         updateTaskList(assignmentType, week);
-        if(spinner != null) {
+        if(spinner != null && getSharedCoursePos() != 22) {
             spinner.setSelection(getSharedCoursePos());
+        }else{
+            spinner.setSelection(0);
         }
     }
 

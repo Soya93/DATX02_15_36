@@ -107,7 +107,12 @@ public class StatsFrag extends Fragment {
         spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
         noDataView = (TextView) rootView.findViewById(R.id.stats_empty);
         setCourses();
-        spinner.setSelection(0);
+
+        if(getSharedCoursePos() != 22){
+            spinner.setSelection(getSharedCoursePos());
+        }else {
+            spinner.setSelection(0);
+        }
         drawCharts();
     }
 
@@ -502,14 +507,28 @@ public class StatsFrag extends Fragment {
         setCourses();
         //Course has both sessions and assignments
         if (isCourses() && courseHasSessions() && courseHasAsses()) {
-            spinner.setSelection(getSharedCoursePos());
+
+            if(getSharedCoursePos() != 22){
+                spinner.setSelection(getSharedCoursePos());
+            }else {
+                spinner.setSelection(0);
+            }
+
             drawCharts();
             //Course has sessions but no assignments
         } else if (isCourses() && courseHasSessions()) {
-            spinner.setSelection(getSharedCoursePos());
+            if(getSharedCoursePos() != 22){
+                spinner.setSelection(getSharedCoursePos());
+            }else {
+                spinner.setSelection(0);
+            }
             drawSessionsChart();
         } else if (isCourses()) {
-            spinner.setSelection(getSharedCoursePos());
+            if(getSharedCoursePos() != 22){
+                spinner.setSelection(getSharedCoursePos());
+            }else {
+                spinner.setSelection(0);
+            }
             hideCharts();
             showNoDataView();
             //No courses
@@ -522,6 +541,7 @@ public class StatsFrag extends Fragment {
         sharedPref = getActivity().getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(ccodeExtraName, pos);
+        editor.commit();
     }
 
     private int getSharedCoursePos(){
