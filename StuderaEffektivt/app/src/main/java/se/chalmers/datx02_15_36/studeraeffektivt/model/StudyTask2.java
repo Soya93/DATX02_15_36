@@ -19,12 +19,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import java.util.Random;
 
@@ -32,8 +28,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
-import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 
 /**
  * This class is for StudyTasks that when is checked is inserted in database
@@ -82,7 +77,7 @@ public class StudyTask2 extends CheckBox {
 
         if(isChecked()){
             Drawable checked = getResources().getDrawable(R.drawable.ic_toggle_check_box);
-            checked.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
+            checked.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
             buttonView.setButtonDrawable(checked);
         }else {
             Drawable unchecked = getResources().getDrawable(R.drawable.ic_toggle_check_box_outline_blank);
@@ -101,7 +96,7 @@ public class StudyTask2 extends CheckBox {
 
                 if (buttonView.isChecked()) {
                     Drawable checked = getResources().getDrawable(R.drawable.ic_toggle_check_box);
-                    checked.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
+                    checked.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
                     buttonView.setButtonDrawable(checked);
                     addToDatabase();
                 } else {

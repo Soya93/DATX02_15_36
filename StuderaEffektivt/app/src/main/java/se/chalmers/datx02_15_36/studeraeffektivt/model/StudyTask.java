@@ -16,13 +16,10 @@ package se.chalmers.datx02_15_36.studeraeffektivt.model;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.PopupMenu;
@@ -33,7 +30,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 /**
@@ -91,7 +88,7 @@ public class StudyTask extends CheckBox{
 
         if(isChecked()){
             Drawable checked = getResources().getDrawable(R.drawable.ic_toggle_check_box);
-            checked.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
+            checked.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
             buttonView.setButtonDrawable(checked);
         }else {
             Drawable unchecked = getResources().getDrawable(R.drawable.ic_toggle_check_box_outline_blank);
@@ -113,7 +110,7 @@ public class StudyTask extends CheckBox{
 
                 if (buttonView.isChecked()) {
                     Drawable checked = getResources().getDrawable(R.drawable.ic_toggle_check_box);
-                    checked.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
+                    checked.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
                     buttonView.setButtonDrawable(checked);
                     dbAdapter.setDone(getStudyTask().getIdNr());
                 }

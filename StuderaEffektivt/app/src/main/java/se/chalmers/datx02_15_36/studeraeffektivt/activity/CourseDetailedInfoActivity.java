@@ -17,7 +17,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -28,8 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -37,7 +34,7 @@ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CourseView;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
@@ -72,7 +69,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         courseName = getIntent().getStringExtra("CourseName");
         courseCode = getIntent().getStringExtra("CourseCode");
         actionBar.setTitle(courseName);
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
         //initFrag(getIntent().getStringExtra("ActivityTitle"));
         if (this != null) {
             dbAdapter = new DBAdapter(this);
@@ -197,9 +194,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         alertDialog.show();
 
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
         Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 
     private void changeStatus() {
@@ -247,9 +244,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         alertDialog.show();
 
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
         Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 
     public void goToTasks() {
@@ -307,8 +304,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
 
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
         Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 }

@@ -14,8 +14,6 @@ limitations under the License.
 
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -44,6 +42,7 @@ import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CoursePreferenceHelper;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.IntegerValueFormatter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.OneDecimalFormatter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
@@ -71,9 +70,7 @@ public class StatsFrag extends Fragment {
 
     private boolean hasInit;
 
-    private SharedPreferences sharedPref;
-    private String ccodePrefName = "CoursePref";
-    private String ccodeExtraName = "course";
+    private CoursePreferenceHelper cph;
 
 
     @Override
@@ -84,6 +81,7 @@ public class StatsFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
         utils = new Utils();
+        cph = CoursePreferenceHelper.getInstance(getActivity());
 
         rootView = inflater.inflate(R.layout.activity_stats, container, false);
         instantiateView(getHoursSpent(), getHoursLeft(), getAssDone(), getAssLeft());
@@ -108,11 +106,7 @@ public class StatsFrag extends Fragment {
         noDataView = (TextView) rootView.findViewById(R.id.stats_empty);
         setCourses();
 
-        if(getSharedCoursePos() != 22){
-            spinner.setSelection(getSharedCoursePos());
-        }else {
-            spinner.setSelection(0);
-        }
+        cph.setSpinnerCourseSelection(spinner);
         drawCharts();
     }
 
@@ -345,11 +339,11 @@ public class StatsFrag extends Fragment {
             String[] parts = temp.split(" ");
             this.currCourse = parts[0];
 
-            setSharedCoursePos(spinner.getSelectedItemPosition());
+            cph.setSharedCoursePos(spinner.getSelectedItemPosition());
 
             //Tests if the update of the sharedpref worked:
-            Log.d("sharedcourse", "Stats. set select: "+spinner.getSelectedItemPosition()
-                + " get select: "+ getSharedCoursePos());
+            Log.d("sharedcourse", "Stats. set select: " + spinner.getSelectedItemPosition()
+                    + " get select: " + cph.getSharedCoursePos());
         }
         drawCharts();
     }
@@ -503,50 +497,24 @@ public class StatsFrag extends Fragment {
     }
 
     public void updateView() {
-        Log.d("sharedcourse", "stats updateview, sharedId: "+ getSharedCoursePos());
+        Log.d("sharedcourse", "stats updateview, sharedId: " + cph.getSharedCoursePos());
         setCourses();
         //Course has both sessions and assignments
         if (isCourses() && courseHasSessions() && courseHasAsses()) {
-
-            if(getSharedCoursePos() != 22){
-                spinner.setSelection(getSharedCoursePos());
-            }else {
-                spinner.setSelection(0);
-            }
-
             drawCharts();
+            cph.setSpinnerCourseSelection(spinner);
             //Course has sessions but no assignments
         } else if (isCourses() && courseHasSessions()) {
-            if(getSharedCoursePos() != 22){
-                spinner.setSelection(getSharedCoursePos());
-            }else {
-                spinner.setSelection(0);
-            }
             drawSessionsChart();
+            cph.setSpinnerCourseSelection(spinner);
         } else if (isCourses()) {
-            if(getSharedCoursePos() != 22){
-                spinner.setSelection(getSharedCoursePos());
-            }else {
-                spinner.setSelection(0);
-            }
             hideCharts();
             showNoDataView();
+            cph.setSpinnerCourseSelection(spinner);
             //No courses
         } else {
             showNoCourseView();
         }
-    }
-
-    private void setSharedCoursePos(int pos){
-        sharedPref = getActivity().getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(ccodeExtraName, pos);
-        editor.commit();
-    }
-
-    private int getSharedCoursePos(){
-        sharedPref = getActivity().getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
-        return sharedPref.getInt(ccodeExtraName, 22);
     }
 
     private void drawSessionsChart() {

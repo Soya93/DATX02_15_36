@@ -41,7 +41,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.HomeAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeEventItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 
 public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -93,7 +93,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         homeFAB.setBackgroundColor(Color.parseColor("#ffffff"));
 
         Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
-        calendarIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP);
+        calendarIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
         homeFAB.setImageDrawable(calendarIcon);
         //homeFAB.setBackgroundColor(Color.parseColor(Constants.primaryColor));
 

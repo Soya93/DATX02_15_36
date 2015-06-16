@@ -19,20 +19,13 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,10 +33,9 @@ import java.util.List;
 import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 
 
 public class CourseActivity extends ActionBarActivity {
@@ -66,7 +58,7 @@ public class CourseActivity extends ActionBarActivity {
         getSupportActionBar().setTitle("Mina avslutade Kurser");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         android.support.v7.app.ActionBar bar = getSupportActionBar();
-        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
+        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
 
         //Create the database access point but check if the context is null first.
         if (this != null) {

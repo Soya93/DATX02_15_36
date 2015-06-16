@@ -19,13 +19,9 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import android.content.Intent;
     import android.database.Cursor;
     import android.graphics.Color;
-    import android.graphics.PorterDuff;
-    import android.graphics.drawable.Drawable;
     import android.net.Uri;
     import android.os.Bundle;
     import android.support.v4.app.Fragment;
-    import android.support.v4.app.FragmentManager;
-    import android.support.v4.app.FragmentTransaction;
     import android.util.Log;
     import android.view.LayoutInflater;
     import android.view.View;
@@ -33,12 +29,9 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import android.widget.AdapterView;
     import android.widget.Button;
     import android.widget.EditText;
-    import android.widget.ImageView;
     import android.widget.ListView;
     import android.widget.SimpleAdapter;
     import android.widget.Toast;
-
-    import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
     import java.util.ArrayList;
     import java.util.HashMap;
@@ -52,7 +45,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.TechsNTipsActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
     import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
-    import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+    import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 
 public class MyProfileFrag extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -297,9 +290,9 @@ public class MyProfileFrag extends Fragment {
 
 
         Button okButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
-        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
         Button cancelButton = d.getButton(DialogInterface.BUTTON_NEGATIVE);
-        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
 
         editTextCoursecode = (EditText) d.findViewById(R.id.codeEditText);
         editTextCoursename = (EditText) d.findViewById(R.id.nameEditText);

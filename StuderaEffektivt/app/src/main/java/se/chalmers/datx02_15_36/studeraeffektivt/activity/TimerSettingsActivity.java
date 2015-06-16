@@ -15,7 +15,6 @@ limitations under the License.
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -36,13 +35,11 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.ListAdapter;
 
 
@@ -117,7 +114,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_timersettings);
         context = this;
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Ställ in tid");
         listView = (ListView) findViewById(R.id.listView);
@@ -242,9 +239,9 @@ public class TimerSettingsActivity extends ActionBarActivity {
         alertDialog.show();
 
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
         Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 
 

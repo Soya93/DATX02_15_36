@@ -17,7 +17,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -27,8 +26,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -54,9 +51,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.fragment.HomeFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.StatsFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TimerFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.TabAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.NotificationBroadcastReceiver;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.NotificationReceiver;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.NotificationService;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.RepetitionReminder;
 
@@ -101,7 +97,7 @@ public class MainActivity extends ActionBarActivity {
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setHomeButtonEnabled(false);
-        primaryColorDrawable = new ColorDrawable(Color.parseColor(Constants.primaryColor));
+        primaryColorDrawable = new ColorDrawable(Color.parseColor(Colors.primaryColor));
         actionBar.setBackgroundDrawable(primaryColorDrawable);
         actionBar.setSplitBackgroundDrawable(primaryColorDrawable);
         actionBar.setStackedBackgroundDrawable(primaryColorDrawable);
@@ -132,7 +128,7 @@ public class MainActivity extends ActionBarActivity {
         //Setting the buttons for the calendar menu
         ImageView icon = new ImageView(this); // Create an icon
         Drawable moreIcon = getResources().getDrawable( R.drawable.ic_navigation_more_vert).mutate();
-        moreIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP);
+        moreIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
         icon.setImageDrawable(moreIcon);
 
 
@@ -144,7 +140,7 @@ public class MainActivity extends ActionBarActivity {
         // repeat many times:
         ImageView itemIcon1 = new ImageView(this);
         Drawable plusIcon = getResources().getDrawable( R.drawable.ic_content_add).mutate();
-        plusIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        plusIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon1.setImageDrawable(plusIcon);
         button1 = itemBuilder.setContentView(itemIcon1).build();
         button1.setTag(1);
@@ -152,7 +148,7 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView itemIcon2 = new ImageView(this);
         Drawable repeatIcon = getResources().getDrawable( R.drawable.ic_av_loop).mutate();
-        repeatIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        repeatIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon2.setImageDrawable(repeatIcon);
         button2 = itemBuilder.setContentView(itemIcon2).build();
         button2.setTag(2);
@@ -160,7 +156,7 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView itemIcon3 = new ImageView(this);
         Drawable nbrOfVisibleDaysIcon = getResources().getDrawable( R.drawable.ic_image_filter).mutate();
-        nbrOfVisibleDaysIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        nbrOfVisibleDaysIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon3.setImageDrawable(nbrOfVisibleDaysIcon);
         button3 = itemBuilder.setContentView(itemIcon3).build();
         button3.setTag(3);
@@ -168,7 +164,7 @@ public class MainActivity extends ActionBarActivity {
 
         ImageView itemIcon4 = new ImageView(this);
         Drawable calendarsIcon = getResources().getDrawable( R.drawable.ic_cal2).mutate();
-        calendarsIcon.setColorFilter(Color.parseColor(Constants.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        calendarsIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon4.setImageDrawable(calendarsIcon);
         button4 = itemBuilder.setContentView(itemIcon4).build();
         button4.setTag(4);
@@ -192,15 +188,15 @@ public class MainActivity extends ActionBarActivity {
 
         //Sets the unselected tab icons to a lighter blue color
         Drawable homeUns = getResources().getDrawable( R.drawable.ic_home1).mutate();
-        homeUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
+        homeUns.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
         Drawable calUns = getResources().getDrawable( R.drawable.ic_cal2).mutate();
-        calUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
+        calUns.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
         Drawable timerUns = getResources().getDrawable( R.drawable.ic_timer).mutate();
-        timerUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
+        timerUns.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
         Drawable statsUns = getResources().getDrawable( R.drawable.ic_action_trending_up).mutate();
-        statsUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
+        statsUns.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
         Drawable myProfileUns = getResources().getDrawable(R.drawable.ic_examhat).mutate();
-        myProfileUns.setColorFilter(Color.parseColor(Constants.secondaryColor), PorterDuff.Mode.SRC_ATOP);
+        myProfileUns.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
 
 
         final Drawable[] ICONS = new Drawable[]{

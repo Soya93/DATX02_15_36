@@ -24,8 +24,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,11 +39,9 @@ import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.RepetitionReminder;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 public class RepetitionActivity extends ActionBarActivity {
@@ -68,7 +64,7 @@ public class RepetitionActivity extends ActionBarActivity {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Repetition");
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
 
         cntxofParent = RepetitionActivity.this;
 

@@ -51,6 +51,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CoursePreferenceHelper;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
@@ -97,8 +98,8 @@ public class TimerFrag extends Fragment {
 
     private SharedPreferences sharedPref;
     private String buttonPrefName = "ButtonPref";
-    private String ccodePrefName = "CoursePref";
-    private String ccodeExtraName = "course";
+
+    private CoursePreferenceHelper cph;
 
     private boolean isActivityRunning = false;
 
@@ -144,6 +145,8 @@ public class TimerFrag extends Fragment {
             dbAdapter = new DBAdapter(getActivity());
         }
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        cph = CoursePreferenceHelper.getInstance(getActivity());
+
         instantiate();
         return rootView;
     }
@@ -267,11 +270,7 @@ public class TimerFrag extends Fragment {
         initButtons();
         assignmentType = AssignmentType.OTHER;
 
-        if(getSharedCoursePos() != 22){
-            spinner.setSelection(getSharedCoursePos());
-        }else {
-            spinner.setSelection(0);
-        }
+        cph.setSpinnerCourseSelection(spinner);
 
         if(spinner.getSelectedItem()!=null) {
             setSelectedCourse();
@@ -310,11 +309,11 @@ public class TimerFrag extends Fragment {
             String[] parts = temp.split(" ");
             this.ccode = parts[0];
 
-            setSharedCoursePos(spinner.getSelectedItemPosition());
+            cph.setSharedCoursePos(spinner.getSelectedItemPosition());
 
             //Tests if the update of the sharedpref worked:
             Log.d("sharedcourse", "Timer. set select: "+spinner.getSelectedItemPosition()
-                    + " get select: "+ getSharedCoursePos());
+                    + " get select: "+ cph.getSharedCoursePos());
         }
     }
 
@@ -533,26 +532,10 @@ public class TimerFrag extends Fragment {
         return isInitialized;
     }
 
-    private void setSharedCoursePos(int id){
-        sharedPref = getActivity().getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(ccodeExtraName, id);
-        editor.commit();
-    }
-
-    private int getSharedCoursePos(){
-        sharedPref = getActivity().getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
-        return sharedPref.getInt(ccodeExtraName, 22);
-    }
-
     public void updateView(){
-        Log.d("sharedcourse", "timer updateview, sharedId: "+ getSharedCoursePos());
+        Log.d("sharedcourse", "timer updateview, sharedId: "+ cph.getSharedCoursePos());
         updateTaskList(assignmentType, week);
-        if(spinner != null && getSharedCoursePos() != 22) {
-            spinner.setSelection(getSharedCoursePos());
-        }else{
-            spinner.setSelection(0);
-        }
+        cph.setSpinnerCourseSelection(spinner);
     }
 
 }

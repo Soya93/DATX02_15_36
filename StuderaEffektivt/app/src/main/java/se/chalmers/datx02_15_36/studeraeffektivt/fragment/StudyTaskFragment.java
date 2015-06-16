@@ -14,8 +14,6 @@ limitations under the License.
 
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,7 +32,6 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 
 /**
  * A simple {@link Fragment} subclass.

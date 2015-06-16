@@ -21,15 +21,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TechniquesFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TipFrag;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 
 public class TechsNTipsActivity extends ActionBarActivity {
 
@@ -44,7 +41,7 @@ public class TechsNTipsActivity extends ActionBarActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         title = getIntent().getStringExtra("ActivityTitle");
         actionBar.setTitle(title);
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
         initFrag(getIntent().getStringExtra("ActivityTitle"));
     }
 

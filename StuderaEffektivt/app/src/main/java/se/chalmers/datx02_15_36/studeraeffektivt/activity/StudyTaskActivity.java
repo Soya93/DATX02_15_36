@@ -20,10 +20,7 @@ Uppdatera då man kryssar av en ruta, någon sortering
  */
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -31,7 +28,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,7 +49,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -62,7 +57,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CoursePreferenceHelper;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
@@ -89,9 +85,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     private int chosenWeek = Utils.getCurrWeekNumber();
 
-    private SharedPreferences sharedPref;
-    private String ccodePrefName = "CoursePref";
-    private String ccodeExtraName = "course";
+    private CoursePreferenceHelper cph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +93,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         setContentView(R.layout.activity_study_task);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Lägg till uppgifter");
 
@@ -107,6 +101,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         if (this != null) {
             dbAdapter = new DBAdapter(this);
         }
+        cph = CoursePreferenceHelper.getInstance(getApplicationContext());
         initComponents();
     }
 
@@ -155,8 +150,8 @@ public class StudyTaskActivity extends ActionBarActivity {
         taskPartsLabel = (TextView) findViewById(R.id.taskPartsLabel);
 
         readOrTaskAssignment.setChecked(true);
-        taskInput.getBackground().setColorFilter(Color.parseColor(Constants.lightGreyColor), PorterDuff.Mode.SRC_ATOP);
-        taskParts.getBackground().setColorFilter(Color.parseColor(Constants.lightGreyColor), PorterDuff.Mode.SRC_ATOP);
+        taskInput.getBackground().setColorFilter(Color.parseColor(Colors.lightGreyColor), PorterDuff.Mode.SRC_ATOP);
+        taskParts.getBackground().setColorFilter(Color.parseColor(Colors.lightGreyColor), PorterDuff.Mode.SRC_ATOP);
 
 
 
@@ -185,11 +180,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         setCourses();
 
-        if(getSharedCoursePos() != 22){
-            courseSpinner.setSelection(getSharedCoursePos());
-        }else {
-            courseSpinner.setSelection(0);
-        }
+        cph.setSpinnerCourseSelection(courseSpinner);
 
         chapterSpinner.setSelection(0);
         weekSpinner.setSelection(0);
@@ -291,10 +282,10 @@ public class StudyTaskActivity extends ActionBarActivity {
             this.courseCode = parts[0];
             Log.d("selected course", courseCode);
 
-            setSharedCoursePos(courseSpinner.getSelectedItemPosition());
+            cph.setSharedCoursePos(courseSpinner.getSelectedItemPosition());
             //Tests if the update of the sharedpref worked:
             Log.d("sharedcourse", "Timer. set select: "+courseSpinner.getSelectedItemPosition()
-                    + " == "+ getSharedCoursePos());
+                    + " == "+ cph.getSharedCoursePos());
 
             listOfTasks.removeAllViews();
             listOfReadAssignments.removeAllViews();
@@ -586,17 +577,5 @@ public class StudyTaskActivity extends ActionBarActivity {
             super.onPostExecute(result);
         }
 
-    }
-
-    private void setSharedCoursePos(int pos){
-        sharedPref = this.getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(ccodeExtraName, pos);
-        editor.commit();
-    }
-
-    private int getSharedCoursePos(){
-        sharedPref = this.getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
-        return sharedPref.getInt(ccodeExtraName, 22);
     }
 }

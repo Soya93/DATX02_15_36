@@ -27,7 +27,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +59,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.adapter.CalendarsFilterAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 
 ;
@@ -237,7 +236,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.setEventMarginVertical(20);
         mWeekView.setBackgroundColor(Color.WHITE);
         mWeekView.setTodayHeaderTextColor(Color.MAGENTA);
-        mWeekView.setTodayBackgroundColor(Color.parseColor(Constants.secondaryColor));
+        mWeekView.setTodayBackgroundColor(Color.parseColor(Colors.secondaryColor));
 
 
         //actionButton.setOnClickListener(myButtonHandler);
@@ -316,9 +315,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         alertDialog.show();
 
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
         Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 
     //Opens an dialog when pressing the buttom for adding a new event
@@ -378,9 +377,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         alertDialog.show();
 
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
         Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 
     //Removes an event from the calendar
@@ -519,9 +518,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         alertDialog.show();
 
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
         Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -573,9 +572,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         alertDialog.show();
 
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        okButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
         Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        cancelButton.setTextColor(Color.parseColor(Constants.primaryDarkColor));
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 
     private int getIndexOfVisibleDays() {

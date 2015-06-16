@@ -14,9 +14,6 @@ limitations under the License.
 
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -29,7 +26,6 @@ import android.widget.TextView;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.IO.TipHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
 
 /**
  * A class displaying the text of an studytechnique tip.

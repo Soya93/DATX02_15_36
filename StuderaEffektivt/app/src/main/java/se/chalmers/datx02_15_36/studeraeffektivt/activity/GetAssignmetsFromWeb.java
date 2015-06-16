@@ -22,8 +22,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -32,20 +30,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask2;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Constants;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
@@ -75,7 +64,7 @@ public class GetAssignmetsFromWeb extends ActionBarActivity {
         if (this != null) {
             dbAdapter = new DBAdapter(this);
         }
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.primaryColor)));
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
 
 
         new GetAllAssignments().execute(courseCode);
