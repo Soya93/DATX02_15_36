@@ -620,24 +620,16 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     private void onForwardCLick() {
         Calendar newDate = mWeekView.getFirstVisibleDay();
-        if (numberOfVisibleDays == 1) {
-            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + 1);
-        } else {
-            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays);
-        }
-
+        newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays);
         mWeekView.goToDate(newDate);
+
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
     }
 
     private void onBackClick() {
         Calendar newDate = mWeekView.getFirstVisibleDay();
-        if (numberOfVisibleDays == 1) {
-            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - 1);
-        } else {
-            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays);
-        }
+        newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) - numberOfVisibleDays);
 
         mWeekView.goToDate(newDate);
         hasOnMonthChange = false;
