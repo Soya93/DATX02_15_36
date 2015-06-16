@@ -123,7 +123,7 @@ public class CalendarUtils {
         cal.set(Calendar.HOUR_OF_DAY, eventH - todayH);
         cal.set(Calendar.MINUTE, eventM - todayM);
 
-        return  cal.getTimeInMillis();
+        return cal.getTimeInMillis();
     }
 
     public static long getTimeUntilTomorrow(long tomorrowMillis){
@@ -166,16 +166,20 @@ public class CalendarUtils {
     }
 
     public static boolean isOnGoing(long eventStart, long eventEnd){
+        update();
         cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
         int nowInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
-        int leftMinutes = (24*60) - ((cal.get(Calendar.HOUR_OF_DAY)*60) + cal.get(Calendar.MINUTE));
+        int minLeftOfToday = (24*60) - ((cal.get(Calendar.HOUR_OF_DAY)*60) + cal.get(Calendar.MINUTE));
 
         cal.setTimeInMillis(eventEnd);
         int endTimeInMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
 
-        cal.setTimeInMillis(getTimeToEventStart(eventStart));
-        int toEventStartMinutes = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+        cal.setTimeInMillis(eventStart);
+        int startTimeMin = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
 
-        return toEventStartMinutes > leftMinutes && endTimeInMin > nowInMin;
+        cal.setTimeInMillis(getTimeToEventStart(eventStart));
+        int minToEventStart = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
+
+        return minToEventStart > minLeftOfToday && startTimeMin <= nowInMin && endTimeInMin > nowInMin;
     }
 }
