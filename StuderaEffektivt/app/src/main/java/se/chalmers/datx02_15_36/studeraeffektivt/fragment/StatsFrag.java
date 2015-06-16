@@ -526,7 +526,7 @@ public class StatsFrag extends Fragment {
 
     private int getSharedCoursePos(){
         sharedPref = getActivity().getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
-        return sharedPref.getInt(ccodeExtraName, 0);
+        return sharedPref.getInt(ccodeExtraName, 22);
     }
 
     private void drawSessionsChart() {
