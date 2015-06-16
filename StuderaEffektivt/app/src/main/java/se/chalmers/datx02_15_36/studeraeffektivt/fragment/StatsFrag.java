@@ -489,6 +489,8 @@ public class StatsFrag extends Fragment {
         }*/
     }
 
+    //Trying to commit.
+
     public void updateView() {
         setCourses();
         //Course has both sessions and assignments
