@@ -103,6 +103,7 @@ public class TimerFrag extends Fragment {
     private Handler serviceHandler;
     private SharedPreferences sharedPref;
     private String prefName = "ButtonPref";
+    private View.OnClickListener textViewListner;
 
     private boolean isActivyRunning = false;
 
@@ -161,7 +162,7 @@ public class TimerFrag extends Fragment {
         int studyHour = sharedPref.getInt("studyHour", -1);
         int pauseMin = sharedPref.getInt("pauseMin", -1);
         int pauseHour = sharedPref.getInt("pauseHour", -1);
-        reps = sharedPref.getInt("REPS",1);
+        reps = sharedPref.getInt("reps",1);
         default_studyTime = new Time(0, 25);
         default_pauseTime = new Time(0, 5);
         if (studyMin != -1 ) {
@@ -201,6 +202,7 @@ public class TimerFrag extends Fragment {
 
         }
           else{
+                setTextViewClick();
                 startButton.setImageResource(R.drawable.ic_action_play);
                  getTimeFromTimerSettings();
                 startSetTimerView();
@@ -242,13 +244,6 @@ public class TimerFrag extends Fragment {
 
     private void instantiate() {
         textView = (TextView) rootView.findViewById(R.id.textView);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(),TimerSettingsActivity.class);
-                startActivity(i);
-            }
-        });
         spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         taskList = (FlowLayout) rootView.findViewById(R.id.taskList);
@@ -307,8 +302,7 @@ public class TimerFrag extends Fragment {
 
 
     public void startTimer() {
-        Log.d("buttonId",String.valueOf(buttonId == R.drawable.ic_action_play));
-        Log.d("hasbeenPause",String.valueOf(hasBeenPaused));
+        textView.setOnClickListener(null);
         if (hasBeenStarted()) {
             spinner.setEnabled(false);
             sendDataToService();
@@ -377,6 +371,7 @@ public class TimerFrag extends Fragment {
         hasBeenPaused = false;
         progressBar.setProgress(1000);
         startButton.setImageResource(buttonId);
+        setTextViewClick();
         progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
         startSetTimerView();
         if(isMyServiceRunning(MyCountDownTimer.class)) {
@@ -415,9 +410,6 @@ public class TimerFrag extends Fragment {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean("hasPaused", hasBeenPaused);
         editor.putInt("buttonId",buttonId);
-
-
-
         if (hasBeenPaused) {
             editor.putLong("timeLeft", serviceInt);
             Log.d("phaceIntDestroy",String.valueOf(phaceInt));
@@ -503,6 +495,18 @@ public class TimerFrag extends Fragment {
         trackStates.addState(new int[]{android.R.attr.state_checked}, new ColorDrawable(color1));
         trackStates.addState(new int[]{}, new ColorDrawable(color2)); // this one has to come last
         taskSwitch.setTrackDrawable(trackStates);*/
+    }
+
+    private void setTextViewClick() {
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(),TimerSettingsActivity.class);
+                startActivity(i);
+            }
+        });
+
     }
 
     private void colorNextButtonGrey(){
