@@ -123,8 +123,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             syncText.setVisibility(View.INVISIBLE);
         }
         setTodaysEvents();
-        Log.i("homefrag", "updateview");
-
     }
 
     public void setContentResolver(ContentResolver cr) {

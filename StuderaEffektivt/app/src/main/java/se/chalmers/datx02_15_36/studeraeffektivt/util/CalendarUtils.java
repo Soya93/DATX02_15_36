@@ -94,7 +94,6 @@ public class CalendarUtils {
         HOUR = newCal.get(Calendar.HOUR_OF_DAY);
         MINUTE = newCal.get(Calendar.MINUTE);
         TODAY_IN_MILLIS = newCal.getTimeInMillis();
-
     }
 
 
@@ -117,6 +116,7 @@ public class CalendarUtils {
         int eventH = cal.get(Calendar.HOUR_OF_DAY);
         int eventM = cal.get(Calendar.MINUTE);
 
+        update();
         cal.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
         int todayH = cal.get(Calendar.HOUR_OF_DAY);
         int todayM = cal.get(Calendar.MINUTE);

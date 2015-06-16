@@ -17,7 +17,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -28,8 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -88,14 +85,10 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         Log.i("CourseDetailedInfo course status", status);
 
 
-
         isActiveCourse = (status.toLowerCase().equals("undone"));
         courseView = new CourseView();
 
     }
-
-
-
 
 
     // listener for FAB menu
@@ -108,7 +101,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         public void onMenuClosed(FloatingActionMenu floatingActionMenu) {
         }
     };
-
 
 
     @Override
@@ -130,10 +122,10 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         return true;
     }
 
-    private void updateText(){
-        if(isActiveCourse){
+    private void updateText() {
+        if (isActiveCourse) {
             menu.getItem(3).setTitle("Markera som avslutad");
-        }else {
+        } else {
             menu.getItem(3).setTitle("Markera som pågående");
         }
     }
@@ -231,15 +223,15 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
 
                 dbAdapter.deleteCourse(courseCode);
-                        dbAdapter.deleteAssignments(courseCode);
-                        Toast.makeText(getApplicationContext(), courseName + " borttagen",
-                                Toast.LENGTH_LONG).show();
-                        finish();
+                dbAdapter.deleteAssignments(courseCode);
+                Toast.makeText(getApplicationContext(), courseName + " borttagen",
+                        Toast.LENGTH_LONG).show();
+                finish();
             }
         });
-           builder.setNegativeButton("Nej", new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int whichButton) {
-                   //No button clicked
+        builder.setNegativeButton("Nej", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //No button clicked
             }
         });
 
@@ -288,7 +280,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 if (add > 0) {
 
                     int mins = dbAdapter.getTimeOnCourse(courseCode);
-                    toast = Toast.makeText(getBaseContext(), "Ditt mål är nu att lägga " + mins + " minuter på " + courseCode + " i veckan.", Toast.LENGTH_LONG);
+                    toast = Toast.makeText(getBaseContext(), "Ditt mål är nu att lägga " + mins + " timmar på " + courseCode + " i veckan.", Toast.LENGTH_LONG);
                 } else {
                     toast = Toast.makeText(getBaseContext(), "Det gick inte att lägga till.", Toast.LENGTH_SHORT);
                 }
