@@ -48,7 +48,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private View rootView;
     private Context context;
     private CalendarFrag calendarFrag;
-    private boolean hasInit = false;
     private FloatingActionButton homeFAB;
     private ContentResolver cr;
     private ListView listView;
@@ -74,12 +73,9 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
 
     private void initComponents(View view) {
-        hasInit = true;
-
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v.getTag() == homeFAB.getTag()) {
-                    Log.i("homefrag", "button");
                     calendarFrag.changeVisibleCalendars();
                     updateView();
                 }
@@ -129,12 +125,12 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         this.cr = cr;
     }
 
-    public void setCalendarFrag(CalendarFrag calendarFrag) {
-        this.calendarFrag = calendarFrag;
+    public void setContext(Context c) {
+        this.context = c;
     }
 
-    private ArrayList<HomeEventItem> getEvents() {
-        return calendarFrag.getCalendarModel().readEventsToday(cr);
+    public void setCalendarFrag(CalendarFrag calendarFrag) {
+        this.calendarFrag = calendarFrag;
     }
 
     public void setTodaysEvents() {
@@ -171,6 +167,10 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         });
     }
 
+    private ArrayList<HomeEventItem> getEvents() {
+        return calendarFrag.getCalendarModel().readEventsToday(cr);
+    }
+
     public void openViewEventInfo(long eventId, long startTime, long endTime) {
 
         //Get a cursor for the detailed information of the event
@@ -188,9 +188,5 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         final int notification = calendarFrag.getCalendarModel().getNotificationTime(cr, startTime, endTime, eventId);
 
         calendarFrag.openViewEventInfo(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay, color);
-    }
-
-    public void setContext(Context c) {
-        this.context = c;
     }
 }
