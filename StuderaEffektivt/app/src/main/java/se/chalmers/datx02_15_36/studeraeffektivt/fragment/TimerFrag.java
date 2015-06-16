@@ -193,11 +193,9 @@ public class TimerFrag extends Fragment {
                 startButton.setImageResource(R.drawable.ic_action_play);
                 phaceInt = sharedPref.getInt("phaceInt",-1);
                 setTimerView(timeLeft);
-
             }
             if (buttonId == R.drawable.ic_action_pause){
                 startButton.setImageResource(R.drawable.ic_action_pause);
-
             }
 
         }
@@ -498,7 +496,6 @@ public class TimerFrag extends Fragment {
     }
 
     private void setTextViewClick() {
-
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
