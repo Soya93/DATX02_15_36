@@ -107,7 +107,7 @@ public class CalendarModel {
                 //set the time for the event
                 item.setTimeS(CalendarView.formatTime(startTime, cur.getLong(CalendarUtils.EVENT_END)));
 
-                //set the time to the start of the event
+                //set the time from now to the start of the event
                 item.setTimeToStartS(CalendarView.formatTimeToEvent(CalendarUtils.getTimeToEventStart(startTime)));
                 CalendarUtils.isOnGoing(startTime, endTime);
                 if (CalendarUtils.isOnGoing(startTime, endTime)) {

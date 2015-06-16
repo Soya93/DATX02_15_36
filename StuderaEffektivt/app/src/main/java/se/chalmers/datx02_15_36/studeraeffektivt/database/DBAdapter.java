@@ -53,15 +53,16 @@ public class DBAdapter {
         }
     }
 
-    public long deleteCourse(String ccode){
+    public long deleteCourse(String ccode) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        try{
-            return db.delete(dbHelper.TABLE_COURSES, dbHelper.COURSES__ccode + " = '"+ ccode + "'", null);
-        }catch (Exception e){
+        try {
+            return db.delete(dbHelper.TABLE_COURSES, dbHelper.COURSES__ccode + " = '" + ccode + "'", null);
+        } catch (Exception e) {
             return -1;
         }
     }
+
     // Avslutad kurs
     public long setCourseDone(String ccode) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -71,7 +72,7 @@ public class DBAdapter {
 
         try {
             return db.update(dbHelper.TABLE_COURSES, cv, dbHelper.COURSES__ccode + " = '" + ccode + "'", null);
-        }catch (Exception e){
+        } catch (Exception e) {
             return -1;
         }
     }
@@ -84,8 +85,8 @@ public class DBAdapter {
         cv.put(dbHelper.COURSES_cstatus, AssignmentStatus.UNDONE.toString());
 
         try {
-            return db.update(dbHelper.TABLE_COURSES, cv, dbHelper.COURSES__ccode + " = '"+ ccode + "'", null);
-        }catch (Exception e){
+            return db.update(dbHelper.TABLE_COURSES, cv, dbHelper.COURSES__ccode + " = '" + ccode + "'", null);
+        } catch (Exception e) {
             return -1;
         }
     }
@@ -96,7 +97,7 @@ public class DBAdapter {
         String selection = dbHelper.COURSES__ccode + " = '" + ccode + "'";
         Cursor cursor = db.query(dbHelper.TABLE_COURSES, null, selection, null, null, null, null);
         cursor.moveToNext();
-        Log.d(selection+"", "database");
+        Log.d(selection + "", "database");
         Log.i("Database", cursor.getString(2));
         return cursor.getString(2);
     }
@@ -137,7 +138,7 @@ public class DBAdapter {
         }
     }
 
-    public long insertAssignment(String courseCode,int id, int chapter, int week, String assNr,
+    public long insertAssignment(String courseCode, int id, int chapter, int week, String assNr,
                                  int startPage, int stopPage, AssignmentType type, AssignmentStatus status) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -159,12 +160,12 @@ public class DBAdapter {
         }
     }
 
-    public long deleteAssignment(int id){
+    public long deleteAssignment(int id) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        try{
-            return db.delete(dbHelper.TABLE_ASSIGNMENTS, dbHelper.ASSIGNMENTS__id+ "=" +id, null);
-        }catch (Exception e){
+        try {
+            return db.delete(dbHelper.TABLE_ASSIGNMENTS, dbHelper.ASSIGNMENTS__id + "=" + id, null);
+        } catch (Exception e) {
             return -1;
         }
     }
@@ -173,7 +174,7 @@ public class DBAdapter {
     public void deleteAssignments(String ccode) {
         Cursor cur = getAssignments(ccode);
 
-        while (cur.moveToNext()){
+        while (cur.moveToNext()) {
             try {
                 deleteAssignment(cur.getColumnIndex("ASSIGNMENTS__id"));
             } catch (Exception e) {
@@ -182,7 +183,7 @@ public class DBAdapter {
     }
 
 
-    public long setDone(int assignmentId){
+    public long setDone(int assignmentId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -190,12 +191,12 @@ public class DBAdapter {
 
         try {
             return db.update(dbHelper.TABLE_ASSIGNMENTS, cv, dbHelper.ASSIGNMENTS__id + "=" + assignmentId, null);
-        }catch (Exception e){
+        } catch (Exception e) {
             return -1;
         }
     }
 
-    public long setUndone(int assignmentId){
+    public long setUndone(int assignmentId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -204,7 +205,7 @@ public class DBAdapter {
 
         try {
             return db.update(dbHelper.TABLE_ASSIGNMENTS, cv, dbHelper.ASSIGNMENTS__id + "=" + assignmentId, null);
-        }catch (Exception e){
+        } catch (Exception e) {
             return -1;
         }
     }
@@ -217,8 +218,8 @@ public class DBAdapter {
             cv.put(dbHelper.TIMEONCOURSE__ccode, ccode);
             cv.put(dbHelper.TIMEONCOURSE_time, minutes);
 
-            return db.update(dbHelper.TABLE_TIMEONCOURSE, cv, null, null);
-            //return db.insert(dbHelper.TABLE_TIMEONCOURSE, null, cv);
+            //return db.update(dbHelper.TABLE_TIMEONCOURSE, cv, null, null);
+            return db.insert(dbHelper.TABLE_TIMEONCOURSE, null, cv);
         } catch (Exception e) {
             return -1;
         }
@@ -229,15 +230,15 @@ public class DBAdapter {
         return db.query(dbHelper.TABLE_ASSIGNMENTS, null, null, null, null, null, null);
     }
 
-    public Cursor getDoneAssignments(String ccode){
+    public Cursor getDoneAssignments(String ccode) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "' AND "
-                + dbHelper.ASSIGNMENTS_status + " = '" + AssignmentStatus.DONE.toString()+"'";
+                + dbHelper.ASSIGNMENTS_status + " = '" + AssignmentStatus.DONE.toString() + "'";
         return db.query(dbHelper.TABLE_ASSIGNMENTS, null, selection, null, null, null, null);
     }
 
-    public Cursor getAssignments(String ccode){
+    public Cursor getAssignments(String ccode) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "'";
@@ -249,21 +250,21 @@ public class DBAdapter {
         return db.query(dbHelper.TABLE_SESSIONS, null, null, null, null, null, null);
     }
 
-    public Cursor getSessions(int week){
+    public Cursor getSessions(int week) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         return db.query(dbHelper.TABLE_SESSIONS, null, dbHelper.SESSION_week + " = '" + week + "'", null, null, null, null);
     }
 
-    public Cursor getMinutes(int week, String ccode){
+    public Cursor getMinutes(int week, String ccode) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         String[] columns = {"minutes"};
 
-        return db.query(dbHelper.TABLE_SESSIONS,columns, dbHelper.SESSION_week + " = '" + week + "' AND "+
+        return db.query(dbHelper.TABLE_SESSIONS, columns, dbHelper.SESSION_week + " = '" + week + "' AND " +
                 dbHelper.SESSIONS_ccode + " = '" + ccode + "'", null, null, null, "minutes");
     }
 
-    public int getSmallestWeek(String ccode){
+    public int getSmallestWeek(String ccode) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         String[] columns = {"min(week)"};
@@ -273,7 +274,7 @@ public class DBAdapter {
         cursor.moveToFirst();
         if (cursor.getCount() == 0 || cursor.getInt(0) == 0) {
             return 53;
-        }else{
+        } else {
             return cursor.getInt(0);
         }
     }
@@ -398,7 +399,7 @@ public class DBAdapter {
                     + ASSIGNMENTS_ccode + " VARCHAR(50), "
                     + ASSIGNMENTS_chapter + " INT, "
                     + ASSIGNMENTS_week + " INT, "
-                    + ASSIGNMENTS_assNr +" VARCHAR(50), "
+                    + ASSIGNMENTS_assNr + " VARCHAR(50), "
                     + ASSIGNMENTS_startPage + " INT, "
                     + ASSIGNMENTS_stopPage + " INT, "
                     + ASSIGNMENTS_type + " VARCHAR(50), "
