@@ -27,6 +27,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +69,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
  * A class representing the controller of a calendar object
  */
 public class CalendarFrag extends Fragment implements WeekView.MonthChangeListener,
-        WeekView.EventClickListener, WeekView.EventLongPressListener {
+        WeekView.EventClickListener, WeekView.EventLongPressListener, WeekView.EmptyViewClickListener {
 
     public ContentResolver cr;
     boolean hasOnMonthChange;
@@ -208,6 +209,9 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         // Set long press listener for events.
         mWeekView.setEventLongPressListener(this);
+
+
+        mWeekView.setEmptyViewClickListener(this);
 
         // Set number of visible days in the calendar view
 
@@ -692,4 +696,10 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         //Log.i("CalendarFrag", "pause");
         //updateFilterSharedPreferences();
     }
+
+    @Override
+    public void onEmptyViewClicked(Calendar calendar) {
+        Log.i("Empty time", "time: " + calendar.getTime());
+    }
+
 }

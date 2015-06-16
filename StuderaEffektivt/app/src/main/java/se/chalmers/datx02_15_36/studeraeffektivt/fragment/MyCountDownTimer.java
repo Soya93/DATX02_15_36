@@ -76,6 +76,8 @@ public class MyCountDownTimer extends Service {
 
     private Utils utils;
 
+    public MyCountDownTimer(){}
+
     private  Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -258,11 +260,11 @@ public class MyCountDownTimer extends Service {
         }
 
     }
-    private int milliSecondsToMin(long milliSeconds) {
-        return ((int) milliSeconds / 1000 / 60);
+
+    public int milliSecondsToMin(long milliSeconds) {
+        double minutes = Math.ceil((double) milliSeconds / 1000 / 60);
+        return (int) minutes;
     }
-
-
 
     private void showPauseNotification() {
 
