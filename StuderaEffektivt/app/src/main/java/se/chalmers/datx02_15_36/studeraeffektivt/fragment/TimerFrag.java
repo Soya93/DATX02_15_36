@@ -98,6 +98,7 @@ public class TimerFrag extends Fragment {
 
     private SharedPreferences sharedPref;
     private String buttonPrefName = "ButtonPref";
+    private String weekPrefName = "WeekPref";
 
     private CoursePreferenceHelper cph;
 
@@ -264,7 +265,8 @@ public class TimerFrag extends Fragment {
 
         setCourses();
 
-        week = Utils.getCurrWeekNumber();
+        week = getChosenWeek();
+
         textViewWeek.setText("Vecka " + String.valueOf(week));
 
         initButtons();
@@ -483,6 +485,9 @@ public class TimerFrag extends Fragment {
                 week--;
                 textViewWeek.setText("Vecka " + String.valueOf(week));
                 updateTaskList(assignmentType, week);
+                setSharedPreferences();
+                Log.i("TimerFrag", "backwardclick" + week);
+
             }
         });
 
@@ -491,6 +496,8 @@ public class TimerFrag extends Fragment {
                 week++;
                 textViewWeek.setText("Vecka " + String.valueOf(week));
                 updateTaskList(assignmentType, week);
+                setSharedPreferences();
+                Log.i("TimerFrag", "forwardclick" + week);
             }
         });
 
@@ -498,6 +505,20 @@ public class TimerFrag extends Fragment {
 
         colorNextButtonGrey();
         colorPrevButtonGrey();
+    }
+
+    private void setSharedPreferences(){
+        sharedPref = getActivity().getSharedPreferences(weekPrefName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("weekInt", week);
+        editor.apply();
+        Log.i("TimerFrag", "added" + getChosenWeek());
+
+    }
+
+    private int getChosenWeek(){
+        sharedPref = getActivity().getSharedPreferences(weekPrefName, Context.MODE_PRIVATE);
+        return sharedPref.getInt("weekInt", Utils.getCurrWeekNumber());
     }
 
     private void colorSwitch(){
@@ -534,7 +555,7 @@ public class TimerFrag extends Fragment {
 
     public void updateView(){
         Log.d("sharedcourse", "timer updateview, sharedId: "+ cph.getSharedCoursePos());
-        updateTaskList(assignmentType, week);
+        updateTaskList(assignmentType, getChosenWeek());
         cph.setSpinnerCourseSelection(spinner);
     }
 

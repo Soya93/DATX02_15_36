@@ -228,7 +228,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
 
                 dbAdapter.deleteCourse(courseCode);
-                        dbAdapter.deleteCourseAssignmets(courseCode);
+                     //   dbAdapter.deleteCourseAssignmets(courseCode);
                         Toast.makeText(getApplicationContext(), courseName + " borttagen",
                                 Toast.LENGTH_LONG).show();
                         finish();
