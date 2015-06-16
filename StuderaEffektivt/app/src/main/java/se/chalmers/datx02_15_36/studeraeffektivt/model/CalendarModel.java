@@ -59,7 +59,6 @@ public class CalendarModel {
         //set end DAY
         endDay = Calendar.getInstance();
         endDay.setTime(futureDate(1));
-        calendarsFilterItems = new ArrayList<>();
         cur = null;
     }
 
@@ -206,6 +205,9 @@ public class CalendarModel {
     }
 
     public ArrayList<CalendarsFilterItem> getCalendarFilters() {
+        for(CalendarsFilterItem item: calendarsFilterItems){
+            Log.i("CalendarModel id: ", item.getCalID()+"");
+        }
         return calendarsFilterItems;
     }
 
@@ -236,8 +238,8 @@ public class CalendarModel {
             int hasWritersPermission = c.getInt(CalendarUtils.CALENDAR_ACCESS_LEVEL);
 
 
-
             if (!calendarsMap.containsKey(id) && !calendarsMap.containsValue(name) && isVisible == 1) {
+                filterItem.setCalID(id);
                 filterItem.setTitle(name);
 
                 //only selects the calendars with editing and writeing permssion

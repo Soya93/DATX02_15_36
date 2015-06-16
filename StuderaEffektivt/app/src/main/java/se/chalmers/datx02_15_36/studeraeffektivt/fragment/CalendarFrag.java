@@ -27,6 +27,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -111,20 +112,30 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         visibleCalendars = new LinkedList<>(cals.keySet());
 
         //Shared preferences stuff
-        //sharedPref = getActivity().getSharedPreferences("calendarFilter", Context.MODE_PRIVATE);
-        //Set<String> visibleCalSet = sharedPref.getStringSet("visibleCalendars", null);
+        sharedPref = getActivity().getSharedPreferences("calendarFilter", Context.MODE_PRIVATE);
+        Set<String> visibleCalSet = sharedPref.getStringSet("visibleCalendars", null);
 
         calendarsList = calendarModel.getCalendarFilters();
 
-       /* if(visibleCalSet!=null) {
-            //Log.i("CalendarFrag", "gettingSharedPrefAdding");
+        if(visibleCalSet!=null) {
+
+            //clear list with viseble calendars and add those from shared preferences.
+            visibleCalendars.clear();
             for (String id : visibleCalSet) {
                 visibleCalendars.add(Long.parseLong(id));
-                //Log.i("CalendarFrag", "List_adding" + " string:" + id + " long:" + Long.parseLong(id));
-            }
-        }*/
 
-        //Log.i("CalendarFrag","gettingSharedPrefAdding");
+            }
+
+
+            //update status on caenderas in the dialog view where calendars are filtered
+            for(CalendarsFilterItem item : calendarsList){
+                if(visibleCalendars.contains(item.getCalID())) {
+                    item.setChecked(true);
+                }else {
+                    item.setChecked(false);
+                }
+            }
+        }
 
         hasInit = true;
 
@@ -248,6 +259,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         super.onResume();
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
+        Log.i("Clanedarfrag", "onResume");
     }
 
     @Override
@@ -493,7 +505,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                     }
                 }
                 //Log.i("CalendarFrag", "updatedfilter");
-                //updateFilterSharedPreferences();
+                updateFilterSharedPreferences();
                 hasOnMonthChange = false;
                 mWeekView.notifyDatasetChanged();
                 alertDialog.dismiss();
@@ -670,17 +682,14 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     //Dunno why it does not work..it saves it correctly in the model but the objects are still drawn in the calendar :(
     private void updateFilterSharedPreferences(){
-        //Log.i("CalendarFrag", "updateSP");
+
         sharedPref = getActivity().getSharedPreferences("calendarFilter", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
         Set<String> visibleCalSet = new HashSet<>();
 
-        //Log.i("CalendarFrag", "visiblecalendars= " + visibleCalendars.equals(null));
-
         for(Long id: visibleCalendars){
             visibleCalSet.add(id.toString());
-            //Log.i("CalendarFrag", "SP_adding" + " long:" + id + " string:"+ id.toString());
         }
         editor.putStringSet("visibleCalendars",visibleCalSet);
         editor.apply();
