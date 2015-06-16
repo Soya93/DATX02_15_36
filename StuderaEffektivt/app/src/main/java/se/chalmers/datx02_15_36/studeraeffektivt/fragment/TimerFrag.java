@@ -15,10 +15,8 @@ limitations under the License.
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -40,7 +38,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -48,9 +45,6 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
-import java.util.HashMap;
-import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
@@ -98,15 +92,15 @@ public class TimerFrag extends Fragment {
     private Spinner spinner;
     private ProgressBar progressBar;
 
-
     private DBAdapter dbAdapter;
     private Handler serviceHandler;
+
     private SharedPreferences sharedPref;
-    private String prefName = "ButtonPref";
-    private View.OnClickListener textViewListner;
+    private String buttonPrefName = "ButtonPref";
+    private String ccodePrefName = "CoursePref";
+    private String ccodeExtraName = "course";
 
-    private boolean isActivyRunning = false;
-
+    private boolean isActivityRunning = false;
 
     private final Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
@@ -116,7 +110,7 @@ public class TimerFrag extends Fragment {
                     Bundle b = msg.getData();
                     serviceInt = b.getLong("timePassed", -1);
                     phaceInt = b.getInt("Phace", -1);
-                    if(isActivyRunning){
+                    if(isActivityRunning){
                     setTimerView(serviceInt);}
                     break;
                 case TIMER_FINISHED:
@@ -157,7 +151,7 @@ public class TimerFrag extends Fragment {
 
 
     private void getTimeFromTimerSettings() {
-        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        sharedPref = getActivity().getSharedPreferences(buttonPrefName, Context.MODE_PRIVATE);
         int studyMin = sharedPref.getInt("studyMin", -1);
         int studyHour = sharedPref.getInt("studyHour", -1);
         int pauseMin = sharedPref.getInt("pauseMin", -1);
@@ -175,12 +169,11 @@ public class TimerFrag extends Fragment {
 
     }
 
-
     public void onStart() {
         super.onStart();
         getTimeFromTimerSettings();
-        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
-        isActivyRunning = true;
+        sharedPref = getActivity().getSharedPreferences(buttonPrefName, Context.MODE_PRIVATE);
+        isActivityRunning = true;
         if (isMyServiceRunning(MyCountDownTimer.class)) {
             Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
             getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
@@ -261,10 +254,8 @@ public class TimerFrag extends Fragment {
         if(spinner.getSelectedItem()!=null) {
             setSelectedCourse();
             updateTaskList(assignmentType, week);
-        }else {
-
         }
-           isInitialized = true;
+        isInitialized = true;
 
     }
 
@@ -295,6 +286,12 @@ public class TimerFrag extends Fragment {
             String temp = spinner.getSelectedItem().toString();
             String[] parts = temp.split(" ");
             this.ccode = parts[0];
+
+            setSharedCoursePos(spinner.getSelectedItemPosition());
+
+            //Tests if the update of the sharedpref worked:
+            Log.d("sharedcourse", "Timer. set select: "+spinner.getSelectedItemPosition()
+                    + " get select: "+ getSharedCoursePos());
         }
     }
 
@@ -394,7 +391,7 @@ public class TimerFrag extends Fragment {
         }
 
         saveFragmentState();
-        isActivyRunning = false;
+        isActivityRunning = false;
     }
 
     private void removeMessages() {
@@ -404,7 +401,7 @@ public class TimerFrag extends Fragment {
     }
 
     private void saveFragmentState() {
-        sharedPref = getActivity().getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        sharedPref = getActivity().getSharedPreferences(buttonPrefName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean("hasPaused", hasBeenPaused);
         editor.putInt("buttonId",buttonId);
@@ -521,8 +518,23 @@ public class TimerFrag extends Fragment {
         return isInitialized;
     }
 
+    private void setSharedCoursePos(int id){
+        sharedPref = getActivity().getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(ccodeExtraName, id);
+    }
+
+    private int getSharedCoursePos(){
+        sharedPref = getActivity().getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
+        return sharedPref.getInt(ccodeExtraName, 0);
+    }
+
     public void updateView(){
+        Log.d("sharedcourse", "timer updateview, sharedId: "+ getSharedCoursePos());
         updateTaskList(assignmentType, week);
+        if(spinner != null) {
+            spinner.setSelection(getSharedCoursePos());
+        }
     }
 
 }

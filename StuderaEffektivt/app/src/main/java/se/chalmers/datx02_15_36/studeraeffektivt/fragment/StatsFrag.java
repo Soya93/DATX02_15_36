@@ -14,6 +14,8 @@ limitations under the License.
 
 package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -69,6 +71,10 @@ public class StatsFrag extends Fragment {
 
     private boolean hasInit;
 
+    private SharedPreferences sharedPref;
+    private String ccodePrefName = "CoursePref";
+    private String ccodeExtraName = "course";
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,7 +102,6 @@ public class StatsFrag extends Fragment {
     private void insertFakeData2() {
         insertTestDataToDB2("APA777");
     }
-
 
     private void instantiateView(int hoursDone, int hoursLeft, int assesDone, int assesLeft) {
         spinner = (Spinner) rootView.findViewById(R.id.spinner_stats);
@@ -334,6 +339,12 @@ public class StatsFrag extends Fragment {
             String temp = spinner.getSelectedItem().toString();
             String[] parts = temp.split(" ");
             this.currCourse = parts[0];
+
+            setSharedCoursePos(spinner.getSelectedItemPosition());
+
+            //Tests if the update of the sharedpref worked:
+            Log.d("sharedcourse", "Stats. set select: "+spinner.getSelectedItemPosition()
+                + " get select: "+ getSharedCoursePos());
         }
         drawCharts();
     }
@@ -487,20 +498,35 @@ public class StatsFrag extends Fragment {
     }
 
     public void updateView() {
+        Log.d("sharedcourse", "stats updateview, sharedId: "+ getSharedCoursePos());
         setCourses();
         //Course has both sessions and assignments
         if (isCourses() && courseHasSessions() && courseHasAsses()) {
+            spinner.setSelection(getSharedCoursePos());
             drawCharts();
-            //Course has both sessions but no assignments
+            //Course has sessions but no assignments
         } else if (isCourses() && courseHasSessions()) {
+            spinner.setSelection(getSharedCoursePos());
             drawSessionsChart();
         } else if (isCourses()) {
+            spinner.setSelection(getSharedCoursePos());
             hideCharts();
             showNoDataView();
             //No courses
         } else {
             showNoCourseView();
         }
+    }
+
+    private void setSharedCoursePos(int pos){
+        sharedPref = getActivity().getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(ccodeExtraName, pos);
+    }
+
+    private int getSharedCoursePos(){
+        sharedPref = getActivity().getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
+        return sharedPref.getInt(ccodeExtraName, 0);
     }
 
     private void drawSessionsChart() {
