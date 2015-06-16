@@ -543,7 +543,11 @@ public class EventActivity extends ActionBarActivity {
         description = ((EditText) findViewById(R.id.description_input)).getText().toString();
 
         if (isInAddMode || isInRepMode) {
-            calendarFrag.getCalendarModel().addEventAuto(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, calendarID, notification, isAllDayEvent);
+            Long id = calendarFrag.getCalendarModel().addEventAuto(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, calendarID, notification, isAllDayEvent);
+            Log.i("eventactivity", "startdate " + calStart.getTime());
+            Log.i("eventactivity", "endDate " + calEnd.getTime());
+            Log.i("eventactivity", "id " + id);
+
             if (isInRepMode) {
                 repetitionActivity.finish();
             }
