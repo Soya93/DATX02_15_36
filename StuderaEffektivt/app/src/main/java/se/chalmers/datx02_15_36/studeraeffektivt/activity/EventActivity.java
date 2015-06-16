@@ -437,7 +437,8 @@ public class EventActivity extends ActionBarActivity {
                     SimpleDateFormat startDateFormat = new SimpleDateFormat("E d MMM yyyy");
                     startDate.setText(startDateFormat.format((new Date(calStart.getTimeInMillis()))));
 
-                    calStart.set(startYear, startMonth+1, startDay);
+                    calStart.set(startYear, startMonth, startDay);
+                    Log.i("EventActivity", "start view month: " + startMonth);
 
                     if (endDay <= startDay && endMonth == startMonth && endYear == startYear || startMonth > endMonth || startYear > endYear) {
                         endDay = startDay;
@@ -447,7 +448,7 @@ public class EventActivity extends ActionBarActivity {
 
                         SimpleDateFormat endDateFormat = new SimpleDateFormat("E d MMM yyyy");
                         endDate.setText(endDateFormat.format((new Date(calEnd.getTimeInMillis()))));
-                        calEnd.set(startYear, startMonth+1, startDay);
+                        calEnd.set(startYear, startMonth, startDay);
 
                     }
                 } else {
@@ -463,8 +464,8 @@ public class EventActivity extends ActionBarActivity {
 
                     SimpleDateFormat endDateFormat = new SimpleDateFormat("E d MMM yyyy");
                     endDate.setText(endDateFormat.format((new Date(calEnd.getTimeInMillis()))));
-                    calEnd.set(endYear, endMonth+1, endDay);
-
+                    calEnd.set(endYear, endMonth, endDay);
+                    Log.i("EventActivity", "end view month: " + startMonth);
                 }
             }
         };
@@ -543,7 +544,11 @@ public class EventActivity extends ActionBarActivity {
         description = ((EditText) findViewById(R.id.description_input)).getText().toString();
 
         if (isInAddMode || isInRepMode) {
-            calendarFrag.getCalendarModel().addEventAuto(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, calendarID, notification, isAllDayEvent);
+            Long id = calendarFrag.getCalendarModel().addEventAuto(getContentResolver(), title, calStart.getTimeInMillis(), calEnd.getTimeInMillis(), location, description, calendarID, notification, isAllDayEvent);
+            Log.i("eventactivity", "startdate " + calStart.getTime());
+            Log.i("eventactivity", "endDate " + calEnd.getTime());
+            Log.i("eventactivity", "id " + id);
+
             if (isInRepMode) {
                 repetitionActivity.finish();
             }

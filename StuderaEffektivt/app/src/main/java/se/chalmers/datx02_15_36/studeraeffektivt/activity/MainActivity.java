@@ -21,7 +21,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -78,7 +77,6 @@ public class MainActivity extends ActionBarActivity {
     private View.OnClickListener fabHandler;
     private Drawable primaryColorDrawable;
     public NotificationBroadcastReceiver testReceiver;
-    private boolean hasInsertedFakeData = true;
 
 
     /**
@@ -191,7 +189,6 @@ public class MainActivity extends ActionBarActivity {
         homeFrag.setContext(this.getApplicationContext());
 
         timerFrag = (TimerFrag) mAdapter.getItem(2);
-        statsFrag = (StatsFrag) mAdapter.getItem(3);
 
         //Sets the unselected tab icons to a lighter blue color
         Drawable homeUns = getResources().getDrawable( R.drawable.ic_home1).mutate();
@@ -305,14 +302,9 @@ public class MainActivity extends ActionBarActivity {
                 if((position == 2) && timerFrag.hasInit()) {
                     timerFrag.updateView();
                 }
-                if((position == 1) && !hasInsertedFakeData) {
-                    statsFrag.addFakeData(new DBAdapter(getApplicationContext()));
-                    hasInsertedFakeData = true;
-                }
                 if((position == 3) && statsFrag.hasInit()) {
                     statsFrag.updateView();
                 }
-
             }
 
             @Override
