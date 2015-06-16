@@ -21,7 +21,9 @@ Uppdatera då man kryssar av en ruta, någon sortering
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -86,6 +88,10 @@ public class StudyTaskActivity extends ActionBarActivity {
     private DBAdapter dbAdapter;
 
     private int chosenWeek = Utils.getCurrWeekNumber();
+
+    private SharedPreferences sharedPref;
+    private String ccodePrefName = "CoursePref";
+    private String ccodeExtraName = "course";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,7 +184,13 @@ public class StudyTaskActivity extends ActionBarActivity {
 
 
         setCourses();
-        courseSpinner.setSelection(0);
+
+        if(getSharedCoursePos() != 22){
+            courseSpinner.setSelection(getSharedCoursePos());
+        }else {
+            courseSpinner.setSelection(0);
+        }
+
         chapterSpinner.setSelection(0);
         weekSpinner.setSelection(0);
         setSelectedCourse();
@@ -278,6 +290,11 @@ public class StudyTaskActivity extends ActionBarActivity {
             String[] parts = temp.split("-");
             this.courseCode = parts[0];
             Log.d("selected course", courseCode);
+
+            setSharedCoursePos(courseSpinner.getSelectedItemPosition());
+            //Tests if the update of the sharedpref worked:
+            Log.d("sharedcourse", "Timer. set select: "+courseSpinner.getSelectedItemPosition()
+                    + " == "+ getSharedCoursePos());
 
             listOfTasks.removeAllViews();
             listOfReadAssignments.removeAllViews();
@@ -569,5 +586,17 @@ public class StudyTaskActivity extends ActionBarActivity {
             super.onPostExecute(result);
         }
 
+    }
+
+    private void setSharedCoursePos(int pos){
+        sharedPref = this.getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(ccodeExtraName, pos);
+        editor.commit();
+    }
+
+    private int getSharedCoursePos(){
+        sharedPref = this.getSharedPreferences(ccodePrefName, Context.MODE_PRIVATE);
+        return sharedPref.getInt(ccodeExtraName, 22);
     }
 }
