@@ -166,11 +166,12 @@ public class DBAdapter {
         }
 
     }
-    public long deleteTimeGoalCourse(String courseId) {
+    public long deleteTimeGoalCourse(String ccode) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "'";
 
         try {
-            return db.delete(dbHelper.TABLE_TIMEONCOURSE, dbHelper.ASSIGNMENTS__id + "=" + "'" + courseId + "'", null);
+            return db.delete(dbHelper.TABLE_TIMEONCOURSE, selection, null);
         } catch (Exception e) {
             return -1;
         }
