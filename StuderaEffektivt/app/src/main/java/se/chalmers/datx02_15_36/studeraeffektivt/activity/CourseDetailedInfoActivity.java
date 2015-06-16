@@ -17,6 +17,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -221,9 +222,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-
+                dbAdapter.deleteAllCourseAssignmets(courseCode);
                 dbAdapter.deleteCourse(courseCode);
-                dbAdapter.deleteAssignments(courseCode);
+
                 Toast.makeText(getApplicationContext(), courseName + " borttagen",
                         Toast.LENGTH_LONG).show();
                 finish();

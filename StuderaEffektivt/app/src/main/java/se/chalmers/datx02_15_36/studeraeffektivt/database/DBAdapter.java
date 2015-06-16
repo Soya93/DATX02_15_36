@@ -164,6 +164,8 @@ public class DBAdapter {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         try {
+            int i = db.delete(dbHelper.TABLE_ASSIGNMENTS, dbHelper.ASSIGNMENTS__id + "=" + id, null);
+
             return db.delete(dbHelper.TABLE_ASSIGNMENTS, dbHelper.ASSIGNMENTS__id + "=" + id, null);
         } catch (Exception e) {
             return -1;
@@ -171,8 +173,22 @@ public class DBAdapter {
     }
 
 
+    public long deleteAllCourseAssignmets(String ccode){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "'";
+
+        try {
+            int i = db.delete(dbHelper.TABLE_ASSIGNMENTS,selection, null);
+            return i;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
     public void deleteAssignments(String ccode) {
         Cursor cur = getAssignments(ccode);
+        Log.d("Cursorsize", cur.getCount()+"");
+
 
         while (cur.moveToNext()) {
             try {
