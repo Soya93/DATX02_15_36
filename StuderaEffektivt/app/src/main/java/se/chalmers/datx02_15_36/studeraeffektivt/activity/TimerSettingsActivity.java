@@ -40,7 +40,7 @@ import java.util.HashMap;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.ListAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.TimerSettingsListAdapter;
 
 
 /**
@@ -151,7 +151,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
 
 
     public void updateView() {
-        listView.setAdapter(new ListAdapter(this, values, mapping));
+        listView.setAdapter(new TimerSettingsListAdapter(this, values, mapping));
     }
 
 

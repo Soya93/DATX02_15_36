@@ -33,14 +33,14 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 /**
  * Created by alexandraback on 23/04/15.
  */
-public class ListAdapter extends BaseAdapter {
+public class TimerSettingsListAdapter extends BaseAdapter {
     private String [] values;
     private Context context;
     private HashMap<Integer,Time> mapping ;
     private static LayoutInflater inflater=null;
 
 
-    public ListAdapter(TimerSettingsActivity mainActivity, String[] stringValues,HashMap<Integer,Time> inputHashMap) {
+    public TimerSettingsListAdapter(TimerSettingsActivity mainActivity, String[] stringValues, HashMap<Integer, Time> inputHashMap) {
         values=stringValues;
         context=mainActivity;
         mapping =inputHashMap;
