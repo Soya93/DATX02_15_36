@@ -92,7 +92,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         homeFAB.setType(FloatingActionButton.TYPE_NORMAL);
         homeFAB.setBackgroundColor(Color.parseColor("#ffffff"));
 
-        Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
+        Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal3).mutate();
         calendarIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
         homeFAB.setImageDrawable(calendarIcon);
         //homeFAB.setBackgroundColor(Color.parseColor(Constants.primaryColor));
