@@ -63,27 +63,28 @@ public class MainActivity extends ActionBarActivity {
     private CalendarFrag calendarFrag;
     private StatsFrag statsFrag;
     private TimerFrag timerFrag;
+
+    private Drawable primaryColorDrawable;
     private Drawable tabResetIcon;
+
+    public static FloatingActionMenu actionMenu;
     public static FloatingActionButton actionButton;
     public static SubActionButton button1;
     public static SubActionButton button2;
     public static SubActionButton button3;
     public static SubActionButton button4;
-    public static FloatingActionMenu actionMenu;
+
     private View.OnClickListener fabHandler;
-    private Drawable primaryColorDrawable;
     public NotificationBroadcastReceiver testReceiver;
-
-
-    /**
-     * Called when the activity is first created.
-     */
 
     private ViewPager viewPager;
     private TabAdapter mAdapter;
     private android.support.v7.app.ActionBar actionBar;
 
 
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,93 +93,20 @@ public class MainActivity extends ActionBarActivity {
         // Initilization
         viewPager = (ViewPager) findViewById(R.id.pager);
 
-        actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setHomeButtonEnabled(false);
-        primaryColorDrawable = new ColorDrawable(Color.parseColor(Colors.primaryColor));
-        actionBar.setBackgroundDrawable(primaryColorDrawable);
-        actionBar.setSplitBackgroundDrawable(primaryColorDrawable);
-        actionBar.setStackedBackgroundDrawable(primaryColorDrawable);
+        instantiateActionBar();
 
         mAdapter = new TabAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mAdapter);
 
         calendarFrag = (CalendarFrag) mAdapter.getItem(1);
         calendarFrag.setContentResolver(this.getContentResolver());
+        instantiateCalendarFloatingActionButton();
 
         homeFrag = (HomeFrag) mAdapter.getItem(0);
         homeFrag.setContentResolver(this.getContentResolver());
         homeFrag.setCalendarFrag(calendarFrag);
 
         statsFrag = (StatsFrag) mAdapter.getItem(3);
-
-        // listener for FAB menu
-        FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
-            @Override
-            public void onMenuOpened(FloatingActionMenu floatingActionMenu) {
-            }
-
-            @Override
-            public void onMenuClosed(FloatingActionMenu floatingActionMenu) {
-            }
-        };
-
-        //Setting the buttons for the calendar menu
-        ImageView icon = new ImageView(this); // Create an icon
-        Drawable moreIcon = getResources().getDrawable( R.drawable.ic_navigation_more_vert).mutate();
-        moreIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
-        icon.setImageDrawable(moreIcon);
-
-
-        actionButton = new FloatingActionButton.Builder(this)
-                .setContentView(icon)
-                .build();
-
-        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
-        // repeat many times:
-        ImageView itemIcon1 = new ImageView(this);
-        Drawable plusIcon = getResources().getDrawable( R.drawable.ic_content_add).mutate();
-        plusIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
-        itemIcon1.setImageDrawable(plusIcon);
-        button1 = itemBuilder.setContentView(itemIcon1).build();
-        button1.setTag(1);
-        button1.setOnClickListener(fabHandler);
-
-        ImageView itemIcon2 = new ImageView(this);
-        Drawable repeatIcon = getResources().getDrawable( R.drawable.ic_av_loop).mutate();
-        repeatIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
-        itemIcon2.setImageDrawable(repeatIcon);
-        button2 = itemBuilder.setContentView(itemIcon2).build();
-        button2.setTag(2);
-        button2.setOnClickListener(fabHandler);
-
-        ImageView itemIcon3 = new ImageView(this);
-        Drawable nbrOfVisibleDaysIcon = getResources().getDrawable( R.drawable.ic_image_filter).mutate();
-        nbrOfVisibleDaysIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
-        itemIcon3.setImageDrawable(nbrOfVisibleDaysIcon);
-        button3 = itemBuilder.setContentView(itemIcon3).build();
-        button3.setTag(3);
-        button3.setOnClickListener(fabHandler);
-
-        ImageView itemIcon4 = new ImageView(this);
-        Drawable calendarsIcon = getResources().getDrawable( R.drawable.ic_cal2).mutate();
-        calendarsIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
-        itemIcon4.setImageDrawable(calendarsIcon);
-        button4 = itemBuilder.setContentView(itemIcon4).build();
-        button4.setTag(4);
-        button4.setOnClickListener(fabHandler);
-
-        actionMenu = new FloatingActionMenu.Builder(this)
-                .addSubActionView(button4)
-                .addSubActionView(button3)
-                .addSubActionView(button2)
-                .addSubActionView(button1)
-                .attachTo(actionButton)
-                .build();
-
-        actionMenu.setStateChangeListener(myFABHandler);
 
         homeFrag = (HomeFrag) mAdapter.getItem(0);
         homeFrag.setCalendarFrag(calendarFrag);
@@ -318,6 +246,7 @@ public class MainActivity extends ActionBarActivity {
                     .setTabListener(tabListener));
         }
 
+
         //Didnt work T_T Wanted to redirect from a timer notification
         if(savedInstanceState!=null) {
             savedInstanceState.getBoolean("goToTimer", false);
@@ -332,6 +261,83 @@ public class MainActivity extends ActionBarActivity {
         //getMenuInflater().inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu);
         return true;
+    }
+
+    private void instantiateActionBar(){
+        actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setHomeButtonEnabled(false);
+        primaryColorDrawable = new ColorDrawable(Color.parseColor(Colors.primaryColor));
+        actionBar.setBackgroundDrawable(primaryColorDrawable);
+        actionBar.setSplitBackgroundDrawable(primaryColorDrawable);
+        actionBar.setStackedBackgroundDrawable(primaryColorDrawable);
+    }
+
+    private void instantiateCalendarFloatingActionButton(){
+        FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
+            @Override
+            public void onMenuOpened(FloatingActionMenu floatingActionMenu) {
+            }
+
+            @Override
+            public void onMenuClosed(FloatingActionMenu floatingActionMenu) {
+            }
+        };
+
+        ImageView icon = new ImageView(this); // Create an icon
+        Drawable moreIcon = getResources().getDrawable( R.drawable.ic_navigation_more_vert).mutate();
+        moreIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
+        icon.setImageDrawable(moreIcon);
+
+        actionButton = new FloatingActionButton.Builder(this)
+                .setContentView(icon)
+                .build();
+
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
+        // repeat many times:
+        ImageView itemIcon1 = new ImageView(this);
+        Drawable plusIcon = getResources().getDrawable( R.drawable.ic_content_add).mutate();
+        plusIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon1.setImageDrawable(plusIcon);
+        button1 = itemBuilder.setContentView(itemIcon1).build();
+        button1.setTag(1);
+        button1.setOnClickListener(fabHandler);
+
+        ImageView itemIcon2 = new ImageView(this);
+        Drawable repeatIcon = getResources().getDrawable( R.drawable.ic_av_loop).mutate();
+        repeatIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon2.setImageDrawable(repeatIcon);
+        button2 = itemBuilder.setContentView(itemIcon2).build();
+        button2.setTag(2);
+        button2.setOnClickListener(fabHandler);
+
+        ImageView itemIcon3 = new ImageView(this);
+        Drawable nbrOfVisibleDaysIcon = getResources().getDrawable( R.drawable.ic_image_filter).mutate();
+        nbrOfVisibleDaysIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon3.setImageDrawable(nbrOfVisibleDaysIcon);
+        button3 = itemBuilder.setContentView(itemIcon3).build();
+        button3.setTag(3);
+        button3.setOnClickListener(fabHandler);
+
+        ImageView itemIcon4 = new ImageView(this);
+        Drawable calendarsIcon = getResources().getDrawable( R.drawable.ic_cal2).mutate();
+        calendarsIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
+        itemIcon4.setImageDrawable(calendarsIcon);
+        button4 = itemBuilder.setContentView(itemIcon4).build();
+        button4.setTag(4);
+        button4.setOnClickListener(fabHandler);
+
+        actionMenu = new FloatingActionMenu.Builder(this)
+                .addSubActionView(button4)
+                .addSubActionView(button3)
+                .addSubActionView(button2)
+                .addSubActionView(button1)
+                .attachTo(actionButton)
+                .build();
+
+        actionMenu.setStateChangeListener(myFABHandler);
     }
 
     public void startTimer(View view) {
