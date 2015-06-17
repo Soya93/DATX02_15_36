@@ -20,6 +20,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * A class with constants for the Calendar model
@@ -177,5 +178,11 @@ public class CalendarUtils {
         int toEventStartMinutes = (cal.get(Calendar.HOUR_OF_DAY)*60) + (cal.get(Calendar.MINUTE));
 
         return toEventStartMinutes > leftMinutes && endTimeInMin > nowInMin;
+    }
+
+    public static int getCurrWeekNumber(){
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        return calendar.get(Calendar.WEEK_OF_YEAR);
     }
 }

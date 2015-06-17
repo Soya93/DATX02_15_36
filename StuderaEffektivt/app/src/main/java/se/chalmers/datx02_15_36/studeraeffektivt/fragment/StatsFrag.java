@@ -42,15 +42,10 @@ import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.formatter.IntegerValueFormatter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.formatter.OneDecimalFormatter;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
-
-/*
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.PieChart;
-*/
 
 public class StatsFrag extends Fragment {
 
@@ -66,7 +61,7 @@ public class StatsFrag extends Fragment {
     private TextView noDataView;
 
     private DBAdapter dbAdapter;
-    private Utils utils;
+    private CalendarUtils utils;
 
     private boolean hasInit;
 
@@ -80,7 +75,7 @@ public class StatsFrag extends Fragment {
         if (getActivity() != null) {
             dbAdapter = new DBAdapter(getActivity());
         }
-        utils = new Utils();
+        utils = new CalendarUtils();
         cph = CoursePreferenceHelper.getInstance(getActivity());
 
         rootView = inflater.inflate(R.layout.activity_stats, container, false);
@@ -163,7 +158,7 @@ public class StatsFrag extends Fragment {
             hoursInCourse = new ArrayList<>();
 
             int i = 0;
-            for (int w = smallestWeek; w <= Utils.getCurrWeekNumber(); w++) {
+            for (int w = smallestWeek; w <= utils.getCurrWeekNumber(); w++) {
 
                 if (c == 0) {
                     weeks.add("v. " + w);

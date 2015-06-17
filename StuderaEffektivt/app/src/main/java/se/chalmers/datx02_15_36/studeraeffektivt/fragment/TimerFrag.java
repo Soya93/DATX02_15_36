@@ -51,8 +51,9 @@ import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.service.TimerService;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 
@@ -122,11 +123,11 @@ public class TimerFrag extends Fragment {
 
         }
     };
-    MyCountDownTimer timerService;
+    TimerService timerService;
     private ServiceConnection sc = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            timerService = ((MyCountDownTimer.MCDTBinder) service).getService();
+            timerService = ((TimerService.MCDTBinder) service).getService();
             timerService.setHandler(handler);
             timerService.setActivityIsRunning();
             serviceHandler = timerService.getServiceHandler();
@@ -177,8 +178,8 @@ public class TimerFrag extends Fragment {
         getTimeFromTimerSettings();
         sharedPref = getActivity().getSharedPreferences(buttonPrefName, Context.MODE_PRIVATE);
         isActivityRunning = true;
-        if (isMyServiceRunning(MyCountDownTimer.class)) {
-            Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
+        if (isMyServiceRunning(TimerService.class)) {
+            Intent i = new Intent(getActivity().getBaseContext(), TimerService.class);
             getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
             long timeLeft = sharedPref.getLong("timeLeft", -1);
 
@@ -344,7 +345,7 @@ public class TimerFrag extends Fragment {
 
 
     private void sendDataToService() {
-        Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
+        Intent i = new Intent(getActivity().getBaseContext(), TimerService.class);
         i.putExtra("CCODE", ccode);
         i.putExtra("TIME_STUDY", default_studyTime.timeToMillisSeconds());
         i.putExtra("TIME_PAUSE", default_pauseTime.timeToMillisSeconds());
@@ -393,8 +394,8 @@ public class TimerFrag extends Fragment {
         startButton.setImageResource(buttonId);
         progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
         startSetTimerView();
-        if(isMyServiceRunning(MyCountDownTimer.class)) {
-            Intent i = new Intent(getActivity().getBaseContext(), MyCountDownTimer.class);
+        if(isMyServiceRunning(TimerService.class)) {
+            Intent i = new Intent(getActivity().getBaseContext(), TimerService.class);
             getActivity().stopService(i);
             getActivity().unbindService(sc);
         }
@@ -408,7 +409,7 @@ public class TimerFrag extends Fragment {
 
     public void onDestroyView() {
         super.onDestroyView();
-        if (isMyServiceRunning(MyCountDownTimer.class)) {
+        if (isMyServiceRunning(TimerService.class)) {
             serviceHandler.sendEmptyMessage(3);
             removeMessages();
             getActivity().unbindService(sc);
@@ -518,7 +519,7 @@ public class TimerFrag extends Fragment {
 
     private int getChosenWeek(){
         sharedPref = getActivity().getSharedPreferences(weekPrefName, Context.MODE_PRIVATE);
-        return sharedPref.getInt("weekInt", Utils.getCurrWeekNumber());
+        return sharedPref.getInt("weekInt", CalendarUtils.getCurrWeekNumber());
     }
 
     private void colorSwitch(){

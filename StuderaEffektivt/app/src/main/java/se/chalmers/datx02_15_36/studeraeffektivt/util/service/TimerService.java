@@ -12,15 +12,12 @@ limitations under the License.
 
 **/
 
-package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
+package se.chalmers.datx02_15_36.studeraeffektivt.util.service;
 
-import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -37,46 +34,44 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.util.List;
-
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 /**
  * Created by alexandraback on 24/02/15.
  * This service is supposed to run in background och count down time when user
  * is not in acitivy.
  */
-public class MyCountDownTimer extends Service {
+public class TimerService extends Service {
 
     private final int PAUSE = 0;
     private final int RESUME = 1;
     private final int STOP = 2;
     private final int ACTIVITY_NOT_RUNNING = 3;
 
-
-
     private long studyTime,pauseTime;
     private int reps;
     private long timeUntilFinished;
-    private int totalcount=0;
-    private int count=0;
+    private int totalcount = 0;
+    private int count = 0;
     private int startId;
 
     private Bundle bundle = new Bundle();
     private final IBinder iBinder = new MCDTBinder();
     private Handler mHandler;
+
     private CountDownTimer studyTimer;
     private DBAdapter dbAdapter;
     private String ccode;
-    private long studyTimePassed=0;
+
+    private long studyTimePassed = 0;
     private boolean activityIsRunning = true;
 
-    private Utils utils;
+    private CalendarUtils utils;
 
-    private  Handler handler = new Handler(Looper.getMainLooper()) {
+    private Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch(msg.what) {
@@ -98,8 +93,8 @@ public class MyCountDownTimer extends Service {
     };
 
     public class MCDTBinder extends Binder {
-        MyCountDownTimer getService(){
-            return  MyCountDownTimer.this;
+        public TimerService getService(){
+            return  TimerService.this;
         }
     }
 
@@ -109,16 +104,15 @@ public class MyCountDownTimer extends Service {
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         studyTime = intent.getLongExtra("TIME_STUDY", 30*1000);
-        pauseTime = intent.getLongExtra("TIME_PAUSE",15*1000);
+        pauseTime = intent.getLongExtra("TIME_PAUSE", 15 * 1000);
         reps= intent.getIntExtra("REPS",1);
         Log.d("Values of reps ", String.valueOf(reps));
         ccode= intent.getStringExtra("CCODE");
         this.startId = startId;
         dbAdapter = new DBAdapter(getBaseContext());
-        utils = new Utils();
+        utils = new CalendarUtils();
         startCountDown();
         return START_NOT_STICKY;
-
     }
 
     public void setHandler (Handler handler){
@@ -135,7 +129,6 @@ public class MyCountDownTimer extends Service {
     }
 
     public void onDestroy () {
-
         if(count==0 ){
             insertIntoDataBase(studyTimePassed);
         }

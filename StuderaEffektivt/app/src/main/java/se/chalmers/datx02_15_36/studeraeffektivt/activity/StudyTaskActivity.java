@@ -57,10 +57,10 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.ServiceHandler;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 public class StudyTaskActivity extends ActionBarActivity {
@@ -83,7 +83,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     //The access point of the database.
     private DBAdapter dbAdapter;
 
-    private int chosenWeek = Utils.getCurrWeekNumber();
+    private int chosenWeek = CalendarUtils.getCurrWeekNumber();
 
     private CoursePreferenceHelper cph;
 
@@ -165,7 +165,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         ArrayAdapter<Integer> chapterAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, chapterItems);
         chapterSpinner.setAdapter(chapterAdapter);
 
-        int week = Utils.getCurrWeekNumber();
+        int week = CalendarUtils.getCurrWeekNumber();
         Integer[] weekItems = new Integer[15];
         for(int i = 0; i < weekItems.length; i++){
             if(week > 52)

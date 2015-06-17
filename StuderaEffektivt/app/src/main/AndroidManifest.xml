@@ -80,7 +80,7 @@
             android:label="@string/title_activity_activity_my_profile" >
         </fragment>
 
-        <service android:name=".fragment.MyCountDownTimer" >
+        <service android:name=".util.service.TimerService" >
         </service>
 
         <activity

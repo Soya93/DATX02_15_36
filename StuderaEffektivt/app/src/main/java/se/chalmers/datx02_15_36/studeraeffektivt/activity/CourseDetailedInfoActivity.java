@@ -82,10 +82,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         String status = dbAdapter.getCourseStatus(courseCode);
 
-        Log.i("CourseDetailedInfo course status", status);
-
-
-
         isActiveCourse = (status.toLowerCase().equals("undone"));
         courseView = new CourseView();
 
@@ -206,7 +202,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             isActiveCourse = true;
             menu.getItem(3).setTitle("Markera som avslutad");
             String status = dbAdapter.getCourseStatus(courseCode);
-            Log.i("CourseDetailedInfo set course undone", status);
 
         } else {
             // mark as completed
@@ -214,7 +209,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             isActiveCourse = false;
             menu.getItem(3).setTitle("Markera som pågående");
             String status = dbAdapter.getCourseStatus(courseCode);
-            Log.i("CourseDetailedInfo set course done", status);
         }
 
     }

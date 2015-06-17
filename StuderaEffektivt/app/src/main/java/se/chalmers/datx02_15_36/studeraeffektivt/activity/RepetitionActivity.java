@@ -41,8 +41,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 public class RepetitionActivity extends ActionBarActivity {
 
@@ -75,8 +75,7 @@ public class RepetitionActivity extends ActionBarActivity {
         calendarModel = new CalendarModel();
         calendarModel.getCalendarInfo(getContentResolver());
 
-        int currentWeek = Utils.getCurrWeekNumber();
-
+        int currentWeek = CalendarUtils.getCurrWeekNumber();
 
         dbAdapter = new DBAdapter(this);
 

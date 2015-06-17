@@ -35,7 +35,7 @@ import java.util.List;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.ServiceHandler;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 /**

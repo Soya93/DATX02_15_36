@@ -26,10 +26,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
-import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.ServiceHandler;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
 
 /**
  * Created by alexandraback on 25/04/15.
