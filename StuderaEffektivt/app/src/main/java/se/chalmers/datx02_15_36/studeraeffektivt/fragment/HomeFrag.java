@@ -33,8 +33,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.software.shell.fab.ActionButton;
 
-import com.melnykov.fab.FloatingActionButton;
+//import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,13 +52,15 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private Context context;
     private CalendarFrag calendarFrag;
     private boolean hasInit = false;
-    private FloatingActionButton homeFAB;
+    //private FloatingActionButton homeFAB;
     private ContentResolver cr;
     private ListView listView;
     private ArrayList<HomeEventItem> eventsList;
     private SwipeRefreshLayout swipeLayout;
     private TextView syncText;
     private boolean hasSynced;
+    private ActionButton actionButton;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,9 +81,10 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private void initComponents(View view) {
         hasInit = true;
 
+
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
-                if (v.getTag() == homeFAB.getTag()) {
+                if (v.getTag() == actionButton.getTag()) {
                     Log.i("homefrag", "button");
                     calendarFrag.changeVisibleCalendars();
                     updateView();
@@ -88,7 +92,18 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             }
         };
 
-        homeFAB = (FloatingActionButton) view.findViewById(R.id.home_fab);
+        actionButton = (ActionButton) view.findViewById(R.id.home_fab);
+        actionButton.setTag(1);
+        actionButton.setOnClickListener(myButtonHandler);
+        actionButton.setType(ActionButton.Type.DEFAULT);
+        actionButton.setButtonColor(Color.parseColor("#ffffff"));
+        actionButton.setButtonColorPressed(Color.parseColor("#ffd6d7d7"));
+
+        Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
+        calendarIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
+        actionButton.setImageDrawable(calendarIcon);
+
+        /*homeFAB = (FloatingActionButton) view.findViewById(R.id.home_fab);
         homeFAB.setTag(1);
         homeFAB.setOnClickListener(myButtonHandler);
         homeFAB.setType(FloatingActionButton.TYPE_NORMAL);
@@ -96,7 +111,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
         Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
         calendarIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
-        homeFAB.setImageDrawable(calendarIcon);
+        homeFAB.setImageDrawable(calendarIcon);*/
 
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
@@ -162,7 +177,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         HomeAdapter adapter = new HomeAdapter(context, visibleEventList);
 
         listView = (ListView) rootView.findViewById(R.id.home_list);
-        homeFAB.attachToListView(listView);
+        //homeFAB.attachToListView(listView);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -98,6 +98,7 @@ public class MainActivity extends ActionBarActivity {
         mAdapter = new TabAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mAdapter);
 
+
         calendarFrag = (CalendarFrag) mAdapter.getItem(1);
         calendarFrag.setContentResolver(this.getContentResolver());
         instantiateCalendarFloatingActionButton();
@@ -133,9 +134,7 @@ public class MainActivity extends ActionBarActivity {
                 timerUns,
                 statsUns,
                 myProfileUns
-
         };
-
 
         /** Defining tab listener */
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
@@ -351,6 +350,8 @@ public class MainActivity extends ActionBarActivity {
     public void settingsTimer(View view) {
         timerFrag.settingsTimer();
     }
+
+
 
 
     /*Notification related stuff begins here */
