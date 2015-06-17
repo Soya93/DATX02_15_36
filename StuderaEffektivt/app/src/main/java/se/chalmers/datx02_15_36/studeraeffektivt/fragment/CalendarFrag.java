@@ -27,6 +27,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
@@ -48,6 +50,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,7 +71,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
  * A class representing the controller of a calendar object
  */
 public class CalendarFrag extends Fragment implements WeekView.MonthChangeListener,
-        WeekView.EventClickListener, WeekView.EventLongPressListener {
+        WeekView.EventClickListener, WeekView.EventLongPressListener, WeekView.EmptyViewClickListener {
 
     public ContentResolver cr;
     boolean hasOnMonthChange;
@@ -214,11 +217,17 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         // Set long press listener for events.
         mWeekView.setEventLongPressListener(this);
 
-        // Set number of visible days in the calendar view
+        //Press on empty spot in the calendar
+        mWeekView.setEmptyViewClickListener(this);
 
+        // Set number of visible days in the calendar view
         mWeekView.setNumberOfVisibleDays(5);
         hasOnMonthChange = false;
 
+
+        // Set up a date time interpreter to interpret how the date and time will be formatted in
+        // the week view. This is optional.
+        setupDateTimeInterpreter();
 
         // set the time for which hour that are shown
         mWeekView.goToHour(CalendarUtils.HOUR == 0 ? CalendarUtils.HOUR : CalendarUtils.HOUR - 1);
@@ -656,5 +665,29 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         super.onPause();
         //Log.i("CalendarFrag", "pause");
         //updateFilterSharedPreferences();
+    }
+
+    public void onEmptyViewClicked(Calendar time){
+        Log.i("CalendarFrag", "empty slot " + time.getTime() + " was pressed");
+    }
+
+    /**
+     * Set up a date time interpreter according to the swedish date and timesystem.
+     */
+    private void setupDateTimeInterpreter() {
+        mWeekView.setDateTimeInterpreter(new DateTimeInterpreter() {
+            @Override
+            public String interpretDate(Calendar date) {
+                SimpleDateFormat weekdayNameFormat = new SimpleDateFormat("EEE", Locale.getDefault());
+                String weekday = weekdayNameFormat.format(date.getTime());
+                SimpleDateFormat format = new SimpleDateFormat("d/M", Locale.getDefault());
+                return weekday.toUpperCase() + format.format(date.getTime());
+            }
+
+            @Override
+            public String interpretTime(int hour) {
+                return Integer.toString(hour)+ ".00";
+            }
+        });
     }
 }
