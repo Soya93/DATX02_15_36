@@ -16,6 +16,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.util;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,16 +72,18 @@ public class ListAdapter extends BaseAdapter {
         Holder holder=new Holder();
         View rowView;
         rowView = inflater.inflate(R.layout.timer_list, null);
-        Time b = mapping.get(position);
+        Time time = mapping.get(position);
         holder.forStringValues=(TextView) rowView.findViewById(R.id.settings_name);
         holder.forIntegerValues=(TextView) rowView.findViewById(R.id.time);
         holder.forStringValues.setText(values[position]);
-        if(position != 0){
-        holder.forIntegerValues.setText(b.getString());}
-        else{
-            holder.forIntegerValues.setText(String.valueOf(b.getMin()));
+        String text = "";
+        if(position != 0) {
+            text = time.getHour() != 0? String.valueOf(time.getHour()) + " tim": "";
+            text = time.getMin() != 0 ? text + " " +  String.valueOf(time.getMin()) + " min": text + "";
+        }else{
+            text = String.valueOf(time.getMin()) + " st";
         }
-
+        holder.forIntegerValues.setText(text);
         return rowView;
     }
 

@@ -63,7 +63,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
     TimePickerDialog.OnTimeSetListener d = new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay,
                               int minute) {
-            if (minute > 0) {
+            if (hourOfDay > 0 || minute > 0) {
                 studyTime = new Time(hourOfDay, minute);
                 mapping.put(1, studyTime);
                 updateView();
@@ -74,7 +74,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
     TimePickerDialog.OnTimeSetListener t = new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay,
                               int minute) {
-            if (minute > 0) {
+            if (hourOfDay > 0 || minute > 0) {
                 pauseTime = new Time(hourOfDay, minute);
                 mapping.put(2, pauseTime);
                 updateView();
