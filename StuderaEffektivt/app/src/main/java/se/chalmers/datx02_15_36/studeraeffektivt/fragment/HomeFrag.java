@@ -52,7 +52,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private Context context;
     private CalendarFrag calendarFrag;
     private boolean hasInit = false;
-    //private FloatingActionButton homeFAB;
     private ContentResolver cr;
     private ListView listView;
     private ArrayList<HomeEventItem> eventsList;
@@ -98,20 +97,12 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         actionButton.setType(ActionButton.Type.DEFAULT);
         actionButton.setButtonColor(Color.parseColor("#ffffff"));
         actionButton.setButtonColorPressed(Color.parseColor("#ffd6d7d7"));
+        actionButton.setShadowXOffset(0);
+        actionButton.setShadowYOffset(0);
 
         Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
         calendarIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
         actionButton.setImageDrawable(calendarIcon);
-
-        /*homeFAB = (FloatingActionButton) view.findViewById(R.id.home_fab);
-        homeFAB.setTag(1);
-        homeFAB.setOnClickListener(myButtonHandler);
-        homeFAB.setType(FloatingActionButton.TYPE_NORMAL);
-        homeFAB.setBackgroundColor(Color.parseColor("#ffffff"));
-
-        Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
-        calendarIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
-        homeFAB.setImageDrawable(calendarIcon);*/
 
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
@@ -177,7 +168,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         HomeAdapter adapter = new HomeAdapter(context, visibleEventList);
 
         listView = (ListView) rootView.findViewById(R.id.home_list);
-        //homeFAB.attachToListView(listView);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
