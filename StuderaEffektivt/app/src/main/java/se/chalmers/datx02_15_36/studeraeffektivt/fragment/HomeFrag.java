@@ -16,9 +16,11 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -92,10 +94,9 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         homeFAB.setType(FloatingActionButton.TYPE_NORMAL);
         homeFAB.setBackgroundColor(Color.parseColor("#ffffff"));
 
-        Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal3).mutate();
+        Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
         calendarIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
         homeFAB.setImageDrawable(calendarIcon);
-        //homeFAB.setBackgroundColor(Color.parseColor(Constants.primaryColor));
 
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
