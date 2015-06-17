@@ -1,4 +1,4 @@
-package se.chalmers.datx02_15_36.studeraeffektivt.util;
+package se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference;
 
 import android.content.Context;
 import android.content.SharedPreferences;

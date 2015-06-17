@@ -12,18 +12,20 @@ limitations under the License.
 
 **/
 
-package se.chalmers.datx02_15_36.studeraeffektivt.util;
+package se.chalmers.datx02_15_36.studeraeffektivt.util.formatter;
 
 import com.github.mikephil.charting.utils.ValueFormatter;
 
-/**
- * Created by Patricia on 2015-04-24.
- */
-public class IntegerValueFormatter implements ValueFormatter {
+import java.text.DecimalFormat;
 
+/**
+ * Created by Patricia on 2015-05-02.
+ */
+public class OneDecimalFormatter implements ValueFormatter {
 
     @Override
-    public String getFormattedValue(float value) {
-        return ""+Math.round(value);
+    public String getFormattedValue(float value){
+        DecimalFormat df = new DecimalFormat("#.#");
+        return ""+df.format(value);
     }
 }

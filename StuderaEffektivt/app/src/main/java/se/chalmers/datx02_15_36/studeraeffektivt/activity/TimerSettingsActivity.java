@@ -40,7 +40,7 @@ import java.util.HashMap;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.TimerSettingsListAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.adapter.TimerSettingsListAdapter;
 
 
 /**

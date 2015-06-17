@@ -52,8 +52,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.fragment.StatsFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TimerFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.TabAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.NotificationBroadcastReceiver;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.NotificationService;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.notification.NotificationBroadcastReceiver;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.notification.NotificationService;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.RepetitionReminder;
 
 

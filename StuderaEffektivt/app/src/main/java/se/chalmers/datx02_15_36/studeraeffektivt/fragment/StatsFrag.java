@@ -42,9 +42,9 @@ import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.CoursePreferenceHelper;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.IntegerValueFormatter;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.OneDecimalFormatter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.formatter.IntegerValueFormatter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.formatter.OneDecimalFormatter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Utils;
 
 /*

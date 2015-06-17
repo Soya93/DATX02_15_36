@@ -12,7 +12,7 @@ limitations under the License.
 
 **/
 
-package se.chalmers.datx02_15_36.studeraeffektivt.util;
+package se.chalmers.datx02_15_36.studeraeffektivt.util.notification;
 
 import android.app.Activity;
 import android.app.AlarmManager;
