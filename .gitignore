@@ -1,6 +1,5 @@
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
+.idea/
 .DS_Store
 
 *.bin
@@ -10,13 +9,5 @@ intermediates/
 
 
 *.properties
-
-*.iml
-
-*.iml
-
-*.iml
-
-*.iml
 
 *.iml
