@@ -80,6 +80,7 @@ public class MainActivity extends ActionBarActivity {
     private ViewPager viewPager;
     private TabAdapter mAdapter;
     private android.support.v7.app.ActionBar actionBar;
+    public static Context mContext;
 
 
     /**
@@ -89,6 +90,8 @@ public class MainActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mContext = getApplicationContext();
 
         // Initilization
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -519,6 +522,8 @@ public class MainActivity extends ActionBarActivity {
         Toast.makeText(this, "Alarm set in " + 2 + " seconds",
                 Toast.LENGTH_LONG).show();
     }
+
+
 }
 
 

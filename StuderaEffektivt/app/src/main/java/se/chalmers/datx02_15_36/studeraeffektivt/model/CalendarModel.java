@@ -14,6 +14,8 @@ limitations under the License.
 
 package se.chalmers.datx02_15_36.studeraeffektivt.model;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -21,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -32,6 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 
@@ -51,6 +55,8 @@ public class CalendarModel {
     private SharedPreferences sharedPref;
     private String prefNameID = "homeCalID";
     private String prefName = "homeCalName";
+    private Context mContext;
+
 
 
     public CalendarModel() {
@@ -331,8 +337,9 @@ public class CalendarModel {
         if (notification != -1) {
             addNotification(cr, eventID, notification, startMillis, endMillis);
         }
-        //
-        // ... do something with event ID
+        //Sync with google
+        //syncCalendar(cr, calID);
+        refreshCalendars();
         return eventID;
     }
 
@@ -461,10 +468,51 @@ public class CalendarModel {
         editor.putLong("homeCalID", homeCalId);
         editor.putString("homeCalName", homeCalName);
         editor.apply();
-
-
-
-
     }
 
+
+
+    public void syncCalendar(ContentResolver cr, long calId) {
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Calendars.SYNC_EVENTS, 1);
+        values.put(CalendarContract.Calendars.VISIBLE, 1);
+
+        cr.update(ContentUris.withAppendedId(CalendarContract.Calendars.CONTENT_URI, calId), values, null, null);
+/*
+        cr.update(
+                ContentUris.withAppendedId(getCalendarUri(true),
+                        Long.parseLong(calendarId)), values, null, null);
+        */
+    }
+
+
+    private Uri getCalendarUri(boolean eventUri) {
+        Uri calendarURI = null;
+        if (android.os.Build.VERSION.SDK_INT <= 7) {
+            calendarURI = (eventUri) ? Uri.parse("content://calendar/events")
+                    : Uri.parse("content://calendar/calendars");
+        } else {
+            calendarURI = (eventUri) ? Uri
+                    .parse("content://com.android.calendar/events") : Uri
+                    .parse("content://com.android.calendar/calendars");
+        }
+        return calendarURI;
+    }
+
+    public void refreshCalendars() {
+        final String TAG = "CalendarModel";
+
+        Account[] accounts = AccountManager.get(MainActivity.mContext).getAccounts();
+        Log.d(TAG, "Refreshing " + accounts.length + " accounts");
+
+        String authority = CalendarContract.Calendars.CONTENT_URI.getAuthority();
+        for (int i = 0; i < accounts.length; i++) {
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, "Refreshing calendars for: " + accounts[i]);
+            }
+            Bundle extras = new Bundle();
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+            ContentResolver.requestSync(accounts[i], authority, extras);
+        }
+    }
 }
