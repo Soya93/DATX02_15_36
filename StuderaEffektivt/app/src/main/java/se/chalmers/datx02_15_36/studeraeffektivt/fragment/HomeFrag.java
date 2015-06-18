@@ -42,6 +42,7 @@ import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.HomeAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeEventItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
@@ -73,6 +74,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             syncText.setVisibility(View.INVISIBLE);
         }
 
+        calendarFrag.getCalendarModel().refreshCalendars();
         return rootView;
     }
 
@@ -129,6 +131,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         if (!eventsList.isEmpty()) {
             syncText.setVisibility(View.INVISIBLE);
         }
+        calendarFrag.getCalendarModel().refreshCalendars();
         setTodaysEvents();
         Log.i("homefrag", "updateview");
 

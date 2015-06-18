@@ -70,6 +70,7 @@ public class CalendarModel {
     }
 
     public ArrayList<HomeEventItem> readEventsToday(ContentResolver cr) {
+        refreshCalendars();
         ArrayList<HomeEventItem> eventsToday = new ArrayList<>();
 
         Calendar cal = Calendar.getInstance();
@@ -222,6 +223,7 @@ public class CalendarModel {
     public ArrayList<CalendarsFilterItem> getCalendarWritersPermissions() { return calendarWritersPermissions; }
 
     public Map<Long, String> getCalendarInfo(ContentResolver cr) {
+        refreshCalendars();
         calendarsMap = new LinkedHashMap<>();
         calIdAndColorMap = new LinkedHashMap<>();
         calendarsFilterItems = new ArrayList<>();
@@ -345,6 +347,7 @@ public class CalendarModel {
 
     public long editEventAuto(ContentResolver cr, String title, Long startMillis, Long endMillis, String location, String description, long calID, long eventID, int notification, boolean isAllDay) {
         deleteEvent(cr, eventID);
+        refreshCalendars();
         return  addEventAuto(cr, title, startMillis, endMillis, location, description, calID, notification, isAllDay);
         //TODO remove notification if it is -1
     }
@@ -352,6 +355,7 @@ public class CalendarModel {
     //deleting an event from a calendar
     public void deleteEvent(ContentResolver cr, long eventID) {
         Uri deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
+        refreshCalendars();
         cr.delete(deleteUri, null, null);
     }
 
@@ -367,39 +371,10 @@ public class CalendarModel {
         } else {
             //removeNotification(cr,  getNotificationID(cr, start, end, eventID));
         }
+        refreshCalendars();
     }
 
 
-    public int getNotificationID(ContentResolver cr, Long startInterval, Long endInterval, Long eventID) {
-        Uri.Builder eventsUriBuilder = CalendarContract.Reminders.CONTENT_URI.buildUpon();
-        ContentUris.appendId(eventsUriBuilder, startInterval);
-        ContentUris.appendId(eventsUriBuilder, endInterval);
-        cur = CalendarContract.Reminders.query(cr, eventID, CalendarUtils.NOTIFICATION_PROJECTION);
-
-        //Prints out all the events in the given interval
-        while (cur.moveToNext()) {
-            if (cur.getLong(CalendarUtils.NOTIFICATION_EVENT_ID) == eventID) {
-                return cur.getInt(CalendarUtils.NOTIFICATION_ID);
-            }
-        }
-        cur.close();
-
-        return -1;
-    }
-
-    private void removeNotification(ContentResolver cr, long reminderID) {
-        Uri reminderUri = ContentUris.withAppendedId(
-                CalendarContract.Reminders.CONTENT_URI, reminderID);
-        cr.delete(reminderUri, null, null);
-    }
-
-
-    public void editEventColor(ContentResolver cr, long eventID, int color) {
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.EVENT_COLOR, color);
-        Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
-        cr.update(updateUri, values, null, null);
-    }
 
     private Cursor getCalendarCursor(ContentResolver cr) {
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
@@ -420,23 +395,6 @@ public class CalendarModel {
         return cr.query(eventsUri, CalendarUtils.INSTANCE_PROJECTION, null, null, CalendarContract.Instances.DTSTART + " ASC");
     }
 
-
-    public int getCalendarColor(ContentResolver cr, String calName, long id) {
-
-
-        Cursor c = getCalendarCursor(cr);
-
-        while (c.moveToNext()) {
-            if (calName.equals(c.getString(CalendarUtils.CALENDAR_NAME))) {
-                return c.getInt(CalendarUtils.CALENDAR_COLOR);
-            }
-        }
-
-        //TODO exceptionhandling
-
-        return 0;
-
-    }
 
     public Map<Long, String> getCalendarsMap() {
         return calendarsMap;
@@ -471,33 +429,6 @@ public class CalendarModel {
     }
 
 
-
-    public void syncCalendar(ContentResolver cr, long calId) {
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Calendars.SYNC_EVENTS, 1);
-        values.put(CalendarContract.Calendars.VISIBLE, 1);
-
-        cr.update(ContentUris.withAppendedId(CalendarContract.Calendars.CONTENT_URI, calId), values, null, null);
-/*
-        cr.update(
-                ContentUris.withAppendedId(getCalendarUri(true),
-                        Long.parseLong(calendarId)), values, null, null);
-        */
-    }
-
-
-    private Uri getCalendarUri(boolean eventUri) {
-        Uri calendarURI = null;
-        if (android.os.Build.VERSION.SDK_INT <= 7) {
-            calendarURI = (eventUri) ? Uri.parse("content://calendar/events")
-                    : Uri.parse("content://calendar/calendars");
-        } else {
-            calendarURI = (eventUri) ? Uri
-                    .parse("content://com.android.calendar/events") : Uri
-                    .parse("content://com.android.calendar/calendars");
-        }
-        return calendarURI;
-    }
 
     public void refreshCalendars() {
         final String TAG = "CalendarModel";

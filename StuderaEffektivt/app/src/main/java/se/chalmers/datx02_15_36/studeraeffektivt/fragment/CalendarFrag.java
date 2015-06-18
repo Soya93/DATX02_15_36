@@ -137,6 +137,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         hasInit = true;
 
         this.initComponents();
+        calendarModel.refreshCalendars();
         return view;
     }
 
@@ -262,6 +263,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         super.onResume();
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
+        calendarModel.refreshCalendars();
     }
 
     @Override
