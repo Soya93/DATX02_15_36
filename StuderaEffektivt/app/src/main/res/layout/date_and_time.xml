@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Datum"
+            android:id="@+id/date_input"
+            android:onClick="goToTextView"
+            android:gravity="center_vertical"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_gravity="left" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Tid"
+            android:id="@+id/time_input"
+            android:layout_gravity="right"
+            android:gravity="center_vertical|right"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+        />
+
+</LinearLayout>
