@@ -24,26 +24,11 @@ import java.util.Date;
 public class StudySession {
 
     public String name;
-    private Course course;
-    private String where;
-    private Date date;
     private Time time;
     private String type;
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    public void setWhere(String where) {
-        this.where = where;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public void setTime(Time time) {
@@ -58,32 +43,11 @@ public class StudySession {
         return name;
     }
 
-    public Course getCourse() {
-        return course;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
     public Time getTime() {
         return time;
     }
 
     public String getType() {
         return type;
-    }
-
-    public String getWhere() {
-        return where;
-    }
-
-
-
-
-
-    public StudySession(String name, Course course){
-        this.name = name;
-        this.course = course;
     }
 }

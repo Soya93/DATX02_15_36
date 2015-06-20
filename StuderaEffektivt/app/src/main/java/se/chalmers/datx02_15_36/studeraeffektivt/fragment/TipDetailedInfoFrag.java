@@ -44,7 +44,7 @@ public class TipDetailedInfoFrag extends Fragment {
     android.support.v7.app.ActionBar actionBar;
 
   /**
-   * Instansiates the view with the name of the tip as a header and
+   * Instantiates the view with the name of the tip as a header and
    * invokes a method for getting the text for the tip
    *
    * @param savedInstanceState

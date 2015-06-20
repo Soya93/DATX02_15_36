@@ -31,10 +31,10 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 
 /**
- * This class is for StudyTasks that when is checked is inserted in database
+ * This class is for StudyTasks which are checked and is inserted in database
  */
 
-public class StudyTask2 extends CheckBox {
+public class CheckedStudyTaskToDB extends CheckBox {
 
     public int chapter;
     private int week;
@@ -54,7 +54,7 @@ public class StudyTask2 extends CheckBox {
         return status;
     }
 
-    public StudyTask2(Context context,String courseCode, int chapter, int week, String taskString, int startPage, int endPage, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
+    public CheckedStudyTaskToDB(Context context, String courseCode, int chapter, int week, String taskString, int startPage, int endPage, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
         super(context);
         Random rand = new Random();
         this.id = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
@@ -138,10 +138,6 @@ public class StudyTask2 extends CheckBox {
 
     public int getEndPage() {
         return endPage;
-    }
-
-    public StudyTask2 getStudyTask() {
-        return this;
     }
 
     public int getWeek() {

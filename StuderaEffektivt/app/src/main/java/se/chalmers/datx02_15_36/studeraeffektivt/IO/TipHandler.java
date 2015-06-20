@@ -92,15 +92,5 @@ public class TipHandler {
         finally {
             return myBitmap;
         }
-        /*catch (FileNotFoundException e) {
-            Log.e("tip handler", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("tip handler", "Can not read file: " + e.toString());
-        }*/
-
-
-
     }
-
-
 }

@@ -87,6 +87,4 @@ public class TimerSettingsListAdapter extends BaseAdapter {
         return rowView;
     }
 
-
-
 }

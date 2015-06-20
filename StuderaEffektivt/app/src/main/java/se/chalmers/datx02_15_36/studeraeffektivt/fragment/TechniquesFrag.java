@@ -51,8 +51,6 @@ public class TechniquesFrag extends Fragment {
         this.container = container;
 
         initComponentsList();
-        /* bundleFromPreviousFragment = this.getArguments();
-        containerId = bundleFromPreviousFragment.getInt("containerId");*/
         containerId = getActivity().getWindow().getDecorView().findViewById(android.R.id.content).getId();
 
         return rootView;

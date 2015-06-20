@@ -82,7 +82,7 @@ public class CalendarChoiceAdapter extends ArrayAdapter<CalendarChoiceItem> {
         textView.setTextColor(Color.BLACK);
         imageView.setBackgroundColor(color);
 
-        // 6. retrn convertView
+        // 6. return convertView
         return convertView;
     }
 
