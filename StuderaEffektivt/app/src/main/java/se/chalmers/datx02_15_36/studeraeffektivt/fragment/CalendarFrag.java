@@ -99,16 +99,12 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     private boolean hasInit;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         this.view = inflater.inflate(R.layout.activity_calendar, container, false);
         calendarModel = new CalendarModel();
-
-
-        numberOfVisibleDays = 5;
 
         Map<Long, String> cals = calendarModel.getCalendarInfo(cr);
         visibleCalendars = new LinkedList<>(cals.keySet());
@@ -133,15 +129,15 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             }
         }
 
-
+        this.initButtons();
+        this.initmWeekView();
         hasInit = true;
 
-        this.initComponents();
+
         return view;
     }
 
-    private void initComponents() {
-
+    private void initButtons(){
         button1 = MainActivity.button1;
         button2 = MainActivity.button2;
         button3 = MainActivity.button3;
@@ -160,10 +156,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         goToTodayButton = (TextView) view.findViewById(R.id.go_to_today_button);
         SimpleDateFormat formatter = new SimpleDateFormat(" d MMMM");
         goToTodayButton.setText(formatter.format(new Date()));
-
-        //Drawable todayDrawable = getResources().getDrawable(R.drawable.ic_idag).mutate();
-        //todayDrawable.setColorFilter(Color.parseColor("#757575"), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
-        //goToTodayButton.setBackground(todayDrawable);
 
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
@@ -189,7 +181,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
                 updateView();
 
                 if (v.getTag() == button1.getTag()) {
-                    openAddEvent();
+                    openAddEventActivity();
                 } else if (v.getTag() == button2.getTag()) {
                     addRepetitionSession();
                 } else if (v.getTag() == button3.getTag()) {
@@ -203,6 +195,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             }
         };
 
+        button1.setOnClickListener(fabHandler);
+        button2.setOnClickListener(fabHandler);
+        button3.setOnClickListener(fabHandler);
+        button4.setOnClickListener(fabHandler);
+    }
+
+    private void initmWeekView() {
 
         // Get a reference for the week view in the layout.
         mWeekView = (WeekView) view.findViewById(R.id.weekView);
@@ -222,8 +221,8 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         // Set number of visible days in the calendar view
         mWeekView.setNumberOfVisibleDays(5);
+        numberOfVisibleDays = 5;
         hasOnMonthChange = false;
-
 
         // Set up a date time interpreter to interpret how the date and time will be formatted in
         // the week view. This is optional.
@@ -247,14 +246,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.setTodayHeaderTextColor(Color.MAGENTA);
         mWeekView.setTodayBackgroundColor(Color.parseColor(Colors.secondaryColor));
 
-
-        //actionButton.setOnClickListener(myButtonHandler);
-        button1.setOnClickListener(fabHandler);
-        button2.setOnClickListener(fabHandler);
-        button3.setOnClickListener(fabHandler);
-        button4.setOnClickListener(fabHandler);
-
         mWeekView.notifyDatasetChanged();
+    }
+
+    public void updateView() {
+        if(MainActivity.actionMenu.isOpen()) {
+            MainActivity.actionMenu.toggle(false);
+        }
     }
 
     @Override
@@ -262,6 +260,11 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         super.onResume();
         hasOnMonthChange = false;
         mWeekView.notifyDatasetChanged();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -296,73 +299,14 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
         final int notification = calendarModel.getNotificationTime(cr, startTime, endTime, eventId);
 
-        openViewEventInfo(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay, color);
+        openViewEventInfoDialog(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay, color);
     }
 
-    public void openViewEventInfo(final long eventId, final String eventTitle, final long startTime, final long endTime, final String location, final String description, final String calendar, final long calID, final int notification, final int allDay, final int color) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
-
-        calendarView.updateEventInfoView(dialogView, eventTitle, startTime, endTime, location, description, calendar, allDay, notification);
-        builder.setView(dialogView);
-
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        });
-
-        builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                openEditEvent(eventId, startTime, endTime, eventTitle, location, description, calID, calendar, notification, allDay, color);
-            }
-        });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-
-        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
-        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
+    //TODO: Implement adding by pressing an empty spot in the calendarview
+    @Override
+    public void onEmptyViewClicked(Calendar time){
+        Log.i("CalendarFrag", "empty slot " + time.getTime() + " was pressed");
     }
-
-    //Opens an dialog when pressing the buttom for adding a new event
-    public void openAddEvent() {
-        eventActivity = new EventActivity();
-        eventActivity.setCalendarFrag(this);
-        Intent intent = new Intent(getActivity(), eventActivity.getClass());
-        intent.putExtra("isInAddMode", true);
-        sharedPref = getActivity().getSharedPreferences("calendarPref", Context.MODE_PRIVATE);
-        Long homeCalID = sharedPref.getLong("homeCalID", 1L); // 1 is some value if it fails to read??
-        intent.putExtra("calID", homeCalID);        // is the home calendar
-        intent.putExtra("calName", calendarModel.getCalendarsMap().get(homeCalID)); //get name of the home calendar
-        intent.putExtra("color", calendarModel.getCalIdAndColorMap().get(homeCalID));  //get the color of the home calendar
-        startActivity(intent);
-    }
-
-    //Opens an dialog when pressing the buttom for adding a new event
-    private void openEditEvent(long eventID, long startTime, long endTime, String title, String location, String description, Long calID, String calName, int notification, int isAllDay, int color) {
-        eventActivity = new EventActivity();
-        eventActivity.setCalendarFrag(this);
-        Intent intent = new Intent(getActivity(), eventActivity.getClass());
-        intent.putExtra("isInAddMode", false);
-        intent.putExtra("eventID", eventID);
-        intent.putExtra("startTime", startTime);
-        intent.putExtra("endTime", endTime);
-        intent.putExtra("title", title);
-        intent.putExtra("location", location);
-        intent.putExtra("description", description);
-        intent.putExtra("calID", calID);
-        intent.putExtra("calName", calName);
-        intent.putExtra("notification", notification);
-        intent.putExtra("isAllDay", isAllDay);
-        intent.putExtra("color", color);
-        startActivity(intent);
-    }
-
 
     @Override
     public void onEventLongPress(final WeekViewEvent weekViewEvent, RectF rectF) {
@@ -391,6 +335,82 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 
+    //Updates the view of the calendar by redrawing the events
+    @Override
+    public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
+        eventList = new ArrayList<>();
+        if (!hasOnMonthChange) {
+            hasOnMonthChange = true;
+            readEvents();
+        }
+        return eventList;
+    }
+
+    //Opens detailed information of an event
+    public void openViewEventInfoDialog(final long eventId, final String eventTitle, final long startTime, final long endTime, final String location, final String description, final String calendar, final long calID, final int notification, final int allDay, final int color) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.event_selected_dialog, null);
+
+        calendarView.updateEventInfoView(dialogView, eventTitle, startTime, endTime, location, description, calendar, allDay, notification);
+        builder.setView(dialogView);
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        builder.setNegativeButton("Redigera", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                openEditEventActivity(eventId, startTime, endTime, eventTitle, location, description, calID, calendar, notification, allDay, color);
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
+    }
+
+    //Opens an dialog when pressing the buttom for adding a new event
+    public void openAddEventActivity() {
+        eventActivity = new EventActivity();
+        eventActivity.setCalendarFrag(this);
+        Intent intent = new Intent(getActivity(), eventActivity.getClass());
+        intent.putExtra("isInAddMode", true);
+        sharedPref = getActivity().getSharedPreferences("calendarPref", Context.MODE_PRIVATE);
+        Long homeCalID = sharedPref.getLong("homeCalID", 1L); // 1 is some value if it fails to read??
+        intent.putExtra("calID", homeCalID);        // is the home calendar
+        intent.putExtra("calName", calendarModel.getCalendarsMap().get(homeCalID)); //get name of the home calendar
+        intent.putExtra("color", calendarModel.getCalIdAndColorMap().get(homeCalID));  //get the color of the home calendar
+        startActivity(intent);
+    }
+
+    //Opens an dialog when pressing the buttom for editing an event
+    private void openEditEventActivity(long eventID, long startTime, long endTime, String title, String location, String description, Long calID, String calName, int notification, int isAllDay, int color) {
+        eventActivity = new EventActivity();
+        eventActivity.setCalendarFrag(this);
+        Intent intent = new Intent(getActivity(), eventActivity.getClass());
+        intent.putExtra("isInAddMode", false);
+        intent.putExtra("eventID", eventID);
+        intent.putExtra("startTime", startTime);
+        intent.putExtra("endTime", endTime);
+        intent.putExtra("title", title);
+        intent.putExtra("location", location);
+        intent.putExtra("description", description);
+        intent.putExtra("calID", calID);
+        intent.putExtra("calName", calName);
+        intent.putExtra("notification", notification);
+        intent.putExtra("isAllDay", isAllDay);
+        intent.putExtra("color", color);
+        startActivity(intent);
+    }
+
     //Removes an event from the calendar
     private void deleteEvent(long id, CharSequence event) {
         calendarModel.deleteEvent(cr, id);
@@ -403,18 +423,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
-    }
-
-
-    //Updates the view of the calendar by redrawing the events
-    @Override
-    public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
-        eventList = new ArrayList<>();
-        if (!hasOnMonthChange) {
-            hasOnMonthChange = true;
-            readEvents();
-        }
-        return eventList;
     }
 
     //Reads the events on the calendar from today until tomorrow
@@ -471,15 +479,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         cur.close();
     }
 
-    public void setContentResolver(ContentResolver cr) {
-        this.cr = cr;
-    }
-
+    //Opens the dialogbox for creating a repetitionssession
     public void addRepetitionSession() {
         Intent i = new Intent(getActivity(), RepetitionActivity.class);
         startActivity(i);
     }
 
+    //Opens a dialog for changing which calendars are visible in the calendar ivew
     public void changeVisibleCalendars() {
         final List<Long> calIDs = new LinkedList<>(calendarModel.getCalendarInfo(cr).keySet());
 
@@ -542,6 +548,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
     }
 
+    //Opens a dialog for changing the number of visible days the calendar view
     public void changeNbrOfDaysDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final String[] choices = {"1", "3", "5"};
@@ -586,25 +593,13 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 
+    //Translates the number of visible day of the dialogbox into its corresponding index.
     private int getIndexOfVisibleDays() {
         int i = numberOfVisibleDays == 3 ? numberOfVisibleDays - 2 : numberOfVisibleDays - 3;
         return numberOfVisibleDays == 1 ? numberOfVisibleDays - 1 : i;
     }
 
-
-    private void onForwardCLick() {
-        Calendar newDate = mWeekView.getFirstVisibleDay();
-        if (numberOfVisibleDays == 1) {
-            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + 1);
-        } else {
-            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays);
-        }
-
-        mWeekView.goToDate(newDate);
-        hasOnMonthChange = false;
-        mWeekView.notifyDatasetChanged();
-    }
-
+    //Moves the visible days in the calendarview one step back
     private void onBackClick() {
         Calendar newDate = mWeekView.getFirstVisibleDay();
         if (numberOfVisibleDays == 1) {
@@ -618,6 +613,7 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.notifyDatasetChanged();
     }
 
+    //Moves the visible days in the calendarview to today.
     private void onTodayClick() {
         mWeekView.goToToday();
         if(CalendarUtils.HOUR != 0) {
@@ -627,53 +623,21 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         mWeekView.notifyDatasetChanged();
     }
 
-    public List<Long> getVisibleCalendars() {
-        return visibleCalendars;
-    }
-
-    public CalendarModel getCalendarModel() {
-        return calendarModel;
-    }
-
-    public void updateView() {
-        if(MainActivity.actionMenu.isOpen()) {
-            MainActivity.actionMenu.toggle(false);
+    //Moves the visible days in the calendarview one step forward
+    private void onForwardCLick() {
+        Calendar newDate = mWeekView.getFirstVisibleDay();
+        if (numberOfVisibleDays == 1) {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + 1);
+        } else {
+            newDate.set(Calendar.DAY_OF_MONTH, newDate.get(Calendar.DAY_OF_MONTH) + numberOfVisibleDays);
         }
+
+        mWeekView.goToDate(newDate);
+        hasOnMonthChange = false;
+        mWeekView.notifyDatasetChanged();
     }
 
-    public boolean hasInit(){
-        return hasInit;
-    }
-
-    private void updateFilterSharedPreferences(){
-
-        sharedPref = getActivity().getSharedPreferences("calendarFilter", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        Set<String> visibleCalSet = new HashSet<>();
-
-        for(Long id: visibleCalendars){
-            visibleCalSet.add(id.toString());
-
-        }
-        editor.putStringSet("visibleCalendars",visibleCalSet);
-        editor.apply();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        //Log.i("CalendarFrag", "pause");
-        //updateFilterSharedPreferences();
-    }
-
-    public void onEmptyViewClicked(Calendar time){
-        Log.i("CalendarFrag", "empty slot " + time.getTime() + " was pressed");
-    }
-
-    /**
-     * Set up a date time interpreter according to the swedish date and timesystem.
-     */
+    //Set up a date time interpreter according to the swedish date and timesystem.
     private void setupDateTimeInterpreter() {
         mWeekView.setDateTimeInterpreter(new DateTimeInterpreter() {
             @Override
@@ -690,4 +654,37 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
             }
         });
     }
+
+    //Updates sharedpreferences for calendarfiltration
+    private void updateFilterSharedPreferences(){
+
+        sharedPref = getActivity().getSharedPreferences("calendarFilter", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        Set<String> visibleCalSet = new HashSet<>();
+
+        for(Long id: visibleCalendars){
+            visibleCalSet.add(id.toString());
+
+        }
+        editor.putStringSet("visibleCalendars",visibleCalSet);
+        editor.apply();
+    }
+
+    public boolean hasInit(){
+        return hasInit;
+    }
+
+    public List<Long> getVisibleCalendars() {
+        return visibleCalendars;
+    }
+
+    public CalendarModel getCalendarModel() {
+        return calendarModel;
+    }
+
+    public void setContentResolver(ContentResolver cr) {
+        this.cr = cr;
+    }
+
 }

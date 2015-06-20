@@ -16,11 +16,9 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,8 +32,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.software.shell.fab.ActionButton;
-
-//import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,8 +126,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             syncText.setVisibility(View.INVISIBLE);
         }
         setTodaysEvents();
-        Log.i("homefrag", "updateview");
-
     }
 
     public void setContentResolver(ContentResolver cr) {
@@ -195,7 +189,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         cur.close();
         final int notification = calendarFrag.getCalendarModel().getNotificationTime(cr, startTime, endTime, eventId);
 
-        calendarFrag.openViewEventInfo(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay, color);
+        calendarFrag.openViewEventInfoDialog(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay, color);
     }
 
     public void setContext(Context c) {
