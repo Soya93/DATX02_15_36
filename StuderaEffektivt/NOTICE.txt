@@ -10,6 +10,6 @@ Unless required by applicable law or agreed to in writing, software distribute
 alamkanak 	Android-Week-View
 oguzbilgener	CircularFloatingActionMenu
 PhilJay		MP AndroidChart
-makovkastar	FloatingActionButton
+shell-software	fab
 
 
