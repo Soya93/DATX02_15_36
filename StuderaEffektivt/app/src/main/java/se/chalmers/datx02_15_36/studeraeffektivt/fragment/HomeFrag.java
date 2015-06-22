@@ -59,6 +59,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private TextView syncText;
     private boolean hasSynced;
     private ActionButton actionButton;
+    private HomeAdapter adapter;
 
 
 
@@ -88,7 +89,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
                 if (v.getTag() == actionButton.getTag()) {
                     Log.i("homefrag", "button");
                     calendarFrag.changeVisibleCalendars();
-                    updateView();
+                    onRefresh();
                 }
             }
         };
@@ -145,11 +146,17 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     }
 
     public void updateView() {
-        if (!eventsList.isEmpty()) {
-            //has synced so remove tip "dra för att sykronisera..."
-            syncText.setVisibility(View.INVISIBLE);
-        }
         setTodaysEvents();
+        adapter.notifyDataSetChanged();
+
+        if (listView.getCount() > 0) {
+            //has items in list view so remove tip "dra för att sykronisera..."
+            syncText.setVisibility(View.INVISIBLE);
+        } else {
+            syncText.setText("Inga planerade händelser idag!");
+            syncText.setVisibility(View.VISIBLE);
+        }
+
     }
 
     public void setContentResolver(ContentResolver cr) {
@@ -172,19 +179,13 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         eventsList = getEvents();
         List<Long> visibleCalendars = calendarFrag.getVisibleCalendars();
 
-        if (eventsList.isEmpty()) {
-            syncText.setText("Inga planerade händelser idag!");
-        } else {
-            syncText.setVisibility(View.INVISIBLE);
-        }
-
         for (int i = 0; i < eventsList.size(); i++) {
             if (visibleCalendars.contains(eventsList.get(i).getCalId())) {
                 visibleEventList.add(eventsList.get(i));
             }
         }
 
-        HomeAdapter adapter = new HomeAdapter(context, visibleEventList);
+        adapter = new HomeAdapter(context, visibleEventList);
 
         listView = (ListView) rootView.findViewById(R.id.home_list);
         listView.setAdapter(adapter);

@@ -61,7 +61,11 @@ public class HomeAdapter extends ArrayAdapter<HomeEventItem> {
 
     @Override
     public HomeEventItem getItem(int position) {
-        return itemsArrayList.get(position);
+        try {
+            return itemsArrayList.get(position);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     @Override
