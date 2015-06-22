@@ -447,7 +447,7 @@ public class DBAdapter {
             db.execSQL("CREATE TABLE " + TABLE_LABS + " ("
                     + LABS_ccode+ " VARCHAR(50), "
                     + LABS_nr + " VARCHAR(50), "
-                    + LABS_week + " VARCHAR(50), "
+                    + LABS_week + " INT, "
                     + LABS_assNr + " VARCHAR(50), "
                     + LABS_status + " VARCHAR(50), "
                     + "FOREIGN KEY(" + LABS_ccode + ") REFERENCES " + COURSES__ccode + ")");
@@ -455,10 +455,19 @@ public class DBAdapter {
             db.execSQL("CREATE TABLE " + TABLE_PROBLEMS + " ("
                     + PROBLEMS_ccode + " VARCHAR(50), "
                     + PROBLEMS_chapter + " VARCHAR(50), "
-                    + PROBLEMS_week + " VARCHAR(50), "
+                    + PROBLEMS_week + " INT, "
                     + PROBLEMS_assNr + " VARCHAR(50), "
                     + PROBLEMS_status + " VARCHAR(50), "
                     + "FOREIGN KEY(" + PROBLEMS_ccode + ") REFERENCES " + COURSES__ccode + ")");
+
+            db.execSQL("CREATE TABLE " + TABLE_READ + " ("
+                    + READ_ccode + " VARCHAR(50), "
+                    + READ_chapter + " VARCHAR(50), "
+                    + READ_week + " INT, "
+                    + READ_startPage + " INT, "
+                    + READ_stopPage + " INT, "
+                    + READ_status + " VARCHAR(50), "
+                    + "FOREIGN KEY(" + READ_ccode + ") REFERENCES " + COURSES__ccode + ")");
 
             db.execSQL("CREATE TABLE " + TABLE_TIMEONCOURSE + "("
                     + TIMEONCOURSE__ccode + " VARCHAR(50) PRIMARY KEY, "
