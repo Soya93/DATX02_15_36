@@ -36,17 +36,7 @@ public class Course {
         this.courseCode = courseCode;
     }
 
-    public void addClass(StudySession c) {
-        if (!studySessionList.contains(c)) {
-            studySessionList.add(c);
-        }
-    }
-
-    public void deleteClass(StudySession c) {
-        studySessionList.remove(c);
-    }
-
-    public String geName(){
+    public String getName(){
         return courseName;
     }
 
@@ -63,6 +53,4 @@ public class Course {
     }
 
     public String getCourseName(){ return courseName; }
-
-
 }

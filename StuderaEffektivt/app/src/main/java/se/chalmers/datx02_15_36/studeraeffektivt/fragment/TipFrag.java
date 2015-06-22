@@ -35,12 +35,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 public class TipFrag extends Fragment {
 
     private List<Button> buttonList;
-    private TextView header;
-
     private View view;
-    private ViewGroup container;
-
-    private Bundle bundleFromPreviousFragment;
     private int containerId;
 
     @Override
@@ -49,11 +44,8 @@ public class TipFrag extends Fragment {
 
         View rootView = inflater.inflate(R.layout.activity_tip, container, false);
         this.view = rootView;
-        this.container = container;
 
         initComponentsList();
-        /*bundleFromPreviousFragment = this.getArguments();
-        containerId = bundleFromPreviousFragment.getInt("containerId");*/
         containerId = getActivity().getWindow().getDecorView().findViewById(android.R.id.content).getId();
 
         return rootView;

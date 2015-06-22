@@ -102,9 +102,7 @@ public class HomeAdapter extends ArrayAdapter<HomeEventItem> {
         myIcon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         imageView.setImageDrawable(myIcon);
 
-        // 6. retrn convertView
+        // 6. return convertView
         return convertView;
     }
-
-
 }

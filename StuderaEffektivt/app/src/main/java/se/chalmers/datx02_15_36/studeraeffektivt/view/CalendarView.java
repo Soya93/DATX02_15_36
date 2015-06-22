@@ -123,10 +123,6 @@ public class CalendarView {
 
     private String notificationTimeToString(int notificationTime) {
 
-       /* if(notificationTime ==  5 || notificationTime ==  10 || notificationTime ==  15 || notificationTime ==  30){
-            return notificationTime + " minuter";
-        }*/
-
         switch (notificationTime) {
             case -1:
                 return "Ingen";
