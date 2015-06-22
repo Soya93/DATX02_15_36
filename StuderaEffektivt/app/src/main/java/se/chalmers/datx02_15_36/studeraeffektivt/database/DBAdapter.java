@@ -469,6 +469,14 @@ public class DBAdapter {
                     + READ_status + " VARCHAR(50), "
                     + "FOREIGN KEY(" + READ_ccode + ") REFERENCES " + COURSES__ccode + ")");
 
+            db.execSQL("CREATE TABLE " + TABLE_HANDIN + " ("
+                    + HANDIN_ccode+ " VARCHAR(50), "
+                    + HANDIN_nr + " VARCHAR(50), "
+                    + HANDIN_week + " INT, "
+                    + HANDIN_assNr + " VARCHAR(50), "
+                    + HANDIN_status + " VARCHAR(50), "
+                    + "FOREIGN KEY(" + HANDIN_ccode + ") REFERENCES " + COURSES__ccode + ")");
+
             db.execSQL("CREATE TABLE " + TABLE_TIMEONCOURSE + "("
                     + TIMEONCOURSE__ccode + " VARCHAR(50) PRIMARY KEY, "
                     + TIMEONCOURSE_time + " INT, "
