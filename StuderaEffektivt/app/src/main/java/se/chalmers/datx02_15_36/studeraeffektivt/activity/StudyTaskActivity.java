@@ -127,7 +127,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement  //noinspection SimplifiableIfStatement
         if (id == R.id.save_tasks) {
-            saveTaks();
+            saveTask();
             return true;
         }else if (id == android.R.id.home){
             this.finish();
@@ -177,7 +177,6 @@ public class StudyTaskActivity extends ActionBarActivity {
         ArrayAdapter<Integer> weekAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, weekItems);
         weekSpinner.setAdapter(weekAdapter);
 
-
         setCourses();
 
         cph.setSpinnerCourseSelection(courseSpinner);
@@ -223,13 +222,13 @@ public class StudyTaskActivity extends ActionBarActivity {
         public void onClick(View v) {
 
             if ((v) == addButton) {
-                saveTaks();
+                saveTask();
             }
 
         }
     };*/
 
-    private void saveTaks() {
+    private void saveTask() {
         String[] chapSep = chapterSpinner.getSelectedItem().toString().split(" ");
         int chapter = Integer.parseInt(chapSep[chapSep.length-1]);
         //int chapter = Integer.parseInt(chapterSpinner.getSelectedItem().toString());
@@ -527,8 +526,6 @@ public class StudyTaskActivity extends ActionBarActivity {
             String endPage = arg[5];
             String type = arg[6];
             String status = arg[7];
-            // TODO Auto-generated method stub
-
 
 
             // Preparing post params

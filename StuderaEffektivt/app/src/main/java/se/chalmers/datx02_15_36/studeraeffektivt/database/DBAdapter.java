@@ -367,6 +367,46 @@ public class DBAdapter {
         private static final String ASSIGNMENTS_type = "type";
         private static final String ASSIGNMENTS_status = "status";
 
+        //Variables for LabAssignments table.
+        private static final String TABLE_LABS = "LABS";
+        private static final String LABS_ccode = COURSES__ccode;
+        private static final String LABS_nr = "nr";
+        private static final String LABS_week = "week";
+        private static final String LABS_assNr = "assNr";
+        private static final String LABS_status = "status";
+
+        //Variables for ProblemAssignments table.
+        private static final String TABLE_PROBLEMS = "PROBLEMS";
+        private static final String PROBLEMS_ccode = COURSES__ccode;
+        private static final String PROBLEMS_chapter = "chapter";
+        private static final String PROBLEMS_week = "week";
+        private static final String PROBLEMS_assNr = "assNr";
+        private static final String PROBLEMS_status = "status";
+
+        //Variables for ReadAssignments table.
+        private static final String TABLE_READ = "READ";
+        private static final String READ_ccode = COURSES__ccode;
+        private static final String READ_chapter = "chapter";
+        private static final String READ_week = "week";
+        private static final String READ_startPage = "startPage";
+        private static final String READ_stopPage = "stopPage";
+        private static final String READ_status = "status";
+
+        //Variables for HandinAssignments table.
+        private static final String TABLE_HANDIN = "HANDIN";
+        private static final String HANDIN_ccode = COURSES__ccode;
+        private static final String HANDIN_nr = "nr";
+        private static final String HANDIN_week = "week";
+        private static final String HANDIN_assNr = "assNr";
+        private static final String HANDIN_status = "status";
+
+        //Variables for Obligatories table.
+        private static final String TABLE_OBLIG = "OBLIGATORIES";
+        private static final String OBLIG_ccode = COURSES__ccode;
+        private static final String OBLIG_type = "type";
+        private static final String OBLIG_date = "date";
+
+
         //Variables for the TimeOnCourse table.
         private static final String TABLE_TIMEONCOURSE = "TIMEONCOURSE";
         private static final String TIMEONCOURSE__ccode = COURSES__ccode;
@@ -403,6 +443,14 @@ public class DBAdapter {
                     + ASSIGNMENTS_stopPage + " INT, "
                     + ASSIGNMENTS_type + " VARCHAR(50), "
                     + ASSIGNMENTS_status + " VARCHAR(50))");
+
+            db.execSQL("CREATE TABLE " + TABLE_LABS + " ("
+                    + LABS_ccode+ " VARCHAR(50), "
+                    + LABS_nr + " VARCHAR(50), "
+                    + LABS_week + " VARCHAR(50), "
+                    + LABS_assNr + " VARCHAR(50), "
+                    + LABS_status + " VARCHAR(50), "
+                    + "FOREIGN KEY(" + LABS_ccode + ") REFERENCES " + COURSES__ccode + ")");
 
             db.execSQL("CREATE TABLE " + TABLE_TIMEONCOURSE + "("
                     + TIMEONCOURSE__ccode + " VARCHAR(50) PRIMARY KEY, "

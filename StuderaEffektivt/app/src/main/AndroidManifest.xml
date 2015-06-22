@@ -94,7 +94,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.GetAssignmetsFromWeb"
+            android:name=".activity.GetAssignmentsFromWeb"
             android:label="@string/title_activity_getAssignmetsFromWeb"
             android:screenOrientation="portrait" >
         </activity>
