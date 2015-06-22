@@ -26,10 +26,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -60,6 +63,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private TextView syncText;
     private boolean hasSynced;
     private ActionButton actionButton;
+
 
 
     @Override
@@ -111,6 +115,23 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
                 android.R.color.holo_blue_light);
 
+        listView = (ListView) view.findViewById(R.id.home_list);
+        AbsListView.OnScrollListener listener = new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+               //do nothing
+            }
+
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                //disable update if first item isn't visible
+                swipeLayout.setEnabled(view.getItemAtPosition(0) == view.getItemAtPosition(firstVisibleItem));
+            }
+        };
+
+        listView.setOnScrollListener(listener);
+
         syncText = (TextView) view.findViewById(R.id.synchronize_lable);
 
     }
@@ -129,11 +150,12 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
     public void updateView() {
         if (!eventsList.isEmpty()) {
+            //has synced so remove tip "dra för att sykronisera..."
             syncText.setVisibility(View.INVISIBLE);
         }
-        calendarFrag.getCalendarModel().refreshCalendars();
-        setTodaysEvents();
-        Log.i("homefrag", "updateview");
+
+            setTodaysEvents();
+            Log.i("homefrag", "update");
 
     }
 
@@ -151,6 +173,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
     public void setTodaysEvents() {
         hasSynced = true;
+        calendarFrag.getCalendarModel().refreshCalendars();
 
         ArrayList<HomeEventItem> visibleEventList = new ArrayList<>();
         eventsList = getEvents();
