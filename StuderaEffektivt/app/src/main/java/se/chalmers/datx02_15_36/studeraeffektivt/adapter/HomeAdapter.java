@@ -61,7 +61,11 @@ public class HomeAdapter extends ArrayAdapter<HomeEventItem> {
 
     @Override
     public HomeEventItem getItem(int position) {
-        return itemsArrayList.get(position);
+        try {
+            return itemsArrayList.get(position);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     @Override
@@ -102,9 +106,7 @@ public class HomeAdapter extends ArrayAdapter<HomeEventItem> {
         myIcon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         imageView.setImageDrawable(myIcon);
 
-        // 6. retrn convertView
+        // 6. return convertView
         return convertView;
     }
-
-
 }

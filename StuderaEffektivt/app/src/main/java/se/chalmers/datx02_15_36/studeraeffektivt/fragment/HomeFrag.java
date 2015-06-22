@@ -16,32 +16,32 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.software.shell.fab.ActionButton;
-
-//import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.adapter.HomeAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.HomeEventItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
@@ -59,6 +59,8 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private TextView syncText;
     private boolean hasSynced;
     private ActionButton actionButton;
+    private HomeAdapter adapter;
+
 
 
     @Override
@@ -73,6 +75,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             syncText.setVisibility(View.INVISIBLE);
         }
 
+        calendarFrag.getCalendarModel().refreshCalendars();
         return rootView;
     }
 
@@ -86,7 +89,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
                 if (v.getTag() == actionButton.getTag()) {
                     Log.i("homefrag", "button");
                     calendarFrag.changeVisibleCalendars();
-                    updateView();
+                    onRefresh();
                 }
             }
         };
@@ -109,6 +112,23 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
                 android.R.color.holo_blue_light);
 
+        listView = (ListView) view.findViewById(R.id.home_list);
+        AbsListView.OnScrollListener listener = new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+               //do nothing
+            }
+
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                //disable update if first item isn't visible
+                swipeLayout.setEnabled(view.getItemAtPosition(0) == view.getItemAtPosition(firstVisibleItem));
+            }
+        };
+
+        listView.setOnScrollListener(listener);
+
         syncText = (TextView) view.findViewById(R.id.synchronize_lable);
 
     }
@@ -126,11 +146,16 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     }
 
     public void updateView() {
-        if (!eventsList.isEmpty()) {
-            syncText.setVisibility(View.INVISIBLE);
-        }
         setTodaysEvents();
-        Log.i("homefrag", "updateview");
+        adapter.notifyDataSetChanged();
+
+        if (listView.getCount() > 0) {
+            //has items in list view so remove tip "dra för att sykronisera..."
+            syncText.setVisibility(View.INVISIBLE);
+        } else {
+            syncText.setText("Inga planerade händelser idag!");
+            syncText.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -148,16 +173,11 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
     public void setTodaysEvents() {
         hasSynced = true;
+        calendarFrag.getCalendarModel().refreshCalendars();
 
         ArrayList<HomeEventItem> visibleEventList = new ArrayList<>();
         eventsList = getEvents();
         List<Long> visibleCalendars = calendarFrag.getVisibleCalendars();
-
-        if (eventsList.isEmpty()) {
-            syncText.setText("Inga planerade händelser idag!");
-        } else {
-            syncText.setVisibility(View.INVISIBLE);
-        }
 
         for (int i = 0; i < eventsList.size(); i++) {
             if (visibleCalendars.contains(eventsList.get(i).getCalId())) {
@@ -165,7 +185,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             }
         }
 
-        HomeAdapter adapter = new HomeAdapter(context, visibleEventList);
+        adapter = new HomeAdapter(context, visibleEventList);
 
         listView = (ListView) rootView.findViewById(R.id.home_list);
         listView.setAdapter(adapter);
@@ -195,7 +215,7 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         cur.close();
         final int notification = calendarFrag.getCalendarModel().getNotificationTime(cr, startTime, endTime, eventId);
 
-        calendarFrag.openViewEventInfo(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay, color);
+        calendarFrag.openViewEventInfoDialog(eventId, title, startTime, endTime, location, description, calendar, calID, notification, allDay, color);
     }
 
     public void setContext(Context c) {

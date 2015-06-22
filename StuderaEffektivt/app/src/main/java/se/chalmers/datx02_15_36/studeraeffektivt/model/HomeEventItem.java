@@ -29,12 +29,9 @@ public class HomeEventItem{
     private int color;
     private long calId;
 
-
-
     public HomeEventItem() {
 
     }
-
 
     public String getTitleS() {
         return titleS;
@@ -112,7 +109,4 @@ public class HomeEventItem{
     public void setCalId(long calId) {
         this.calId = calId;
     }
-
-
-
 }

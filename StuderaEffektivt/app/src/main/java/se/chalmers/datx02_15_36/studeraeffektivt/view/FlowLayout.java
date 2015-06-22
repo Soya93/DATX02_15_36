@@ -33,7 +33,7 @@ import java.util.TreeMap;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask2;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.CheckedStudyTaskToDB;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 
@@ -49,8 +49,8 @@ public class FlowLayout extends ViewGroup {
 
     private HashMap<Integer, ArrayList<StudyTask>> hashMapOfStudyTasks;
     private HashMap<Integer, ArrayList<StudyTask>> hashMapOfReadingAssignments;
-    private HashMap<Integer, ArrayList<StudyTask2>> hashMapOfStudyTasks2 = new HashMap<>();
-    private HashMap<Integer, ArrayList<StudyTask2>> hashMapOfReadingAssignments2 = new HashMap<>();
+    private HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> hashMapOfStudyTasks2 = new HashMap<>();
+    private HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> hashMapOfReadingAssignments2 = new HashMap<>();
 
     public FlowLayout(Context context) {
         super(context);
@@ -252,9 +252,6 @@ public class FlowLayout extends ViewGroup {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-
-                //Log.d("Vecka innan if-sats: ", "" + cursor.getInt(cursor.getColumnIndex("week")));
-
                 if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode)
                         && cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())
                         && cursor.getInt(cursor.getColumnIndex("week")) == week
@@ -336,7 +333,7 @@ public class FlowLayout extends ViewGroup {
             assignmentType = AssignmentType.OTHER;
         }
 
-        StudyTask2 studyTask = new StudyTask2(
+        CheckedStudyTaskToDB studyTask = new CheckedStudyTaskToDB(
                 this.getContext(),
                 courseCode,
                 chapter,
@@ -352,7 +349,7 @@ public class FlowLayout extends ViewGroup {
             if (hashMapOfStudyTasks2.containsKey(studyTask.getChapter())) {
                 hashMapOfStudyTasks2.get(studyTask.getChapter()).add(studyTask);
             } else {
-                ArrayList<StudyTask2> a = new ArrayList();
+                ArrayList<CheckedStudyTaskToDB> a = new ArrayList();
                 a.add(studyTask);
                 hashMapOfStudyTasks2.put(studyTask.getChapter(), a);
             }
@@ -361,19 +358,19 @@ public class FlowLayout extends ViewGroup {
             if (hashMapOfReadingAssignments2.containsKey(studyTask.getChapter())) {
                 hashMapOfReadingAssignments2.get(studyTask.getChapter()).add(studyTask);
             } else {
-                ArrayList<StudyTask2> a = new ArrayList();
+                ArrayList<CheckedStudyTaskToDB> a = new ArrayList();
                 a.add(studyTask);
                 hashMapOfReadingAssignments2.put(studyTask.getChapter(), a);
             }
         }
     }
 
-    public HashMap<Integer, ArrayList<StudyTask2>> getReadHashMapOfStudyTasks2() {
+    public HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> getReadHashMapOfStudyTasks2() {
         return this.hashMapOfReadingAssignments2;
     }
 
 
-    public HashMap<Integer, ArrayList<StudyTask2>> getOtherHashMapOfStudyTask2(){
+    public HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> getOtherHashMapOfStudyTask2(){
         return this.hashMapOfStudyTasks2;
     }
 
@@ -381,7 +378,7 @@ public class FlowLayout extends ViewGroup {
         Map<Integer, ArrayList> treeMap;
         treeMap = new TreeMap<Integer, ArrayList>(hashMapOfReadingAssignments2);
         for (Object value : treeMap.values()) {
-            ArrayList<StudyTask2> a = (ArrayList) value;
+            ArrayList<CheckedStudyTaskToDB> a = (ArrayList) value;
             Log.d("sizeofMap",a.size()+"");
             TextView kapitelText = new TextView(this.getContext());
             kapitelText.setText("  KAPITEL " + a.get(0).getChapter());
@@ -410,7 +407,7 @@ public class FlowLayout extends ViewGroup {
         Map<Integer, ArrayList> treeMap;
         treeMap = new TreeMap<Integer, ArrayList>(hashMapOfStudyTasks2);
         for (Object value : treeMap.values()) {
-            ArrayList<StudyTask2> a = (ArrayList) value;
+            ArrayList<CheckedStudyTaskToDB> a = (ArrayList) value;
             Log.d("sizeofMap",a.size()+"");
             TextView kapitelText = new TextView(this.getContext());
             kapitelText.setText("  KAPITEL " + a.get(0).getChapter());

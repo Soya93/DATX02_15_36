@@ -13,6 +13,7 @@
         android:paddingBottom="@dimen/activity_vertical_margin">
 
 
+
     <TableRow
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
@@ -65,7 +66,7 @@
             android:text="Kalender"
             android:id="@+id/calendar_lable_input"
             android:layout_column="3"
-            android:onClick="goToTextView"
+            android:onClick="openChooseCalendar"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:gravity="center_vertical"
@@ -97,27 +98,12 @@
             android:paddingLeft="0dp"
             android:paddingRight="15dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Hela dagen"
-            android:id="@+id/all_day_label"
-            android:layout_column="3"
-            android:gravity="center_vertical"
-            android:paddingTop="10dp"
-            android:paddingBottom="5dp"
-            android:layout_gravity="left" />
-
-        <Switch
+        <include
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/all_day_switch"
-            android:layout_column="4"
-            android:paddingTop="10dp"
-            android:paddingBottom="5dp"
-            android:checked="false"
-            android:gravity="center_vertical|right" />
+            layout="@layout/all_day"
+            android:layout_column="3" />
+
 
     </TableRow>
 
@@ -125,65 +111,26 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent">
 
-        <TextView
+        <include
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Datum"
-            android:id="@+id/start_date_input"
-            android:layout_column="3"
-            android:onClick="goToTextView"
-            android:gravity="center_vertical"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:layout_gravity="left" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Tid"
-            android:id="@+id/start_time_input"
-            android:layout_column="4"
-            android:layout_gravity="right"
-            android:onClick="goToTextView"
-            android:gravity="center_vertical|right"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp" />
-
+            android:id="@+id/start_time"
+            layout="@layout/date_and_time"
+            android:layout_column="3" />
     </TableRow>
 
     <TableRow
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
 
-        <TextView
+        <include
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Datum"
-            android:id="@+id/end_date_input"
-            android:layout_column="3"
-            android:onClick="goToTextView"
-            android:gravity="center_vertical"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:layout_gravity="center_vertical" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Tid"
-            android:id="@+id/end_time_input"
-            android:layout_column="4"
-            android:layout_gravity="right"
-            android:gravity="center_vertical|right"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp" />
-
+            android:id="@+id/end_time"
+            layout="@layout/date_and_time"
+            android:layout_column="3" />
     </TableRow>
 
     <View
@@ -255,7 +202,7 @@
             android:ems="10"
             android:id="@+id/notification_input"
             android:hint="Lägg till notifikation"
-            android:onClick="goToTextView"
+            android:onClick="chooseNotification"
             android:layout_column="3"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"

@@ -96,13 +96,9 @@ public class CalendarsFilterAdapter extends ArrayAdapter<CalendarsFilterItem> {
         }
 
 
-        // 6. retrn convertView
+        // 6. return convertView
         return convertView;
     }
-
-
-
-
 
     public void setColor(int color) {
         this.colorView.setColorFilter(color);

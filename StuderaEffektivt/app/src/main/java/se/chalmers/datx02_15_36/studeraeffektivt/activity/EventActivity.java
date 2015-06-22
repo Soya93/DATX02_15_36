@@ -56,6 +56,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarChoiceItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarsFilterItem;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.formatter.IntegerValueFormatter;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CalendarView;
 
 public class EventActivity extends ActionBarActivity {
@@ -70,6 +71,8 @@ public class EventActivity extends ActionBarActivity {
     private TextView descriptionView;
     private TextView calendarTextView;
     private TextView notificationView;
+    private View startView;
+    private View endView;
     private String title;
     private String location;
     private String description;
@@ -218,20 +221,27 @@ public class EventActivity extends ActionBarActivity {
         calendarTextView.setText(calendarName);
         calendarTextView.setOnClickListener(myTextViewHandler);
 
-        startDate = (TextView) findViewById(R.id.start_date_input);
+        startView = findViewById(R.id.start_time);
+
+        startDate = (TextView) startView.findViewById(R.id.date_input);
         startDate.setOnClickListener(myTextViewHandler);
+        startDate.setTag(1);
 
-        startTime = (TextView) findViewById(R.id.start_time_input);
+        startTime = (TextView) startView.findViewById(R.id.time_input);
         startTime.setOnClickListener(myTextViewHandler);
+        startTime.setTag(2);
 
-        endDate = (TextView) findViewById(R.id.end_date_input);
+        endView = findViewById(R.id.end_time);
+
+        endDate = (TextView) endView.findViewById(R.id.date_input);
         endDate.setOnClickListener(myTextViewHandler);
+        endDate.setTag(3);
 
-        endTime = (TextView) findViewById(R.id.end_time_input);
+        endTime = (TextView) endView.findViewById(R.id.time_input);
         endTime.setOnClickListener(myTextViewHandler);
+        endTime.setTag(4);
 
         notificationView = (TextView) findViewById(R.id.notification_input);
-        //notificationView.setText(notificationAlternatives[notification] + "");
         notificationView.setOnClickListener(myTextViewHandler);
         setNotificationMapValues();
         notificationView.setText(notificationAlternativesMap.get(notification));
@@ -239,6 +249,8 @@ public class EventActivity extends ActionBarActivity {
         allDaySwitch = (Switch) findViewById(R.id.all_day_switch);
         allDaySwitch.setChecked(isAllDayEvent);
         allDaySwitch.setOnClickListener(myTextViewHandler);
+        allDaySwitch.setTag(5);
+
 
         //add color filter on icons
         ImageView cal = (ImageView) findViewById(R.id.image_calendar);
@@ -315,7 +327,31 @@ public class EventActivity extends ActionBarActivity {
 
     private void goToTextView(TextView v) {
         int id = v.getId();
+        int tag = (Integer) v.getTag();
         Log.i("goToTextView", id + "");
+
+        if (((Integer) startDate.getTag()) == tag) {
+            Log.i("click on text view", "start date");
+            openDatePickerDialog(true);
+        } else if (((Integer) startTime.getTag()) == tag) {
+            Log.i("click on text view", " start time");
+            openTimePickerDialog(true);
+        } else if ((Integer) endDate.getTag() == tag) {
+            Log.i("click on text view", "end date");
+            openDatePickerDialog(false);
+        } else if ((Integer) endTime.getTag() == tag) {
+            Log.i("click on text view", " end time");
+            openTimePickerDialog(false);
+        } else {
+            Log.i("click on text view", "all day switch");
+            allDaySwitch.setChecked(allDaySwitch.isChecked());
+            isAllDayEvent = allDaySwitch.isChecked();
+            hideTimeLabels(isAllDayEvent);
+
+        }
+
+
+        /*
 
         switch (id) {
             //Start date ID
@@ -352,7 +388,8 @@ public class EventActivity extends ActionBarActivity {
                 isAllDayEvent = allDaySwitch.isChecked();
                 hideTimeLabels(isAllDayEvent);
                 break;
-        }
+
+        }*/
     }
 
     private void hideTimeLabels(boolean hide) {
