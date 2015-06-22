@@ -406,7 +406,6 @@ public class DBAdapter {
         private static final String OBLIG_type = "type";
         private static final String OBLIG_date = "date";
 
-
         //Variables for the TimeOnCourse table.
         private static final String TABLE_TIMEONCOURSE = "TIMEONCOURSE";
         private static final String TIMEONCOURSE__ccode = COURSES__ccode;
@@ -476,6 +475,12 @@ public class DBAdapter {
                     + HANDIN_assNr + " VARCHAR(50), "
                     + HANDIN_status + " VARCHAR(50), "
                     + "FOREIGN KEY(" + HANDIN_ccode + ") REFERENCES " + COURSES__ccode + ")");
+
+            db.execSQL("CREATE TABLE " + TABLE_OBLIG + " ("
+                    + OBLIG_ccode + " VARCHAR(50), "
+                    + OBLIG_type + " VARCHAR(50), "
+                    + OBLIG_date + " DATE, "
+                    + "FOREIGN KEY(" + OBLIG_ccode + ") REFERENCES " + COURSES__ccode + ")");
 
             db.execSQL("CREATE TABLE " + TABLE_TIMEONCOURSE + "("
                     + TIMEONCOURSE__ccode + " VARCHAR(50) PRIMARY KEY, "
