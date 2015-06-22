@@ -452,6 +452,14 @@ public class DBAdapter {
                     + LABS_status + " VARCHAR(50), "
                     + "FOREIGN KEY(" + LABS_ccode + ") REFERENCES " + COURSES__ccode + ")");
 
+            db.execSQL("CREATE TABLE " + TABLE_PROBLEMS + " ("
+                    + PROBLEMS_ccode + " VARCHAR(50), "
+                    + PROBLEMS_chapter + " VARCHAR(50), "
+                    + PROBLEMS_week + " VARCHAR(50), "
+                    + PROBLEMS_assNr + " VARCHAR(50), "
+                    + PROBLEMS_status + " VARCHAR(50), "
+                    + "FOREIGN KEY(" + PROBLEMS_ccode + ") REFERENCES " + COURSES__ccode + ")");
+
             db.execSQL("CREATE TABLE " + TABLE_TIMEONCOURSE + "("
                     + TIMEONCOURSE__ccode + " VARCHAR(50) PRIMARY KEY, "
                     + TIMEONCOURSE_time + " INT, "
