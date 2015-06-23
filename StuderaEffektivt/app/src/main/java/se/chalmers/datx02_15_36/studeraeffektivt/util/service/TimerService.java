@@ -37,6 +37,7 @@ import android.widget.Toast;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.MainActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.SessionsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 
 /**
@@ -63,7 +64,7 @@ public class TimerService extends Service {
     private Handler mHandler;
 
     private CountDownTimer studyTimer;
-    private DBAdapter dbAdapter;
+    private SessionsDBAdapter sessionsDBAdapter;
     private String ccode;
 
     private long studyTimePassed = 0;
@@ -109,7 +110,7 @@ public class TimerService extends Service {
         Log.d("Values of reps ", String.valueOf(reps));
         ccode= intent.getStringExtra("CCODE");
         this.startId = startId;
-        dbAdapter = new DBAdapter(getBaseContext());
+        sessionsDBAdapter = new SessionsDBAdapter(getBaseContext());
         utils = new CalendarUtils();
         startCountDown();
         return START_NOT_STICKY;
@@ -231,10 +232,10 @@ public class TimerService extends Service {
         millisPassed = millisPassed * 60; ///TODO: This is to make it in hours instead of minutes, for the show ;D
         Log.d("databas", "millispassed: "+ milliSecondsToMin(millisPassed));
 
-        long inserted = dbAdapter.insertSession(ccode, utils.getCurrWeekNumber(), milliSecondsToMin(millisPassed));
+        long inserted = sessionsDBAdapter.insertSession(ccode, utils.getCurrWeekNumber(), milliSecondsToMin(millisPassed));
         if (inserted > 0 && getBaseContext() != null) {
 
-            Cursor sessions = dbAdapter.getSessions(utils.getCurrWeekNumber());
+            Cursor sessions = sessionsDBAdapter.getSessions(utils.getCurrWeekNumber());
             while (sessions.moveToNext()){
                 String timestamp = sessions.getString(sessions.getColumnIndex("timestamp"));
                 int minutes = sessions.getInt(sessions.getColumnIndex("minutes"));

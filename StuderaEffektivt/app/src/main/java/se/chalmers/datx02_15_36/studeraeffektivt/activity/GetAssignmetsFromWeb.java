@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
@@ -46,7 +47,7 @@ public class GetAssignmetsFromWeb extends ActionBarActivity {
     private String courseName;
     private String courseCode;
     private String URL_CONNECTION = "http://studiecoachchalmers.se/getassignmets2.php";
-    private DBAdapter dbAdapter;
+    private AssignmentsDBAdapter assDBAdapter;
     private FlowLayout taskListfromWebOther;
     private FlowLayout taskListfromWebRead;
 
@@ -62,7 +63,7 @@ public class GetAssignmetsFromWeb extends ActionBarActivity {
 
         actionBar.setTitle("Hämta uppgifter " + courseName);
         if (this != null) {
-            dbAdapter = new DBAdapter(this);
+            assDBAdapter = new AssignmentsDBAdapter(this);
         }
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
 
@@ -146,13 +147,13 @@ public class GetAssignmetsFromWeb extends ActionBarActivity {
 
                         if (type.equals("OTHER")) {
                             taskListfromWebOther.addTasksFromWeb(returnedCod, Integer.parseInt(chapter),
-                                    Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), status, type, dbAdapter);
+                                    Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), status, type, assDBAdapter);
                             count++;
                             Log.d("count", String.valueOf(count));
                         }
                         else {
                             taskListfromWebRead.addTasksFromWeb(returnedCod, Integer.parseInt(chapter),
-                                    Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), status, type, dbAdapter);
+                                    Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), status, type, assDBAdapter);
                         }
                     }
                 } catch (JSONException e) {

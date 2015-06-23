@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CheckedStudyTaskToDB;
@@ -175,18 +176,23 @@ public class FlowLayout extends ViewGroup {
         }
     }
 
-    public void addTasksFromDatabase(DBAdapter dbAdapter, String courseCode, AssignmentType assignmentType) {
+    public void addTasksFromDatabase(AssignmentsDBAdapter assDBAdapter, String courseCode, AssignmentType assignmentType) {
 
-        Cursor cursor = dbAdapter.getAssignments();
+        Cursor cursor = assDBAdapter.getAssignments();
 
         hashMapOfStudyTasks = new HashMap<>();
         hashMapOfReadingAssignments = new HashMap<>();
+
+        int i = 0;
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
 
                 if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode) &&
                         cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())) {
+
+                    i++;
+                    Log.d("dbref", "i: "+i);
 
                     AssignmentStatus assignmentStatus;
                     if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())) {
@@ -209,7 +215,7 @@ public class FlowLayout extends ViewGroup {
                             cursor.getString(cursor.getColumnIndex("assNr")),
                             Integer.parseInt(cursor.getString(cursor.getColumnIndex("startPage"))),
                             Integer.parseInt(cursor.getString(cursor.getColumnIndex("stopPage"))),
-                            dbAdapter,
+                            assDBAdapter,
                             assignmentType,
                             assignmentStatus);
 
@@ -241,11 +247,13 @@ public class FlowLayout extends ViewGroup {
                 addMap(hashMapOfReadingAssignments);
 
         }
+        Log.d("dbref", "asses i: "+i + " course " + courseCode);
     }
 
-    public void addTasksFromDatabase(DBAdapter dbAdapter, String courseCode, AssignmentType assignmentType, int week) {
+    public void addTasksFromDatabase(AssignmentsDBAdapter assDBAdapter, String courseCode, AssignmentType assignmentType, int week) {
 
-        Cursor cursor = dbAdapter.getAssignments();
+        Cursor cursor = assDBAdapter.getAssignments();
+        //Log.d("dbref", "asses total: "+cursor.getCount());
 
         hashMapOfStudyTasks = new HashMap<>();
         hashMapOfReadingAssignments = new HashMap<>();
@@ -257,6 +265,7 @@ public class FlowLayout extends ViewGroup {
                         && cursor.getInt(cursor.getColumnIndex("week")) == week
                         && cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.UNDONE.toString())) {
 
+
                     AssignmentStatus assignmentStatus;
                     if (cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())) {
                         assignmentStatus = AssignmentStatus.DONE;
@@ -278,7 +287,7 @@ public class FlowLayout extends ViewGroup {
                             cursor.getString(cursor.getColumnIndex("assNr")),
                             Integer.parseInt(cursor.getString(cursor.getColumnIndex("startPage"))),
                             Integer.parseInt(cursor.getString(cursor.getColumnIndex("stopPage"))),
-                            dbAdapter,
+                            assDBAdapter,
                             assignmentType,
                             assignmentStatus);
 
@@ -310,13 +319,14 @@ public class FlowLayout extends ViewGroup {
                 addMap(hashMapOfReadingAssignments);
 
         }
+
     }
     public boolean isEmpty(){
         return (this.getChildCount()<1);
     }
 
     public void addTasksFromWeb( String courseCode, int chapter, int week, String assNr,
-                                int startPage, int stopPage, String status, String type,DBAdapter dbAdapter) {
+                                int startPage, int stopPage, String status, String type,AssignmentsDBAdapter assDBAdapter) {
 
 
 
@@ -341,7 +351,7 @@ public class FlowLayout extends ViewGroup {
                 assNr,
                 startPage,
                 stopPage,
-                dbAdapter,
+                assDBAdapter,
                 assignmentType,
                 assignmentStatus);
         if (studyTask.getType() == AssignmentType.OTHER) {

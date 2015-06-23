@@ -48,6 +48,8 @@ import java.util.List;
 import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
@@ -75,7 +77,8 @@ public class StudyTaskActivity extends ActionBarActivity {
     private String URL_CONNECTION = "http://studiecoachchalmers.se/insertassignmets.php";
 
     //The access point of the database.
-    private DBAdapter dbAdapter;
+    private AssignmentsDBAdapter assDBAdapter;
+    private CoursesDBAdapter coursesDBAdapter;
 
     private int chosenWeek = CalendarUtils.getCurrWeekNumber();
 
@@ -93,7 +96,8 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         //Create the database access point but check if the context is null first.
         if (this != null) {
-            dbAdapter = new DBAdapter(this);
+            assDBAdapter = new AssignmentsDBAdapter(this);
+            coursesDBAdapter = new CoursesDBAdapter(this);
         }
         cph = CoursePreferenceHelper.getInstance(getApplicationContext());
         initComponents();
@@ -169,8 +173,8 @@ public class StudyTaskActivity extends ActionBarActivity {
         weekSpinner.setSelection(0);
         setSelectedCourse();
 
-        listOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
-        listOfReadAssignments.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+        listOfTasks.addTasksFromDatabase(new AssignmentsDBAdapter(this), courseCode, AssignmentType.OTHER);
+        listOfReadAssignments.addTasksFromDatabase(new AssignmentsDBAdapter(this), courseCode, AssignmentType.READ);
 
         courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -225,7 +229,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         courseSpinner.setAdapter(adapter);
-        Cursor cursor = dbAdapter.getOngoingCourses();
+        Cursor cursor = coursesDBAdapter.getOngoingCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
         while (cursor.moveToNext()) {
@@ -255,8 +259,8 @@ public class StudyTaskActivity extends ActionBarActivity {
 
             listOfTasks.removeAllViews();
             listOfReadAssignments.removeAllViews();
-            listOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
-            listOfReadAssignments.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+            listOfTasks.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.OTHER);
+            listOfReadAssignments.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.READ);
 
             if(listOfTasks.isEmpty()){
                 TextView textView = new TextView(this);
@@ -349,7 +353,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                         elementToAdd = s2 + separateTaskParts[i];       //Combine the maintasks 1 and subtask a such that it becomes 1a
                         if (!listOfTasks.contains(chapter, elementToAdd)) {
                             int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, elementToAdd, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
+                            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, elementToAdd, 0, 0, assDBAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
                             addToDatabase(studyTask);
                             new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"",elementToAdd,
                                     Integer.toString(0),Integer.toString(0),"OTHER","UNDONE");
@@ -364,7 +368,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 for (String s : stringList) {         //For each maintask
                     if (!listOfTasks.contains(chapter, s)) {
                         int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                        StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, s, 0, 0, dbAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
+                        StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, s, 0, 0, assDBAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
                         addToDatabase(studyTask);
                         new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"",s,
                                 Integer.toString(0),Integer.toString(0),"OTHER","UNDONE");
@@ -398,7 +402,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
                 if(!(listOfReadAssignments.contains(chapter, start, end))) {
-                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "read", start, end, dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
+                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "read", start, end, assDBAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
                     addToDatabase(studyTask);
                     new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"","ReadAssignment",
@@ -413,7 +417,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 if (!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
 
                     StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment",
-                            Integer.parseInt(taskString), Integer.parseInt(taskString), dbAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
+                            Integer.parseInt(taskString), Integer.parseInt(taskString), assDBAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
                     addToDatabase(studyTask);
                     new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
@@ -431,7 +435,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     public void addToDatabase(StudyTask studyTask) {
 
-        dbAdapter.insertAssignment(
+        assDBAdapter.insertAssignment(
                 studyTask.getCourseCode(),
                 studyTask.getIdNr(),
                 studyTask.getChapter(),
@@ -443,16 +447,16 @@ public class StudyTaskActivity extends ActionBarActivity {
                 studyTask.getStatus()
         );
 
-        Cursor asses = dbAdapter.getAssignments();
+        Cursor asses = assDBAdapter.getAssignments();
         Log.d("ass", "asses in db: "+asses.getCount()+" course: "+studyTask.getType());
 
         if(studyTask.getType().equals(AssignmentType.READ)){
             listOfReadAssignments.removeAllViews();
-            listOfReadAssignments.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+            listOfReadAssignments.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.READ);
         }
         else{
             listOfTasks.removeAllViews();
-            listOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
+            listOfTasks.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.OTHER);
         }
 
         taskInput.setText("");

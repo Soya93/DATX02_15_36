@@ -25,7 +25,7 @@ import android.widget.CompoundButton;
 import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
@@ -44,7 +44,7 @@ public class CheckedStudyTaskToDB extends CheckBox {
     private int endPage;
     private int id;
     private CompoundButton buttonView;
-    DBAdapter dbAdapter;
+    AssignmentsDBAdapter assDBAdapter;
 
     AssignmentType type;
     AssignmentStatus status;
@@ -54,7 +54,7 @@ public class CheckedStudyTaskToDB extends CheckBox {
         return status;
     }
 
-    public CheckedStudyTaskToDB(Context context, String courseCode, int chapter, int week, String taskString, int startPage, int endPage, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
+    public CheckedStudyTaskToDB(Context context, String courseCode, int chapter, int week, String taskString, int startPage, int endPage, AssignmentsDBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
         super(context);
         Random rand = new Random();
         this.id = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
@@ -64,7 +64,7 @@ public class CheckedStudyTaskToDB extends CheckBox {
         this.taskString = taskString;
         this.startPage = startPage;
         this.endPage = endPage;
-        this.dbAdapter = dbAdapter;
+        this.assDBAdapter = dbAdapter;
         this.status = status;
         this.type = type;
 
@@ -146,11 +146,11 @@ public class CheckedStudyTaskToDB extends CheckBox {
 
     public void addToDatabase() {
 
-        dbAdapter.insertAssignment(
+        assDBAdapter.insertAssignment(
                 getCourseCode(),
                 getIdNr(),
                 getChapter(),
-               getWeek(),
+                getWeek(),
                 getTaskString(),
                 getStartPage(),
                 getEndPage(),
@@ -161,7 +161,7 @@ public class CheckedStudyTaskToDB extends CheckBox {
     }
 
     public void deleteFromDatabase() {
-        dbAdapter.deleteAssignment(getIdNr());
+        assDBAdapter.deleteAssignment(getIdNr());
     }
 
 

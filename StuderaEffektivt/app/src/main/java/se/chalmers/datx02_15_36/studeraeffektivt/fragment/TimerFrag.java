@@ -48,6 +48,8 @@ import android.widget.TextView;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -94,7 +96,8 @@ public class TimerFrag extends Fragment {
     private Spinner spinner;
     private ProgressBar progressBar;
 
-    private DBAdapter dbAdapter;
+    private CoursesDBAdapter coursesDBAdapter;
+    private AssignmentsDBAdapter assDBAdapter;
     private Handler serviceHandler;
 
     private SharedPreferences sharedPref;
@@ -144,7 +147,8 @@ public class TimerFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_timer, container, false);
         if (getActivity() != null) {
-            dbAdapter = new DBAdapter(getActivity());
+            coursesDBAdapter = new CoursesDBAdapter(getActivity());
+            assDBAdapter = new AssignmentsDBAdapter(getActivity());
         }
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         cph = CoursePreferenceHelper.getInstance(getActivity());
@@ -215,7 +219,7 @@ public class TimerFrag extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setSelectedCourse();
                 taskList.removeAllViews();
-                taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
+                taskList.addTasksFromDatabase(assDBAdapter, ccode, assignmentType, week);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -288,7 +292,7 @@ public class TimerFrag extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        Cursor cursor = dbAdapter.getOngoingCourses();
+        Cursor cursor = coursesDBAdapter.getOngoingCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
         if(cursor.getCount()>0) {
@@ -456,7 +460,7 @@ public class TimerFrag extends Fragment {
     public void updateTaskList(AssignmentType assignmentType, int week) {
 
         taskList.removeAllViews();
-        taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
+        taskList.addTasksFromDatabase(assDBAdapter, ccode, assignmentType, week);
 
         if(taskList.isEmpty()){
             TextView textView1 = new TextView(getActivity());

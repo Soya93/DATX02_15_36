@@ -32,7 +32,8 @@ import android.widget.Toast;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CourseView;
@@ -57,7 +58,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private MenuItem activeCourseItem;
 
 
-    private DBAdapter dbAdapter;
+    private CoursesDBAdapter coursesDBAdapter;
     private CourseView courseView;
 
     @Override
@@ -72,15 +73,14 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
         //initFrag(getIntent().getStringExtra("ActivityTitle"));
         if (this != null) {
-            dbAdapter = new DBAdapter(this);
+            coursesDBAdapter = new CoursesDBAdapter(this);
         }
 
-//        fillActivity(courseCode, courseName);
         initComponents();
 
         isInitialized = true;
 
-        String status = dbAdapter.getCourseStatus(courseCode);
+        String status = coursesDBAdapter.getCourseStatus(courseCode);
 
         isActiveCourse = (status.toLowerCase().equals("undone"));
         courseView = new CourseView();
@@ -109,8 +109,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         super.onStart();
         layoutWithinScrollViewOfTasks.removeAllViews();
         layoutWithinScrollViewOfOther.removeAllViews();
-        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
-        layoutWithinScrollViewOfOther.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
+        layoutWithinScrollViewOfTasks.addTasksFromDatabase(new AssignmentsDBAdapter(this), courseCode, AssignmentType.READ);
+        layoutWithinScrollViewOfOther.addTasksFromDatabase(new AssignmentsDBAdapter(this), courseCode, AssignmentType.OTHER);
 
     }
 
@@ -198,17 +198,17 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private void changeStatus() {
         if (!isActiveCourse) {
             // mark as ongoing
-            dbAdapter.setCourseUndone(courseCode);
+            coursesDBAdapter.setCourseUndone(courseCode);
             isActiveCourse = true;
             menu.getItem(3).setTitle("Markera som avslutad");
-            String status = dbAdapter.getCourseStatus(courseCode);
+            String status = coursesDBAdapter.getCourseStatus(courseCode);
 
         } else {
             // mark as completed
-            dbAdapter.setCourseDone(courseCode);
+            coursesDBAdapter.setCourseDone(courseCode);
             isActiveCourse = false;
             menu.getItem(3).setTitle("Markera som pågående");
-            String status = dbAdapter.getCourseStatus(courseCode);
+            String status = coursesDBAdapter.getCourseStatus(courseCode);
         }
 
     }
@@ -221,8 +221,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                dbAdapter.deleteCourse(courseCode);
-                     //   dbAdapter.deleteCourseAssignmets(courseCode);
+                coursesDBAdapter.deleteCourse(courseCode);
+                     //   coursesDBAdapter.deleteCourseAssignmets(courseCode);
                         Toast.makeText(getApplicationContext(), courseName + " borttagen",
                                 Toast.LENGTH_LONG).show();
                         finish();
@@ -274,11 +274,11 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 Log.d("course", "add " + value + " minutes to " + courseCode);
 
                 //add value
-                long add = dbAdapter.insertTimeOnCourse(courseCode, Integer.parseInt(value));
+                long add = coursesDBAdapter.insertTimeOnCourse(courseCode, Integer.parseInt(value));
                 Toast toast;
                 if (add > 0) {
 
-                    int mins = dbAdapter.getTimeOnCourse(courseCode);
+                    int mins = coursesDBAdapter.getTimeOnCourse(courseCode);
                     toast = Toast.makeText(getBaseContext(), "Ditt mål är nu att lägga " + mins + " minuter på " + courseCode + " i veckan.", Toast.LENGTH_LONG);
                 } else {
                     toast = Toast.makeText(getBaseContext(), "Det gick inte att lägga till.", Toast.LENGTH_SHORT);

@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
@@ -45,7 +46,7 @@ public class CourseActivity extends ActionBarActivity {
     SimpleAdapter simpleAdpt;
 
     //The access point of the database.
-    private DBAdapter dbAdapter;
+    private CoursesDBAdapter dbAdapter;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,7 @@ public class CourseActivity extends ActionBarActivity {
 
         //Create the database access point but check if the context is null first.
         if (this != null) {
-            dbAdapter = new DBAdapter(this);
+            dbAdapter = new CoursesDBAdapter(this);
         }
         showCourseList();
     }

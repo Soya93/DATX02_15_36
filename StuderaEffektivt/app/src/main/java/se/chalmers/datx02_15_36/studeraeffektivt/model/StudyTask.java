@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -50,7 +51,7 @@ public class StudyTask extends CheckBox{
     private int startPage;
     private int endPage;
     private int id;
-    DBAdapter dbAdapter;
+    AssignmentsDBAdapter assDBAdapter;
 
     AssignmentType type;
     AssignmentStatus status;
@@ -61,7 +62,7 @@ public class StudyTask extends CheckBox{
         return status;
     }
 
-    public StudyTask(Context context,int id, String courseCode,int chapter, int week, String taskString, int startPage, int endPage, DBAdapter dbAdapter, AssignmentType type, AssignmentStatus status) {
+    public StudyTask(Context context,int id, String courseCode,int chapter, int week, String taskString, int startPage, int endPage, AssignmentsDBAdapter assDBAdapter, AssignmentType type, AssignmentStatus status) {
         super(context);
         this.id = id;
         this.courseCode = courseCode;
@@ -70,7 +71,7 @@ public class StudyTask extends CheckBox{
         this.taskString = taskString;
         this.startPage = startPage;
         this.endPage = endPage;
-        this.dbAdapter = dbAdapter;
+        this.assDBAdapter = assDBAdapter;
         this.status = status;
         this.type = type;
 
@@ -112,13 +113,13 @@ public class StudyTask extends CheckBox{
                     Drawable checked = getResources().getDrawable(R.drawable.ic_toggle_check_box);
                     checked.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
                     buttonView.setButtonDrawable(checked);
-                    dbAdapter.setDone(getStudyTask().getIdNr());
+                    assDBAdapter.setDone(getStudyTask().getIdNr());
                 }
                 else{
                     Drawable unchecked = getResources().getDrawable(R.drawable.ic_toggle_check_box_outline_blank);
                     unchecked.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP);
                     buttonView.setButtonDrawable(unchecked);
-                    dbAdapter.setUndone(getStudyTask().getIdNr());
+                    assDBAdapter.setUndone(getStudyTask().getIdNr());
                 }
 
             }
@@ -140,11 +141,11 @@ public class StudyTask extends CheckBox{
                         else
                             ((FlowLayout)getParent()).removeView(getStudyTask());*/
 
-                        dbAdapter.deleteAssignment(getStudyTask().getIdNr());
+                        assDBAdapter.deleteAssignment(getStudyTask().getIdNr());
                         Toast.makeText(StudyTask.this.getContext(),"Uppgift borttagen",Toast.LENGTH_SHORT).show();
                         FlowLayout flowLayout = (FlowLayout)getParent();
                         flowLayout.removeAllViews();
-                        flowLayout.addTasksFromDatabase(dbAdapter, courseCode, type);
+                        flowLayout.addTasksFromDatabase(assDBAdapter, courseCode, type);
 
                         if(flowLayout.isEmpty()){
                             TextView textView = new TextView(getContext());

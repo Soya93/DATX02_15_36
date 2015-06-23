@@ -42,6 +42,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.TechsNTipsActivity;
+    import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
     import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
     import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
     import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
@@ -65,7 +66,7 @@ public class MyStudiesPage extends Fragment {
 
 
     //The access point of the database.
-    private DBAdapter dbAdapter;
+    private CoursesDBAdapter dbAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class MyStudiesPage extends Fragment {
 
         //Create the database access point but check if the context is null first.
         if(getActivity() != null){
-            dbAdapter = new DBAdapter(getActivity());
+            dbAdapter = new CoursesDBAdapter(getActivity());
         }
     }
 
