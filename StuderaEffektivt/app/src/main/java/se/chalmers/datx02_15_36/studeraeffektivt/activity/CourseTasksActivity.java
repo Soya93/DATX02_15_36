@@ -1,31 +1,23 @@
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
-
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
-import se.chalmers.datx02_15_36.studeraeffektivt.view.CourseView;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 /*
@@ -51,7 +43,7 @@ public class CourseTasksActivity extends ActionBarActivity {
     private String courseCode;
     private String courseName;
     private Spinner assignmentTypesSpinner;
-    private DBAdapter dbAdapter;
+    private AssignmentsDBAdapter assignmentsDBAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +56,7 @@ public class CourseTasksActivity extends ActionBarActivity {
         actionBar.setTitle("Uppgifter i kursen " + courseName);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
         if (this != null) {
-            dbAdapter = new DBAdapter(this);
+            assignmentsDBAdapter = new AssignmentsDBAdapter(this);
         }
         initComponents();
     }
@@ -95,10 +87,10 @@ public class CourseTasksActivity extends ActionBarActivity {
         Log.i("string for asstype", AssignmentType.READ.toString());
 
         if(assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
-            assignmentsFlowLayout.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
+            assignmentsFlowLayout.addTasksFromDatabase(assignmentsDBAdapter, courseCode, AssignmentType.READ);
 
         } else if(assignmentTypesSpinner.getSelectedItem().equals(AssignmentType.OTHER.toString())) {
-            assignmentsFlowLayout.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
+            assignmentsFlowLayout.addTasksFromDatabase(assignmentsDBAdapter, courseCode, AssignmentType.OTHER);
         }
     }
 
