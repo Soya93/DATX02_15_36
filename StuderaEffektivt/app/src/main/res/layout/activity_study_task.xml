@@ -155,7 +155,8 @@
                         android:textAlignment="gravity"
                         android:textColor="#03A9F4"
                         android:textOff="@string/type_button_text_reading"
-                        android:textOn="@string/type_button_text_other" />
+                        android:textOn="@string/type_button_text_other"
+                        android:checked="false" />
 
                 </LinearLayout>
             </LinearLayout>
