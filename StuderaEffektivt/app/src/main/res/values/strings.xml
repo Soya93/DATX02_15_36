@@ -55,7 +55,7 @@
     <string name="type_button_text_reading"><u>LÄSANVISNING</u></string>
     <string name="type_button_text_other"><u>RÄKNEUPPGIFT</u></string>
 
-    <string name="type_title">TYP AV UPPGIFT\n\<font size="10">Klicka för att ändra</font></string>
+    <string name="type_title">TYP AV UPPGIFT\n</string>
 
     <string name="save_task"><font size="23">SPARA UPPGIFT</font></string>
 
@@ -64,8 +64,7 @@
     <string name="chapter_title">KAPITEL</string>
     <string name="week_title">VECKA</string>
     <string name="task_info_title">uppgiftsinformation</string>
-    <string name="saved_tasks_other_title">Sparade Räkneuppgifter</string>
-    <string name="saved_tasks_read_title">Sparade Läsanvisningar</string>
+    <string name="saved_tasks_title">Sparade</string>
 
     <string name="task_title"><font size="15">UPPGIFTSNUMMER </font></string>
     <string name="task_string_hint"><font size="15">ex: 1&#8211;5 eller 1,2,3</font></string>

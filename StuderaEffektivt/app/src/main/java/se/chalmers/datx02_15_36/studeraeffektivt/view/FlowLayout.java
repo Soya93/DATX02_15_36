@@ -203,7 +203,7 @@ public class FlowLayout extends ViewGroup {
                     if (cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ.toString())) {
                         assignmentType = AssignmentType.READ;
                     } else {
-                        assignmentType = AssignmentType.OTHER;
+                        assignmentType = AssignmentType.PROBLEM;
                     }
 
                     StudyTask studyTask = new StudyTask(
@@ -219,7 +219,7 @@ public class FlowLayout extends ViewGroup {
                             assignmentType,
                             assignmentStatus);
 
-                    if (studyTask.getType() == AssignmentType.OTHER) {
+                    if (studyTask.getType() == AssignmentType.PROBLEM) {
 
                         if (hashMapOfStudyTasks.containsKey(studyTask.getChapter())) {
                             hashMapOfStudyTasks.get(studyTask.getChapter()).add(studyTask);
@@ -275,7 +275,7 @@ public class FlowLayout extends ViewGroup {
                     if (cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ.toString())) {
                         assignmentType = AssignmentType.READ;
                     } else {
-                        assignmentType = AssignmentType.OTHER;
+                        assignmentType = AssignmentType.PROBLEM;
                     }
 
                     StudyTask studyTask = new StudyTask(
@@ -291,7 +291,7 @@ public class FlowLayout extends ViewGroup {
                             assignmentType,
                             assignmentStatus);
 
-                    if (studyTask.getType() == AssignmentType.OTHER) {
+                    if (studyTask.getType() == AssignmentType.PROBLEM) {
 
                         if (hashMapOfStudyTasks.containsKey(studyTask.getChapter())) {
                             hashMapOfStudyTasks.get(studyTask.getChapter()).add(studyTask);
@@ -340,7 +340,7 @@ public class FlowLayout extends ViewGroup {
         if (type.equals(AssignmentType.READ.toString())) {
             assignmentType = AssignmentType.READ;
         } else {
-            assignmentType = AssignmentType.OTHER;
+            assignmentType = AssignmentType.PROBLEM;
         }
 
         CheckedStudyTaskToDB studyTask = new CheckedStudyTaskToDB(
@@ -354,7 +354,7 @@ public class FlowLayout extends ViewGroup {
                 assDBAdapter,
                 assignmentType,
                 assignmentStatus);
-        if (studyTask.getType() == AssignmentType.OTHER) {
+        if (studyTask.getType() == AssignmentType.PROBLEM) {
 
             if (hashMapOfStudyTasks2.containsKey(studyTask.getChapter())) {
                 hashMapOfStudyTasks2.get(studyTask.getChapter()).add(studyTask);

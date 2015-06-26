@@ -66,12 +66,13 @@ public class StudyTaskActivity extends ActionBarActivity {
     private EditText taskInput;
     private EditText taskParts;
     private FlowLayout listOfTasks;
-    private FlowLayout listOfReadAssignments;
     private Spinner chapterSpinner;
     private Spinner courseSpinner;
     private Spinner weekSpinner;
-    private ToggleButton readOrTaskAssignment;
+    private Spinner assignmentTypeSpinner;
+    private TextView visibleTasksLabel;
     private TextView taskPartsLabel;
+
 
     private String courseCode;
     private String URL_CONNECTION = "http://studiecoachchalmers.se/insertassignmets.php";
@@ -138,43 +139,32 @@ public class StudyTaskActivity extends ActionBarActivity {
         taskInput = (EditText) findViewById(R.id.taskInput);
         taskParts = (EditText) findViewById(R.id.taskParts);
         listOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
-        listOfReadAssignments = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfReadingAssignments);
         chapterSpinner = (Spinner) findViewById(R.id.chapterSpinner);
         courseSpinner = (Spinner) findViewById(R.id.courseSpinner);
         weekSpinner = (Spinner) findViewById(R.id.weekSpinner);
-        readOrTaskAssignment = (ToggleButton) findViewById(R.id.readOrTaskAssignment);
+        assignmentTypeSpinner = (Spinner) findViewById(R.id.assignmentTypeSpinner);
         taskPartsLabel = (TextView) findViewById(R.id.taskPartsLabel);
+        visibleTasksLabel = (TextView) findViewById(R.id.tasks_title);
 
-        readOrTaskAssignment.setChecked(true);
         taskInput.getBackground().setColorFilter(Color.parseColor(Colors.lightGreyColor), PorterDuff.Mode.SRC_ATOP);
         taskParts.getBackground().setColorFilter(Color.parseColor(Colors.lightGreyColor), PorterDuff.Mode.SRC_ATOP);
 
+        setCourseSpinner();
+        setWeekSpinner();
+        setAssignmentTypeSpinner();
+
+        listOfTasks.addTasksFromDatabase(new AssignmentsDBAdapter(this), courseCode, AssignmentType.PROBLEM);
+    }
+
+    private void setCourseSpinner(){
         Integer[] chapterItems = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50};
         ArrayAdapter<Integer> chapterAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, chapterItems);
         chapterSpinner.setAdapter(chapterAdapter);
 
-        int week = CalendarUtils.getCurrWeekNumber();
-        Integer[] weekItems = new Integer[15];
-        for(int i = 0; i < weekItems.length; i++){
-            if(week > 52)
-                week = 1;
-            weekItems[i] = week;
-            week++;
-        }
-
-        ArrayAdapter<Integer> weekAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, weekItems);
-        weekSpinner.setAdapter(weekAdapter);
-
         setCourses();
-
         cph.setSpinnerCourseSelection(courseSpinner);
-
         chapterSpinner.setSelection(0);
-        weekSpinner.setSelection(0);
         setSelectedCourse();
-
-        listOfTasks.addTasksFromDatabase(new AssignmentsDBAdapter(this), courseCode, AssignmentType.OTHER);
-        listOfReadAssignments.addTasksFromDatabase(new AssignmentsDBAdapter(this), courseCode, AssignmentType.READ);
 
         courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -188,22 +178,60 @@ public class StudyTaskActivity extends ActionBarActivity {
 
             }
         });
-
-        readOrTaskAssignment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    taskParts.setVisibility(View.VISIBLE);
-                    taskPartsLabel.setVisibility(View.VISIBLE);
-                }
-                else{
-                    taskParts.setVisibility(View.GONE);
-                    taskPartsLabel.setVisibility(View.GONE);
-                }
-            }
-        });
     }
 
+    private void setWeekSpinner(){
+        int week = CalendarUtils.getCurrWeekNumber();
+        Integer[] weekItems = new Integer[15];
+        for(int i = 0; i < weekItems.length; i++){
+            if(week > 52)
+                week = 1;
+            weekItems[i] = week;
+            week++;
+        }
+
+        ArrayAdapter<Integer> weekAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, weekItems);
+        weekSpinner.setAdapter(weekAdapter);
+        weekSpinner.setSelection(0);
+    }
+
+    private void setAssignmentTypeSpinner(){
+        String[] assignmentTypes = new String[]{AssignmentType.HANDIN.toString(), AssignmentType.LAB.toString(), AssignmentType.PROBLEM.toString(), AssignmentType.READ.toString(), AssignmentType.OBLIGATORY.toString(), AssignmentType.OTHER.toString()};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, assignmentTypes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        assignmentTypeSpinner.setAdapter(adapter);
+        assignmentTypeSpinner.setSelection(2);
+
+        if (assignmentTypeSpinner != null) {
+            assignmentTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.PROBLEM.toString())) {
+                        visibleTasksLabel.setText("Tillagda " + AssignmentType.PROBLEM.toString() );
+                        updateListOfTasks(AssignmentType.PROBLEM);
+                        taskParts.setVisibility(View.VISIBLE);
+                        taskPartsLabel.setVisibility(View.VISIBLE);
+                    } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
+                        visibleTasksLabel.setText("Tillagda " + AssignmentType.READ.toString() );
+                        updateListOfTasks(AssignmentType.READ);
+                        taskParts.setVisibility(View.GONE);
+                        taskPartsLabel.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+    }
+
+    private void updateListOfTasks(AssignmentType assignmentType){
+        listOfTasks.removeAllViews();
+        listOfTasks.addTasksFromDatabase(new AssignmentsDBAdapter(this), courseCode, assignmentType);
+    }
 
     private void saveTask() {
         String[] chapSep = chapterSpinner.getSelectedItem().toString().split(" ");
@@ -211,10 +239,10 @@ public class StudyTaskActivity extends ActionBarActivity {
         String[] weekSep = weekSpinner.getSelectedItem().toString().split(" ");
         chosenWeek = Integer.parseInt(weekSep[weekSep.length-1]);
         if(!taskInput.getText().toString().equals("")) {
-            if (readOrTaskAssignment.isChecked()) {
+            if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.PROBLEM.toString())) {
                 addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString());
             }
-            else {
+            else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())){
                 addReadAssignment(chapter, taskInput.getText().toString());
             }
         }
@@ -258,21 +286,13 @@ public class StudyTaskActivity extends ActionBarActivity {
                     + " == "+ cph.getSharedCoursePos());
 
             listOfTasks.removeAllViews();
-            listOfReadAssignments.removeAllViews();
-            listOfTasks.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.OTHER);
-            listOfReadAssignments.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.READ);
+            listOfTasks.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.PROBLEM);
 
             if(listOfTasks.isEmpty()){
                 TextView textView = new TextView(this);
                 textView.setText("Du har för närvaranade inga räkneuppgifter för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
                 textView.setPadding(15,5,15,5);
                 listOfTasks.addView(textView);
-            }
-            if(listOfReadAssignments.isEmpty()){
-                TextView textView = new TextView(this);
-                textView.setText("Du har för närvaranade inga läsanvisningar för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
-                textView.setPadding(15,5,15,5);
-                listOfReadAssignments.addView(textView);
             }
         }
         else{
@@ -353,10 +373,10 @@ public class StudyTaskActivity extends ActionBarActivity {
                         elementToAdd = s2 + separateTaskParts[i];       //Combine the maintasks 1 and subtask a such that it becomes 1a
                         if (!listOfTasks.contains(chapter, elementToAdd)) {
                             int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, elementToAdd, 0, 0, assDBAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
+                            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, elementToAdd, 0, 0, assDBAdapter, AssignmentType.PROBLEM, AssignmentStatus.UNDONE);
                             addToDatabase(studyTask);
                             new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"",elementToAdd,
-                                    Integer.toString(0),Integer.toString(0),"OTHER","UNDONE");
+                                    Integer.toString(0),Integer.toString(0),"PROBLEM","UNDONE");
                         } else {
                             Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
                         }
@@ -368,10 +388,10 @@ public class StudyTaskActivity extends ActionBarActivity {
                 for (String s : stringList) {         //For each maintask
                     if (!listOfTasks.contains(chapter, s)) {
                         int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                        StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, s, 0, 0, assDBAdapter, AssignmentType.OTHER, AssignmentStatus.UNDONE);
+                        StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, s, 0, 0, assDBAdapter, AssignmentType.PROBLEM, AssignmentStatus.UNDONE);
                         addToDatabase(studyTask);
                         new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"",s,
-                                Integer.toString(0),Integer.toString(0),"OTHER","UNDONE");
+                                Integer.toString(0),Integer.toString(0),"PROBLEM","UNDONE");
                     } else {
                         Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
                     }
@@ -401,7 +421,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 start = Integer.parseInt(separateLine[0]);    //Start and end is the interval of the elements which are to be added
                 end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
-                if(!(listOfReadAssignments.contains(chapter, start, end))) {
+               if(!(listOfTasks.contains(chapter, start, end))) {
                     StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "read", start, end, assDBAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
                     addToDatabase(studyTask);
@@ -414,7 +434,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 }
 
             } else {
-                if (!(listOfReadAssignments.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
+                 if (!(listOfTasks.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
 
                     StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment",
                             Integer.parseInt(taskString), Integer.parseInt(taskString), assDBAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
@@ -451,12 +471,12 @@ public class StudyTaskActivity extends ActionBarActivity {
         Log.d("ass", "asses in db: "+asses.getCount()+" course: "+studyTask.getType());
 
         if(studyTask.getType().equals(AssignmentType.READ)){
-            listOfReadAssignments.removeAllViews();
-            listOfReadAssignments.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.READ);
+            listOfTasks.removeAllViews();
+            listOfTasks.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.PROBLEM);
         }
         else{
             listOfTasks.removeAllViews();
-            listOfTasks.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.OTHER);
+            listOfTasks.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.PROBLEM);
         }
 
         taskInput.setText("");

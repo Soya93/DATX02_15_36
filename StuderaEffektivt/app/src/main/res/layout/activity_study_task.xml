@@ -42,17 +42,12 @@
         </LinearLayout>
         -->
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/courseLayout">
-
-
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_below="@+id/courseLayout"
+            >
 
 
             <View
@@ -68,7 +63,8 @@
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
                 android:orientation="vertical"
-                android:weightSum="1.0">
+                android:weightSum="1.0"
+                >
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -143,43 +139,16 @@
                         android:textAlignment="gravity"
                         android:textSize="17sp" />
 
-                    <ToggleButton
-                        android:id="@+id/readOrTaskAssignment"
+                    <Spinner
+                        android:id="@+id/assignmentTypeSpinner"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="15dp"
-                        android:layout_weight="0.5"
-                        android:background="@null"
-                        android:gravity="left|center"
-                        android:textAlignment="gravity"
-                        android:textColor="#03A9F4"
-                        android:textOff="@string/type_button_text_reading"
-                        android:textOn="@string/type_button_text_other"
-                        android:checked="false" />
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="0.5" />
 
                 </LinearLayout>
             </LinearLayout>
 
-            <!--<LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal"
-                android:id="@+id/infoLyout"
-                android:layout_below="@+id/firstLayout"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/task_info_title"
-                    android:gravity="center"
-                    android:textSize="17sp"
-                    android:textColor="#03A9F4"
-                    style="?android:attr/listSeparatorTextViewStyle"
-                    />
-
-            </LinearLayout>-->
 
             <View
                 android:id="@+id/infoLyout"
@@ -282,37 +251,17 @@
                 android:weightSum="1">
 
                 <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="center"
-                    android:text="@string/saved_tasks_other_title"
-                    android:textColor="#03A9F4"
-                    android:textSize="13sp" />
-
-                <TextView
 
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:gravity="center"
-                    android:text="@string/saved_tasks_read_title"
+                    android:text="@string/saved_tasks_title"
                     android:textColor="#03A9F4"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:id="@+id/tasks_title" />
 
             </LinearLayout>
-
-            <!--<TextView
-                android:id="@+id/savedTaskTitle"
-                android:layout_below="@+id/secondLayout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/saved_tasks_title"
-                android:gravity="center"
-                android:textSize="17sp"
-                android:textColor="#03A9F4"
-                style="?android:attr/listSeparatorTextViewStyle"
-                />-->
 
             <LinearLayout
                 android:id="@+id/fourthLayout"
@@ -322,45 +271,23 @@
                 android:orientation="horizontal"
                 android:weightSum="1">
 
-
                 <ScrollView
-                    android:id="@+id/scrollViewOfTasks"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/scrollViewOfAssigmnents"
                     android:layout_weight="0.5">
 
-                    <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
-                        android:id="@+id/layoutWithinScrollViewOfTasks"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"></se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
+                <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/layoutWithinScrollViewOfTasks">
+                </se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
 
-                </ScrollView>
-
-                <View
-                    android:id="@+id/lineBetweenScrollviews"
-                    android:layout_width="2dp"
-                    android:layout_height="fill_parent"
-                    android:layout_gravity="center_vertical"
-                    android:background="#c0c0c0" />
-
-                <ScrollView
-                    android:id="@+id/scrollViewOfReadingAssigmnents"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="0.5">
-
-                    <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
-                        android:id="@+id/layoutWithinScrollViewOfReadingAssignments"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"></se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
-
-                </ScrollView>
+             </ScrollView>
 
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
 
 </RelativeLayout>

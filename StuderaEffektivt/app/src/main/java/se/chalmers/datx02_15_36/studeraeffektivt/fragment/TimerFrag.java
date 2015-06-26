@@ -275,7 +275,7 @@ public class TimerFrag extends Fragment {
         textViewWeek.setText("Vecka " + String.valueOf(week));
 
         initButtons();
-        assignmentType = AssignmentType.OTHER;
+        assignmentType = AssignmentType.PROBLEM;
 
         cph.setSpinnerCourseSelection(spinner);
 
@@ -479,7 +479,7 @@ public class TimerFrag extends Fragment {
                     updateTaskList(assignmentType, week);
                 }
                 else{
-                    assignmentType = AssignmentType.OTHER;
+                    assignmentType = AssignmentType.PROBLEM;
                     updateTaskList(assignmentType, week);
                 }
             }

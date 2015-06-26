@@ -150,7 +150,7 @@ public class GetAssignmentsFromWeb extends ActionBarActivity {
 
                         if (type.equals("OTHER")) {
                             taskListfromWebOther.addTasksFromWeb(returnedCod, Integer.parseInt(chapter),
-                                    Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), status, type, assDBAdapter);
+                                    Integer.parseInt(week), assNr, Integer.parseInt(startPage), Integer.parseInt(endPage), status, "PROBLEM", assDBAdapter);
                             count++;
                             Log.d("count", String.valueOf(count));
                         }

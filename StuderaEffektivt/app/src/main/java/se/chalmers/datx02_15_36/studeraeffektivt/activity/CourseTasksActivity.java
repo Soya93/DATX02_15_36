@@ -72,7 +72,7 @@ public class CourseTasksActivity extends ActionBarActivity {
     }
 
     private void setAssignmentTypeSpinner(){
-        String[] assignmentTypes = new String[]{AssignmentType.READ.toString(), AssignmentType.OTHER.toString()};
+        String[] assignmentTypes = new String[]{AssignmentType.HANDIN.toString(), AssignmentType.LAB.toString(), AssignmentType.PROBLEM.toString(), AssignmentType.READ.toString(), AssignmentType.OBLIGATORY.toString(), AssignmentType.OTHER.toString()};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, assignmentTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         assignmentTypesSpinner.setAdapter(adapter);
@@ -89,8 +89,8 @@ public class CourseTasksActivity extends ActionBarActivity {
         if(assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
             assignmentsFlowLayout.addTasksFromDatabase(assignmentsDBAdapter, courseCode, AssignmentType.READ);
 
-        } else if(assignmentTypesSpinner.getSelectedItem().equals(AssignmentType.OTHER.toString())) {
-            assignmentsFlowLayout.addTasksFromDatabase(assignmentsDBAdapter, courseCode, AssignmentType.OTHER);
+        } else if(assignmentTypesSpinner.getSelectedItem().equals(AssignmentType.PROBLEM.toString())) {
+            assignmentsFlowLayout.addTasksFromDatabase(assignmentsDBAdapter, courseCode, AssignmentType.PROBLEM);
         }
     }
 

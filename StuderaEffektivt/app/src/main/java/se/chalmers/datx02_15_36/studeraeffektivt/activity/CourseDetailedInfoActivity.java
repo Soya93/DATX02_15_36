@@ -44,9 +44,6 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
  */
 public class CourseDetailedInfoActivity extends ActionBarActivity {
 
-    private FlowLayout layoutWithinScrollViewOfTasks;
-    private FlowLayout layoutWithinScrollViewOfOther;
-
     private boolean isActiveCourse;
     private boolean hasFetchedBefore = false;
 
@@ -81,7 +78,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         isInitialized = true;
 
         String status = coursesDBAdapter.getCourseStatus(courseCode);
-
         isActiveCourse = (status.toLowerCase().equals("undone"));
         courseView = new CourseView();
 
@@ -91,11 +87,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     @Override
     public void onStart() {
         super.onStart();
-        layoutWithinScrollViewOfTasks.removeAllViews();
-        layoutWithinScrollViewOfOther.removeAllViews();
-        layoutWithinScrollViewOfTasks.addTasksFromDatabase(new AssignmentsDBAdapter(this), courseCode, AssignmentType.READ);
-        layoutWithinScrollViewOfOther.addTasksFromDatabase(new AssignmentsDBAdapter(this), courseCode, AssignmentType.OTHER);
-
     }
 
     @Override
@@ -145,10 +136,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     public void initComponents() {
-
-        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
-
-        layoutWithinScrollViewOfOther = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfOther);
 
     }
 
