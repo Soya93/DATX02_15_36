@@ -94,41 +94,91 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/week_container"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="20dp"
-        android:layout_below="@+id/button_container"
-        android:layout_alignParentEnd="true">
 
-        <TextView
+    <LinearLayout
+        android:id="@+id/switchLayout"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/button_container">
+
+       <!-- <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:textSize="@dimen/abc_text_size_small_material"
-            android:id="@+id/textViewWeek"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/button_start_timer"
-            android:layout_gravity="center_horizontal" />
-    </LinearLayout>
+            android:id="@+id/exam"
+            android:text="Uppgifter"
+            android:layout_below="@+id/asses"
+            android:gravity="left"
+            android:textSize="13sp"
+            android:textColor="#03A9F4"
+            /> -->
+
+        <Spinner
+            android:id="@+id/taskSwitch"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0.5"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
 
         <LinearLayout
-            android:id ="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_below="@+id/week_container"
-            android:layout_above="@+id/switchLayout"
+            android:id="@+id/week_container"
             android:orientation="horizontal"
-            android:weightSum="3">
+            android:layout_width="wrap_content"
+            android:layout_gravity="right"
+            android:weightSum="3"
+            android:layout_marginTop="40dp"
+            android:layout_height="20dp">
 
             <ImageButton
                 android:id="@+id/previousWeek"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.29"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="left"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Medium Text"
+                android:textSize="@dimen/abc_text_size_small_material"
+                android:id="@+id/textViewWeek"
+                android:layout_gravity="center" />
+
+
+            <ImageButton
+                android:id="@+id/nextWeek"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:id ="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@+id/switchLayout"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentBottom="true">
+
+           <!-- <ImageButton
+                android:id="@+id/previousWeek"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.29"
+                android:layout_gravity="center_vertical" -->
                 />
 
             <ScrollView
@@ -141,7 +191,7 @@
                 >
 
                 <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:id="@+id/taskList">
@@ -149,39 +199,14 @@
 
             </ScrollView>
 
-            <ImageButton
+          <!--  <ImageButton
                 android:id="@+id/nextWeek"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.29"
                 android:layout_gravity="center_vertical"
-                />
+                /> -->
 
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/switchLayout"
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_alignParentBottom="true"
-            >
-
-            <Switch
-                android:id="@+id/taskSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textOn="Läsanvisningar"
-                android:textOff="Uppgifter"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:showText="true"
-
-                />
-
-        </LinearLayout>
-
-
 
 </RelativeLayout>

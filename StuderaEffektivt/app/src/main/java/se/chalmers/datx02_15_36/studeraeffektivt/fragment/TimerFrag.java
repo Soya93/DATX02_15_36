@@ -73,7 +73,7 @@ public class TimerFrag extends Fragment {
 
     private View rootView;
     private FlowLayout taskList;
-    private Switch taskSwitch;
+    private Spinner taskSwitch;
     private ImageButton previousWeek;
     private ImageButton nextWeek;
 
@@ -261,7 +261,7 @@ public class TimerFrag extends Fragment {
         spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         taskList = (FlowLayout) rootView.findViewById(R.id.taskList);
-        taskSwitch = (Switch) rootView.findViewById(R.id.taskSwitch);
+        taskSwitch = (Spinner) rootView.findViewById(R.id.taskSwitch);
         previousWeek = (ImageButton) rootView.findViewById(R.id.previousWeek);
         nextWeek = (ImageButton) rootView.findViewById(R.id.nextWeek);
         textViewWeek = (TextView) rootView.findViewById(R.id.textViewWeek);
@@ -285,7 +285,7 @@ public class TimerFrag extends Fragment {
         }
 
         isInitialized = true;
-
+        setTaskTypeSpinner();
     }
 
     private void setCourses() {
@@ -471,19 +471,24 @@ public class TimerFrag extends Fragment {
 
     public void initButtons() {
 
-        taskSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            taskSwitch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                if(isChecked){
-                    assignmentType = AssignmentType.READ;
-                    updateTaskList(assignmentType, week);
+                    if (taskSwitch.getSelectedItem().toString().equals(AssignmentType.PROBLEM.toString())) {
+                        assignmentType = AssignmentType.PROBLEM;
+                        updateTaskList(assignmentType, week);
+                    } else if (taskSwitch.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
+                        assignmentType = AssignmentType.READ;
+                        updateTaskList(assignmentType, week);
+                    }
                 }
-                else{
-                    assignmentType = AssignmentType.PROBLEM;
-                    updateTaskList(assignmentType, week);
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
                 }
-            }
-        });
+            });
 
         previousWeek.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -512,6 +517,15 @@ public class TimerFrag extends Fragment {
         colorPrevButtonGrey();
     }
 
+    private void setTaskTypeSpinner(){
+        String[] assignmentTypes = new String[]{AssignmentType.HANDIN.toString(), AssignmentType.LAB.toString(), AssignmentType.PROBLEM.toString(), AssignmentType.READ.toString(), AssignmentType.OBLIGATORY.toString(), AssignmentType.OTHER.toString()};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assignmentTypes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        taskSwitch.setAdapter(adapter);
+        taskSwitch.setSelection(2);
+    }
+
+
     private void setSharedPreferences(){
         sharedPref = getActivity().getSharedPreferences(weekPrefName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -532,7 +546,7 @@ public class TimerFrag extends Fragment {
         StateListDrawable thumbStates = new StateListDrawable();
         thumbStates.addState(new int[]{android.R.attr.state_checked}, new ColorDrawable(colorOn));
         thumbStates.addState(new int[]{}, new ColorDrawable(colorOff)); // this one has to come last
-        taskSwitch.setThumbDrawable(thumbStates);
+       // taskSwitch.setThumbDrawable(thumbStates);
 
         /*/The color of the taskSwitches background/track
         int color1 = Color.parseColor("#B3E5FC");
