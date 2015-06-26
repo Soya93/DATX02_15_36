@@ -88,22 +88,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
 
-
-
-
-    // listener for FAB menu
-    FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
-        @Override
-        public void onMenuOpened(FloatingActionMenu floatingActionMenu) {
-        }
-
-        @Override
-        public void onMenuClosed(FloatingActionMenu floatingActionMenu) {
-        }
-    };
-
-
-
     @Override
     public void onStart() {
         super.onStart();
@@ -149,9 +133,11 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         } else if (id == R.id.action_download) {
             getAssignmetsFromWeb();
         } else if (id == R.id.action_add) {
-            goToTasks();
+            goToAddTasks();
         } else if (id == R.id.action_activate) {
             openConfirmChangeStatusDialog();
+        } else if (id == R.id.action_tasks) {
+            goToCourseTasks();
         }
         updateText();
 
@@ -243,7 +229,14 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 
-    public void goToTasks() {
+    public void goToCourseTasks() {
+        Intent i = new Intent(this, CourseTasksActivity.class);
+        i.putExtra("CourseCode", courseCode);
+        i.putExtra("CourseName", courseName);
+        startActivity(i);
+    }
+
+    public void goToAddTasks() {
         Intent i = new Intent(this, StudyTaskActivity.class);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);

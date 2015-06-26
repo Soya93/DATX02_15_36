@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="se.chalmers.datx02_15_36.studeraeffektivt.view.CourseDetails">
 
+    <item android:id="@+id/action_tasks" android:title="Se tillagda uppgifter"
+        android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_add" android:title="Lägg till uppgifter"
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_download" android:title="Hämta uppgifter"

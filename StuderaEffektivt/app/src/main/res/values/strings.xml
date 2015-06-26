@@ -24,6 +24,7 @@
     <!-- Course -->
     <string name="title_activity_course">CourseActivity</string>
     <string name="title_activity_course_details">CourseDetails</string>
+    <string name="title_activity_course_tasks">CourseTasks</string>
     <string name="title_activity_home">Hem</string>
 
     <!-- Tip -->

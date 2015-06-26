@@ -132,6 +132,10 @@
             android:name=".activity.RepetitionActivity"
             android:label="@string/title_activity_repetition" >
         </activity>
+        <activity
+            android:name=".activity.CourseTasksActivity"
+            android:label="@string/title_activity_course_tasks" >
+        </activity>
 
         <receiver android:name=".util.notification.NotificationBroadcastReceiver"
             android:exported="false">
