@@ -33,8 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
@@ -48,7 +47,7 @@ public class GetAssignmentsFromWeb extends ActionBarActivity {
     private String courseCode;
     private String URL_CONNECTION = "http://studiecoachchalmers.se/getassignmets2.php";
 
-    private AssignmentsDBAdapter assDBAdapter;
+    private OldAssignmentsDBAdapter assDBAdapter;
 
     private FlowLayout taskListfromWebOther;
     private FlowLayout taskListfromWebRead;
@@ -66,7 +65,7 @@ public class GetAssignmentsFromWeb extends ActionBarActivity {
 
         actionBar.setTitle("Hämta uppgifter " + courseName);
         if (this != null) {
-            assDBAdapter = new AssignmentsDBAdapter(this);
+            assDBAdapter = new OldAssignmentsDBAdapter(this);
         }
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
 

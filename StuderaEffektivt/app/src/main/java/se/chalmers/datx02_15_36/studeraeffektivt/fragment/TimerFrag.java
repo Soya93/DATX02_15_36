@@ -38,19 +38,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -97,7 +94,7 @@ public class TimerFrag extends Fragment {
     private ProgressBar progressBar;
 
     private CoursesDBAdapter coursesDBAdapter;
-    private AssignmentsDBAdapter assDBAdapter;
+    private OldAssignmentsDBAdapter assDBAdapter;
     private Handler serviceHandler;
 
     private SharedPreferences sharedPref;
@@ -148,7 +145,7 @@ public class TimerFrag extends Fragment {
         rootView = inflater.inflate(R.layout.activity_timer, container, false);
         if (getActivity() != null) {
             coursesDBAdapter = new CoursesDBAdapter(getActivity());
-            assDBAdapter = new AssignmentsDBAdapter(getActivity());
+            assDBAdapter = new OldAssignmentsDBAdapter(getActivity());
         }
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         cph = CoursePreferenceHelper.getInstance(getActivity());

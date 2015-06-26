@@ -44,9 +44,8 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import java.util.ArrayList;
 import java.util.List;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
 //import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CourseDetailedInfoFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.HomeFrag;
@@ -364,7 +363,7 @@ public class MainActivity extends ActionBarActivity {
     public void onlyWhenInAppReminder() {
         // if(Utils.getCurrWeekNumber() == Calendar.MONDAY && Utils.getHourNow() >= 8){
         RepetitionReminder repetitionReminder = new RepetitionReminder();
-        repetitionReminder.setAssesDBAdapter(new AssignmentsDBAdapter(this));
+        repetitionReminder.setAssesDBAdapter(new OldAssignmentsDBAdapter(this));
         repetitionReminder.setCoursesDBAdapter(new CoursesDBAdapter(this));
 
         List<String> message = repetitionReminder.reminderMessage();
@@ -399,7 +398,7 @@ public class MainActivity extends ActionBarActivity {
        // if(Utils.getCurrWeekNumber() == Calendar.MONDAY && Utils.getHourNow() >= 8){
             RepetitionReminder repetitionReminder = new RepetitionReminder();
             repetitionReminder.setCoursesDBAdapter(new CoursesDBAdapter(this));
-            repetitionReminder.setAssesDBAdapter(new AssignmentsDBAdapter(this));
+            repetitionReminder.setAssesDBAdapter(new OldAssignmentsDBAdapter(this));
 
             List<String> message = repetitionReminder.reminderMessage();
 
@@ -470,7 +469,7 @@ public class MainActivity extends ActionBarActivity {
         // if(Utils.getCurrWeekNumber() == Calendar.MONDAY && Utils.getHourNow() >= 8){
         RepetitionReminder repetitionReminder = new RepetitionReminder();
         repetitionReminder.setCoursesDBAdapter(new CoursesDBAdapter(this));
-        repetitionReminder.setAssesDBAdapter(new AssignmentsDBAdapter(this));
+        repetitionReminder.setAssesDBAdapter(new OldAssignmentsDBAdapter(this));
 
         ArrayList<String> message = repetitionReminder.reminderMessage();
         Intent i = new Intent(this, NotificationService.class);

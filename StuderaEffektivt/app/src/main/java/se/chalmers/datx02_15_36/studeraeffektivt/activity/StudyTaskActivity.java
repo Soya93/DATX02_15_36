@@ -24,19 +24,16 @@ import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -48,9 +45,8 @@ import java.util.List;
 import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -78,7 +74,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     private String URL_CONNECTION = "http://studiecoachchalmers.se/insertassignmets.php";
 
     //The access point of the database.
-    private AssignmentsDBAdapter assDBAdapter;
+    private OldAssignmentsDBAdapter assDBAdapter;
     private CoursesDBAdapter coursesDBAdapter;
 
     private int chosenWeek = CalendarUtils.getCurrWeekNumber();
@@ -97,7 +93,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         //Create the database access point but check if the context is null first.
         if (this != null) {
-            assDBAdapter = new AssignmentsDBAdapter(this);
+            assDBAdapter = new OldAssignmentsDBAdapter(this);
             coursesDBAdapter = new CoursesDBAdapter(this);
         }
         cph = CoursePreferenceHelper.getInstance(getApplicationContext());
@@ -153,7 +149,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         setWeekSpinner();
         setAssignmentTypeSpinner();
 
-        listOfTasks.addTasksFromDatabase(new AssignmentsDBAdapter(this), courseCode, AssignmentType.PROBLEM);
+        listOfTasks.addTasksFromDatabase(new OldAssignmentsDBAdapter(this), courseCode, AssignmentType.PROBLEM);
     }
 
     private void setCourseSpinner(){
@@ -230,7 +226,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     private void updateListOfTasks(AssignmentType assignmentType){
         listOfTasks.removeAllViews();
-        listOfTasks.addTasksFromDatabase(new AssignmentsDBAdapter(this), courseCode, assignmentType);
+        listOfTasks.addTasksFromDatabase(new OldAssignmentsDBAdapter(this), courseCode, assignmentType);
     }
 
     private void saveTask() {

@@ -20,9 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 
 /**
  * Created by SoyaPanda on 15-05-06.
@@ -30,7 +29,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 public class RepetitionReminder {
 
 
-    private AssignmentsDBAdapter assDBAdapter;
+    private OldAssignmentsDBAdapter assDBAdapter;
     private CoursesDBAdapter coursesDBAdapter;
     private ArrayList <String> coursesToRepeat;
 
@@ -129,7 +128,7 @@ public class RepetitionReminder {
         this.coursesDBAdapter = cdba;
     }
 
-    public void setAssesDBAdapter(AssignmentsDBAdapter adba) {
+    public void setAssesDBAdapter(OldAssignmentsDBAdapter adba) {
         this.assDBAdapter = adba;
     }
 

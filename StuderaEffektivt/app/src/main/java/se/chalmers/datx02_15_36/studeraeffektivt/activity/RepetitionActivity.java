@@ -38,9 +38,8 @@ import java.util.List;
 import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -55,7 +54,7 @@ public class RepetitionActivity extends ActionBarActivity {
     private Spinner courseSpinner;
     private TextView taskTextView;
     public static Context cntxofParent;
-    private AssignmentsDBAdapter assDBAdapter;
+    private OldAssignmentsDBAdapter assDBAdapter;
     private CoursesDBAdapter coursesDBAdapter;
     private String prevCourse = "";
 
@@ -80,7 +79,7 @@ public class RepetitionActivity extends ActionBarActivity {
 
         int currentWeek = CalendarUtils.getCurrWeekNumber();
 
-        assDBAdapter = new AssignmentsDBAdapter(this);
+        assDBAdapter = new OldAssignmentsDBAdapter(this);
         coursesDBAdapter = new CoursesDBAdapter(this);
 
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,

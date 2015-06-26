@@ -14,16 +14,10 @@ limitations under the License.
 
 package se.chalmers.datx02_15_36.studeraeffektivt.database;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 
 /**
  * A database adapter that is used to read and write to/from the database.
@@ -51,49 +45,61 @@ public class DBAdapter {
             + SessionsDBAdapter.SESSION_timestamp + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
             + SessionsDBAdapter.SESSION_week + " INT)";
 
-    private static final String CREATE_ASSIGNMENTS_TABLE = "CREATE TABLE " + AssignmentsDBAdapter.TABLE_ASSIGNMENTS + " ("
-            + AssignmentsDBAdapter.ASSIGNMENTS__id + " PRIMARY KEY, "
-            + AssignmentsDBAdapter.ASSIGNMENTS_ccode + " VARCHAR(50), "
-            + AssignmentsDBAdapter.ASSIGNMENTS_chapter + " INT, "
-            + AssignmentsDBAdapter.ASSIGNMENTS_week + " INT, "
-            + AssignmentsDBAdapter.ASSIGNMENTS_assNr +" VARCHAR(50), "
-            + AssignmentsDBAdapter.ASSIGNMENTS_startPage + " INT, "
-            + AssignmentsDBAdapter.ASSIGNMENTS_stopPage + " INT, "
-            + AssignmentsDBAdapter.ASSIGNMENTS_type + " VARCHAR(50), "
-            + AssignmentsDBAdapter.ASSIGNMENTS_status + " VARCHAR(50))";
+    private static final String CREATE_ASSIGNMENTS_TABLE = "CREATE TABLE " + OldAssignmentsDBAdapter.TABLE_ASSIGNMENTS + " ("
+            + OldAssignmentsDBAdapter.ASSIGNMENTS__id + " PRIMARY KEY, "
+            + OldAssignmentsDBAdapter.ASSIGNMENTS_ccode + " VARCHAR(50), "
+            + OldAssignmentsDBAdapter.ASSIGNMENTS_chapter + " INT, "
+            + OldAssignmentsDBAdapter.ASSIGNMENTS_week + " INT, "
+            + OldAssignmentsDBAdapter.ASSIGNMENTS_assNr +" VARCHAR(50), "
+            + OldAssignmentsDBAdapter.ASSIGNMENTS_startPage + " INT, "
+            + OldAssignmentsDBAdapter.ASSIGNMENTS_stopPage + " INT, "
+            + OldAssignmentsDBAdapter.ASSIGNMENTS_type + " VARCHAR(50), "
+            + OldAssignmentsDBAdapter.ASSIGNMENTS_status + " VARCHAR(50))";
 
-    private static final String CREATE_LABS_TABLE = "CREATE TABLE " + AssignmentsDBAdapter.TABLE_LABS + " ("
-            + AssignmentsDBAdapter.LABS_ccode + " VARCHAR(50), "
-            + AssignmentsDBAdapter.LABS_nr + " VARCHAR(50), "
-            + AssignmentsDBAdapter.LABS_week + " INT, "
-            + AssignmentsDBAdapter.LABS_assNr + " VARCHAR(50), "
-            + AssignmentsDBAdapter.LABS_status + " VARCHAR(50), "
-            + "FOREIGN KEY(" + AssignmentsDBAdapter.LABS_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+    private static final String CREATE_LABS_TABLE = "CREATE TABLE " + LabAssignmentsDBAdapter.TABLE_LABS + " ("
+            + LabAssignmentsDBAdapter.LABS__id + " PRIMARY KEY, "
+            + LabAssignmentsDBAdapter.LABS_ccode + " VARCHAR(50), "
+            + LabAssignmentsDBAdapter.LABS_nr + " VARCHAR(50), "
+            + LabAssignmentsDBAdapter.LABS_week + " INT, "
+            + LabAssignmentsDBAdapter.LABS_assNr + " VARCHAR(50), "
+            + LabAssignmentsDBAdapter.LABS_status + " VARCHAR(50), "
+            + "FOREIGN KEY(" + LabAssignmentsDBAdapter.LABS_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
-    private static final String CREATE_PROBLEMS_TABLE = "CREATE TABLE " + AssignmentsDBAdapter.TABLE_PROBLEMS + " ("
-            + AssignmentsDBAdapter.PROBLEMS_ccode + " VARCHAR(50), "
-            + AssignmentsDBAdapter.PROBLEMS_chapter + " VARCHAR(50), "
-            + AssignmentsDBAdapter.PROBLEMS_week + " INT, "
-            + AssignmentsDBAdapter.PROBLEMS_assNr + " VARCHAR(50), "
-            + AssignmentsDBAdapter.PROBLEMS_status + " VARCHAR(50), "
-            + "FOREIGN KEY(" + AssignmentsDBAdapter.PROBLEMS_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+    private static final String CREATE_PROBLEMS_TABLE = "CREATE TABLE " + ProblemAssignmentsDBAdapter.TABLE_PROBLEMS + " ("
+            + ProblemAssignmentsDBAdapter.PROBLEMS__id + " PRIMARY KEY, "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_ccode + " VARCHAR(50), "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_chapter + " VARCHAR(50), "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_week + " INT, "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_assNr + " VARCHAR(50), "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_status + " VARCHAR(50), "
+            + "FOREIGN KEY(" + ProblemAssignmentsDBAdapter.PROBLEMS_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
-    private static final String CREATE_READ_TABLE = "CREATE TABLE " + AssignmentsDBAdapter.TABLE_READ + " ("
-            + AssignmentsDBAdapter.READ_ccode + " VARCHAR(50), "
-            + AssignmentsDBAdapter.READ_chapter + " VARCHAR(50), "
-            + AssignmentsDBAdapter.READ_week + " INT, "
-            + AssignmentsDBAdapter.READ_startPage + " INT, "
-            + AssignmentsDBAdapter.READ_stopPage + " INT, "
-            + AssignmentsDBAdapter.READ_status + " VARCHAR(50), "
-            + "FOREIGN KEY(" + AssignmentsDBAdapter.READ_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+    private static final String CREATE_READ_TABLE = "CREATE TABLE " + ReadAssignmentsDBAdapter.TABLE_READ + " ("
+            + ReadAssignmentsDBAdapter.READ__id + " PRIMARY KEY, "
+            + ReadAssignmentsDBAdapter.READ_ccode + " VARCHAR(50), "
+            + ReadAssignmentsDBAdapter.READ_chapter + " VARCHAR(50), "
+            + ReadAssignmentsDBAdapter.READ_week + " INT, "
+            + ReadAssignmentsDBAdapter.READ_startPage + " INT, "
+            + ReadAssignmentsDBAdapter.READ_endPage + " INT, "
+            + ReadAssignmentsDBAdapter.READ_status + " VARCHAR(50), "
+            + "FOREIGN KEY(" + ReadAssignmentsDBAdapter.READ_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
-    private static final String CREATE_HANDIN_TABLE = "CREATE TABLE " + AssignmentsDBAdapter.TABLE_HANDIN + " ("
-            + AssignmentsDBAdapter.HANDIN_ccode+ " VARCHAR(50), "
-            + AssignmentsDBAdapter.HANDIN_nr + " VARCHAR(50), "
-            + AssignmentsDBAdapter.HANDIN_week + " INT, "
-            + AssignmentsDBAdapter.HANDIN_assNr + " VARCHAR(50), "
-            + AssignmentsDBAdapter.HANDIN_status + " VARCHAR(50), "
-            + "FOREIGN KEY(" + AssignmentsDBAdapter.HANDIN_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+    private static final String CREATE_HANDIN_TABLE = "CREATE TABLE " + HandInAssignmentsDBAdapter.TABLE_HANDIN + " ("
+            + HandInAssignmentsDBAdapter.HANDIN__id + " PRIMARY KEY, "
+            + HandInAssignmentsDBAdapter.HANDIN_ccode+ " VARCHAR(50), "
+            + HandInAssignmentsDBAdapter.HANDIN_nr + " VARCHAR(50), "
+            + HandInAssignmentsDBAdapter.HANDIN_week + " INT, "
+            + HandInAssignmentsDBAdapter.HANDIN_assNr + " VARCHAR(50), "
+            + HandInAssignmentsDBAdapter.HANDIN_status + " VARCHAR(50), "
+            + "FOREIGN KEY(" + HandInAssignmentsDBAdapter.HANDIN_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+
+    private static final String CREATE_OTHER_TABLE = "CREATE TABLE " + OtherAssignmentsDBAdapter.TABLE_OTHER + " ("
+            + OtherAssignmentsDBAdapter.OTHER__id + " PRIMARY KEY, "
+            + OtherAssignmentsDBAdapter.OTHER_ccode+ " VARCHAR(50), "
+            + OtherAssignmentsDBAdapter.OTHER_week + " INT, "
+            + OtherAssignmentsDBAdapter.OTHER_assNr + " VARCHAR(50), "
+            + OtherAssignmentsDBAdapter.OTHER_status + " VARCHAR(50), "
+            + "FOREIGN KEY(" + OtherAssignmentsDBAdapter.OTHER_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
     private static final String CREATE_OBLIG_TABLE = "CREATE TABLE " + CoursesDBAdapter.TABLE_OBLIG + " ("
             + CoursesDBAdapter.OBLIG_ccode + " VARCHAR(50), "

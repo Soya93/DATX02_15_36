@@ -11,9 +11,9 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 /**
  * Created by haxmaj0 on 2015-06-22.
  */
-public class AssignmentsDBAdapter extends DBAdapter {
+public class OldAssignmentsDBAdapter extends DBAdapter {
 
-    public AssignmentsDBAdapter(Context ctx){
+    public OldAssignmentsDBAdapter(Context ctx){
         super(ctx);
     }
 
@@ -28,39 +28,6 @@ public class AssignmentsDBAdapter extends DBAdapter {
     public static final String ASSIGNMENTS_stopPage = "stopPage";
     public static final String ASSIGNMENTS_type = "type";
     public static final String ASSIGNMENTS_status = "status";
-
-    //Variables for LabAssignments table.
-    public static final String TABLE_LABS = "LABS";
-    public static final String LABS_ccode = CoursesDBAdapter.COURSES__ccode;
-    public static final String LABS_nr = "nr";
-    public static final String LABS_week = "week";
-    public static final String LABS_assNr = "assNr";
-    public static final String LABS_status = "status";
-
-    //Variables for ProblemAssignments table.
-    public static final String TABLE_PROBLEMS = "PROBLEMS";
-    public static final String PROBLEMS_ccode = CoursesDBAdapter.COURSES__ccode;
-    public static final String PROBLEMS_chapter = "chapter";
-    public static final String PROBLEMS_week = "week";
-    public static final String PROBLEMS_assNr = "assNr";
-    public static final String PROBLEMS_status = "status";
-
-    //Variables for ReadAssignments table.
-    public static final String TABLE_READ = "READ";
-    public static final String READ_ccode = CoursesDBAdapter.COURSES__ccode;
-    public static final String READ_chapter = "chapter";
-    public static final String READ_week = "week";
-    public static final String READ_startPage = "startPage";
-    public static final String READ_stopPage = "stopPage";
-    public static final String READ_status = "status";
-
-    //Variables for HandinAssignments table.
-    public static final String TABLE_HANDIN = "HANDIN";
-    public static final String HANDIN_ccode = CoursesDBAdapter.COURSES__ccode;
-    public static final String HANDIN_nr = "nr";
-    public static final String HANDIN_week = "week";
-    public static final String HANDIN_assNr = "assNr";
-    public static final String HANDIN_status = "status";
 
     public long insertAssignment(String courseCode,int id, int chapter, int week, String assNr,
                                  int startPage, int stopPage, AssignmentType type, AssignmentStatus status) {
@@ -90,18 +57,6 @@ public class AssignmentsDBAdapter extends DBAdapter {
             return -1;
         }
     }
-
-
-    /*public void deleteAssignments(String ccode) {
-        Cursor cur = getAssignments(ccode);
-
-        while (cur.moveToNext()){
-            try {
-                deleteAssignment(cur.getColumnIndex("ASSIGNMENTS__id"));
-            } catch (Exception e) {
-            }
-        }
-    }*/
 
 
     public long setDone(int assignmentId){
@@ -154,7 +109,4 @@ public class AssignmentsDBAdapter extends DBAdapter {
         String selection = "_ccode" + " = '" + ccode + "'";
         return db.query(TABLE_ASSIGNMENTS, null, selection, null, null, null, null);
     }
-
-
-
 }

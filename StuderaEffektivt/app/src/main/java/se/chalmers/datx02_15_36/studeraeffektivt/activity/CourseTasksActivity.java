@@ -14,8 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
@@ -43,7 +42,7 @@ public class CourseTasksActivity extends ActionBarActivity {
     private String courseCode;
     private String courseName;
     private Spinner assignmentTypesSpinner;
-    private AssignmentsDBAdapter assignmentsDBAdapter;
+    private OldAssignmentsDBAdapter oldAssignmentsDBAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class CourseTasksActivity extends ActionBarActivity {
         actionBar.setTitle("Uppgifter i kursen " + courseName);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
         if (this != null) {
-            assignmentsDBAdapter = new AssignmentsDBAdapter(this);
+            oldAssignmentsDBAdapter = new OldAssignmentsDBAdapter(this);
         }
         initComponents();
     }
@@ -87,10 +86,10 @@ public class CourseTasksActivity extends ActionBarActivity {
         Log.i("string for asstype", AssignmentType.READ.toString());
 
         if(assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
-            assignmentsFlowLayout.addTasksFromDatabase(assignmentsDBAdapter, courseCode, AssignmentType.READ);
+            assignmentsFlowLayout.addTasksFromDatabase(oldAssignmentsDBAdapter, courseCode, AssignmentType.READ);
 
         } else if(assignmentTypesSpinner.getSelectedItem().equals(AssignmentType.PROBLEM.toString())) {
-            assignmentsFlowLayout.addTasksFromDatabase(assignmentsDBAdapter, courseCode, AssignmentType.PROBLEM);
+            assignmentsFlowLayout.addTasksFromDatabase(oldAssignmentsDBAdapter, courseCode, AssignmentType.PROBLEM);
         }
     }
 

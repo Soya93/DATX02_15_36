@@ -31,8 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CheckedStudyTaskToDB;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
@@ -176,7 +175,7 @@ public class FlowLayout extends ViewGroup {
         }
     }
 
-    public void addTasksFromDatabase(AssignmentsDBAdapter assDBAdapter, String courseCode, AssignmentType assignmentType) {
+    public void addTasksFromDatabase(OldAssignmentsDBAdapter assDBAdapter, String courseCode, AssignmentType assignmentType) {
 
         Cursor cursor = assDBAdapter.getAssignments();
 
@@ -250,7 +249,7 @@ public class FlowLayout extends ViewGroup {
         Log.d("dbref", "asses i: "+i + " course " + courseCode);
     }
 
-    public void addTasksFromDatabase(AssignmentsDBAdapter assDBAdapter, String courseCode, AssignmentType assignmentType, int week) {
+    public void addTasksFromDatabase(OldAssignmentsDBAdapter assDBAdapter, String courseCode, AssignmentType assignmentType, int week) {
 
         Cursor cursor = assDBAdapter.getAssignments();
         //Log.d("dbref", "asses total: "+cursor.getCount());
@@ -326,7 +325,7 @@ public class FlowLayout extends ViewGroup {
     }
 
     public void addTasksFromWeb( String courseCode, int chapter, int week, String assNr,
-                                int startPage, int stopPage, String status, String type,AssignmentsDBAdapter assDBAdapter) {
+                                int startPage, int stopPage, String status, String type,OldAssignmentsDBAdapter assDBAdapter) {
 
 
 

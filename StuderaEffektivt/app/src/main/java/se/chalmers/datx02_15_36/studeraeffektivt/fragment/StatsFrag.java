@@ -41,9 +41,8 @@ import com.github.mikephil.charting.data.PieDataSet;
 import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.SessionsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
@@ -64,7 +63,7 @@ public class StatsFrag extends Fragment {
     private TextView noDataView;
 
     private CoursesDBAdapter courseDBAdapter;
-    private AssignmentsDBAdapter assDBAdapter;
+    private OldAssignmentsDBAdapter assDBAdapter;
     private SessionsDBAdapter sessDBAdapter;
     private CalendarUtils utils;
 
@@ -79,7 +78,7 @@ public class StatsFrag extends Fragment {
 
         if (getActivity() != null) {
             courseDBAdapter = new CoursesDBAdapter(getActivity());
-            assDBAdapter = new AssignmentsDBAdapter(getActivity());
+            assDBAdapter = new OldAssignmentsDBAdapter(getActivity());
             sessDBAdapter = new SessionsDBAdapter(getActivity());
         }
         utils = new CalendarUtils();

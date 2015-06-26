@@ -27,8 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
@@ -51,7 +50,7 @@ public class StudyTask extends CheckBox{
     private int startPage;
     private int endPage;
     private int id;
-    AssignmentsDBAdapter assDBAdapter;
+    OldAssignmentsDBAdapter assDBAdapter;
 
     AssignmentType type;
     AssignmentStatus status;
@@ -62,7 +61,7 @@ public class StudyTask extends CheckBox{
         return status;
     }
 
-    public StudyTask(Context context,int id, String courseCode,int chapter, int week, String taskString, int startPage, int endPage, AssignmentsDBAdapter assDBAdapter, AssignmentType type, AssignmentStatus status) {
+    public StudyTask(Context context,int id, String courseCode,int chapter, int week, String taskString, int startPage, int endPage, OldAssignmentsDBAdapter assDBAdapter, AssignmentType type, AssignmentStatus status) {
         super(context);
         this.id = id;
         this.courseCode = courseCode;

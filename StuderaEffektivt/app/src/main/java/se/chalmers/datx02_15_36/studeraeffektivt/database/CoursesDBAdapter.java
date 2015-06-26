@@ -50,6 +50,7 @@ public class CoursesDBAdapter extends DBAdapter {
     public long deleteCourse(String ccode){
         try{
             return db.delete(TABLE_COURSES, COURSES__ccode + " = '" + ccode + "'", null);
+            //TODO remove all the assignments of the course too
         }catch (Exception e){
             return -1;
         }
