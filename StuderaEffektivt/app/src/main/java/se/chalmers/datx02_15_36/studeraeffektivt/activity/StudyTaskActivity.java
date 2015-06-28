@@ -47,7 +47,7 @@ import java.util.Random;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.OldStudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -369,8 +369,8 @@ public class StudyTaskActivity extends ActionBarActivity {
                         elementToAdd = s2 + separateTaskParts[i];       //Combine the maintasks 1 and subtask a such that it becomes 1a
                         if (!listOfTasks.contains(chapter, elementToAdd)) {
                             int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                            StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, elementToAdd, 0, 0, assDBAdapter, AssignmentType.PROBLEM, AssignmentStatus.UNDONE);
-                            addToDatabase(studyTask);
+                            OldStudyTask oldStudyTask = new OldStudyTask(this, randomNum, courseCode, chapter, chosenWeek, elementToAdd, 0, 0, assDBAdapter, AssignmentType.PROBLEM, AssignmentStatus.UNDONE);
+                            addToDatabase(oldStudyTask);
                             new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"",elementToAdd,
                                     Integer.toString(0),Integer.toString(0),"PROBLEM","UNDONE");
                         } else {
@@ -384,8 +384,8 @@ public class StudyTaskActivity extends ActionBarActivity {
                 for (String s : stringList) {         //For each maintask
                     if (!listOfTasks.contains(chapter, s)) {
                         int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                        StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, s, 0, 0, assDBAdapter, AssignmentType.PROBLEM, AssignmentStatus.UNDONE);
-                        addToDatabase(studyTask);
+                        OldStudyTask oldStudyTask = new OldStudyTask(this, randomNum, courseCode, chapter, chosenWeek, s, 0, 0, assDBAdapter, AssignmentType.PROBLEM, AssignmentStatus.UNDONE);
+                        addToDatabase(oldStudyTask);
                         new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"",s,
                                 Integer.toString(0),Integer.toString(0),"PROBLEM","UNDONE");
                     } else {
@@ -418,9 +418,9 @@ public class StudyTaskActivity extends ActionBarActivity {
                 end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
                if(!(listOfTasks.contains(chapter, start, end))) {
-                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "read", start, end, assDBAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
+                    OldStudyTask oldStudyTask = new OldStudyTask(this, randomNum, courseCode, chapter, chosenWeek, "read", start, end, assDBAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
-                    addToDatabase(studyTask);
+                    addToDatabase(oldStudyTask);
                     new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"","ReadAssignment",
                             start+"",end+"","READ","UNDONE");
                     //addToListOfTasks(studyTask);
@@ -432,10 +432,10 @@ public class StudyTaskActivity extends ActionBarActivity {
             } else {
                  if (!(listOfTasks.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
 
-                    StudyTask studyTask = new StudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment",
+                    OldStudyTask oldStudyTask = new OldStudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment",
                             Integer.parseInt(taskString), Integer.parseInt(taskString), assDBAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
 
-                    addToDatabase(studyTask);
+                    addToDatabase(oldStudyTask);
                     new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
                             taskString,taskString,"READ","UNDONE");
                 } else {
@@ -449,24 +449,24 @@ public class StudyTaskActivity extends ActionBarActivity {
         }
     }
 
-    public void addToDatabase(StudyTask studyTask) {
+    public void addToDatabase(OldStudyTask oldStudyTask) {
 
         assDBAdapter.insertAssignment(
-                studyTask.getCourseCode(),
-                studyTask.getIdNr(),
-                studyTask.getChapter(),
-                studyTask.getWeek(),
-                studyTask.getTaskString(),
-                studyTask.getStartPage(),
-                studyTask.getEndPage(),
-                studyTask.getType(),
-                studyTask.getStatus()
+                oldStudyTask.getCourseCode(),
+                oldStudyTask.getIdNr(),
+                oldStudyTask.getChapter(),
+                oldStudyTask.getWeek(),
+                oldStudyTask.getTaskString(),
+                oldStudyTask.getStartPage(),
+                oldStudyTask.getEndPage(),
+                oldStudyTask.getType(),
+                oldStudyTask.getStatus()
         );
 
         Cursor asses = assDBAdapter.getAssignments();
-        Log.d("ass", "asses in db: "+asses.getCount()+" course: "+studyTask.getType());
+        Log.d("ass", "asses in db: "+asses.getCount()+" course: "+ oldStudyTask.getType());
 
-        if(studyTask.getType().equals(AssignmentType.READ)){
+        if(oldStudyTask.getType().equals(AssignmentType.READ)){
             listOfTasks.removeAllViews();
             listOfTasks.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.PROBLEM);
         }

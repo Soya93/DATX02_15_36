@@ -31,7 +31,7 @@ import java.util.HashMap;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.OldStudyTask;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,8 +63,8 @@ public class StudyTaskFragment extends Fragment {
     private Course course;
 
     //HashMap with the chapters as keys and a list of tasks as the elements.
-    private HashMap<Integer, ArrayList<StudyTask>> taskMap = new HashMap<>();
-    ArrayList<StudyTask> studyTaskList;
+    private HashMap<Integer, ArrayList<OldStudyTask>> taskMap = new HashMap<>();
+    ArrayList<OldStudyTask> oldStudyTaskList;
 
     private View view;
 
@@ -172,10 +172,10 @@ public class StudyTaskFragment extends Fragment {
         //Kolla om kapitlet man vill lägga till i redan finns bland uppgifterna, om inte: skapa en nyckel för detta kapitel
 
         if(taskMap.containsKey(chapter)){
-            studyTaskList = taskMap.get(chapter);
+            oldStudyTaskList = taskMap.get(chapter);
         }
         else{
-            studyTaskList = new ArrayList<>();
+            oldStudyTaskList = new ArrayList<>();
         }
 
         //Kollar om det finns kommatecken i input för uppgifter och separerar i så fall stringen så att alla element hamnar separat
@@ -229,7 +229,7 @@ public class StudyTaskFragment extends Fragment {
             }
         }*/
 
-        taskMap.put(chapter, studyTaskList);        //Uppdatera Hashmappen för nyckeln för kapitlet
+        taskMap.put(chapter, oldStudyTaskList);        //Uppdatera Hashmappen för nyckeln för kapitlet
 
         String taskMapString = taskMap.toString();
 

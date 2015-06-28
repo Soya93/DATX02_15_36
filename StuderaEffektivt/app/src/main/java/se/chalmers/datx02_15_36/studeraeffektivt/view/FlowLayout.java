@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.OldStudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CheckedStudyTaskToDB;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -47,8 +47,8 @@ public class FlowLayout extends ViewGroup {
     private final static int PAD_H = 2, PAD_V = 2; // Space between child views.
     private int mHeight;
 
-    private HashMap<Integer, ArrayList<StudyTask>> hashMapOfStudyTasks;
-    private HashMap<Integer, ArrayList<StudyTask>> hashMapOfReadingAssignments;
+    private HashMap<Integer, ArrayList<OldStudyTask>> hashMapOfStudyTasks;
+    private HashMap<Integer, ArrayList<OldStudyTask>> hashMapOfReadingAssignments;
     private HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> hashMapOfStudyTasks2 = new HashMap<>();
     private HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> hashMapOfReadingAssignments2 = new HashMap<>();
 
@@ -123,8 +123,8 @@ public class FlowLayout extends ViewGroup {
         for(int i = 0; i < this.getChildCount(); i++){
             if(
                     !(getChildAt(i).getClass().equals(TextView.class)) &&
-                            ((StudyTask) getChildAt(i)).getChapter() == chapter &&
-                            ((StudyTask) getChildAt(i)).getTaskString().equals(taskString)){
+                            ((OldStudyTask) getChildAt(i)).getChapter() == chapter &&
+                            ((OldStudyTask) getChildAt(i)).getTaskString().equals(taskString)){
 
                 return true;
             }
@@ -137,9 +137,9 @@ public class FlowLayout extends ViewGroup {
         for(int i = 0; i < this.getChildCount(); i++){
             if(
                     !(getChildAt(i).getClass().equals(TextView.class)) &&
-                            ((StudyTask) getChildAt(i)).getChapter() == chapter &&
-                            ((StudyTask) getChildAt(i)).getStartPage() == startPage &&
-                            ((StudyTask) getChildAt(i)).getEndPage() == endPage){
+                            ((OldStudyTask) getChildAt(i)).getChapter() == chapter &&
+                            ((OldStudyTask) getChildAt(i)).getStartPage() == startPage &&
+                            ((OldStudyTask) getChildAt(i)).getEndPage() == endPage){
 
                 return true;
             }
@@ -148,11 +148,11 @@ public class FlowLayout extends ViewGroup {
         return false;
     }
 
-    public void addMap(HashMap<Integer, ArrayList<StudyTask>> hashMap){
+    public void addMap(HashMap<Integer, ArrayList<OldStudyTask>> hashMap){
         Map<Integer, ArrayList> treeMap;
         treeMap = new TreeMap<Integer, ArrayList>(hashMap);
         for (Object value : treeMap.values()) {
-            ArrayList<StudyTask> a = (ArrayList) value;
+            ArrayList<OldStudyTask> a = (ArrayList) value;
             TextView kapitelText = new TextView(this.getContext());
             kapitelText.setText("  KAPITEL " + a.get(0).getChapter());
             int width = this.getWidth();
@@ -205,7 +205,7 @@ public class FlowLayout extends ViewGroup {
                         assignmentType = AssignmentType.PROBLEM;
                     }
 
-                    StudyTask studyTask = new StudyTask(
+                    OldStudyTask oldStudyTask = new OldStudyTask(
                             this.getContext(),
                             cursor.getInt(cursor.getColumnIndex("_id")),
                             cursor.getString(cursor.getColumnIndex("_ccode")),
@@ -218,23 +218,23 @@ public class FlowLayout extends ViewGroup {
                             assignmentType,
                             assignmentStatus);
 
-                    if (studyTask.getType() == AssignmentType.PROBLEM) {
+                    if (oldStudyTask.getType() == AssignmentType.PROBLEM) {
 
-                        if (hashMapOfStudyTasks.containsKey(studyTask.getChapter())) {
-                            hashMapOfStudyTasks.get(studyTask.getChapter()).add(studyTask);
+                        if (hashMapOfStudyTasks.containsKey(oldStudyTask.getChapter())) {
+                            hashMapOfStudyTasks.get(oldStudyTask.getChapter()).add(oldStudyTask);
                         } else {
-                            ArrayList<StudyTask> a = new ArrayList();
-                            a.add(studyTask);
-                            hashMapOfStudyTasks.put(studyTask.getChapter(), a);
+                            ArrayList<OldStudyTask> a = new ArrayList();
+                            a.add(oldStudyTask);
+                            hashMapOfStudyTasks.put(oldStudyTask.getChapter(), a);
                         }
 
                     } else {
-                        if (hashMapOfReadingAssignments.containsKey(studyTask.getChapter())) {
-                            hashMapOfReadingAssignments.get(studyTask.getChapter()).add(studyTask);
+                        if (hashMapOfReadingAssignments.containsKey(oldStudyTask.getChapter())) {
+                            hashMapOfReadingAssignments.get(oldStudyTask.getChapter()).add(oldStudyTask);
                         } else {
-                            ArrayList<StudyTask> a = new ArrayList();
-                            a.add(studyTask);
-                            hashMapOfReadingAssignments.put(studyTask.getChapter(), a);
+                            ArrayList<OldStudyTask> a = new ArrayList();
+                            a.add(oldStudyTask);
+                            hashMapOfReadingAssignments.put(oldStudyTask.getChapter(), a);
                         }
                     }
                 }
@@ -277,7 +277,7 @@ public class FlowLayout extends ViewGroup {
                         assignmentType = AssignmentType.PROBLEM;
                     }
 
-                    StudyTask studyTask = new StudyTask(
+                    OldStudyTask oldStudyTask = new OldStudyTask(
                             this.getContext(),
                             cursor.getInt(cursor.getColumnIndex("_id")),
                             cursor.getString(cursor.getColumnIndex("_ccode")),
@@ -290,23 +290,23 @@ public class FlowLayout extends ViewGroup {
                             assignmentType,
                             assignmentStatus);
 
-                    if (studyTask.getType() == AssignmentType.PROBLEM) {
+                    if (oldStudyTask.getType() == AssignmentType.PROBLEM) {
 
-                        if (hashMapOfStudyTasks.containsKey(studyTask.getChapter())) {
-                            hashMapOfStudyTasks.get(studyTask.getChapter()).add(studyTask);
+                        if (hashMapOfStudyTasks.containsKey(oldStudyTask.getChapter())) {
+                            hashMapOfStudyTasks.get(oldStudyTask.getChapter()).add(oldStudyTask);
                         } else {
-                            ArrayList<StudyTask> a = new ArrayList();
-                            a.add(studyTask);
-                            hashMapOfStudyTasks.put(studyTask.getChapter(), a);
+                            ArrayList<OldStudyTask> a = new ArrayList();
+                            a.add(oldStudyTask);
+                            hashMapOfStudyTasks.put(oldStudyTask.getChapter(), a);
                         }
 
                     } else {
-                        if (hashMapOfReadingAssignments.containsKey(studyTask.getChapter())) {
-                            hashMapOfReadingAssignments.get(studyTask.getChapter()).add(studyTask);
+                        if (hashMapOfReadingAssignments.containsKey(oldStudyTask.getChapter())) {
+                            hashMapOfReadingAssignments.get(oldStudyTask.getChapter()).add(oldStudyTask);
                         } else {
-                            ArrayList<StudyTask> a = new ArrayList();
-                            a.add(studyTask);
-                            hashMapOfReadingAssignments.put(studyTask.getChapter(), a);
+                            ArrayList<OldStudyTask> a = new ArrayList();
+                            a.add(oldStudyTask);
+                            hashMapOfReadingAssignments.put(oldStudyTask.getChapter(), a);
                         }
                     }
                 }

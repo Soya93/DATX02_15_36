@@ -34,7 +34,6 @@ import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 
