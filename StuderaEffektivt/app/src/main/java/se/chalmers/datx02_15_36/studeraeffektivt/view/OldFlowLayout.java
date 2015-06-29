@@ -31,16 +31,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CheckedStudyTaskToDB;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.OldStudyTask;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.StudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 
@@ -50,7 +43,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
  * Originally from http://nishantvnair.wordpress.com/2010/09/28/flowlayout-in-android/
  *
  */
-public class FlowLayout extends ViewGroup {
+public class OldFlowLayout extends ViewGroup {
     private final static int PAD_H = 2, PAD_V = 2; // Space between child views.
     private int mHeight;
 
@@ -59,11 +52,11 @@ public class FlowLayout extends ViewGroup {
     private HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> hashMapOfStudyTasks2 = new HashMap<>();
     private HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> hashMapOfReadingAssignments2 = new HashMap<>();
 
-    public FlowLayout(Context context) {
+    public OldFlowLayout(Context context) {
         super(context);
     }
 
-    public FlowLayout(Context context, AttributeSet attrs) {
+    public OldFlowLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -182,9 +175,9 @@ public class FlowLayout extends ViewGroup {
         }
     }
 
-    public void addProblemsFromDatabase(String courseCode, ProblemAssignmentsDBAdapter problemAssignmentsDBAdapter) {
-        Cursor cursor = problemAssignmentsDBAdapter.getAssignments();
+    public void addTasksFromDatabase(OldAssignmentsDBAdapter assDBAdapter, String courseCode, AssignmentType assignmentType) {
 
+        Cursor cursor = assDBAdapter.getAssignments();
 
         hashMapOfStudyTasks = new HashMap<>();
         hashMapOfReadingAssignments = new HashMap<>();
@@ -194,7 +187,8 @@ public class FlowLayout extends ViewGroup {
         if (cursor != null) {
             while (cursor.moveToNext()) {
 
-                if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode)) {
+                if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode) &&
+                        cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())) {
 
                     i++;
                     Log.d("dbref", "i: "+i);
@@ -205,16 +199,10 @@ public class FlowLayout extends ViewGroup {
                     } else {
                         assignmentStatus = AssignmentStatus.UNDONE;
                     }
-
-                    public StudyTask(Context context, int id, AssignmentsDBAdapter assignmentsFactory, AssignmentType type, AssignmentStatus status){
-
-
-                        StudyTask studyTask = new StudyTask(){
-                        this.getContext(),
-                        cursor.getInt(cursor.getColumnIndex("_id")),
-                        cursor.getString(cursor.getColumnIndex("_ccode")),
-                        cursor.getInt(cursor.getColumnIndex("chapter")),
-
+                    if (cursor.getString(cursor.getColumnIndex("type")).equals(AssignmentType.READ.toString())) {
+                        assignmentType = AssignmentType.READ;
+                    } else {
+                        assignmentType = AssignmentType.PROBLEM;
                     }
 
                     OldStudyTask oldStudyTask = new OldStudyTask(
@@ -258,10 +246,8 @@ public class FlowLayout extends ViewGroup {
                 addMap(hashMapOfReadingAssignments);
 
         }
-
-
+        Log.d("dbref", "asses i: "+i + " course " + courseCode);
     }
-
 
     public void addTasksFromDatabase(OldAssignmentsDBAdapter assDBAdapter, String courseCode, AssignmentType assignmentType, int week) {
 

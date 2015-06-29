@@ -29,7 +29,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.model;
         import se.chalmers.datx02_15_36.studeraeffektivt.R;
         import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
         import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsFactory;
-        import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
         import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
         import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
         import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
@@ -38,7 +37,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.model;
         import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
         import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
         import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
-        import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 
 /**
@@ -53,6 +51,13 @@ public class StudyTask extends CheckBox {
     private CompoundButton buttonView;
     public String taskString;
 
+    //The access point of the database.
+    private HandInAssignmentsDBAdapter handInDB;
+    private LabAssignmentsDBAdapter labDB;
+    private OtherAssignmentsDBAdapter otherDB;
+    private ProblemAssignmentsDBAdapter problemDB;
+    private ReadAssignmentsDBAdapter readDB;
+
 
 
     public int getWeek() {
@@ -66,32 +71,11 @@ public class StudyTask extends CheckBox {
         return status;
     }
 
-    public StudyTask(Context context, int id, AssignmentsDBAdapter assignmentsFactory, AssignmentType type, AssignmentStatus status){
+    public StudyTask(Context context, int id, AssignmentType type, AssignmentStatus status){
         super(context);
         this.id = id;
         this.status = status;
         this.type = type;
-        AssignmentsFactory dbf = new AssignmentsFactory(context);
-
-        switch (type){
-            case HANDIN:
-                assignmentsDBAdapter =  new HandInAssignmentsDBAdapter(context);
-
-            case LAB:
-                assignmentsDBAdapter = new LabAssignmentsDBAdapter(context);
-
-            case PROBLEM:
-                assignmentsDBAdapter = new ProblemAssignmentsDBAdapter(context);
-
-            case READ:
-                assignmentsDBAdapter = new ReadAssignmentsDBAdapter(context);
-
-            case OTHER:
-                assignmentsDBAdapter = new OtherAssignmentsDBAdapter(context);
-
-            default:
-                //never invoked
-        }
 
         if(status==AssignmentStatus.DONE) {
             this.setChecked(true);
@@ -104,6 +88,8 @@ public class StudyTask extends CheckBox {
         else{
             setText(taskString);
         }
+
+        initDB(type, context);
 
         buttonView = (CompoundButton) this.getRootView();
 
@@ -123,6 +109,29 @@ public class StudyTask extends CheckBox {
 
     }
 
+    private void initDB(AssignmentType type, Context ctx){
+            switch (type){
+                case HANDIN:
+                    handInDB = new HandInAssignmentsDBAdapter(ctx);
+
+                case LAB:
+                    labDB = new LabAssignmentsDBAdapter(ctx);
+
+                case PROBLEM:
+                    problemDB = new ProblemAssignmentsDBAdapter(ctx);
+
+                case READ:
+                    readDB =  new ReadAssignmentsDBAdapter(ctx);
+
+                case OTHER:
+                    otherDB =  new OtherAssignmentsDBAdapter(ctx);
+
+                default:
+                    //never invoked
+         }
+    }
+
+
     public void initCheckbox(){
         this.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -135,6 +144,8 @@ public class StudyTask extends CheckBox {
                     Drawable checked = getResources().getDrawable(R.drawable.ic_toggle_check_box);
                     checked.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
                     buttonView.setButtonDrawable(checked);
+
+
                     assDBAdapter.setDone(getStudyTask().getIdNr());
                 }
                 else{
@@ -160,7 +171,7 @@ public class StudyTask extends CheckBox {
                     public boolean onMenuItemClick(MenuItem item) {
                         assDBAdapter.deleteAssignment(getStudyTask().getIdNr());
                         Toast.makeText(OldStudyTask.this.getContext(), "Uppgift borttagen", Toast.LENGTH_SHORT).show();
-                        FlowLayout flowLayout = (FlowLayout)getParent();
+                        OldFlowLayout flowLayout = (OldFlowLayout)getParent();
                         flowLayout.removeAllViews();
                         flowLayout.addTasksFromDatabase(assDBAdapter, courseCode, type);
 

@@ -17,7 +17,6 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
-import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 /*
     Copyright 2015 DATX02-15-36
@@ -37,7 +36,7 @@ limitations under the License.
  */
 public class CourseTasksActivity extends ActionBarActivity {
 
-    private FlowLayout assignmentsFlowLayout;
+    private OldFlowLayout assignmentsFlowLayout;
 
     private String courseCode;
     private String courseName;
@@ -61,7 +60,7 @@ public class CourseTasksActivity extends ActionBarActivity {
     }
 
     public void initComponents() {
-        assignmentsFlowLayout = (FlowLayout) findViewById(R.id.assignmentsFlowLayout);
+        assignmentsFlowLayout = (OldFlowLayout) findViewById(R.id.assignmentsFlowLayout);
         assignmentTypesSpinner = (Spinner) findViewById(R.id.assignmentTypesSpinner);
         setAssignmentTypeSpinner();
 

@@ -31,7 +31,6 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapte
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
-import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 /**
  * Created by jesper on 2015-03-23.
@@ -142,7 +141,7 @@ public class OldStudyTask extends CheckBox{
 
                         assDBAdapter.deleteAssignment(getStudyTask().getIdNr());
                         Toast.makeText(OldStudyTask.this.getContext(),"Uppgift borttagen",Toast.LENGTH_SHORT).show();
-                        FlowLayout flowLayout = (FlowLayout)getParent();
+                        OldFlowLayout flowLayout = (OldFlowLayout)getParent();
                         flowLayout.removeAllViews();
                         flowLayout.addTasksFromDatabase(assDBAdapter, courseCode, type);
 

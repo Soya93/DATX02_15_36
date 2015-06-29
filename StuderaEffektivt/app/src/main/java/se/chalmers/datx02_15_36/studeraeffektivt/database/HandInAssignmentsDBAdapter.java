@@ -24,7 +24,7 @@ public class HandInAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     public static final String HANDIN_assNr = "assNr";
     public static final String HANDIN_status = "status";
 
-    public long insertAssignments(String courseCode,int id, String nr, int week, String assNr, AssignmentStatus status) {
+    public long insertAssignment(String courseCode, int id, String nr, int week, String assNr, AssignmentStatus status) {
         ContentValues cv = new ContentValues();
 
         try {

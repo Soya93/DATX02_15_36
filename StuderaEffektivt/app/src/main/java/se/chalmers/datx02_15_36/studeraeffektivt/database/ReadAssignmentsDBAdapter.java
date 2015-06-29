@@ -25,7 +25,7 @@ public class ReadAssignmentsDBAdapter  extends AssignmentsDBAdapter  {
     public static final String READ_endPage = "endPage";
     public static final String READ_status = "status";
 
-    public long insertAssignments(String courseCode,int id, String chapter, int week, int startPage, int endPage, AssignmentStatus status) {
+    public long insertAssignment(String courseCode, int id, String chapter, int week, int startPage, int endPage, AssignmentStatus status) {
         ContentValues cv = new ContentValues();
 
         try {

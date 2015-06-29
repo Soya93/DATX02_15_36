@@ -277,12 +277,12 @@
                     android:id="@+id/scrollViewOfAssigmnents"
                     android:layout_weight="0.5">
 
-                <se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout
+                <se.chalmers.datx02_15_36.studeraeffektivt.view.OldFlowLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:id="@+id/layoutWithinScrollViewOfTasks">
-                </se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout>
+                </se.chalmers.datx02_15_36.studeraeffektivt.view.OldFlowLayout>
 
              </ScrollView>
 

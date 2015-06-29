@@ -47,7 +47,6 @@ import java.util.Random;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
@@ -79,7 +78,6 @@ public class StudyTaskActivity extends ActionBarActivity {
     private String URL_CONNECTION = "http://studiecoachchalmers.se/insertassignmets.php";
 
     //The access point of the database.
-    private OldAssignmentsDBAdapter assDBAdapter;
     private HandInAssignmentsDBAdapter handInDB;
     private LabAssignmentsDBAdapter labDB;
     private OtherAssignmentsDBAdapter otherDB;
@@ -108,7 +106,11 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         //Create the database access point but check if the context is null first.
         if (this != null) {
-            assDBAdapter = new OldAssignmentsDBAdapter(this);
+            handInDB = new HandInAssignmentsDBAdapter(this);
+            labDB = new LabAssignmentsDBAdapter(this);
+            otherDB = new OtherAssignmentsDBAdapter(this);
+            problemDB = new ProblemAssignmentsDBAdapter(this);
+            readDB = new ReadAssignmentsDBAdapter(this);
             coursesDBAdapter = new CoursesDBAdapter(this);
         }
         cph = CoursePreferenceHelper.getInstance(getApplicationContext());
@@ -164,7 +166,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         setWeekSpinner();
         setAssignmentTypeSpinner();
 
-        listOfTasks.addTasksFromDatabase(new OldAssignmentsDBAdapter(this), courseCode, AssignmentType.PROBLEM);
+        listOfTasks.addTasksFromDatabase(courseCode, problemDB);
     }
 
     private void setCourseSpinner(){
@@ -217,20 +219,8 @@ public class StudyTaskActivity extends ActionBarActivity {
             assignmentTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                    if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.PROBLEM.toString())) {
-                        visibleTasksLabel.setText("Tillagda " + AssignmentType.PROBLEM.toString() );
-                        updateListOfTasks(AssignmentType.PROBLEM);
-                        taskParts.setVisibility(View.VISIBLE);
-                        taskPartsLabel.setVisibility(View.VISIBLE);
-                    } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
-                        visibleTasksLabel.setText("Tillagda " + AssignmentType.READ.toString() );
-                        updateListOfTasks(AssignmentType.READ);
-                        taskParts.setVisibility(View.GONE);
-                        taskPartsLabel.setVisibility(View.GONE);
-                    }
+                    updateView();
                 }
-
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
 
@@ -239,9 +229,50 @@ public class StudyTaskActivity extends ActionBarActivity {
         }
     }
 
+    private void updateView(){
+        if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.HANDIN.toString())) {
+            visibleTasksLabel.setText("Tillagda " + AssignmentType.HANDIN.toString());
+            updateListOfTasks(AssignmentType.HANDIN);
+            taskParts.setVisibility(View.VISIBLE);
+            taskPartsLabel.setVisibility(View.VISIBLE);
+
+        } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.LAB.toString())) {
+                visibleTasksLabel.setText("Tillagda " + AssignmentType.LAB.toString() );
+                updateListOfTasks(AssignmentType.LAB);
+                taskParts.setVisibility(View.VISIBLE);
+                taskPartsLabel.setVisibility(View.VISIBLE);
+
+        } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.PROBLEM.toString())) {
+            visibleTasksLabel.setText("Tillagda " + AssignmentType.PROBLEM.toString() );
+            updateListOfTasks(AssignmentType.PROBLEM);
+            taskParts.setVisibility(View.VISIBLE);
+            taskPartsLabel.setVisibility(View.VISIBLE);
+
+        } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
+            visibleTasksLabel.setText("Tillagda " + AssignmentType.READ.toString());
+            updateListOfTasks(AssignmentType.READ);
+            taskParts.setVisibility(View.GONE);
+            taskPartsLabel.setVisibility(View.GONE);
+
+        } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.OBLIGATORY.toString())) {
+            visibleTasksLabel.setText("Tillagda " + AssignmentType.OBLIGATORY.toString());
+            updateListOfTasks(AssignmentType.OBLIGATORY);
+            taskParts.setVisibility(View.GONE);
+            taskPartsLabel.setVisibility(View.GONE);
+
+        } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.OTHER.toString())) {
+            visibleTasksLabel.setText("Tillagda " + AssignmentType.OTHER.toString());
+            updateListOfTasks(AssignmentType.OTHER);
+            taskParts.setVisibility(View.GONE);
+            taskPartsLabel.setVisibility(View.GONE);
+
+    }
+
+}
+
     private void updateListOfTasks(AssignmentType assignmentType){
         listOfTasks.removeAllViews();
-        listOfTasks.addTasksFromDatabase(new OldAssignmentsDBAdapter(this), courseCode, assignmentType);
+        listOfTasks.addTasksFromDatabase(courseCode, assignmentType);
     }
 
     private void saveTask() {
@@ -250,11 +281,21 @@ public class StudyTaskActivity extends ActionBarActivity {
         String[] weekSep = weekSpinner.getSelectedItem().toString().split(" ");
         chosenWeek = Integer.parseInt(weekSep[weekSep.length-1]);
         if(!taskInput.getText().toString().equals("")) {
+
             if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.PROBLEM.toString())) {
-                addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString());
+                addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString(), AssignmentType.PROBLEM);
+            }
+            else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.LAB.toString())){
+                addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString(), AssignmentType.LAB);
+            }
+            else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.HANDIN.toString())){
+                addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString(), AssignmentType.HANDIN);
             }
             else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())){
                 addReadAssignment(chapter, taskInput.getText().toString());
+            }
+            else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.OTHER.toString())){
+                addOtherAssignment(chapter, taskInput.getText().toString());
             }
         }
 
@@ -297,7 +338,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                     + " == "+ cph.getSharedCoursePos());
 
             listOfTasks.removeAllViews();
-            listOfTasks.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.PROBLEM);
+            listOfTasks.addTasksFromDatabase(courseCode, AssignmentType.PROBLEM);
 
             if(listOfTasks.isEmpty()){
                 TextView textView = new TextView(this);
@@ -335,7 +376,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     //Metod för att lägga till en uppgift
 
-    public void addTask(int chapter, String taskString, String taskParts) {
+    public void addTask(int chapter, String taskString, String taskParts, AssignmentType type) {
 
         if(!(taskString.contains("-") && taskString.contains("."))){
 
@@ -384,10 +425,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                         elementToAdd = s2 + separateTaskParts[i];       //Combine the maintasks 1 and subtask a such that it becomes 1a
                         if (!listOfTasks.contains(chapter, elementToAdd)) {
                             int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                            OldStudyTask oldStudyTask = new OldStudyTask(this, randomNum, courseCode, chapter, chosenWeek, elementToAdd, 0, 0, assDBAdapter, AssignmentType.PROBLEM, AssignmentStatus.UNDONE);
-                            addToDatabase(oldStudyTask);
-                            new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"",elementToAdd,
-                                    Integer.toString(0),Integer.toString(0),"PROBLEM","UNDONE");
+                            addToDatabase(courseCode, AssignmentType.PROBLEM, randomNum, Integer.toString(chapter), chosenWeek, elementToAdd);
                         } else {
                             Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
                         }
@@ -399,10 +437,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 for (String s : stringList) {         //For each maintask
                     if (!listOfTasks.contains(chapter, s)) {
                         int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                        OldStudyTask oldStudyTask = new OldStudyTask(this, randomNum, courseCode, chapter, chosenWeek, s, 0, 0, assDBAdapter, AssignmentType.PROBLEM, AssignmentStatus.UNDONE);
-                        addToDatabase(oldStudyTask);
-                        new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"",s,
-                                Integer.toString(0),Integer.toString(0),"PROBLEM","UNDONE");
+                        addToDatabase(courseCode, AssignmentType.PROBLEM, randomNum, Integer.toString(chapter), chosenWeek, s);
                     } else {
                         Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
                     }
@@ -433,12 +468,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                 end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
                if(!(listOfTasks.contains(chapter, start, end))) {
-                    OldStudyTask oldStudyTask = new OldStudyTask(this, randomNum, courseCode, chapter, chosenWeek, "read", start, end, assDBAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
-
-                    addToDatabase(oldStudyTask);
-                    new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"","ReadAssignment",
-                            start+"",end+"","READ","UNDONE");
-                    //addToListOfTasks(studyTask);
+                   addToDatabase(courseCode, AssignmentType.READ, randomNum, Integer.toString(chapter), chosenWeek, start, end);
                 }
                 else{
                     Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
@@ -446,13 +476,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
             } else {
                  if (!(listOfTasks.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
-
-                    OldStudyTask oldStudyTask = new OldStudyTask(this, randomNum, courseCode, chapter, chosenWeek, "ReadAssignment",
-                            Integer.parseInt(taskString), Integer.parseInt(taskString), assDBAdapter, AssignmentType.READ, AssignmentStatus.UNDONE);
-
-                    addToDatabase(oldStudyTask);
-                    new AddToWebDatabase().execute(courseCode, chapter+"",chosenWeek+"","ReadAssignmet",
-                            taskString,taskString,"READ","UNDONE");
+                     addToDatabase(courseCode, AssignmentType.READ, randomNum, Integer.toString(chapter), chosenWeek, Integer.parseInt(taskString), Integer.parseInt(taskString));
                 } else {
                     Toast.makeText(this, "Läsanvisning redan tillagd!", Toast.LENGTH_SHORT).show();
                 }
@@ -464,36 +488,68 @@ public class StudyTaskActivity extends ActionBarActivity {
         }
     }
 
-    public void addToDatabase(OldStudyTask oldStudyTask) {
+    public void addOtherAssignment(int chapter, String taskString) {
+        if(!taskString.contains(",") && !taskString.contains(".")){
+            Random rand = new Random();
+            int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
 
-        assDBAdapter.insertAssignment(
-                oldStudyTask.getCourseCode(),
-                oldStudyTask.getIdNr(),
-                oldStudyTask.getChapter(),
-                oldStudyTask.getWeek(),
-                oldStudyTask.getTaskString(),
-                oldStudyTask.getStartPage(),
-                oldStudyTask.getEndPage(),
-                oldStudyTask.getType(),
-                oldStudyTask.getStatus()
-        );
+            if (!(listOfTasks.contains(chapter, Integer.parseInt(taskString), Integer.parseInt(taskString)))) {
+                addToDatabase(courseCode, AssignmentType.READ, randomNum, chosenWeek, taskString);
+            } else {
+                Toast.makeText(this, "Läsanvisning redan tillagd!", Toast.LENGTH_SHORT).show();
+            }
 
-        Cursor asses = assDBAdapter.getAssignments();
-        Log.d("ass", "asses in db: "+asses.getCount()+" course: "+ oldStudyTask.getType());
-
-        if(oldStudyTask.getType().equals(AssignmentType.READ)){
-            listOfTasks.removeAllViews();
-            listOfTasks.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.PROBLEM);
         }
         else{
-            listOfTasks.removeAllViews();
-            listOfTasks.addTasksFromDatabase(assDBAdapter, courseCode, AssignmentType.PROBLEM);
+            Toast.makeText(getApplicationContext(), "Format ej godkänt",
+                    Toast.LENGTH_LONG).show();
         }
+    }
 
+
+    public void addToDatabase(String courseCode, AssignmentType type, int id, String chapterOrNumber, int week, String assignment) {
+        switch (type){
+
+            case PROBLEM:
+                ProblemAssignmentsDBAdapter problemAssignmentsDBAdapter = new ProblemAssignmentsDBAdapter(this);
+                problemAssignmentsDBAdapter.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+                break;
+
+            case LAB:
+                LabAssignmentsDBAdapter labAssignmentsDBAdapter = new LabAssignmentsDBAdapter(this);
+                labAssignmentsDBAdapter.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+                break;
+
+            case HANDIN:
+                HandInAssignmentsDBAdapter handInAssignmentsDBAdapter = new HandInAssignmentsDBAdapter(this);
+                handInAssignmentsDBAdapter.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+                break;
+
+            default:
+                //do nothing
+
+        }
+        updateListOfTasks(type);
         taskInput.setText("");
         taskParts.setText("");
-
     }
+
+    public void addToDatabase(String courseCode, AssignmentType type, int id, String chapter, int week, int startPage, int endPage){
+        ReadAssignmentsDBAdapter readAssignmentsDBAdapter = new ReadAssignmentsDBAdapter(this);
+        readAssignmentsDBAdapter.insertAssignment(courseCode, id, chapter, week, startPage, endPage, AssignmentStatus.UNDONE);
+        updateListOfTasks(type);
+        taskInput.setText("");
+        taskParts.setText("");
+    }
+
+    public void addToDatabase(String courseCode, AssignmentType type, int id, int week, String assignment) {
+        OtherAssignmentsDBAdapter otherAssignmentsDBAdapter = new OtherAssignmentsDBAdapter(this);
+        otherAssignmentsDBAdapter.insertAssignment(courseCode, id, week, assignment, AssignmentStatus.UNDONE);
+        updateListOfTasks(type);
+        taskInput.setText("");
+        taskParts.setText("");
+    }
+
 
     private class AddToWebDatabase extends AsyncTask<String, Void, Void> {
 
