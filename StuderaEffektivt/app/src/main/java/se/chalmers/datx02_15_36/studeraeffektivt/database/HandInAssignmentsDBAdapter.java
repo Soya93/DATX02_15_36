@@ -9,7 +9,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 /**
  * Created by SoyaPanda on 15-06-26.
  */
-public class HandInAssignmentsDBAdapter  extends DBAdapter {
+public class HandInAssignmentsDBAdapter  extends AssignmentsDBAdapter {
 
     public HandInAssignmentsDBAdapter(Context ctx){
         super(ctx);
@@ -80,7 +80,6 @@ public class HandInAssignmentsDBAdapter  extends DBAdapter {
     }
 
     public Cursor getDoneAssignments(String ccode){
-
         String selection = HANDIN_ccode + " = '" + ccode + "' AND "
                 + HANDIN_status + " = '" + AssignmentStatus.DONE.toString()+"'";
         return db.query(TABLE_HANDIN, null, selection, null, null, null, null);
@@ -90,7 +89,5 @@ public class HandInAssignmentsDBAdapter  extends DBAdapter {
         String selection = "_ccode" + " = '" + ccode + "'";
         return db.query(TABLE_HANDIN, null, selection, null, null, null, null);
     }
-
-
 
 }

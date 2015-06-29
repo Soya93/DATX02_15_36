@@ -10,7 +10,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.database;
  * Created by SoyaPanda on 15-06-26.
  */
 
-public class OtherAssignmentsDBAdapter  extends DBAdapter {
+public class OtherAssignmentsDBAdapter  extends AssignmentsDBAdapter {
 
     public OtherAssignmentsDBAdapter(Context ctx){
         super(ctx);

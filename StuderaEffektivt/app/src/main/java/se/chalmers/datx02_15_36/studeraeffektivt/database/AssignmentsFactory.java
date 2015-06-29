@@ -7,16 +7,16 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 /**
  * Created by SoyaPanda on 15-06-26.
  */
-public class AssignmentsDPBAdapter extends  DBAdapter{
+public class AssignmentsFactory extends  DBAdapter{
 
     private Context ctx;
 
-    public AssignmentsDPBAdapter(Context ctx){
+    public AssignmentsFactory(Context ctx){
         super(ctx);
         this.ctx = ctx;
     }
 
-    public DBAdapter getDBAdapter(AssignmentType type){
+    public AssignmentsDBAdapter getAssignmentsDBAdapter(AssignmentType type){
         switch (type){
             case HANDIN:
                 return new HandInAssignmentsDBAdapter(ctx);
@@ -38,6 +38,4 @@ public class AssignmentsDPBAdapter extends  DBAdapter{
                 return  null;
         }
     }
-
-
 }

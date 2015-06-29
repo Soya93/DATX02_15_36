@@ -11,7 +11,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
  */
 
 
-public class LabAssignmentsDBAdapter  extends DBAdapter {
+public class LabAssignmentsDBAdapter  extends AssignmentsDBAdapter {
 
     public LabAssignmentsDBAdapter(Context ctx){
         super(ctx);

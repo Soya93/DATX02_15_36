@@ -10,7 +10,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
  * Created by SoyaPanda on 15-06-26.
  */
 
-public class ProblemAssignmentsDBAdapter  extends DBAdapter {
+public class ProblemAssignmentsDBAdapter  extends AssignmentsDBAdapter {
 
     public ProblemAssignmentsDBAdapter(Context ctx){
         super(ctx);
