@@ -45,8 +45,13 @@ import java.util.List;
 import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.OldStudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -76,7 +81,7 @@ public class StudyTaskActivity extends ActionBarActivity {
     //The access point of the database.
     private OldAssignmentsDBAdapter assDBAdapter;
     private HandInAssignmentsDBAdapter handInDB;
-    private LabAssignmentDBAdapter labDB;
+    private LabAssignmentsDBAdapter labDB;
     private OtherAssignmentsDBAdapter otherDB;
     private ProblemAssignmentsDBAdapter problemDB;
     private ReadAssignmentsDBAdapter readDB;
@@ -87,6 +92,9 @@ public class StudyTaskActivity extends ActionBarActivity {
     private int chosenWeek = CalendarUtils.getCurrWeekNumber();
 
     private CoursePreferenceHelper cph;
+
+    public StudyTaskActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
