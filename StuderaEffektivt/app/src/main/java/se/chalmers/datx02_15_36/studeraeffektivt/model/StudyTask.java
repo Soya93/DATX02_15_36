@@ -186,9 +186,6 @@ public class StudyTask extends CheckBox {
         getStudyTask().setClickable(true);
     }
 
-
-
-
     public int getIdNr() {
         return id;
     }
