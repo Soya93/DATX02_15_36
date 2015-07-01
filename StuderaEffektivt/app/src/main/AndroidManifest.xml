@@ -133,7 +133,7 @@
             android:label="@string/title_activity_repetition" >
         </activity>
         <activity
-            android:name=".activity.CourseTasksActivity"
+            android:name=".activity.CourseAssignmentsActivity"
             android:label="@string/title_activity_course_tasks" >
         </activity>
 

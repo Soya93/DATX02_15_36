@@ -14,9 +14,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.AssignmentCheckBox;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
 
 /*
     Copyright 2015 DATX02-15-36
@@ -34,14 +42,21 @@ limitations under the License.
 /**
  * Created by SoyaPanda on 15-03-06.
  */
-public class CourseTasksActivity extends ActionBarActivity {
+public class CourseAssignmentsActivity extends ActionBarActivity {
 
-    private OldFlowLayout assignmentsFlowLayout;
+    private AssignmentCheckBoxLayout assignmentsFlowLayout;
 
     private String courseCode;
     private String courseName;
     private Spinner assignmentTypesSpinner;
-    private OldAssignmentsDBAdapter oldAssignmentsDBAdapter;
+
+    //The access point of the database.
+    private HandInAssignmentsDBAdapter handInDB;
+    private LabAssignmentsDBAdapter labDB;
+    private OtherAssignmentsDBAdapter otherDB;
+    private ProblemAssignmentsDBAdapter problemDB;
+    private ReadAssignmentsDBAdapter readDB;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +69,17 @@ public class CourseTasksActivity extends ActionBarActivity {
         actionBar.setTitle("Uppgifter i kursen " + courseName);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
         if (this != null) {
-            oldAssignmentsDBAdapter = new OldAssignmentsDBAdapter(this);
+            handInDB = new HandInAssignmentsDBAdapter(this);
+            labDB = new LabAssignmentsDBAdapter(this);
+            otherDB = new OtherAssignmentsDBAdapter(this);
+            problemDB = new ProblemAssignmentsDBAdapter(this);
+            readDB = new ReadAssignmentsDBAdapter(this);
         }
         initComponents();
     }
 
     public void initComponents() {
-        assignmentsFlowLayout = (OldFlowLayout) findViewById(R.id.assignmentsFlowLayout);
+        assignmentsFlowLayout = (AssignmentCheckBoxLayout) findViewById(R.id.assignmentsFlowLayout);
         assignmentTypesSpinner = (Spinner) findViewById(R.id.assignmentTypesSpinner);
         setAssignmentTypeSpinner();
 
@@ -77,18 +96,30 @@ public class CourseTasksActivity extends ActionBarActivity {
         assignmentTypesSpinner.setSelection(0);
     }
 
-
-    private void updateAssignmentsLayout(){
+    private void updateAssignmentsLayout() {
         assignmentsFlowLayout.removeAllViews();
 
-        Log.i("selected in spinner", assignmentTypesSpinner.getSelectedItem() + "");
-        Log.i("string for asstype", AssignmentType.READ.toString());
+        if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.HANDIN.toString())) {
+            assignmentsFlowLayout.addHandInsFromDatabase(courseCode, handInDB);
 
-        if(assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
-            assignmentsFlowLayout.addTasksFromDatabase(oldAssignmentsDBAdapter, courseCode, AssignmentType.READ);
 
-        } else if(assignmentTypesSpinner.getSelectedItem().equals(AssignmentType.PROBLEM.toString())) {
-            assignmentsFlowLayout.addTasksFromDatabase(oldAssignmentsDBAdapter, courseCode, AssignmentType.PROBLEM);
+        } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.LAB.toString())) {
+            assignmentsFlowLayout.addLabsFromDatabase(courseCode, labDB);
+
+
+        } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.PROBLEM.toString())) {
+            assignmentsFlowLayout.addProblemsFromDatabase(courseCode, problemDB);
+
+
+        } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
+            assignmentsFlowLayout.addReadsFromDatabase(courseCode, readDB);
+
+
+        } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.OBLIGATORY.toString())) {
+
+
+        } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.OTHER.toString())) {
+            assignmentsFlowLayout.addOthersFromDatabase(courseCode, otherDB);
         }
     }
 

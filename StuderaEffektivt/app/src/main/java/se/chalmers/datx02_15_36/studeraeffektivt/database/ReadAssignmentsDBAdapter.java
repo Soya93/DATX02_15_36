@@ -3,6 +3,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 
@@ -26,6 +27,8 @@ public class ReadAssignmentsDBAdapter  extends AssignmentsDBAdapter  {
     public static final String READ_status = "status";
 
     public long insertAssignment(String courseCode, int id, String chapter, int week, int startPage, int endPage, AssignmentStatus status) {
+        Log.i("DB", "in insert");
+
         ContentValues cv = new ContentValues();
 
         try {
@@ -83,14 +86,61 @@ public class ReadAssignmentsDBAdapter  extends AssignmentsDBAdapter  {
     }
 
     public Cursor getDoneAssignments(String ccode){
-
         String selection = READ_ccode + " = '" + ccode + "' AND "
                 + READ_status + " = '" + AssignmentStatus.DONE.toString()+"'";
         return db.query(TABLE_READ, null, selection, null, null, null, null);
     }
 
     public Cursor getAssignments(String ccode){
-        String selection = "_ccode" + " = '" + ccode + "'";
+        String selection = READ_ccode + " = '" + ccode + "'";
         return db.query(TABLE_READ, null, selection, null, null, null, null);
+    }
+
+    public  String getCourse(int id){
+        String selection = READ__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_READ, null, selection, null, null, null, null);
+        return cur.getString(cur.getColumnIndex(READ_ccode));
+    }
+    public int getWeek(int id){
+        String selection = READ__id + " = '" + id + "'";
+        Log.i("ReadAssDB", "selection :" + selection);
+        Cursor cur =  db.query(TABLE_READ, null, selection, null, null, null, null);
+        int week  = -1;
+        if( cur != null && cur.moveToNext() ) {
+            week = cur.getInt(cur.getColumnIndex(READ_week));
+            Log.i("ReadAssDB", "selection :" + selection);
+            Log.i("ReadAssDB", "week :"  + week);
+            cur.close();
+        }
+        return week;
+    }
+
+    public  String getChapter(int id){
+
+        Cursor cursor = db.query(TABLE_READ, new String[] { READ_chapter }, READ__id + "=?",
+                new String[] { String.valueOf(id) }, null, null, null);
+            cursor.moveToFirst();
+            while(cursor.moveToNext()){
+
+            }
+
+            return cursor.getString(0);
+
+       /* String selection = READ__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_READ, null, selection, null, null, null, null);
+        cur.moveToFirst();
+        return  cur.getString(cur.getColumnIndex(READ_chapter));*/
+    }
+
+    public  String getStartPage(int id){
+        String selection = READ__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_READ, null, selection, null, null, null, null);
+        return cur.getString(cur.getColumnIndex(READ_startPage));
+    }
+
+    public  String getEndPage(int id){
+        String selection = READ__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_READ, null, selection, null, null, null, null);
+        return cur.getString(cur.getColumnIndex(READ_endPage));
     }
 }

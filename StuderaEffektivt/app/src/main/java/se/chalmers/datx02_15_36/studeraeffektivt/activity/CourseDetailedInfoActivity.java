@@ -95,9 +95,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     private void updateText(){
         if(isActiveCourse){
-            menu.getItem(3).setTitle("Markera som avslutad");
+            menu.getItem(4).setTitle("Markera som avslutad");
         }else {
-            menu.getItem(3).setTitle("Markera som pågående");
+            menu.getItem(4).setTitle("Markera som pågående");
         }
     }
 
@@ -191,7 +191,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
                 coursesDBAdapter.deleteCourse(courseCode);
                      //   coursesDBAdapter.deleteCourseAssignmets(courseCode);
-                        Toast.makeText(getApplicationContext(), courseName + " borttagen",
+                //TODO remove all the assignments of the course too
+                Toast.makeText(getApplicationContext(), courseName + " borttagen",
                                 Toast.LENGTH_LONG).show();
                         finish();
             }
@@ -212,7 +213,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     public void goToCourseTasks() {
-        Intent i = new Intent(this, CourseTasksActivity.class);
+        Intent i = new Intent(this, CourseAssignmentsActivity.class);
         i.putExtra("CourseCode", courseCode);
         i.putExtra("CourseName", courseName);
         startActivity(i);

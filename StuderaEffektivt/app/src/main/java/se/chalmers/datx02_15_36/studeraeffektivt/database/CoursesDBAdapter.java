@@ -50,13 +50,11 @@ public class CoursesDBAdapter extends DBAdapter {
     public long deleteCourse(String ccode){
         try{
             return db.delete(TABLE_COURSES, COURSES__ccode + " = '" + ccode + "'", null);
-            //TODO remove all the assignments of the course too
         }catch (Exception e){
             return -1;
         }
     }
 
-    // Avslutad kurs
     public long setCourseDone(String ccode) {
         ContentValues cv = new ContentValues();
 
@@ -69,7 +67,6 @@ public class CoursesDBAdapter extends DBAdapter {
         }
     }
 
-    //Pågående kurs
     public long setCourseUndone(String ccode) {
         ContentValues cv = new ContentValues();
 
@@ -86,8 +83,8 @@ public class CoursesDBAdapter extends DBAdapter {
         String selection = COURSES__ccode + " = '" + ccode + "'";
         Cursor cursor = db.query(TABLE_COURSES, null, selection, null, null, null, null);
         cursor.moveToNext();
-        Log.d(selection + "", "database");
-        Log.i("Database", cursor.getString(2));
+        Log.i("CourseDB", "selection :" + selection);
+        Log.i("CourseDB", "status :"  + cursor.getString(cursor.getColumnIndex(COURSES_cstatus)));
         return cursor.getString(2);
     }
 

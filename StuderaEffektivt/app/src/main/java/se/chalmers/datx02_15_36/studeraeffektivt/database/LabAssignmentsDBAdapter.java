@@ -89,10 +89,31 @@ public class LabAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     }
 
     public Cursor getAssignments(String ccode){
-        String selection = "_ccode" + " = '" + ccode + "'";
+        String selection = LABS_ccode + " = '" + ccode + "'";
         return db.query(TABLE_LABS, null, selection, null, null, null, null);
     }
 
+    public  String getCourse(int id){
+        String selection = LABS__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_LABS, null, selection, null, null, null, null);
+        return cur.getString(cur.getColumnIndex(LABS_ccode));
+    }
 
+    public  int getWeek(int id){
+        String selection = LABS__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_LABS, null, selection, null, null, null, null);
+        return cur.getInt(cur.getColumnIndex(LABS_week));
+    }
 
+    public  String getNr(int id){
+        String selection = LABS__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_LABS, null, selection, null, null, null, null);
+        return cur.getString(cur.getColumnIndex(LABS_nr));
+    }
+
+    public  String getAssNr(int id){
+        String selection = LABS__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_LABS, null, selection, null, null, null, null);
+        return cur.getString(cur.getColumnIndex(LABS_assNr));
+    }
 }

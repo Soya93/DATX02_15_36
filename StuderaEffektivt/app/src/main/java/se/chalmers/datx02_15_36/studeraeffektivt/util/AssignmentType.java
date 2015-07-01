@@ -20,7 +20,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.util;
 public enum AssignmentType {
     HANDIN ("Inlämningsuppgifter"),
     LAB ("Laboration"),
-    PROBLEM ("Problemlösningsuppgifter"),
+    PROBLEM ("Övningsuppgifter"),
     READ ("Läsanvisningar"),
     OBLIGATORY ("Obligatoriska moment"),
     OTHER ("Fria uppgifter");

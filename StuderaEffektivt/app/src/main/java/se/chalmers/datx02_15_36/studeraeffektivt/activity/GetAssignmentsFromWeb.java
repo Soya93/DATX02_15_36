@@ -36,6 +36,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
 
 /**
  * Created by alexandraback on 06/05/15.
@@ -48,15 +49,15 @@ public class GetAssignmentsFromWeb extends ActionBarActivity {
 
     private OldAssignmentsDBAdapter assDBAdapter;
 
-    private OldFlowLayout taskListfromWebOther;
-    private OldFlowLayout taskListfromWebRead;
+    private AssignmentCheckBoxLayout taskListfromWebOther;
+    private AssignmentCheckBoxLayout taskListfromWebRead;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_getassignmetsfromweb);
-        taskListfromWebOther = (OldFlowLayout) findViewById(R.id.taskListfromWebOther);
-        taskListfromWebRead = (OldFlowLayout) findViewById(R.id.taskListfromWebRead);
+        taskListfromWebOther = (AssignmentCheckBoxLayout) findViewById(R.id.taskListfromWebOther);
+        taskListfromWebRead = (AssignmentCheckBoxLayout) findViewById(R.id.taskListfromWebRead);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         courseName = getIntent().getStringExtra("CourseName");

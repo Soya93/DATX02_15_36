@@ -19,7 +19,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import android.content.Intent;
     import android.database.Cursor;
     import android.graphics.Color;
-    import android.net.Uri;
     import android.os.Bundle;
     import android.support.v4.app.Fragment;
     import android.view.LayoutInflater;
@@ -43,7 +42,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.TechsNTipsActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
-    import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
     import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
     import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 
@@ -66,7 +64,7 @@ public class MyStudiesPage extends Fragment {
 
 
     //The access point of the database.
-    private CoursesDBAdapter dbAdapter;
+    private CoursesDBAdapter coursesDBAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,7 +72,7 @@ public class MyStudiesPage extends Fragment {
 
         //Create the database access point but check if the context is null first.
         if(getActivity() != null){
-            dbAdapter = new CoursesDBAdapter(getActivity());
+            coursesDBAdapter = new CoursesDBAdapter(getActivity());
         }
     }
 
@@ -193,7 +191,7 @@ public class MyStudiesPage extends Fragment {
                             toast.show();
                         }
                         else {
-                            long result = dbAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
+                            long result = coursesDBAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
                             if(result > 0) {
                                 Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
                                 toast.show();
@@ -233,7 +231,7 @@ public class MyStudiesPage extends Fragment {
     public void updateCourses(){
         courseList.clear();
 
-        Cursor cursor = dbAdapter.getOngoingCourses();
+        Cursor cursor = coursesDBAdapter.getOngoingCourses();
         if (cursor.getCount() > 0){
             String ccode = "";
             String cname = "";

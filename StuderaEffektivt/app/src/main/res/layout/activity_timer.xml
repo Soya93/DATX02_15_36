@@ -190,12 +190,12 @@
                 android:layout_marginTop="10dp"
                 >
 
-                <se.chalmers.datx02_15_36.studeraeffektivt.view.OldFlowLayout
+                <se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:id="@+id/taskList">
-                </se.chalmers.datx02_15_36.studeraeffektivt.view.OldFlowLayout>
+                </se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout>
 
             </ScrollView>
 

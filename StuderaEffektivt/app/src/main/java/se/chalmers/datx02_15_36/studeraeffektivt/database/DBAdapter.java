@@ -18,6 +18,7 @@ import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * A database adapter that is used to read and write to/from the database.
@@ -129,6 +130,9 @@ public class DBAdapter {
         @Override
         public void onCreate(SQLiteDatabase db)
         {
+
+            Log.i("DBAdapter", "onCreate");
+
             db.execSQL(CREATE_COURSES_TABLE);
             db.execSQL(CREATE_TIMEONCOURSE_TABLE);
             db.execSQL(CREATE_OBLIG_TABLE);
@@ -136,10 +140,12 @@ public class DBAdapter {
             db.execSQL(CREATE_SESSIONS_TABLE);
 
             db.execSQL(CREATE_ASSIGNMENTS_TABLE);
+
+            db.execSQL(CREATE_HANDIN_TABLE);
+            db.execSQL(CREATE_LABS_TABLE);
+            db.execSQL(CREATE_OTHER_TABLE);
             db.execSQL(CREATE_PROBLEMS_TABLE);
             db.execSQL(CREATE_READ_TABLE);
-            db.execSQL(CREATE_LABS_TABLE);
-            db.execSQL(CREATE_HANDIN_TABLE);
 
         }
 

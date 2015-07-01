@@ -30,6 +30,9 @@ public abstract class AssignmentsDBAdapter extends DBAdapter{
 
     public abstract Cursor getAssignments(String ccode);
 
+    public abstract String getCourse(int id);
+
+    public abstract int getWeek(int id);
 
     public int getAssignmentsCount(String ccode){
         String HandInSelection = HandInAssignmentsDBAdapter.HANDIN_ccode + " = '" + ccode + "'";

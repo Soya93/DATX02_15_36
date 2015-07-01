@@ -87,10 +87,31 @@ public class ProblemAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     }
 
     public Cursor getAssignments(String ccode){
-        String selection = "_ccode" + " = '" + ccode + "'";
+        String selection = PROBLEMS_ccode + " = '" + ccode + "'";
         return db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);
     }
 
+    public  String getCourse(int id){
+        String selection = PROBLEMS__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);
+        return cur.getString(cur.getColumnIndex(PROBLEMS_ccode));
+    }
 
+    public  int getWeek(int id){
+        String selection = PROBLEMS__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);
+        return cur.getInt(cur.getColumnIndex(PROBLEMS_week));
+    }
 
+    public  String getChapter(int id){
+        String selection = PROBLEMS__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);
+        return cur.getString(cur.getColumnIndex(PROBLEMS_chapter));
+    }
+
+    public  String getAssNr(int id){
+        String selection = PROBLEMS__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);
+        return cur.getString(cur.getColumnIndex(PROBLEMS_assNr));
+    }
 }

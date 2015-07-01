@@ -127,7 +127,7 @@ public class OldStudyTask extends CheckBox{
             public boolean onLongClick(View arg0) {
 
                 //Creating the instance of PopupMenu
-                PopupMenu popup = new PopupMenu(OldStudyTask.this.getContext(), getStudyTask());
+              /*  PopupMenu popup = new PopupMenu(OldStudyTask.this.getContext(), getStudyTask());
                 //Inflating the Popup using xml file
                 popup.getMenuInflater().inflate(R.menu.popup_remove_menu, popup.getMenu());
 
@@ -139,7 +139,7 @@ public class OldStudyTask extends CheckBox{
                         else
                             ((FlowLayout)getParent()).removeView(getStudyTask());*/
 
-                        assDBAdapter.deleteAssignment(getStudyTask().getIdNr());
+                      /*  assDBAdapter.deleteAssignment(getStudyTask().getIdNr());
                         Toast.makeText(OldStudyTask.this.getContext(),"Uppgift borttagen",Toast.LENGTH_SHORT).show();
                         OldFlowLayout flowLayout = (OldFlowLayout)getParent();
                         flowLayout.removeAllViews();
@@ -159,7 +159,7 @@ public class OldStudyTask extends CheckBox{
                     }
                 });
 
-                popup.show();//showing popup menu
+                popup.show();//showing popup menu*/
                 return true;
             }
         });

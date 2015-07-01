@@ -53,6 +53,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.TimerService;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
 
 
 public class TimerFrag extends Fragment {
@@ -68,7 +69,7 @@ public class TimerFrag extends Fragment {
     private TextView textView;
 
     private View rootView;
-    private OldFlowLayout taskList;
+    private AssignmentCheckBoxLayout taskList;
     private Spinner taskSwitch;
     private ImageButton previousWeek;
     private ImageButton nextWeek;
@@ -256,7 +257,7 @@ public class TimerFrag extends Fragment {
         });
         spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        taskList = (OldFlowLayout) rootView.findViewById(R.id.taskList);
+        taskList = (AssignmentCheckBoxLayout) rootView.findViewById(R.id.taskList);
         taskSwitch = (Spinner) rootView.findViewById(R.id.taskSwitch);
         previousWeek = (ImageButton) rootView.findViewById(R.id.previousWeek);
         nextWeek = (ImageButton) rootView.findViewById(R.id.nextWeek);

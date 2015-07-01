@@ -45,7 +45,7 @@ public class CourseActivity extends ActionBarActivity {
     SimpleAdapter simpleAdpt;
 
     //The access point of the database.
-    private CoursesDBAdapter dbAdapter;
+    private CoursesDBAdapter coursesDBAdapter;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class CourseActivity extends ActionBarActivity {
 
         //Create the database access point but check if the context is null first.
         if (this != null) {
-            dbAdapter = new CoursesDBAdapter(this);
+            coursesDBAdapter = new CoursesDBAdapter(this);
         }
         showCourseList();
     }
@@ -91,14 +91,14 @@ public class CourseActivity extends ActionBarActivity {
     public void showCourseList() {
         courseList.clear();
         Log.d("courseList", "cursorList.size är "+courseList.size());
-        Cursor cursor = dbAdapter.getDoneCourses();
+        Cursor cursor = coursesDBAdapter.getDoneCourses();
         Log.d("DB", "cursor.getCount() är "+cursor.getCount());
         if (cursor.getCount() > 0){
             String ccode = "";
             String cname = "";
             while (cursor.moveToNext()) {
-                ccode = cursor.getString(0);
-                cname = cursor.getString(1);
+                ccode = cursor.getString(cursor.getColumnIndex(CoursesDBAdapter.COURSES__ccode));
+                cname = cursor.getString(cursor.getColumnIndex(CoursesDBAdapter.COURSES_cname));
                 courseList.add(createCourse("Courses", new Course(cname, ccode)));
             }
             simpleAdpt.notifyDataSetChanged();

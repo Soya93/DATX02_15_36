@@ -17,7 +17,7 @@ public class OtherAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     }
 
     //Variables for OtherAssignments table.
-    public static final String TABLE_OTHER = "HANDIN";
+    public static final String TABLE_OTHER = "OTHER";
     public static final String OTHER__id = "_id";
     public static final String OTHER_ccode = CoursesDBAdapter.COURSES__ccode;
     public static final String OTHER_week = "week";
@@ -86,7 +86,26 @@ public class OtherAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     }
 
     public Cursor getAssignments(String ccode){
-        String selection = "_ccode" + " = '" + ccode + "'";
+        String selection = OTHER_ccode + " = '" + ccode + "'";
         return db.query(TABLE_OTHER, null, selection, null, null, null, null);
     }
+
+    public  String getCourse(int id){
+        String selection = OTHER__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_OTHER, null, selection, null, null, null, null);
+        return cur.getString(cur.getColumnIndex(OTHER_ccode));
+    }
+
+    public int getWeek(int id){
+        String selection = OTHER__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_OTHER, null, selection, null, null, null, null);
+        return cur.getInt(cur.getColumnIndex(OTHER_week));
+    }
+
+    public  String getAssNr(int id){
+        String selection = OTHER__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_OTHER, null, selection, null, null, null, null);
+        return cur.getString(cur.getColumnIndex(OTHER_assNr));
+    }
+
 }
