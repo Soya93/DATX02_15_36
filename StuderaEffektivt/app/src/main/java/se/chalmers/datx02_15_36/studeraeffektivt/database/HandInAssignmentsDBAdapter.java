@@ -69,7 +69,6 @@ public class HandInAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     public long setUndone(int assignmentId){
         ContentValues cv = new ContentValues();
 
-        String nullString = null;
         cv.put(HANDIN_status, AssignmentStatus.UNDONE.toString());
 
         try {
@@ -93,24 +92,28 @@ public class HandInAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     public String getCourse(int id){
         String selection = HANDIN__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_HANDIN, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(HANDIN_ccode));
     }
 
     public int getWeek(int id){
         String selection = HANDIN__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_HANDIN, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getInt(cur.getColumnIndex(HANDIN_week));
     }
 
     public String getNr(int id){
         String selection = HANDIN__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_HANDIN, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(HANDIN_nr));
     }
 
     public  String getAssNr(int id){
         String selection = HANDIN__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_HANDIN, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(HANDIN_assNr));
     }
 }

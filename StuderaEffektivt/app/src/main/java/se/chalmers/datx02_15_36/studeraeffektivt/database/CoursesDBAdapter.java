@@ -83,9 +83,7 @@ public class CoursesDBAdapter extends DBAdapter {
         String selection = COURSES__ccode + " = '" + ccode + "'";
         Cursor cursor = db.query(TABLE_COURSES, null, selection, null, null, null, null);
         cursor.moveToNext();
-        Log.i("CourseDB", "selection :" + selection);
-        Log.i("CourseDB", "status :"  + cursor.getString(cursor.getColumnIndex(COURSES_cstatus)));
-        return cursor.getString(2);
+        return cursor.getString(cursor.getColumnIndex(COURSES_cstatus));
     }
 
     public long insertTimeOnCourse(String ccode, int minutes) {
@@ -137,6 +135,4 @@ public class CoursesDBAdapter extends DBAdapter {
         String selection = COURSES_cstatus + " = '" + AssignmentStatus.DONE.toString() + "'";
         return db.query(TABLE_COURSES, null, selection, null, null, null, null);
     }
-
-
-    }
+}

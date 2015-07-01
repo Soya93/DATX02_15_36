@@ -68,7 +68,6 @@ public class OtherAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     public long setUndone(int assignmentId){
         ContentValues cv = new ContentValues();
 
-        String nullString = null;
         cv.put(OTHER_status, AssignmentStatus.UNDONE.toString());
 
         try {
@@ -93,18 +92,21 @@ public class OtherAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     public  String getCourse(int id){
         String selection = OTHER__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_OTHER, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(OTHER_ccode));
     }
 
     public int getWeek(int id){
         String selection = OTHER__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_OTHER, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getInt(cur.getColumnIndex(OTHER_week));
     }
 
     public  String getAssNr(int id){
         String selection = OTHER__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_OTHER, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(OTHER_assNr));
     }
 

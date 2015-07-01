@@ -71,7 +71,6 @@ public class LabAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     public long setUndone(int assignmentId){
         ContentValues cv = new ContentValues();
 
-        String nullString = null;
         cv.put(LABS_status, AssignmentStatus.UNDONE.toString());
 
         try {
@@ -96,24 +95,28 @@ public class LabAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     public  String getCourse(int id){
         String selection = LABS__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_LABS, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(LABS_ccode));
     }
 
     public  int getWeek(int id){
         String selection = LABS__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_LABS, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getInt(cur.getColumnIndex(LABS_week));
     }
 
     public  String getNr(int id){
         String selection = LABS__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_LABS, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(LABS_nr));
     }
 
     public  String getAssNr(int id){
         String selection = LABS__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_LABS, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(LABS_assNr));
     }
 }

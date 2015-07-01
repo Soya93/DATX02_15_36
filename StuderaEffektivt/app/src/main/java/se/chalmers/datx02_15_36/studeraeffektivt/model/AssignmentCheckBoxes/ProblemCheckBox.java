@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -92,20 +93,20 @@ public class ProblemCheckBox extends AssignmentCheckBox {
     }
 
     public String getCourseCode(){
-        return problemDB.getCourse(super.getId());
+        return problemDB.getCourse(super.getIdNr());
 
     }
 
     public int getWeek() {
-        return problemDB.getWeek(super.getId());
+        return problemDB.getWeek(super.getIdNr());
     }
 
     public String getSortingString(){
-        return problemDB.getChapter(super.getId());
+        return problemDB.getChapter(super.getIdNr());
     }
 
     public String getTaskString() {
-        return problemDB.getAssNr(super.getId());
+        return problemDB.getAssNr(super.getIdNr());
     }
 
 

@@ -32,13 +32,13 @@ public class ReadAssignmentsDBAdapter  extends AssignmentsDBAdapter  {
         ContentValues cv = new ContentValues();
 
         try {
+            cv.put(READ__id, id);
             cv.put(READ_ccode, courseCode);
             cv.put(READ_chapter, chapter);
             cv.put(READ_week, week);
             cv.put(READ_startPage, startPage);
             cv.put(READ_endPage, endPage);
             cv.put(READ_status, status.toString());
-            cv.put(READ__id, id);
 
             return db.insert(TABLE_READ, null, cv);
         } catch (Exception e) {
@@ -75,7 +75,6 @@ public class ReadAssignmentsDBAdapter  extends AssignmentsDBAdapter  {
     public long setUndone(int assignmentId){
         ContentValues cv = new ContentValues();
 
-        String nullString = null;
         cv.put(READ_status, AssignmentStatus.UNDONE.toString());
 
         try {
@@ -99,48 +98,34 @@ public class ReadAssignmentsDBAdapter  extends AssignmentsDBAdapter  {
     public  String getCourse(int id){
         String selection = READ__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_READ, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(READ_ccode));
     }
     public int getWeek(int id){
         String selection = READ__id + " = '" + id + "'";
-        Log.i("ReadAssDB", "selection :" + selection);
         Cursor cur =  db.query(TABLE_READ, null, selection, null, null, null, null);
-        int week  = -1;
-        if( cur != null && cur.moveToNext() ) {
-            week = cur.getInt(cur.getColumnIndex(READ_week));
-            Log.i("ReadAssDB", "selection :" + selection);
-            Log.i("ReadAssDB", "week :"  + week);
-            cur.close();
-        }
-        return week;
+        cur.moveToNext();
+        return cur.getInt(cur.getColumnIndex(READ_week));
     }
 
     public  String getChapter(int id){
-
-        Cursor cursor = db.query(TABLE_READ, new String[] { READ_chapter }, READ__id + "=?",
-                new String[] { String.valueOf(id) }, null, null, null);
-            cursor.moveToFirst();
-            while(cursor.moveToNext()){
-
-            }
-
-            return cursor.getString(0);
-
-       /* String selection = READ__id + " = '" + id + "'";
+        String selection = READ__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_READ, null, selection, null, null, null, null);
-        cur.moveToFirst();
-        return  cur.getString(cur.getColumnIndex(READ_chapter));*/
+        cur.moveToNext();
+        return cur.getString(cur.getColumnIndex(READ_chapter));
     }
 
     public  String getStartPage(int id){
         String selection = READ__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_READ, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(READ_startPage));
     }
 
     public  String getEndPage(int id){
         String selection = READ__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_READ, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(READ_endPage));
     }
 }

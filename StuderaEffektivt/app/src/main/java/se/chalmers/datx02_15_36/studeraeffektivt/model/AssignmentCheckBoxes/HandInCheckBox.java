@@ -90,18 +90,18 @@ public class HandInCheckBox extends AssignmentCheckBox {
         getStudyTask().setClickable(true);
     }
 
-    public String getCourseCode(){ return handInDB.getCourse(super.getId());}
+    public String getCourseCode(){ return handInDB.getCourse(super.getIdNr());}
 
     public int getWeek() {
-        return handInDB.getWeek(super.getId());
+        return handInDB.getWeek(super.getIdNr());
     }
 
     public String getSortingString(){
-        return handInDB.getNr(super.getId());
+        return handInDB.getNr(super.getIdNr());
     }
 
     public String getTaskString() {
-        return handInDB.getAssNr(super.getId());
+        return handInDB.getAssNr(super.getIdNr());
     }
 
 }

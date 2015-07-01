@@ -40,7 +40,7 @@ public class DBAdapter {
             + CoursesDBAdapter.COURSES_cstatus + " VARCHAR(50))";
 
     private static final String CREATE_SESSIONS_TABLE = "CREATE TABLE " + SessionsDBAdapter.TABLE_SESSIONS + " ("
-            + SessionsDBAdapter.SESSIONS__id + " INTEGER PRIMARY KEY, "
+            + SessionsDBAdapter.SESSIONS__id + " INT PRIMARY KEY, "
             + SessionsDBAdapter.SESSIONS_minutes + " INT, "
             + SessionsDBAdapter.SESSIONS_ccode + " VARCHAR(50), "
             + SessionsDBAdapter.SESSION_timestamp + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
@@ -58,59 +58,59 @@ public class DBAdapter {
             + OldAssignmentsDBAdapter.ASSIGNMENTS_status + " VARCHAR(50))";
 
     private static final String CREATE_LABS_TABLE = "CREATE TABLE " + LabAssignmentsDBAdapter.TABLE_LABS + " ("
-            + LabAssignmentsDBAdapter.LABS__id + " PRIMARY KEY, "
-            + LabAssignmentsDBAdapter.LABS_ccode + " VARCHAR(50), "
-            + LabAssignmentsDBAdapter.LABS_nr + " VARCHAR(50), "
-            + LabAssignmentsDBAdapter.LABS_week + " INT, "
-            + LabAssignmentsDBAdapter.LABS_assNr + " VARCHAR(50), "
-            + LabAssignmentsDBAdapter.LABS_status + " VARCHAR(50), "
+            + LabAssignmentsDBAdapter.LABS__id + " INT PRIMARY KEY NOT NULL,"
+            + LabAssignmentsDBAdapter.LABS_ccode + " VARCHAR(50) NOT NULL, "
+            + LabAssignmentsDBAdapter.LABS_nr + " VARCHAR(50) NOT NULL, "
+            + LabAssignmentsDBAdapter.LABS_week + " INT NOT NULL, "
+            + LabAssignmentsDBAdapter.LABS_assNr + " VARCHAR(50) NOT NULL, "
+            + LabAssignmentsDBAdapter.LABS_status + " VARCHAR(50) NOT NULL, "
             + "FOREIGN KEY(" + LabAssignmentsDBAdapter.LABS_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
     private static final String CREATE_PROBLEMS_TABLE = "CREATE TABLE " + ProblemAssignmentsDBAdapter.TABLE_PROBLEMS + " ("
-            + ProblemAssignmentsDBAdapter.PROBLEMS__id + " PRIMARY KEY, "
-            + ProblemAssignmentsDBAdapter.PROBLEMS_ccode + " VARCHAR(50), "
-            + ProblemAssignmentsDBAdapter.PROBLEMS_chapter + " VARCHAR(50), "
-            + ProblemAssignmentsDBAdapter.PROBLEMS_week + " INT, "
-            + ProblemAssignmentsDBAdapter.PROBLEMS_assNr + " VARCHAR(50), "
-            + ProblemAssignmentsDBAdapter.PROBLEMS_status + " VARCHAR(50), "
+            + ProblemAssignmentsDBAdapter.PROBLEMS__id + " INT PRIMARY KEY NOT NULL,"
+            + ProblemAssignmentsDBAdapter.PROBLEMS_ccode + " VARCHAR(50) NOT NULL, "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_chapter + " VARCHAR(50) NOT NULL, "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_week + " INT NOT NULL, "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_assNr + " VARCHAR(50) NOT NULL, "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_status + " VARCHAR(50) NOT NULL, "
             + "FOREIGN KEY(" + ProblemAssignmentsDBAdapter.PROBLEMS_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
     private static final String CREATE_READ_TABLE = "CREATE TABLE " + ReadAssignmentsDBAdapter.TABLE_READ + " ("
-            + ReadAssignmentsDBAdapter.READ__id + " PRIMARY KEY, "
-            + ReadAssignmentsDBAdapter.READ_ccode + " VARCHAR(50), "
-            + ReadAssignmentsDBAdapter.READ_chapter + " VARCHAR(50), "
-            + ReadAssignmentsDBAdapter.READ_week + " INT, "
-            + ReadAssignmentsDBAdapter.READ_startPage + " INT, "
-            + ReadAssignmentsDBAdapter.READ_endPage + " INT, "
-            + ReadAssignmentsDBAdapter.READ_status + " VARCHAR(50), "
+            + ReadAssignmentsDBAdapter.READ__id + " INT PRIMARY KEY NOT NULL,"
+            + ReadAssignmentsDBAdapter.READ_ccode + " VARCHAR(50) NOT NULL, "
+            + ReadAssignmentsDBAdapter.READ_chapter + " VARCHAR(50) NOT NULL, "
+            + ReadAssignmentsDBAdapter.READ_week + " INT NOT NULL, "
+            + ReadAssignmentsDBAdapter.READ_startPage + " INT NOT NULL, "
+            + ReadAssignmentsDBAdapter.READ_endPage + " INT NOT NULL, "
+            + ReadAssignmentsDBAdapter.READ_status + " VARCHAR(50) NOT NULL, "
             + "FOREIGN KEY(" + ReadAssignmentsDBAdapter.READ_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
     private static final String CREATE_HANDIN_TABLE = "CREATE TABLE " + HandInAssignmentsDBAdapter.TABLE_HANDIN + " ("
-            + HandInAssignmentsDBAdapter.HANDIN__id + " PRIMARY KEY, "
-            + HandInAssignmentsDBAdapter.HANDIN_ccode+ " VARCHAR(50), "
-            + HandInAssignmentsDBAdapter.HANDIN_nr + " VARCHAR(50), "
-            + HandInAssignmentsDBAdapter.HANDIN_week + " INT, "
-            + HandInAssignmentsDBAdapter.HANDIN_assNr + " VARCHAR(50), "
-            + HandInAssignmentsDBAdapter.HANDIN_status + " VARCHAR(50), "
+            + HandInAssignmentsDBAdapter.HANDIN__id + " INT PRIMARY KEY NOT NULL,"
+            + HandInAssignmentsDBAdapter.HANDIN_ccode+ " VARCHAR(50) NOT NULL, "
+            + HandInAssignmentsDBAdapter.HANDIN_nr + " VARCHAR(50) NOT NULL, "
+            + HandInAssignmentsDBAdapter.HANDIN_week + " INT NOT NULL, "
+            + HandInAssignmentsDBAdapter.HANDIN_assNr + " VARCHAR(50) NOT NULL, "
+            + HandInAssignmentsDBAdapter.HANDIN_status + " VARCHAR(50) NOT NULL, "
             + "FOREIGN KEY(" + HandInAssignmentsDBAdapter.HANDIN_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
     private static final String CREATE_OTHER_TABLE = "CREATE TABLE " + OtherAssignmentsDBAdapter.TABLE_OTHER + " ("
-            + OtherAssignmentsDBAdapter.OTHER__id + " PRIMARY KEY, "
-            + OtherAssignmentsDBAdapter.OTHER_ccode+ " VARCHAR(50), "
-            + OtherAssignmentsDBAdapter.OTHER_week + " INT, "
-            + OtherAssignmentsDBAdapter.OTHER_assNr + " VARCHAR(50), "
-            + OtherAssignmentsDBAdapter.OTHER_status + " VARCHAR(50), "
+            + OtherAssignmentsDBAdapter.OTHER__id + " INT PRIMARY KEY NOT NULL,"
+            + OtherAssignmentsDBAdapter.OTHER_ccode+ " VARCHAR(50) NOT NULL, "
+            + OtherAssignmentsDBAdapter.OTHER_week + " INT NOT NULL, "
+            + OtherAssignmentsDBAdapter.OTHER_assNr + " VARCHAR(50) NOT NULL, "
+            + OtherAssignmentsDBAdapter.OTHER_status + " VARCHAR(50) NOT NULL, "
             + "FOREIGN KEY(" + OtherAssignmentsDBAdapter.OTHER_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
     private static final String CREATE_OBLIG_TABLE = "CREATE TABLE " + CoursesDBAdapter.TABLE_OBLIG + " ("
-            + CoursesDBAdapter.OBLIG_ccode + " VARCHAR(50), "
-            + CoursesDBAdapter.OBLIG_type + " VARCHAR(50), "
-            + CoursesDBAdapter.OBLIG_date + " DATE, "
+            + CoursesDBAdapter.OBLIG_ccode + " VARCHAR(50) PRIMARY KEY NOT NULL, "
+            + CoursesDBAdapter.OBLIG_type + " VARCHAR(50) NOT NULL, "
+            + CoursesDBAdapter.OBLIG_date + " DATE NOT NULL, "
             + "FOREIGN KEY(" + CoursesDBAdapter.OBLIG_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
     private static final String CREATE_TIMEONCOURSE_TABLE = "CREATE TABLE " + CoursesDBAdapter.TABLE_TIMEONCOURSE + "("
-            + CoursesDBAdapter.TIMEONCOURSE__ccode + " VARCHAR(50) PRIMARY KEY, "
-            + CoursesDBAdapter.TIMEONCOURSE_time + " INT, "
+            + CoursesDBAdapter.TIMEONCOURSE__ccode + " VARCHAR(50) PRIMARY KEY NOT NULL, "
+            + CoursesDBAdapter.TIMEONCOURSE_time + " INT NOT NULL, "
             + "FOREIGN KEY(" + CoursesDBAdapter.TIMEONCOURSE__ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
     public DBAdapter(Context ctx)

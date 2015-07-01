@@ -165,7 +165,7 @@ public class StudyTaskActivity extends ActionBarActivity {
         setChapterSpinner();
         setWeekSpinner();
         setAssignmentTypeSpinner();
-        //updateAssignmentsLayout(AssignmentType.PROBLEM);
+        updateAssignmentsLayout(AssignmentType.PROBLEM);
     }
 
     private void setChapterSpinner() {
@@ -184,7 +184,6 @@ public class StudyTaskActivity extends ActionBarActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setSelectedCourse();
-
             }
 
             @Override
@@ -220,7 +219,7 @@ public class StudyTaskActivity extends ActionBarActivity {
             assignmentTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    //updateView();
+                    updateView();
                 }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
@@ -352,7 +351,7 @@ public class StudyTaskActivity extends ActionBarActivity {
                     + " == " + coursePrefHelper.getSharedCoursePos());
 
             assignmentsFlowLayout.removeAllViews();
-//            assignmentsFlowLayout.addProblemsFromDatabase(courseCode, problemDB);
+            assignmentsFlowLayout.addProblemsFromDatabase(courseCode, problemDB);
 
             if(assignmentsFlowLayout.isEmpty()){
                 TextView textView = new TextView(this);
@@ -525,41 +524,54 @@ public class StudyTaskActivity extends ActionBarActivity {
 
 
     public void addToDatabase(String courseCode, AssignmentType type, int id, String chapterOrNumber, int week, String assignment) {
+        Log.i("STA", "in addToDatabase: kurskod:" + courseCode);
+
+        Log.i("STA", "in addToDatabase: kurskod:" + courseCode);
+
+        Log.i("STA", "in addToDatabase: id:" + id);
+
+        Log.i("STA", "in addToDatabase: chapter:" + chapterOrNumber);
+
+        Log.i("STA", "in addToDatabase: week:" + week);
+
+        Log.i("STA", "in addToDatabase: assNr:" + assignment);
+
         switch (type){
 
             case PROBLEM:
-                ProblemAssignmentsDBAdapter problemAssignmentsDBAdapter = new ProblemAssignmentsDBAdapter(this);
-                problemAssignmentsDBAdapter.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+                problemDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+
+                Log.i("STA", "in addToDatabase: inserted chapter:" + problemDB.getChapter(id));
+
                 break;
 
             case LAB:
-                LabAssignmentsDBAdapter labAssignmentsDBAdapter = new LabAssignmentsDBAdapter(this);
-                labAssignmentsDBAdapter.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+                labDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+
+                Log.i("STA", "in addToDatabase: inserted nr:" + labDB.getNr(id));
+
                 break;
 
             case HANDIN:
-                HandInAssignmentsDBAdapter handInAssignmentsDBAdapter = new HandInAssignmentsDBAdapter(this);
-                handInAssignmentsDBAdapter.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+                handInDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+
+                Log.i("STA", "in addToDatabase: inserted nr:" + handInDB.getNr(id));
+
+
                 break;
 
             default:
                 //do nothing
 
         }
-       // updateAssignmentsLayout(type);
+       updateAssignmentsLayout(type);
         taskInput.setText("");
         taskParts.setText("");
     }
 
     public void addToDatabase(String courseCode, AssignmentType type, int id, String chapter, int week, int startPage, int endPage){
 
-
-
-
-
-
         Log.i("STA", "in addToDatabase: kurskod:" + courseCode);
-
 
         Log.i("STA", "in addToDatabase: kurskod:" + courseCode);
 
@@ -577,19 +589,20 @@ public class StudyTaskActivity extends ActionBarActivity {
 
         Log.i("STA", "in addToDatabase: result:" + result);
 
-       Log.i("STA", "in addToDatabase: inserted week:" + readDB.getWeek(id));
+        Log.i("STA", "in addToDatabase: inserted chapter:" + readDB.getChapter(id));
 
-
-
-       // updateAssignmentsLayout(type);
+        updateAssignmentsLayout(type);
         taskInput.setText("");
         taskParts.setText("");
     }
 
     public void addToDatabase(String courseCode, AssignmentType type, int id, int week, String assignment) {
-        OtherAssignmentsDBAdapter otherAssignmentsDBAdapter = new OtherAssignmentsDBAdapter(this);
-        otherAssignmentsDBAdapter.insertAssignment(courseCode, id, week, assignment, AssignmentStatus.UNDONE);
-       // updateAssignmentsLayout(type);
+        otherDB.insertAssignment(courseCode, id, week, assignment, AssignmentStatus.UNDONE);
+
+        Log.i("STA", "in addToDatabase: inserted week:" + otherDB.getWeek(id));
+
+
+        updateAssignmentsLayout(type);
         taskInput.setText("");
         taskParts.setText("");
     }

@@ -94,20 +94,20 @@ public class OtherCheckBox extends AssignmentCheckBox {
     }
 
     public String getCourseCode(){
-        return otherDB.getCourse(super.getId());
+        return otherDB.getCourse(super.getIdNr());
 
     }
 
     public int getWeek() {
-        return otherDB.getWeek(super.getId());
+        return otherDB.getWeek(super.getIdNr());
     }
 
     public String getSortingString(){
-        return Integer.toString(otherDB.getWeek(super.getId()));
+        return Integer.toString(otherDB.getWeek(super.getIdNr()));
     }
 
     public String getTaskString() {
-        return otherDB.getAssNr(super.getId());
+        return otherDB.getAssNr(super.getIdNr());
     }
 
 

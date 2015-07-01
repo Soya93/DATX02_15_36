@@ -90,18 +90,18 @@ public class ReadCheckBox extends AssignmentCheckBox {
     }
 
     public String getCourseCode(){
-        return readDB.getCourse(super.getId());
+        return readDB.getCourse(super.getIdNr());
     }
 
     public int getWeek() {
-        return readDB.getWeek(super.getId());
+        return readDB.getWeek(super.getIdNr());
     }
 
     public String getSortingString(){
-        return readDB.getChapter(super.getId());
+        return readDB.getChapter(super.getIdNr());
     }
 
     public String getTaskString() {
-        return readDB.getStartPage(super.getId()) + "-" + readDB.getEndPage(super.getId());
+        return readDB.getStartPage(super.getIdNr()) + "-" + readDB.getEndPage(super.getIdNr());
     }
 }

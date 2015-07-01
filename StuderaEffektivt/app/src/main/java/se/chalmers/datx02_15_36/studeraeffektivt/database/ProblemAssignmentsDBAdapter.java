@@ -69,7 +69,6 @@ public class ProblemAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     public long setUndone(int assignmentId){
         ContentValues cv = new ContentValues();
 
-        String nullString = null;
         cv.put(PROBLEMS_status, AssignmentStatus.UNDONE.toString());
 
         try {
@@ -94,24 +93,28 @@ public class ProblemAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     public  String getCourse(int id){
         String selection = PROBLEMS__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(PROBLEMS_ccode));
     }
 
     public  int getWeek(int id){
         String selection = PROBLEMS__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getInt(cur.getColumnIndex(PROBLEMS_week));
     }
 
     public  String getChapter(int id){
         String selection = PROBLEMS__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(PROBLEMS_chapter));
     }
 
     public  String getAssNr(int id){
         String selection = PROBLEMS__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);
+        cur.moveToNext();
         return cur.getString(cur.getColumnIndex(PROBLEMS_assNr));
     }
 }
