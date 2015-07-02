@@ -135,6 +135,10 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
 
     public boolean contains(String sortingString, String taskString){
+
+        Log.i("contains", "taskString: " + taskString );
+
+
         for(int i = 0; i < this.getChildCount(); i++){
             if(
                     !(getChildAt(i).getClass().equals(TextView.class)) &&
@@ -219,7 +223,7 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
                     if (handInHashMap.containsKey(handInCheckBox.getSortingString())) {
                         handInHashMap.get(handInCheckBox.getSortingString()).add(handInCheckBox);
                     } else {
-                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList();
+                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
                         arrayList.add(handInCheckBox);
                         handInHashMap.put(handInCheckBox.getSortingString(), arrayList);
                     }
@@ -272,7 +276,7 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
                     OtherCheckBox otherCheckBox = new OtherCheckBox(this.getContext(),
                             cursor.getInt(cursor.getColumnIndex("_id")),assignmentStatus);
 
-                    if (otherHashMap.containsKey(otherCheckBox.getSortingString())) {
+                    if (otherHashMap.containsKey(otherCheckBox.getSortingString() )) {
                         otherHashMap.get(otherCheckBox.getSortingString()).add(otherCheckBox);
                     } else {
                         ArrayList<AssignmentCheckBox> arrayList = new ArrayList();

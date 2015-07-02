@@ -31,6 +31,7 @@ public class LabCheckBox extends AssignmentCheckBox {
 
         labDB = new LabAssignmentsDBAdapter(context);
         initCheckbox();
+        setText(getTaskString());
     }
 
     public void initCheckbox(){

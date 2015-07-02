@@ -29,7 +29,10 @@ public class ReadCheckBox extends AssignmentCheckBox {
 
     public ReadCheckBox(Context context, int id, AssignmentStatus status){
         super(context,id,status);
+
         readDB = new ReadAssignmentsDBAdapter(context);
+        initCheckbox();
+        setText(getTaskString());
     }
 
     public void initCheckbox(){

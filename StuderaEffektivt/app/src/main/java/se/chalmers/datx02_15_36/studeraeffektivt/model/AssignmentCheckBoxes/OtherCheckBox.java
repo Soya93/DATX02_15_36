@@ -33,7 +33,8 @@ public class OtherCheckBox extends AssignmentCheckBox {
         super(context,id,status);
 
         otherDB = new OtherAssignmentsDBAdapter(context);
-
+        initCheckbox();
+        setText(getTaskString());
     }
 
     public void initCheckbox(){

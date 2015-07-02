@@ -120,6 +120,7 @@ public class OldStudyTask extends CheckBox{
                     assDBAdapter.setUndone(getStudyTask().getIdNr());
                 }
 
+
             }
         });
 

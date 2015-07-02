@@ -33,6 +33,8 @@ public class ProblemCheckBox extends AssignmentCheckBox {
     public ProblemCheckBox(Context context, int id, AssignmentStatus status){
         super(context,id,status);
         problemDB = new ProblemAssignmentsDBAdapter(context);
+        initCheckbox();
+        setText(getTaskString());
     }
 
     public void initCheckbox(){

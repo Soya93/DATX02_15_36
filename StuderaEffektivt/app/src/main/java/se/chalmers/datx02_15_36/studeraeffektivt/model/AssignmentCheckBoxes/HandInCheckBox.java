@@ -30,6 +30,8 @@ public class HandInCheckBox extends AssignmentCheckBox {
         super(context,id,status);
 
         handInDB = new HandInAssignmentsDBAdapter(context);
+        initCheckbox();
+        setText(getTaskString());
     }
 
     @Override
