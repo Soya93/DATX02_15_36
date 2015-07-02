@@ -206,6 +206,8 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
     public void addHandInsFromDatabase(String courseCode, HandInAssignmentsDBAdapter handInAssignmentsDBAdapter) {
+        handInHashMap = new HashMap<>();
+
         Cursor cursor = handInAssignmentsDBAdapter.getAssignments();
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -225,6 +227,8 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
     public void addHandInsFromDatabase(String courseCode, HandInAssignmentsDBAdapter handInAssignmentsDBAdapter, int week) {
+        handInHashMap = new HashMap<>();
+
         Cursor cursor = handInAssignmentsDBAdapter.getAssignments();
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -246,8 +250,6 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
     private void addCheckBoxToMap(HandInCheckBox handInCheckBox){
-        handInHashMap = new HashMap<>();
-
         if (handInHashMap.containsKey(handInCheckBox.getSortingString())) {
             handInHashMap.get(handInCheckBox.getSortingString()).add(handInCheckBox);
         } else {
@@ -259,6 +261,8 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
 
     public void addLabsFromDatabase(String courseCode, LabAssignmentsDBAdapter labAssignmentsDBAdapter) {
+        handInHashMap = new HashMap<>();
+
         Cursor cursor = labAssignmentsDBAdapter.getAssignments();
 
         if (cursor != null) {
@@ -278,6 +282,8 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
     public void addLabsFromDatabase(String courseCode, LabAssignmentsDBAdapter labAssignmentsDBAdapter, int week) {
+        handInHashMap = new HashMap<>();
+
         Cursor cursor = labAssignmentsDBAdapter.getAssignments();
 
         if (cursor != null) {
@@ -299,8 +305,6 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
     private void addCheckBoxToMap(LabCheckBox labCheckBox){
-        labHashMap = new HashMap<>();
-
         if (labHashMap.containsKey(labCheckBox.getSortingString())) {
             labHashMap.get(labCheckBox.getSortingString()).add(labCheckBox);
         } else {
@@ -312,6 +316,8 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
 
     public void addOthersFromDatabase(String courseCode, OtherAssignmentsDBAdapter otherAssignmentsDBAdapter) {
+        otherHashMap = new HashMap<>();
+
         Cursor cursor = otherAssignmentsDBAdapter.getAssignments();
 
         if (cursor != null) {
@@ -332,6 +338,8 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
     public void addOthersFromDatabase(String courseCode, OtherAssignmentsDBAdapter otherAssignmentsDBAdapter, int week) {
+        otherHashMap = new HashMap<>();
+
         Cursor cursor = otherAssignmentsDBAdapter.getAssignments();
 
         if (cursor != null) {
@@ -355,8 +363,6 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
 
     private void addCheckBoxToMap(OtherCheckBox otherCheckBox){
-        otherHashMap = new HashMap<>();
-
         if (otherHashMap.containsKey(otherCheckBox.getSortingString() )) {
             otherHashMap.get(otherCheckBox.getSortingString()).add(otherCheckBox);
         } else {
@@ -368,6 +374,8 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
 
     public void addProblemsFromDatabase(String courseCode, ProblemAssignmentsDBAdapter problemAssignmentsDBAdapter) {
+        problemHashMap = new HashMap<>();
+
         Cursor cursor = problemAssignmentsDBAdapter.getAssignments();
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -385,6 +393,8 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
     public void addProblemsFromDatabase(String courseCode, ProblemAssignmentsDBAdapter problemAssignmentsDBAdapter, int week) {
+        problemHashMap = new HashMap<>();
+
         Cursor cursor = problemAssignmentsDBAdapter.getAssignments();
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -407,8 +417,6 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
 
     private void addCheckBoxToMap(ProblemCheckBox problemCheckBox){
-        problemHashMap = new HashMap<>();
-
         if (problemHashMap.containsKey(problemCheckBox.getSortingString())) {
             problemHashMap.get(problemCheckBox.getSortingString()).add(problemCheckBox);
         } else {
@@ -420,6 +428,8 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
 
     public void addReadsFromDatabase(String courseCode, ReadAssignmentsDBAdapter readAssignmentsDBAdapter) {
+        readHashMap = new HashMap<>();
+
         Cursor cursor = readAssignmentsDBAdapter.getAssignments();
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -437,6 +447,8 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
 
     public void addReadsFromDatabase(String courseCode, ReadAssignmentsDBAdapter readAssignmentsDBAdapter, int week) {
+        readHashMap = new HashMap<>();
+
         Cursor cursor = readAssignmentsDBAdapter.getAssignments();
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -455,8 +467,6 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
     private void addCheckBoxToMap(ReadCheckBox readCheckBox){
-        readHashMap = new HashMap<>();
-
         if (readHashMap.containsKey(readCheckBox.getSortingString())) {
             readHashMap.get(readCheckBox.getSortingString()).add(readCheckBox);
         } else {
@@ -466,16 +476,6 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
         }
     }
 
-    //Timerstuff
-    public void addTasksFromDatabase(OldAssignmentsDBAdapter assDBAdapter, String courseCode, AssignmentType assignmentType, int week) {
-       /* if (cursor != null) {
-            while (cursor.moveToNext()) {
-                if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode)
-                        && cursor.getString(cursor.getColumnIndex("type")).equals(assignmentType.toString())
-                        && cursor.getInt(cursor.getColumnIndex("week")) == week
-                        && cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.UNDONE.toString())) {*/
-
-    }
     public boolean isEmpty(){
         return (this.getChildCount()<1);
     }

@@ -67,11 +67,13 @@ public class LabCheckBox extends AssignmentCheckBox {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         String courseCode = getCourseCode();
+                        int week = getWeek();
                         labDB.deleteAssignment(getAssignmentCheckBox().getIdNr());
                         Toast.makeText(LabCheckBox.this.getContext(), "Uppgift borttagen", Toast.LENGTH_SHORT).show();
                         AssignmentCheckBoxLayout assignmentCheckBoxLayout = (AssignmentCheckBoxLayout)getParent();
                         assignmentCheckBoxLayout.removeAllViews();
                         assignmentCheckBoxLayout.addLabsFromDatabase(courseCode, labDB);
+                        assignmentCheckBoxLayout.addLabsFromDatabase(courseCode, labDB, week);
 
                         if(assignmentCheckBoxLayout.isEmpty()){
                             TextView textView = new TextView(getContext());
