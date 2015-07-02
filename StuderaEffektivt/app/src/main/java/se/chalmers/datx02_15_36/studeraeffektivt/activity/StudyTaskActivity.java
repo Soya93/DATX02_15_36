@@ -82,8 +82,6 @@ public class StudyTaskActivity extends ActionBarActivity {
     private OtherAssignmentsDBAdapter otherDB;
     private ProblemAssignmentsDBAdapter problemDB;
     private ReadAssignmentsDBAdapter readDB;
-
-
     private CoursesDBAdapter coursesDBAdapter;
 
     private int chosenWeek = CalendarUtils.getCurrWeekNumber();

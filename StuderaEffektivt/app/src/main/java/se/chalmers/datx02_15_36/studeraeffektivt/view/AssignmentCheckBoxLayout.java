@@ -172,13 +172,18 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
             switch (type) {
                 case HANDIN: case LAB:
                     sortingText.setText("  Nummer " + a.get(0).getSortingString());
+                    break;
 
                 case OTHER:
                     sortingText.setText("  Vecka " + a.get(0).getSortingString());
+                    break;
 
                 case PROBLEM: case READ:
                     sortingText.setText("  Kapitel " + a.get(0).getSortingString());
+                    break;
+
                 default:
+                    //do nothing
             }
             int width = this.getWidth();
             sortingText.setWidth(width);
@@ -201,23 +206,16 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
     public void addHandInsFromDatabase(String courseCode, HandInAssignmentsDBAdapter handInAssignmentsDBAdapter) {
-        handInHashMap = new HashMap<>();
         Cursor cursor = handInAssignmentsDBAdapter.getAssignments();
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 if(cursor.getString(cursor.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN_ccode)).equals(courseCode)) {
+
                     AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
                     int id =cursor.getInt(cursor.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN__id));
 
-                    HandInCheckBox handInCheckBox = new HandInCheckBox(this.getContext(),id,assignmentStatus);
+                    addCheckBoxToMap(new HandInCheckBox(this.getContext(),id,assignmentStatus));
 
-                    if (handInHashMap.containsKey(handInCheckBox.getSortingString())) {
-                        handInHashMap.get(handInCheckBox.getSortingString()).add(handInCheckBox);
-                    } else {
-                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
-                        arrayList.add(handInCheckBox);
-                        handInHashMap.put(handInCheckBox.getSortingString(), arrayList);
-                    }
                 }
             }
 
@@ -226,25 +224,51 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
         }
     }
 
+    public void addHandInsFromDatabase(String courseCode, HandInAssignmentsDBAdapter handInAssignmentsDBAdapter, int week) {
+        Cursor cursor = handInAssignmentsDBAdapter.getAssignments();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                if(cursor.getString(cursor.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN_ccode)).equals(courseCode)
+                        && cursor.getInt(cursor.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN_week)) == week &&
+                        cursor.getString(cursor.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN_status)).equals(AssignmentStatus.UNDONE.toString())) {
+
+                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                    int id =cursor.getInt(cursor.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN__id));
+
+                    addCheckBoxToMap(new HandInCheckBox(this.getContext(),id,assignmentStatus));
+
+                }
+            }
+
+            if(handInHashMap!=null)
+                addMap(handInHashMap, AssignmentType.HANDIN);
+        }
+    }
+
+    private void addCheckBoxToMap(HandInCheckBox handInCheckBox){
+        handInHashMap = new HashMap<>();
+
+        if (handInHashMap.containsKey(handInCheckBox.getSortingString())) {
+            handInHashMap.get(handInCheckBox.getSortingString()).add(handInCheckBox);
+        } else {
+            ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
+            arrayList.add(handInCheckBox);
+            handInHashMap.put(handInCheckBox.getSortingString(), arrayList);
+        }
+    }
+
+
     public void addLabsFromDatabase(String courseCode, LabAssignmentsDBAdapter labAssignmentsDBAdapter) {
-        labHashMap = new HashMap<>();
         Cursor cursor = labAssignmentsDBAdapter.getAssignments();
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 if(cursor.getString(cursor.getColumnIndex(LabAssignmentsDBAdapter.LABS_ccode)).equals(courseCode)) {
+
                     AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(LabAssignmentsDBAdapter.LABS_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
                     int id =cursor.getInt(cursor.getColumnIndex(LabAssignmentsDBAdapter.LABS__id));
 
-                    LabCheckBox labCheckBox = new LabCheckBox(this.getContext(),id,assignmentStatus);
-
-                    if (labHashMap.containsKey(labCheckBox.getSortingString())) {
-                        labHashMap.get(labCheckBox.getSortingString()).add(labCheckBox);
-                    } else {
-                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
-                        arrayList.add(labCheckBox);
-                        labHashMap.put(labCheckBox.getSortingString(), arrayList);
-                    }
+                    addCheckBoxToMap(new LabCheckBox(this.getContext(),id,assignmentStatus));
                 }
             }
 
@@ -253,27 +277,74 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
         }
     }
 
+    public void addLabsFromDatabase(String courseCode, LabAssignmentsDBAdapter labAssignmentsDBAdapter, int week) {
+        Cursor cursor = labAssignmentsDBAdapter.getAssignments();
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                if(cursor.getString(cursor.getColumnIndex(LabAssignmentsDBAdapter.LABS_ccode)).equals(courseCode)
+                        && cursor.getInt(cursor.getColumnIndex(LabAssignmentsDBAdapter.LABS_week)) == week &&
+                        cursor.getString(cursor.getColumnIndex(LabAssignmentsDBAdapter.LABS_status)).equals(AssignmentStatus.UNDONE.toString())) {
+
+                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(LabAssignmentsDBAdapter.LABS_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                    int id =cursor.getInt(cursor.getColumnIndex(LabAssignmentsDBAdapter.LABS__id));
+
+                    addCheckBoxToMap(new LabCheckBox(this.getContext(),id,assignmentStatus));
+                }
+            }
+
+            if(labHashMap!=null)
+                addMap(labHashMap, AssignmentType.LAB);
+        }
+    }
+
+    private void addCheckBoxToMap(LabCheckBox labCheckBox){
+        labHashMap = new HashMap<>();
+
+        if (labHashMap.containsKey(labCheckBox.getSortingString())) {
+            labHashMap.get(labCheckBox.getSortingString()).add(labCheckBox);
+        } else {
+            ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
+            arrayList.add(labCheckBox);
+            labHashMap.put(labCheckBox.getSortingString(), arrayList);
+        }
+    }
+
 
     public void addOthersFromDatabase(String courseCode, OtherAssignmentsDBAdapter otherAssignmentsDBAdapter) {
-        otherHashMap = new HashMap<>();
         Cursor cursor = otherAssignmentsDBAdapter.getAssignments();
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 if(cursor.getString(cursor.getColumnIndex(OtherAssignmentsDBAdapter.OTHER_ccode)).equals(courseCode)) {
+
                     AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(OtherAssignmentsDBAdapter.OTHER_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
                     int id =cursor.getInt(cursor.getColumnIndex(OtherAssignmentsDBAdapter.OTHER__id));
 
-                    OtherCheckBox otherCheckBox = new OtherCheckBox(this.getContext(),
-                            id,assignmentStatus);
+                    addCheckBoxToMap(new OtherCheckBox(this.getContext(),
+                            id,assignmentStatus));
+                }
+            }
 
-                    if (otherHashMap.containsKey(otherCheckBox.getSortingString() )) {
-                        otherHashMap.get(otherCheckBox.getSortingString()).add(otherCheckBox);
-                    } else {
-                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
-                        arrayList.add(otherCheckBox);
-                        otherHashMap.put(otherCheckBox.getSortingString(), arrayList);
-                    }
+            if(otherHashMap!=null)
+                addMap(otherHashMap, AssignmentType.OTHER);
+        }
+    }
+
+    public void addOthersFromDatabase(String courseCode, OtherAssignmentsDBAdapter otherAssignmentsDBAdapter, int week) {
+        Cursor cursor = otherAssignmentsDBAdapter.getAssignments();
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                if(cursor.getString(cursor.getColumnIndex(OtherAssignmentsDBAdapter.OTHER_ccode)).equals(courseCode)
+                        && cursor.getInt(cursor.getColumnIndex(OtherAssignmentsDBAdapter.OTHER_week)) == week &&
+                        cursor.getString(cursor.getColumnIndex(OtherAssignmentsDBAdapter.OTHER_status)).equals(AssignmentStatus.UNDONE.toString())) {
+
+                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(OtherAssignmentsDBAdapter.OTHER_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                    int id =cursor.getInt(cursor.getColumnIndex(OtherAssignmentsDBAdapter.OTHER__id));
+
+                    addCheckBoxToMap(new OtherCheckBox(this.getContext(),
+                            id,assignmentStatus));
                 }
             }
 
@@ -283,8 +354,20 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
 
+    private void addCheckBoxToMap(OtherCheckBox otherCheckBox){
+        otherHashMap = new HashMap<>();
+
+        if (otherHashMap.containsKey(otherCheckBox.getSortingString() )) {
+            otherHashMap.get(otherCheckBox.getSortingString()).add(otherCheckBox);
+        } else {
+            ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
+            arrayList.add(otherCheckBox);
+            otherHashMap.put(otherCheckBox.getSortingString(), arrayList);
+        }
+    }
+
+
     public void addProblemsFromDatabase(String courseCode, ProblemAssignmentsDBAdapter problemAssignmentsDBAdapter) {
-        problemHashMap = new HashMap<>();
         Cursor cursor = problemAssignmentsDBAdapter.getAssignments();
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -292,15 +375,7 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
                     AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
                     int id =cursor.getInt(cursor.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS__id));
 
-                    ProblemCheckBox problemCheckBox = new ProblemCheckBox(this.getContext(),id,assignmentStatus);
-
-                    if (problemHashMap.containsKey(problemCheckBox.getSortingString())) {
-                        problemHashMap.get(problemCheckBox.getSortingString()).add(problemCheckBox);
-                    } else {
-                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
-                        arrayList.add(problemCheckBox);
-                        problemHashMap.put(problemCheckBox.getSortingString(), arrayList);
-                    }
+                    addCheckBoxToMap(new ProblemCheckBox(this.getContext(),id,assignmentStatus));
                 }
             }
 
@@ -309,32 +384,87 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
         }
     }
 
+    public void addProblemsFromDatabase(String courseCode, ProblemAssignmentsDBAdapter problemAssignmentsDBAdapter, int week) {
+        Cursor cursor = problemAssignmentsDBAdapter.getAssignments();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                if(cursor.getString(cursor.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS_ccode)).equals(courseCode)
+                        && cursor.getInt(cursor.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS_week)) == week &&
+                        cursor.getString(cursor.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS_status)).equals(AssignmentStatus.UNDONE.toString())) {
+
+                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                    int id =cursor.getInt(cursor.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS__id));
+
+                    addCheckBoxToMap(new ProblemCheckBox(this.getContext(),id,assignmentStatus));
+                }
+            }
+
+            if(problemHashMap!=null)
+                addMap(problemHashMap, AssignmentType.PROBLEM);
+        }
+    }
+
+
+
+    private void addCheckBoxToMap(ProblemCheckBox problemCheckBox){
+        problemHashMap = new HashMap<>();
+
+        if (problemHashMap.containsKey(problemCheckBox.getSortingString())) {
+            problemHashMap.get(problemCheckBox.getSortingString()).add(problemCheckBox);
+        } else {
+            ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
+            arrayList.add(problemCheckBox);
+            problemHashMap.put(problemCheckBox.getSortingString(), arrayList);
+        }
+    }
+
+
     public void addReadsFromDatabase(String courseCode, ReadAssignmentsDBAdapter readAssignmentsDBAdapter) {
-        readHashMap = new HashMap<>();
         Cursor cursor = readAssignmentsDBAdapter.getAssignments();
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 if(cursor.getString(cursor.getColumnIndex(ReadAssignmentsDBAdapter.READ_ccode)).equals(courseCode)) {
+
                     AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(ReadAssignmentsDBAdapter.READ_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
                     int id =cursor.getInt(cursor.getColumnIndex(ReadAssignmentsDBAdapter.READ__id));
-
-                    ReadCheckBox readCheckBox = new ReadCheckBox(this.getContext(),id,assignmentStatus);
-
-                    if (readHashMap.containsKey(readCheckBox.getSortingString())) {
-                        readHashMap.get(readCheckBox.getSortingString()).add(readCheckBox);
-                    } else {
-                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
-                        arrayList.add(readCheckBox);
-                        readHashMap.put(readCheckBox.getSortingString(), arrayList);
-                    }
+                    addCheckBoxToMap(new ReadCheckBox(this.getContext(),id,assignmentStatus));
                 }
             }
-
             if(readHashMap!=null)
                 addMap(readHashMap, AssignmentType.READ);
         }
     }
 
+
+    public void addReadsFromDatabase(String courseCode, ReadAssignmentsDBAdapter readAssignmentsDBAdapter, int week) {
+        Cursor cursor = readAssignmentsDBAdapter.getAssignments();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                 if(cursor.getString(cursor.getColumnIndex(ReadAssignmentsDBAdapter.READ_ccode)).equals(courseCode)
+                        && cursor.getInt(cursor.getColumnIndex(ReadAssignmentsDBAdapter.READ_week)) == week &&
+                        cursor.getString(cursor.getColumnIndex(ReadAssignmentsDBAdapter.READ_status)).equals(AssignmentStatus.UNDONE.toString())) {
+
+                     AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(ReadAssignmentsDBAdapter.READ_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                     int id =cursor.getInt(cursor.getColumnIndex(ReadAssignmentsDBAdapter.READ__id));
+                    addCheckBoxToMap(new ReadCheckBox(this.getContext(),id,assignmentStatus));
+                }
+            }
+            if(readHashMap!=null)
+                addMap(readHashMap, AssignmentType.READ);
+        }
+    }
+
+    private void addCheckBoxToMap(ReadCheckBox readCheckBox){
+        readHashMap = new HashMap<>();
+
+        if (readHashMap.containsKey(readCheckBox.getSortingString())) {
+            readHashMap.get(readCheckBox.getSortingString()).add(readCheckBox);
+        } else {
+            ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
+            arrayList.add(readCheckBox);
+            readHashMap.put(readCheckBox.getSortingString(), arrayList);
+        }
+    }
 
     //Timerstuff
     public void addTasksFromDatabase(OldAssignmentsDBAdapter assDBAdapter, String courseCode, AssignmentType assignmentType, int week) {
