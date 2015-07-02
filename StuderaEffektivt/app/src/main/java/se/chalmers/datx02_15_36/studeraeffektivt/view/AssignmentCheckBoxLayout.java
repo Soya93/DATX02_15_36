@@ -44,7 +44,6 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.Othe
 import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.ProblemCheckBox;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.ReadCheckBox;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CheckedStudyTaskToDB;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.OldStudyTask;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 
@@ -136,9 +135,6 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
     public boolean contains(String sortingString, String taskString){
 
-        Log.i("contains", "taskString: " + taskString );
-
-
         for(int i = 0; i < this.getChildCount(); i++){
             if(
                     !(getChildAt(i).getClass().equals(TextView.class)) &&
@@ -155,15 +151,10 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
     public boolean contains(String sortingString, String startPage, String endPage){
         for(int i = 0; i < this.getChildCount(); i++){
-            String taskString = ((AssignmentCheckBox) getChildAt(i)).getTaskString();
-            String checkBoxStartPage = taskString.split("-")[0];
-            String checkBoxEndPage = taskString.split("-")[1];
-
-
             if(!(getChildAt(i).getClass().equals(TextView.class)) &&
                             ((AssignmentCheckBox) getChildAt(i)).getSortingString().equals(sortingString) &&
-                            checkBoxStartPage.equals(startPage) &&
-                                checkBoxEndPage.equals(endPage)){
+                    ((AssignmentCheckBox) getChildAt(i)).getTaskString().split("-")[0].equals(startPage) &&
+                    ((AssignmentCheckBox) getChildAt(i)).getTaskString().split("-")[1].equals(endPage)){
 
                 return true;
             }
@@ -214,11 +205,11 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
         Cursor cursor = handInAssignmentsDBAdapter.getAssignments();
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode)) {
-                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                if(cursor.getString(cursor.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN_ccode)).equals(courseCode)) {
+                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                    int id =cursor.getInt(cursor.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN__id));
 
-                    HandInCheckBox handInCheckBox = new HandInCheckBox(this.getContext(),
-                            cursor.getInt(cursor.getColumnIndex("_id")),assignmentStatus);
+                    HandInCheckBox handInCheckBox = new HandInCheckBox(this.getContext(),id,assignmentStatus);
 
                     if (handInHashMap.containsKey(handInCheckBox.getSortingString())) {
                         handInHashMap.get(handInCheckBox.getSortingString()).add(handInCheckBox);
@@ -233,7 +224,6 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
             if(handInHashMap!=null)
                 addMap(handInHashMap, AssignmentType.HANDIN);
         }
-
     }
 
     public void addLabsFromDatabase(String courseCode, LabAssignmentsDBAdapter labAssignmentsDBAdapter) {
@@ -242,16 +232,16 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode)) {
-                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                if(cursor.getString(cursor.getColumnIndex(LabAssignmentsDBAdapter.LABS_ccode)).equals(courseCode)) {
+                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(LabAssignmentsDBAdapter.LABS_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                    int id =cursor.getInt(cursor.getColumnIndex(LabAssignmentsDBAdapter.LABS__id));
 
-                    LabCheckBox labCheckBox = new LabCheckBox(this.getContext(),
-                            cursor.getInt(cursor.getColumnIndex("_id")),assignmentStatus);
+                    LabCheckBox labCheckBox = new LabCheckBox(this.getContext(),id,assignmentStatus);
 
                     if (labHashMap.containsKey(labCheckBox.getSortingString())) {
                         labHashMap.get(labCheckBox.getSortingString()).add(labCheckBox);
                     } else {
-                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList();
+                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
                         arrayList.add(labCheckBox);
                         labHashMap.put(labCheckBox.getSortingString(), arrayList);
                     }
@@ -270,16 +260,17 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode)) {
-                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                if(cursor.getString(cursor.getColumnIndex(OtherAssignmentsDBAdapter.OTHER_ccode)).equals(courseCode)) {
+                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(OtherAssignmentsDBAdapter.OTHER_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                    int id =cursor.getInt(cursor.getColumnIndex(OtherAssignmentsDBAdapter.OTHER__id));
 
                     OtherCheckBox otherCheckBox = new OtherCheckBox(this.getContext(),
-                            cursor.getInt(cursor.getColumnIndex("_id")),assignmentStatus);
+                            id,assignmentStatus);
 
                     if (otherHashMap.containsKey(otherCheckBox.getSortingString() )) {
                         otherHashMap.get(otherCheckBox.getSortingString()).add(otherCheckBox);
                     } else {
-                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList();
+                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
                         arrayList.add(otherCheckBox);
                         otherHashMap.put(otherCheckBox.getSortingString(), arrayList);
                     }
@@ -300,21 +291,13 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
                 if(cursor.getString(cursor.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS_ccode)).equals(courseCode)) {
                     AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
                     int id =cursor.getInt(cursor.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS__id));
-                    String chapter =cursor.getString(cursor.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS_chapter));
-
-
-                    Log.i("CheckBoxLayout", "id " + id);
-                    Log.i("CheckBoxLayout", "assignmentStatus " + assignmentStatus);
-                    Log.i("CheckBoxLayout", "chapter " + chapter);
 
                     ProblemCheckBox problemCheckBox = new ProblemCheckBox(this.getContext(),id,assignmentStatus);
-
-                    Log.i("CheckBoxLayout", "checkbox id " + problemCheckBox.getIdNr());
 
                     if (problemHashMap.containsKey(problemCheckBox.getSortingString())) {
                         problemHashMap.get(problemCheckBox.getSortingString()).add(problemCheckBox);
                     } else {
-                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList();
+                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
                         arrayList.add(problemCheckBox);
                         problemHashMap.put(problemCheckBox.getSortingString(), arrayList);
                     }
@@ -331,16 +314,16 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
         Cursor cursor = readAssignmentsDBAdapter.getAssignments();
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(courseCode)) {
-                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex("status")).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                if(cursor.getString(cursor.getColumnIndex(ReadAssignmentsDBAdapter.READ_ccode)).equals(courseCode)) {
+                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(ReadAssignmentsDBAdapter.READ_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                    int id =cursor.getInt(cursor.getColumnIndex(ReadAssignmentsDBAdapter.READ__id));
 
-                    ReadCheckBox readCheckBox = new ReadCheckBox(this.getContext(),
-                            cursor.getInt(cursor.getColumnIndex("_id")),assignmentStatus);
+                    ReadCheckBox readCheckBox = new ReadCheckBox(this.getContext(),id,assignmentStatus);
 
                     if (readHashMap.containsKey(readCheckBox.getSortingString())) {
                         readHashMap.get(readCheckBox.getSortingString()).add(readCheckBox);
                     } else {
-                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList();
+                        ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
                         arrayList.add(readCheckBox);
                         readHashMap.put(readCheckBox.getSortingString(), arrayList);
                     }
@@ -353,6 +336,7 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
 
+    //Timerstuff
     public void addTasksFromDatabase(OldAssignmentsDBAdapter assDBAdapter, String courseCode, AssignmentType assignmentType, int week) {
        /* if (cursor != null) {
             while (cursor.moveToNext()) {

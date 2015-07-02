@@ -102,7 +102,6 @@ public class CourseAssignmentsActivity extends ActionBarActivity {
         if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.HANDIN.toString())) {
             assignmentsFlowLayout.addHandInsFromDatabase(courseCode, handInDB);
 
-
         } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.LAB.toString())) {
             assignmentsFlowLayout.addLabsFromDatabase(courseCode, labDB);
 

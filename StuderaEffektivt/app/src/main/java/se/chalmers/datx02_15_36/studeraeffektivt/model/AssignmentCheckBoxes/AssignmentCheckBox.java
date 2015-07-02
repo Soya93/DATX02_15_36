@@ -18,21 +18,10 @@ package se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes;
         import android.graphics.Color;
         import android.graphics.PorterDuff;
         import android.graphics.drawable.Drawable;
-        import android.view.MenuItem;
-        import android.view.View;
         import android.widget.CheckBox;
         import android.widget.CompoundButton;
-        import android.widget.PopupMenu;
-        import android.widget.TextView;
-        import android.widget.Toast;
 
         import se.chalmers.datx02_15_36.studeraeffektivt.R;
-        import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
-        import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
-        import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
-        import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
-        import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
-        import se.chalmers.datx02_15_36.studeraeffektivt.model.OldStudyTask;
         import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
         import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
         import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
@@ -90,6 +79,6 @@ public abstract class AssignmentCheckBox extends CheckBox {
         return type;
     }
 
-    public AssignmentCheckBox getStudyTask(){ return this; }
+    public AssignmentCheckBox getAssignmentCheckBox(){ return this; }
 
 }

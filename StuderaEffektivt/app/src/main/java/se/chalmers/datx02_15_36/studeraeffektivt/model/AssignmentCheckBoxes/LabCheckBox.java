@@ -43,34 +43,35 @@ public class LabCheckBox extends AssignmentCheckBox {
                     Drawable checked = getResources().getDrawable(R.drawable.ic_toggle_check_box);
                     checked.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
                     buttonView.setButtonDrawable(checked);
-                    labDB.setDone(getStudyTask().getIdNr());
+                    labDB.setDone(getAssignmentCheckBox().getIdNr());
                 }
                 else{
                     Drawable unchecked = getResources().getDrawable(R.drawable.ic_toggle_check_box_outline_blank);
                     unchecked.setColorFilter(Color.parseColor("#939393"), PorterDuff.Mode.SRC_ATOP);
                     buttonView.setButtonDrawable(unchecked);
-                    labDB.setUndone(getStudyTask().getIdNr());
+                    labDB.setUndone(getAssignmentCheckBox().getIdNr());
                 }
 
             }
         });
 
-        getStudyTask().setOnLongClickListener(new View.OnLongClickListener() {
+        getAssignmentCheckBox().setOnLongClickListener(new View.OnLongClickListener() {
             public boolean onLongClick(View arg0) {
 
                 //Creating the instance of PopupMenu
-                PopupMenu popup = new PopupMenu(LabCheckBox.this.getContext(), getStudyTask());
+                PopupMenu popup = new PopupMenu(LabCheckBox.this.getContext(), getAssignmentCheckBox());
                 //Inflating the Popup using xml file
                 popup.getMenuInflater().inflate(R.menu.popup_remove_menu, popup.getMenu());
 
                 //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        labDB.deleteAssignment(getStudyTask().getIdNr());
+                        String courseCode = getCourseCode();
+                        labDB.deleteAssignment(getAssignmentCheckBox().getIdNr());
                         Toast.makeText(LabCheckBox.this.getContext(), "Uppgift borttagen", Toast.LENGTH_SHORT).show();
                         AssignmentCheckBoxLayout assignmentCheckBoxLayout = (AssignmentCheckBoxLayout)getParent();
                         assignmentCheckBoxLayout.removeAllViews();
-                        assignmentCheckBoxLayout.addLabsFromDatabase(getCourseCode(), labDB);
+                        assignmentCheckBoxLayout.addLabsFromDatabase(courseCode, labDB);
 
                         if(assignmentCheckBoxLayout.isEmpty()){
                             TextView textView = new TextView(getContext());
@@ -87,24 +88,24 @@ public class LabCheckBox extends AssignmentCheckBox {
             }
         });
 
-        getStudyTask().setLongClickable(true);
-        getStudyTask().setClickable(true);
+        getAssignmentCheckBox().setLongClickable(true);
+        getAssignmentCheckBox().setClickable(true);
     }
 
     public String getCourseCode(){
-        return labDB.getCourse(super.getId());
+        return labDB.getCourse(super.getIdNr());
 
     }
     public int getWeek() {
-        return labDB.getWeek(super.getId());
+        return labDB.getWeek(super.getIdNr());
     }
 
     public String getSortingString(){
-        return labDB.getNr(super.getId());
+        return labDB.getNr(super.getIdNr());
     }
 
     public String getTaskString() {
-        return labDB.getAssNr(super.getId());
+        return labDB.getAssNr(super.getIdNr());
     }
 
 }
