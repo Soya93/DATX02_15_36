@@ -55,18 +55,13 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         setContentView(R.layout.activity_getcoursesfromweb);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        courseName = getIntent().getStringExtra("CourseName");
-        courseCode = getIntent().getStringExtra("CourseCode");
 
         actionBar.setTitle("Lägg till kurs");
         coursesDBAdapter = new CoursesDBAdapter(this);
 
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
 
-
         new GetAllCourses().execute();
-
-
     }
 
     @Override
@@ -109,11 +104,13 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         }
 
         protected String doInBackground(String... args) {
-            ServiceHandler sh = new ServiceHandler();
-            int count = 0;
 
+            Log.i("GetCoursesFromWebActivity" ,"in doInBackgroun");
+
+            ServiceHandler sh = new ServiceHandler();
 
             String jsonStr = sh.makeServiceCall(URL_CONNECTION, ServiceHandler.POST);
+            Log.i("GetCoursesFromWebActivity" ,"jsonStr: " + jsonStr);
             if (jsonStr != null) {
                 try {
                     Log.d(jsonStr, "jsonStr");
