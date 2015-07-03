@@ -14,6 +14,7 @@ limitations under the License.
 
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -100,7 +101,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
             }
         };
 
-        /*actionButton = (ActionButton) findViewById(R.id.plus_fab); //TODO add it in the XML
+        actionButton = (ActionButton) findViewById(R.id.add_fab);
         actionButton.setTag(1);
         actionButton.setOnClickListener(myButtonHandler);
         actionButton.setType(ActionButton.Type.DEFAULT);
@@ -110,7 +111,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         actionButton.setShadowYOffset(0);
         Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
         calendarIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
-        actionButton.setImageDrawable(calendarIcon);*/
+        actionButton.setImageDrawable(calendarIcon);
     }
 
     @Override
@@ -205,9 +206,10 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
 
     public void addCourseDialog(){
-        LayoutInflater inflater = getParent().getLayoutInflater();
+        LayoutInflater inflater = this.getLayoutInflater();
+        final Activity thisActivity = this;
 
-        final AlertDialog d = new AlertDialog.Builder(getParent())
+        final AlertDialog d = new AlertDialog.Builder(this)
                 .setView(inflater.inflate(R.layout.add_course_dialog, null))
                 .setTitle("Lägg till kurs")
                 .setPositiveButton("Lägg till", null) //Set to null. We override the onclick
@@ -225,16 +227,16 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
                     @Override
                     public void onClick(View view) {
                         if(editTextCoursecode.getText().toString().trim().length() == 0 || editTextCoursename.getText().toString().trim().length() == 0){
-                            Toast toast = Toast.makeText(getParent(), "Både kursnamn och kurskod måste fylls i!", Toast.LENGTH_SHORT);
+                            Toast toast = Toast.makeText(thisActivity, "Både kursnamn och kurskod måste fylls i!", Toast.LENGTH_SHORT);
                             toast.show();
                         }
                         else {
                             long result = addToDB(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
                             if(result > 0) {
-                                Toast toast = Toast.makeText(getParent(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
+                                Toast toast = Toast.makeText(thisActivity, editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
                                 toast.show();
                             } else {
-                                Toast toast = Toast.makeText(getParent(), editTextCoursename.getText().toString() + "s kurskod är upptagen!", Toast.LENGTH_SHORT);
+                                Toast toast = Toast.makeText(thisActivity, editTextCoursename.getText().toString() + "s kurskod är upptagen!", Toast.LENGTH_SHORT);
                                 toast.show();
                             }
                             d.dismiss();
