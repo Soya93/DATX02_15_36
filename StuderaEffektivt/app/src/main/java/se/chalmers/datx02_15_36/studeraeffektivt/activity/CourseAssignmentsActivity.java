@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,14 +13,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.AssignmentCheckBox;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
@@ -179,7 +175,7 @@ public class CourseAssignmentsActivity extends ActionBarActivity {
     }
 
     public void getAssignmetsFromWeb() {
-        Intent i = new Intent(this, GetAssignmentsFromWeb.class);
+        Intent i = new Intent(this, GetAssignmentsFromWebActivity.class);
         i.putExtra("CourseName", courseName);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);
