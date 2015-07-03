@@ -570,7 +570,7 @@ public class TimerFrag extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assignmentTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         assignmentTypeSpinner.setAdapter(adapter);
-        assignmentTypeSpinner.setSelection(2);
+        assignmentTypeSpinner.setSelection(0);
     }
 
 

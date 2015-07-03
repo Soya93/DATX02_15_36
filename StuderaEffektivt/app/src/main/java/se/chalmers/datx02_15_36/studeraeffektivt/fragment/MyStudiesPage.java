@@ -39,6 +39,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
+    import se.chalmers.datx02_15_36.studeraeffektivt.activity.GetCoursesFromWebActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.TechsNTipsActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
@@ -142,7 +143,10 @@ public class MyStudiesPage extends Fragment {
 
         switch (id) {
             case R.id.addCourse:
-                initDialogToAddCourse();
+                Intent addCourse = new Intent(getActivity(), GetCoursesFromWebActivity.class);
+                startActivity(addCourse);
+
+                //initDialogToAddCourse();
                 break;
             case R.id.prevCourses:
 
