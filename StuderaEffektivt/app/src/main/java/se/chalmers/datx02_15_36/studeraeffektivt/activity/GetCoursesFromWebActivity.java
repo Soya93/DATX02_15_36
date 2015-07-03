@@ -127,6 +127,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
                         Log.i("GetCoursesFromWeb", "coursecode " + courseCode);
                         Log.i("GetCoursesFromWeb", "courseName " + courseName);
+                        //Here they inserted to the database
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -143,6 +144,8 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
             Log.i("GetCoursesFromWeb", "coursecode " + courseCode);
             Log.i("GetCoursesFromWeb", "courseName " + courseName);
+            //Here they updated the view to the database
+
         }
 
 
