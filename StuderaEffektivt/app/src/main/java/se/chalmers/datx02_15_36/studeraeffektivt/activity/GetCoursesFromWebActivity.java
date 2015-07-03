@@ -14,14 +14,23 @@ limitations under the License.
 
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -31,10 +40,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
@@ -49,6 +60,12 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
     private String URL_CONNECTION = "http://studiecoachchalmers.se/php/getCourses.php";
 
     private CoursesDBAdapter coursesDBAdapter;
+    private EditText editTextCoursecode;
+    private EditText editTextCoursename;
+
+    private ListView listViewCourses;
+    public static List<Map<String, Course>> courseList = new ArrayList<Map<String, Course>>();
+    SimpleAdapter simpleAdpt;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,11 +74,18 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         actionBar.setTitle("Lägg till kurs");
-        coursesDBAdapter = new CoursesDBAdapter(this);
-
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
 
+        coursesDBAdapter = new CoursesDBAdapter(this);
+
+        initComponents();
         new GetAllCourses().execute();
+    }
+
+    private void initComponents(){
+        listViewCourses = (ListView) findViewById(R.id.list_courses_from_web);
+        simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
+        listViewCourses.setAdapter(simpleAdpt);
     }
 
     @Override
@@ -105,12 +129,12 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
         protected String doInBackground(String... args) {
 
-            Log.i("GetCoursesFromWebActivity" ,"in doInBackgroun");
+            Log.i("GetCW" ,"in doInBackgroun");
 
             ServiceHandler sh = new ServiceHandler();
 
             String jsonStr = sh.makeServiceCall(URL_CONNECTION, ServiceHandler.POST);
-            Log.i("GetCoursesFromWebActivity" ,"jsonStr: " + jsonStr);
+            Log.i("GetCW" ,"jsonStr: " + jsonStr);
             if (jsonStr != null) {
                 try {
                     Log.d(jsonStr, "jsonStr");
@@ -127,6 +151,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
                         Log.i("GetCoursesFromWeb", "coursecode " + courseCode);
                         Log.i("GetCoursesFromWeb", "courseName " + courseName);
+                        //Here they inserted to the database
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -143,9 +168,75 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
             Log.i("GetCoursesFromWeb", "coursecode " + courseCode);
             Log.i("GetCoursesFromWeb", "courseName " + courseName);
+            //Here they updated the view to the database
+
         }
+    }
+
+    private long addToDB(String courseCode, String courseName){
+        return coursesDBAdapter.insertCourse(courseCode, courseName);
+    }
 
 
+    public void addCourseDialog(){
+        LayoutInflater inflater = getParent().getLayoutInflater();
+
+        final AlertDialog d = new AlertDialog.Builder(getParent())
+                .setView(inflater.inflate(R.layout.add_course_dialog, null))
+                .setTitle("Lägg till kurs")
+                .setPositiveButton("Lägg till", null) //Set to null. We override the onclick
+                .setNegativeButton("Avbryt", null)
+                .create();
+
+        d.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                Button positive = d.getButton(AlertDialog.BUTTON_POSITIVE);
+                positive.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        if(editTextCoursecode.getText().toString().trim().length() == 0 || editTextCoursename.getText().toString().trim().length() == 0){
+                            Toast toast = Toast.makeText(getParent(), "Både kursnamn och kurskod måste fylls i!", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                        else {
+                            long result = addToDB(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
+                            if(result > 0) {
+                                Toast toast = Toast.makeText(getParent(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
+                                toast.show();
+                            } else {
+                                Toast toast = Toast.makeText(getParent(), editTextCoursename.getText().toString() + "s kurskod är upptagen!", Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
+                            d.dismiss();
+                        }
+
+                    }
+                });
+
+                Button negative = d.getButton(AlertDialog.BUTTON_NEGATIVE);
+                negative.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        d.dismiss();
+                    }
+                });
+            }
+        });
+
+        d.show();
+
+
+        Button okButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
+        Button cancelButton = d.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
+
+        editTextCoursecode = (EditText) d.findViewById(R.id.codeEditText);
+        editTextCoursename = (EditText) d.findViewById(R.id.nameEditText);
     }
 
 
