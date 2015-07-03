@@ -17,7 +17,9 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -31,6 +33,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
+import com.software.shell.fab.ActionButton;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -63,6 +67,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
     private EditText editTextCoursecode;
     private EditText editTextCoursename;
 
+    private ActionButton actionButton;
     private ListView listViewCourses;
     public static List<Map<String, Course>> courseList = new ArrayList<Map<String, Course>>();
     SimpleAdapter simpleAdpt;
@@ -86,6 +91,26 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         listViewCourses = (ListView) findViewById(R.id.list_courses_from_web);
         simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
         listViewCourses.setAdapter(simpleAdpt);
+
+        View.OnClickListener myButtonHandler = new View.OnClickListener() {
+            public void onClick(View v) {
+                if (v.getTag() == actionButton.getTag()) {
+                    addCourseDialog();
+                }
+            }
+        };
+
+        actionButton = (ActionButton) findViewById(R.id.plus_fab); //TODO add it in the XML
+        actionButton.setTag(1);
+        actionButton.setOnClickListener(myButtonHandler);
+        actionButton.setType(ActionButton.Type.DEFAULT);
+        actionButton.setButtonColor(Color.parseColor("#ffffff"));
+        actionButton.setButtonColorPressed(Color.parseColor("#ffd6d7d7"));
+        actionButton.setShadowXOffset(0);
+        actionButton.setShadowYOffset(0);
+        Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
+        calendarIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
+        actionButton.setImageDrawable(calendarIcon);
     }
 
     @Override
@@ -104,6 +129,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.save_event) {
+            //addToDB(courseCode,courseName);
             this.finish();
             return true;
         } else if (id == android.R.id.home) {
