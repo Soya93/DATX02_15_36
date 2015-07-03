@@ -172,11 +172,12 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
             //Here they updated the view to the database
 
         }
-
-
     }
 
-    
+    private long addToDB(String courseCode, String courseName){
+        return coursesDBAdapter.insertCourse(courseCode, courseName);
+    }
+
 
     public void addCourseDialog(){
         LayoutInflater inflater = getParent().getLayoutInflater();
@@ -203,7 +204,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
                             toast.show();
                         }
                         else {
-                            long result = coursesDBAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
+                            long result = addToDB(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
                             if(result > 0) {
                                 Toast toast = Toast.makeText(getParent(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
                                 toast.show();
