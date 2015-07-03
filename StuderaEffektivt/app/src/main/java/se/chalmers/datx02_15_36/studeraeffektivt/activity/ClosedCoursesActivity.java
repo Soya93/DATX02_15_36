@@ -38,7 +38,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 
 
-public class CourseActivity extends ActionBarActivity {
+public class ClosedCoursesActivity extends ActionBarActivity {
 
     private ListView listOfCourses;
     public static List<Map<String, Course>> courseList = new ArrayList<Map<String, Course>>();
@@ -50,7 +50,7 @@ public class CourseActivity extends ActionBarActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course);
+        setContentView(R.layout.activity_closed_courses);
         initComponents();
         simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
         listOfCourses.setAdapter(simpleAdpt);

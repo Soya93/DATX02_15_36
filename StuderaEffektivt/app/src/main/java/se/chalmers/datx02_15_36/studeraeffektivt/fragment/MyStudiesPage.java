@@ -37,7 +37,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import java.util.Map;
 
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
-    import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseActivity;
+    import se.chalmers.datx02_15_36.studeraeffektivt.activity.ClosedCoursesActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.GetCoursesFromWebActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
@@ -150,7 +150,7 @@ public class MyStudiesPage extends Fragment {
                 break;
             case R.id.prevCourses:
 
-                Intent iCourse = new Intent(getActivity(), CourseActivity.class);
+                Intent iCourse = new Intent(getActivity(), ClosedCoursesActivity.class);
                 startActivity(iCourse);
                 break;
             case R.id.addTask:

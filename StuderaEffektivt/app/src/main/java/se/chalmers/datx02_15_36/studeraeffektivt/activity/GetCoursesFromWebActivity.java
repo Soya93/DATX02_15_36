@@ -22,6 +22,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -31,10 +33,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
@@ -50,6 +54,10 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
     private CoursesDBAdapter coursesDBAdapter;
 
+    private ListView listViewCourses;
+    public static List<Map<String, Course>> courseList = new ArrayList<Map<String, Course>>();
+    SimpleAdapter simpleAdpt;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_getcoursesfromweb);
@@ -59,14 +67,21 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         courseCode = getIntent().getStringExtra("CourseCode");
 
         actionBar.setTitle("Lägg till kurs");
-        coursesDBAdapter = new CoursesDBAdapter(this);
-
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
 
+        coursesDBAdapter = new CoursesDBAdapter(this);
+
+        initComponents();
 
         new GetAllCourses().execute();
 
 
+    }
+
+    private void initComponents(){
+        listViewCourses = (ListView) findViewById(R.id.list_courses_from_web);
+        simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
+        listViewCourses.setAdapter(simpleAdpt);
     }
 
     @Override
@@ -111,7 +126,6 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         protected String doInBackground(String... args) {
             ServiceHandler sh = new ServiceHandler();
             int count = 0;
-
 
             String jsonStr = sh.makeServiceCall(URL_CONNECTION, ServiceHandler.POST);
             if (jsonStr != null) {
