@@ -129,7 +129,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.CourseActivity"
+            android:name=".activity.ClosedCoursesActivity"
             android:label="@string/title_activity_course"
             android:screenOrientation="portrait" >
         </activity>
