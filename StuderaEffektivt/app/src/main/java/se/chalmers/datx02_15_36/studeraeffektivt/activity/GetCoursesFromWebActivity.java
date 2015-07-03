@@ -63,8 +63,6 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         setContentView(R.layout.activity_getcoursesfromweb);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        courseName = getIntent().getStringExtra("CourseName");
-        courseCode = getIntent().getStringExtra("CourseCode");
 
         actionBar.setTitle("Lägg till kurs");
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
@@ -72,10 +70,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         coursesDBAdapter = new CoursesDBAdapter(this);
 
         initComponents();
-
         new GetAllCourses().execute();
-
-
     }
 
     private void initComponents(){
@@ -124,10 +119,13 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         }
 
         protected String doInBackground(String... args) {
+
+            Log.i("GetCW" ,"in doInBackgroun");
+
             ServiceHandler sh = new ServiceHandler();
-            int count = 0;
 
             String jsonStr = sh.makeServiceCall(URL_CONNECTION, ServiceHandler.POST);
+            Log.i("GetCW" ,"jsonStr: " + jsonStr);
             if (jsonStr != null) {
                 try {
                     Log.d(jsonStr, "jsonStr");
@@ -144,6 +142,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
                         Log.i("GetCoursesFromWeb", "coursecode " + courseCode);
                         Log.i("GetCoursesFromWeb", "courseName " + courseName);
+                        //Here they inserted to the database
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -160,6 +159,8 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
             Log.i("GetCoursesFromWeb", "coursecode " + courseCode);
             Log.i("GetCoursesFromWeb", "courseName " + courseName);
+            //Here they updated the view to the database
+
         }
 
 

@@ -60,8 +60,6 @@ public class GetAssignmentsFromWebActivity extends ActionBarActivity {
         taskListfromWebRead = (AssignmentCheckBoxLayout) findViewById(R.id.taskListfromWebRead);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        courseName = getIntent().getStringExtra("CourseName");
-        courseCode = getIntent().getStringExtra("CourseCode");
 
         actionBar.setTitle("Hämta uppgifter " + courseName);
         if (this != null) {
