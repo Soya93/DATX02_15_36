@@ -100,7 +100,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
             }
         };
 
-        actionButton = (ActionButton) findViewById(R.id.plus_fab); //TODO add it in the XML
+        /*actionButton = (ActionButton) findViewById(R.id.plus_fab); //TODO add it in the XML
         actionButton.setTag(1);
         actionButton.setOnClickListener(myButtonHandler);
         actionButton.setType(ActionButton.Type.DEFAULT);
@@ -110,7 +110,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         actionButton.setShadowYOffset(0);
         Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
         calendarIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
-        actionButton.setImageDrawable(calendarIcon);
+        actionButton.setImageDrawable(calendarIcon);*/
     }
 
     @Override
