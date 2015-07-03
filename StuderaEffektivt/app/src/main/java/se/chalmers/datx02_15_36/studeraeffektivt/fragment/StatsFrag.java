@@ -41,8 +41,14 @@ import com.github.mikephil.charting.data.PieDataSet;
 import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.SessionsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
@@ -62,8 +68,14 @@ public class StatsFrag extends Fragment {
 
     private TextView noDataView;
 
+    //The access point of the database.
+    private HandInAssignmentsDBAdapter handInDB;
+    private LabAssignmentsDBAdapter labDB;
+    private OtherAssignmentsDBAdapter otherDB;
+    private ProblemAssignmentsDBAdapter problemDB;
+    private ReadAssignmentsDBAdapter readDB;
     private CoursesDBAdapter courseDBAdapter;
-    private OldAssignmentsDBAdapter assDBAdapter;
+    private AssignmentsDBAdapter assDBAdapter;
     private SessionsDBAdapter sessDBAdapter;
     private CalendarUtils utils;
 
@@ -78,7 +90,47 @@ public class StatsFrag extends Fragment {
 
         if (getActivity() != null) {
             courseDBAdapter = new CoursesDBAdapter(getActivity());
-            assDBAdapter = new OldAssignmentsDBAdapter(getActivity());
+            assDBAdapter = new AssignmentsDBAdapter(getActivity()) {
+                @Override
+                public long deleteAssignment(int id) {
+                    return 0;
+                }
+
+                @Override
+                public Cursor getAssignments() {
+                    return null;
+                }
+
+                @Override
+                public long setDone(int assignmentId) {
+                    return 0;
+                }
+
+                @Override
+                public long setUndone(int assignmentId) {
+                    return 0;
+                }
+
+                @Override
+                public Cursor getDoneAssignments(String ccode) {
+                    return null;
+                }
+
+                @Override
+                public Cursor getAssignments(String ccode) {
+                    return null;
+                }
+
+                @Override
+                public String getCourse(int id) {
+                    return null;
+                }
+
+                @Override
+                public int getWeek(int id) {
+                    return 0;
+                }
+            };
             sessDBAdapter = new SessionsDBAdapter(getActivity());
         }
         utils = new CalendarUtils();
@@ -365,22 +417,12 @@ public class StatsFrag extends Fragment {
     }
 
     private int getAssDone() {
-        return assDBAdapter.getDoneAssignments(currCourse).getCount();
+        return assDBAdapter.getDoneAssignmentsCount(currCourse);
     }
 
     private int getAssLeft() {
-        Cursor cursor = assDBAdapter.getAssignments();
-
-        int assignments = 0;
-        while (cursor.moveToNext()) {
-            if(cursor.getString(cursor.getColumnIndex("_ccode")).equals(currCourse)){
-                assignments++;
-                Log.d("dbref","assignments: "+assignments);
-            }
-        }
-
-        Log.d("dbref", "asses in "+currCourse+": " + assignments);
-        int doneAssignments = assDBAdapter.getDoneAssignments(currCourse).getCount();
+        int doneAssignments = assDBAdapter.getDoneAssignmentsCount(currCourse);
+        int assignments = assDBAdapter.getAssignmentsCount(currCourse);
         return (assignments - doneAssignments);
     }
 
@@ -394,7 +436,7 @@ public class StatsFrag extends Fragment {
 
     private boolean courseHasAsses() {
         if (currCourse != null) {
-            if (assDBAdapter.getAssignments(currCourse).getCount() != 0) {
+            if (assDBAdapter.getAssignmentsCount(currCourse) != 0) {
                 return true;
             }
         }
