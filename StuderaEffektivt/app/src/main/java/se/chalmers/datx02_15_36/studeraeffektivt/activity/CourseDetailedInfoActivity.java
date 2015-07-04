@@ -117,7 +117,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         } else if (id == R.id.action_time_on_course) {
             chooseTimeOnCourseDialog();
         } else if (id == R.id.action_download) {
-            getAssignmetsFromWeb();
+            getAssignmentsFromWeb();
         } else if (id == R.id.action_add) {
             goToAddTasks();
         } else if (id == R.id.action_activate) {
@@ -225,13 +225,13 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         startActivity(i);
     }
 
-    public void getAssignmetsFromWeb() {
-        Intent i = new Intent(this, GetAssignmentsFromWebActivity.class);
-        i.putExtra("CourseName", courseName);
-        i.putExtra("CourseCode", courseCode);
-        startActivity(i);
+    public void getAssignmentsFromWeb() {
+        GetAssignmentsFromWeb getAssignmentsFromWeb = new GetAssignmentsFromWeb(this);
+        getAssignmentsFromWeb.addAssignmentsFromWeb(courseCode);
+        Toast.makeText(getBaseContext(), "Kursen har uppdaterats", Toast.LENGTH_LONG);
+        //TODO: Kolla ifall nätverk finns när användaren klickar på uppdatera
+        //Om inte, ge ett passande toast för det.
     }
-
 
     private void chooseTimeOnCourseDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

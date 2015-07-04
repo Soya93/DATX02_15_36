@@ -39,7 +39,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.ClosedCoursesActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
-    import se.chalmers.datx02_15_36.studeraeffektivt.activity.GetAssignmentsFromWebActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.GetCoursesFromWebActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.TechsNTipsActivity;

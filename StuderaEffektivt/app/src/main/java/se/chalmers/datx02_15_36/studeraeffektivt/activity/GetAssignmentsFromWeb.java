@@ -14,6 +14,7 @@ limitations under the License.
 
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -33,76 +34,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentID;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
 
 /**
  * Created by alexandraback on 06/05/15.
+ * Updated by Soyapanda on 03/07/15.
  */
-public class GetAssignmentsFromWebActivity extends ActionBarActivity {
+public class GetAssignmentsFromWeb {
 
-    private String courseCode;
     private String HandIN_URL_CONNECTION = "http://studiecoachchalmers.se/php/mobile/getHandInAssignments.php";
     private String lab_URL_CONNECTION = "http://studiecoachchalmers.se/php/mobile/getLabAssignments.php";
     private String problem_URL_CONNECTION = "http://studiecoachchalmers.se/php/mobile/getProblemAssignments.php";
     private String read_URL_CONNECTION = "http://studiecoachchalmers.se/php/mobile/getReadAssignments.php";
     private String obligatory_URL_CONNECTION = "http://studiecoachchalmers.se/php/mobile/getObligatoryAssignments.php";
 
+    private Context context;
 
 
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_getassignmetsfromweb);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+    public GetAssignmentsFromWeb(Context context){
+        this.context = context;
+    }
 
-        courseCode = "TDA623";
-
-        actionBar.setTitle("Hämta uppgifter " + courseCode);
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
-
+    public void addAssignmentsFromWeb(String courseCode){
+        //courseCode = "TDA623";
         new GetHandInAssignments().execute(courseCode);
         new GetLabAssignments().execute(courseCode);
         new GetProblemAssignments().execute(courseCode);
         new GetReadAssignments().execute(courseCode);
         new GetObligatoryAssignments().execute(courseCode);
-
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_timer, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.save_event) {
-            this.finish();
-            return true;
-        } else if (id == android.R.id.home) {
-            this.finish();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void onStart() {
-        super.onStart();
-
-
-    }
-
 
     private class GetHandInAssignments extends AsyncTask<String, String, String> {
         @Override
@@ -129,13 +101,14 @@ public class GetAssignmentsFromWebActivity extends ActionBarActivity {
                     for (int i = 0; i < handInAssignments.length(); i++) {
                         JSONObject c = handInAssignments.getJSONObject(i);
 
-                        String ccode = c.getString("ccode");
                         String nr = c.getString("nr");
                         String week = c.getString("week");
                         String assNr = c.getString("assNr");
+                        int id = AssignmentID.getID();
+
+                        addToDatabase(courseCode, AssignmentType.HANDIN, id, nr, Integer.parseInt(week), assNr);
 
                         Log.i("GetAFWA", "HandInAsses ");
-                        Log.i("GetAFWA", "ccode " + ccode);
                         Log.i("GetAFWA", "nr " + nr);
                         Log.i("GetAFWA", "week " + week);
                         Log.i("GetAFWA", "assNr " + assNr);
@@ -186,6 +159,10 @@ public class GetAssignmentsFromWebActivity extends ActionBarActivity {
                         String nr = c.getString("nr");
                         String week = c.getString("week");
                         String assNr = c.getString("assNr");
+                        int id = AssignmentID.getID();
+
+                        addToDatabase(courseCode, AssignmentType.LAB, id, nr, Integer.parseInt(week), assNr);
+
 
                         Log.i("GetAFWA", "Labasses ");
                         Log.i("GetAFWA", "ccode " + ccode);
@@ -239,6 +216,10 @@ public class GetAssignmentsFromWebActivity extends ActionBarActivity {
                         String chapter = c.getString("chapter");
                         String week = c.getString("week");
                         String assNr = c.getString("assNr");
+                        int id = AssignmentID.getID();
+
+                        //TODO: check if the assignment already exists in the db. if so, remove it.
+                        addToDatabase(courseCode, AssignmentType.PROBLEM, id, chapter, Integer.parseInt(week), assNr);
 
                         Log.i("GetAFWA", "Problems ");
                         Log.i("GetAFWA", "ccode " + ccode);
@@ -293,6 +274,9 @@ public class GetAssignmentsFromWebActivity extends ActionBarActivity {
                         String week = c.getString("week");
                         String startPage = c.getString("startPage");
                         String endPage = c.getString("endPage");
+                        int id = AssignmentID.getID();
+
+                        addToDatabase(courseCode, id, chapter, Integer.parseInt(week), Integer.parseInt(startPage), Integer.parseInt(endPage));
 
                         Log.i("GetAFWA", "Readasses ");
                         Log.i("GetAFWA", "ccode " + ccode);
@@ -347,6 +331,7 @@ public class GetAssignmentsFromWebActivity extends ActionBarActivity {
                         String ccode = c.getString("ccode");
                         String type = c.getString("type");
                         String date = c.getString("date");
+                        int id = AssignmentID.getID();
 
                         Log.i("GetAFWA", "Oblasses ");
                         Log.i("GetAFWA", "ccode " + ccode);
@@ -371,6 +356,37 @@ public class GetAssignmentsFromWebActivity extends ActionBarActivity {
     }
 
 
+    public void addToDatabase(String courseCode, AssignmentType type, int id, String chapterOrNumber, int week, String assignment) {
+        switch (type){
+            case PROBLEM:
+                ProblemAssignmentsDBAdapter problemDB = new ProblemAssignmentsDBAdapter(context);
+                problemDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+                break;
+
+            case LAB:
+                LabAssignmentsDBAdapter labDB = new LabAssignmentsDBAdapter(context);
+                labDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+                break;
+
+            case HANDIN:
+                HandInAssignmentsDBAdapter handInDB = new HandInAssignmentsDBAdapter(context);
+                handInDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+                break;
+
+            default:
+                //do nothing
+        }
+    }
+
+
+        public void addToDatabase(String courseCode, int id, String chapter, int week, int startPage, int endPage){
+        ReadAssignmentsDBAdapter readDB = new ReadAssignmentsDBAdapter(context);
+        readDB.insertAssignment(courseCode, id, chapter, week, startPage, endPage, AssignmentStatus.UNDONE);
+    }
+
+    //TODO insert obligatory
+    public void addToDatabase(String courseCode, int id, String type, String date) {
+    }
 }
 
 

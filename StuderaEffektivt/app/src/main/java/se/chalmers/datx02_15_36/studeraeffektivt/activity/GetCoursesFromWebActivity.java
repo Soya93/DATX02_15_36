@@ -266,8 +266,6 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         editTextCoursecode = (EditText) d.findViewById(R.id.codeEditText);
         editTextCoursename = (EditText) d.findViewById(R.id.nameEditText);
     }
-
-
 }
 
 
