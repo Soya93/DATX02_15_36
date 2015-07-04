@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import java.sql.Date;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 
 /**
@@ -134,5 +136,19 @@ public class CoursesDBAdapter extends DBAdapter {
     public Cursor getDoneCourses() {
         String selection = COURSES_cstatus + " = '" + AssignmentStatus.DONE.toString() + "'";
         return db.query(TABLE_COURSES, null, selection, null, null, null, null);
+    }
+
+    public long insertAssignment(String courseCode, String type, String date) {
+        ContentValues cv = new ContentValues();
+
+        try {
+            cv.put(OBLIG_ccode, courseCode);
+            cv.put(OBLIG_type, type);
+            cv.put(OBLIG_date, date);
+
+            return db.insert(TABLE_OBLIG, null, cv);
+        } catch (Exception e) {
+            return -1;
+        }
     }
 }

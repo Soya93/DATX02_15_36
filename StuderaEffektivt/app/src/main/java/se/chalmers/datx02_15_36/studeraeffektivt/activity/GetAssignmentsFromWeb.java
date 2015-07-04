@@ -328,13 +328,12 @@ public class GetAssignmentsFromWeb {
                     for (int i = 0; i < labAssignments.length(); i++) {
                         JSONObject c = labAssignments.getJSONObject(i);
 
-                        String ccode = c.getString("ccode");
                         String type = c.getString("type");
                         String date = c.getString("date");
-                        int id = AssignmentID.getID();
+
+                        addToDatabase(courseCode,type,date);
 
                         Log.i("GetAFWA", "Oblasses ");
-                        Log.i("GetAFWA", "ccode " + ccode);
                         Log.i("GetAFWA", "type " + type);
                         Log.i("GetAFWA", "date " + date);
                     }
@@ -384,8 +383,9 @@ public class GetAssignmentsFromWeb {
         readDB.insertAssignment(courseCode, id, chapter, week, startPage, endPage, AssignmentStatus.UNDONE);
     }
 
-    //TODO insert obligatory
-    public void addToDatabase(String courseCode, int id, String type, String date) {
+    public void addToDatabase(String courseCode, String type, String date) {
+        CoursesDBAdapter coursesDB = new CoursesDBAdapter(context);
+        coursesDB.insertAssignment(courseCode,type,date);
     }
 }
 
