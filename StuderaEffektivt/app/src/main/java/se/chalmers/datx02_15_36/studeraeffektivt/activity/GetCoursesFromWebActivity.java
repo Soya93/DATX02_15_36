@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -39,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,12 +62,15 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
     private String URL_CONNECTION = "http://studiecoachchalmers.se/php/getCourses.php";
 
     private CoursesDBAdapter coursesDBAdapter;
+
+    //Dialog
     private EditText editTextCoursecode;
     private EditText editTextCoursename;
 
+    //List
     private ListView listViewCourses;
     public static List<Map<String, Course>> courseList = new ArrayList<Map<String, Course>>();
-    SimpleAdapter simpleAdpt;
+    public SimpleAdapter simpleAdpt;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +85,40 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
         initComponents();
         new GetAllCourses().execute();
+
+        listViewCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+
+                HashMap courseMap = (HashMap) parent.getItemAtPosition(position);
+                Course course = (Course) courseMap.get("Courses");
+                showDialog(course.getCourseCode(), course.getCourseName());
+            }
+        });
+    }
+
+    private void showDialog(final String courseCode, final String courseName){
+        /*AlertDialog.Builder builder = courseView.confirmCourseStatusView(courseName, isActiveCourse, this);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                Toast.makeText(getParent(), "ska lägga till", Toast.LENGTH_SHORT);
+            }
+        });
+
+        builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // Cancel
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
+        Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));*/
     }
 
     private void initComponents(){
@@ -128,7 +167,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         }
 
         protected String doInBackground(String... args) {
-
+            courseList.clear();
             Log.i("GetCW" ,"in doInBackgroun");
 
             ServiceHandler sh = new ServiceHandler();
@@ -151,32 +190,34 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
                         Log.i("GetCoursesFromWeb", "coursecode " + courseCode);
                         Log.i("GetCoursesFromWeb", "courseName " + courseName);
-                        //Here they inserted to the database
+
+                        //Update list here
+                        addToList(courseCode, courseName);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             } else {
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
+                addToList("Hittade inga kurser att lägga till.", "");
             }
-
             return null;
         }
 
-
         protected void onPostExecute(String file_url) {
-
-            Log.i("GetCoursesFromWeb", "coursecode " + courseCode);
-            Log.i("GetCoursesFromWeb", "courseName " + courseName);
-            //Here they updated the view to the database
-
+            simpleAdpt.notifyDataSetChanged();
         }
+    }
+
+    private void addToList(String courseCode, String courseName){
+        HashMap<String, Course> mapForCourse = new HashMap<String, Course>();
+        mapForCourse.put("Courses", new Course(courseName, courseCode));
+        courseList.add(mapForCourse);
     }
 
     private long addToDB(String courseCode, String courseName){
         return coursesDBAdapter.insertCourse(courseCode, courseName);
     }
-
 
     public void addCourseDialog(){
         LayoutInflater inflater = getParent().getLayoutInflater();
@@ -238,8 +279,6 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         editTextCoursecode = (EditText) d.findViewById(R.id.codeEditText);
         editTextCoursename = (EditText) d.findViewById(R.id.nameEditText);
     }
-
-
 }
 
 

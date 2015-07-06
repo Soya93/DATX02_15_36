@@ -42,7 +42,7 @@ public class ClosedCoursesActivity extends ActionBarActivity {
 
     private ListView listOfCourses;
     public static List<Map<String, Course>> courseList = new ArrayList<Map<String, Course>>();
-    SimpleAdapter simpleAdpt;
+    public SimpleAdapter simpleAdpt;
 
     //The access point of the database.
     private CoursesDBAdapter coursesDBAdapter;
@@ -55,7 +55,7 @@ public class ClosedCoursesActivity extends ActionBarActivity {
         simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
         listOfCourses.setAdapter(simpleAdpt);
 
-        getSupportActionBar().setTitle("Mina avslutade Kurser");
+        getSupportActionBar().setTitle("Mina avslutade kurser");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         android.support.v7.app.ActionBar bar = getSupportActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
