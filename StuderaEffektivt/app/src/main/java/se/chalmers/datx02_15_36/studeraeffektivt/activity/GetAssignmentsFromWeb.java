@@ -15,6 +15,7 @@ limitations under the License.
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -162,7 +163,6 @@ public class GetAssignmentsFromWeb {
                         int id = AssignmentID.getID();
 
                         addToDatabase(courseCode, AssignmentType.LAB, id, nr, Integer.parseInt(week), assNr);
-
 
                         Log.i("GetAFWA", "Labasses ");
                         Log.i("GetAFWA", "ccode " + ccode);
@@ -365,6 +365,15 @@ public class GetAssignmentsFromWeb {
             case LAB:
                 LabAssignmentsDBAdapter labDB = new LabAssignmentsDBAdapter(context);
                 labDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+                Cursor cur = labDB.getAssignments(courseCode);
+                while(cur.moveToNext()){
+                    Log.i("GetAsses", "Week: " + cur.getString(cur.getColumnIndex(LabAssignmentsDBAdapter.LABS_week)));
+                    Log.i("GetAsses", "Nr: " + cur.getString(cur.getColumnIndex(LabAssignmentsDBAdapter.LABS_nr)));
+                    Log.i("GetAsses", "AssNr: " + cur.getString(cur.getColumnIndex(LabAssignmentsDBAdapter.LABS_assNr)));
+                }
+                Log.i("GetAsses", "Cur null :(: ");
+
+
                 break;
 
             case HANDIN:
