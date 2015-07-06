@@ -178,14 +178,11 @@ public class GetAssignmentsFromWeb {
                         String assNr = c.getString("assNr");
                         int id = AssignmentID.getID();
 
-                        labDB.deleteAssignments(courseCode);
-
                         long result = addToDatabase(courseCode, AssignmentType.LAB, id, nr, Integer.parseInt(week), assNr);
 
                         if(result < 0){
                             Toast.makeText(context, "Det gick inte att lägga till labbuppgifterna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
                         }
-
 
                         /*Log.i("GetAFWA", "Labasses ");
                         Log.i("GetAFWA", "nr " + nr);

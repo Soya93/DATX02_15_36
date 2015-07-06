@@ -53,7 +53,6 @@ import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
@@ -88,7 +87,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_getcoursesfromweb);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Lägg till kurs");
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
 
@@ -104,6 +103,21 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
                 showDialog(course.getCourseCode(), course.getCourseName());
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showDialog(final String courseCode, final String courseName){
@@ -175,21 +189,6 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
     public void onStart() {
         super.onStart();
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == android.R.id.home){
-            this.finish();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 

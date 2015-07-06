@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
@@ -54,7 +54,7 @@ public class RepetitionActivity extends ActionBarActivity {
     private Spinner courseSpinner;
     private TextView taskTextView;
     public static Context cntxofParent;
-    private OldAssignmentsDBAdapter assDBAdapter;
+    private AssignmentsDBAdapter assDBAdapter;
     private CoursesDBAdapter coursesDBAdapter;
     private String prevCourse = "";
 
@@ -79,7 +79,47 @@ public class RepetitionActivity extends ActionBarActivity {
 
         int currentWeek = CalendarUtils.getCurrWeekNumber();
 
-        assDBAdapter = new OldAssignmentsDBAdapter(this);
+        assDBAdapter = new AssignmentsDBAdapter(this) {
+            @Override
+            public long deleteAssignment(int id) {
+                return 0;
+            }
+
+            @Override
+            public Cursor getAssignments() {
+                return null;
+            }
+
+            @Override
+            public long setDone(int assignmentId) {
+                return 0;
+            }
+
+            @Override
+            public long setUndone(int assignmentId) {
+                return 0;
+            }
+
+            @Override
+            public Cursor getDoneAssignments(String ccode) {
+                return null;
+            }
+
+            @Override
+            public Cursor getAssignments(String ccode) {
+                return null;
+            }
+
+            @Override
+            public String getCourse(int id) {
+                return null;
+            }
+
+            @Override
+            public int getWeek(int id) {
+                return 0;
+            }
+        };
         coursesDBAdapter = new CoursesDBAdapter(this);
 
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,

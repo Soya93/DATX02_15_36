@@ -76,7 +76,7 @@ public class HandInCheckBox extends AssignmentCheckBox {
 
                         if(assignmentCheckBoxLayout.isEmpty()){
                             TextView textView = new TextView(getContext());
-                            textView.setText("Du har för närvaranade inga" + AssignmentType.HANDIN.toString() + "för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
+                            textView.setText("Du har för närvaranade inga " + AssignmentType.HANDIN.toString().toLowerCase() + " för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
                             textView.setPadding(15,5,15,5);
                             assignmentCheckBoxLayout.addView(textView);
                         }

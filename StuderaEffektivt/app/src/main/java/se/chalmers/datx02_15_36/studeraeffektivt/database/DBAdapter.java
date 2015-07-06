@@ -46,17 +46,6 @@ public class DBAdapter {
             + SessionsDBAdapter.SESSION_timestamp + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
             + SessionsDBAdapter.SESSION_week + " INT)";
 
-    private static final String CREATE_ASSIGNMENTS_TABLE = "CREATE TABLE " + OldAssignmentsDBAdapter.TABLE_ASSIGNMENTS + " ("
-            + OldAssignmentsDBAdapter.ASSIGNMENTS__id + " PRIMARY KEY, "
-            + OldAssignmentsDBAdapter.ASSIGNMENTS_ccode + " VARCHAR(50), "
-            + OldAssignmentsDBAdapter.ASSIGNMENTS_chapter + " INT, "
-            + OldAssignmentsDBAdapter.ASSIGNMENTS_week + " INT, "
-            + OldAssignmentsDBAdapter.ASSIGNMENTS_assNr +" VARCHAR(50), "
-            + OldAssignmentsDBAdapter.ASSIGNMENTS_startPage + " INT, "
-            + OldAssignmentsDBAdapter.ASSIGNMENTS_stopPage + " INT, "
-            + OldAssignmentsDBAdapter.ASSIGNMENTS_type + " VARCHAR(50), "
-            + OldAssignmentsDBAdapter.ASSIGNMENTS_status + " VARCHAR(50))";
-
     private static final String CREATE_LABS_TABLE = "CREATE TABLE " + LabAssignmentsDBAdapter.TABLE_LABS + " ("
             + LabAssignmentsDBAdapter.LABS__id + " INT PRIMARY KEY NOT NULL,"
             + LabAssignmentsDBAdapter.LABS_ccode + " VARCHAR(50) NOT NULL, "
@@ -140,8 +129,6 @@ public class DBAdapter {
             db.execSQL(CREATE_OBLIG_TABLE);
 
             db.execSQL(CREATE_SESSIONS_TABLE);
-
-            db.execSQL(CREATE_ASSIGNMENTS_TABLE);
 
             db.execSQL(CREATE_HANDIN_TABLE);
             db.execSQL(CREATE_LABS_TABLE);
