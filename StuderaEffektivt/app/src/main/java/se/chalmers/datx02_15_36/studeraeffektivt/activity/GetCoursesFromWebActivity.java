@@ -17,6 +17,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -123,6 +124,15 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int id) {
                 //Ska lägga till
                 Log.d("getCW", "lägg till kurs från webb");
+                long bool = coursesDBAdapter.insertCourse(courseCode, courseName);
+
+                //Test
+                Cursor cursor = coursesDBAdapter.getCourses();
+                while(cursor.moveToNext()){
+                    if( cursor.getString( cursor.getColumnIndex("_ccode") ).equals(courseCode) ){
+                        Log.d("getCW", "kursen lades till");
+                    }
+                }
             }
         });
 
