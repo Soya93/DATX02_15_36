@@ -175,7 +175,7 @@ public class CourseAssignmentsActivity extends ActionBarActivity {
     }
 
     public void getAssignmetsFromWeb() {
-        Intent i = new Intent(this, GetAssignmentsFromWebActivity.class);
+        Intent i = new Intent(this, GetAssignmentsFromWeb.class);
         i.putExtra("CourseName", courseName);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);

@@ -149,9 +149,11 @@ public class MyStudiesFrag extends Fragment {
                 //initDialogToAddCourse();
                 break;
             case R.id.prevCourses:
-
                 Intent iCourse = new Intent(getActivity(), ClosedCoursesActivity.class);
                 startActivity(iCourse);
+                /*Intent in = new Intent(getActivity(), GetAssignmentsFromWebActivity.class);
+                in.putExtra("CourseCode", "TDA623");
+                startActivity(in);*/
                 break;
             case R.id.addTask:
                 Intent i = new Intent(getActivity(), StudyTaskActivity.class);

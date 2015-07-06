@@ -51,6 +51,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentID;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -439,16 +440,12 @@ public class StudyTaskActivity extends ActionBarActivity {
 
             //Adds the subtaaks if the input for it exists, e.g. a, b, c.
             String elementToAdd;
-            Random rand = new Random();
             if (separateTaskParts.length > 1) {
                 for (int i = 1; i < separateTaskParts.length; i++) {       //For each subtasks
                     for (String s2 : stringList) {                         //For each maintask
                         elementToAdd = s2 + separateTaskParts[i];       //Combine the maintasks 1 and subtask a such that it becomes 1a
-
-
                         if (!assignmentsFlowLayout.contains(Integer.toString(chapter), elementToAdd)) {
-                            int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                            addToDatabase(courseCode, type, randomNum, Integer.toString(chapter), chosenWeek, elementToAdd);
+                            addToDatabase(courseCode, type, AssignmentID.getID(), Integer.toString(chapter), chosenWeek, elementToAdd);
                         } else {
                             Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
                         }
@@ -459,8 +456,7 @@ public class StudyTaskActivity extends ActionBarActivity {
             else {
                 for (String maintask : stringList) {         //For each maintask
                     if (!assignmentsFlowLayout.contains(Integer.toString(chapter), maintask)) {
-                        int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-                        addToDatabase(courseCode, type, randomNum, Integer.toString(chapter), chosenWeek, maintask);
+                        addToDatabase(courseCode, type, AssignmentID.getID(), Integer.toString(chapter), chosenWeek, maintask);
                     } else {
                         Toast.makeText(this, "Uppgift redan tillagd!", Toast.LENGTH_SHORT).show();
                     }
@@ -482,11 +478,6 @@ public class StudyTaskActivity extends ActionBarActivity {
             int end;
 
             Log.i("STA", "in addReadAssignment");
-
-
-            Random rand = new Random();
-            int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-
             if (taskString.contains("-")) {
 
                 separateLine = taskString.split("-");   //Divides the string into an array with the elements between the commas
@@ -494,14 +485,14 @@ public class StudyTaskActivity extends ActionBarActivity {
                 end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
                 if(!(assignmentsFlowLayout.contains(Integer.toString(chapter), Integer.toString(start), Integer.toString(end)))) {
-                addToDatabase(courseCode, AssignmentType.READ, randomNum, Integer.toString(chapter), chosenWeek, start, end);
+                addToDatabase(courseCode, AssignmentType.READ, AssignmentID.getID(), Integer.toString(chapter), chosenWeek, start, end);
                 }
                 else{
                     Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
                 }
             } else {
                 if (!(assignmentsFlowLayout.contains(Integer.toString(chapter), taskString, taskString))) {
-                    addToDatabase(courseCode, AssignmentType.READ, randomNum, Integer.toString(chapter), chosenWeek, Integer.parseInt(taskString), Integer.parseInt(taskString));
+                    addToDatabase(courseCode, AssignmentType.READ, AssignmentID.getID(), Integer.toString(chapter), chosenWeek, Integer.parseInt(taskString), Integer.parseInt(taskString));
                 } else {
                     Toast.makeText(this, "Läsanvisning redan tillagd!", Toast.LENGTH_SHORT).show();
                 }
@@ -515,11 +506,8 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     public void addOtherAssignment(String chapter, String taskString) {
         if(!taskString.contains(",") && !taskString.contains(".")){
-            Random rand = new Random();
-            int randomNum = rand.nextInt((99999999 - 10000000) + 1) + 10000000;
-
             if (!(assignmentsFlowLayout.contains(chapter, taskString))) {
-                addToDatabase(courseCode, AssignmentType.OTHER, randomNum, chosenWeek, taskString);
+                addToDatabase(courseCode, AssignmentType.OTHER, AssignmentID.getID(), chosenWeek, taskString);
             } else {
                 Toast.makeText(this, "Fria uppgiften redan tillagd!", Toast.LENGTH_SHORT).show();
             }

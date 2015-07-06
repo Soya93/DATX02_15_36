@@ -14,10 +14,13 @@ limitations under the License.
 
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -32,6 +35,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
+import com.software.shell.fab.ActionButton;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -57,10 +62,12 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
  */
 public class GetCoursesFromWebActivity extends ActionBarActivity {
 
+    //Web connection
     private String courseName;
     private String courseCode;
     private String URL_CONNECTION = "http://studiecoachchalmers.se/php/getCourses.php";
 
+    //Database connection
     private CoursesDBAdapter coursesDBAdapter;
 
     //Dialog
@@ -71,6 +78,9 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
     private ListView listViewCourses;
     public static List<Map<String, Course>> courseList = new ArrayList<Map<String, Course>>();
     public SimpleAdapter simpleAdpt;
+
+    //ActionButton
+    private ActionButton actionButton;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +135,26 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         listViewCourses = (ListView) findViewById(R.id.list_courses_from_web);
         simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
         listViewCourses.setAdapter(simpleAdpt);
+
+        View.OnClickListener myButtonHandler = new View.OnClickListener() {
+            public void onClick(View v) {
+                if (v.getTag() == actionButton.getTag()) {
+                    addCourseDialog();
+                }
+            }
+        };
+
+        actionButton = (ActionButton) findViewById(R.id.add_fab);
+        actionButton.setTag(1);
+        actionButton.setOnClickListener(myButtonHandler);
+        actionButton.setType(ActionButton.Type.DEFAULT);
+        actionButton.setButtonColor(Color.parseColor("#ffffff"));
+        actionButton.setButtonColorPressed(Color.parseColor("#ffd6d7d7"));
+        actionButton.setShadowXOffset(0);
+        actionButton.setShadowYOffset(0);
+        Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
+        calendarIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
+        actionButton.setImageDrawable(calendarIcon);
     }
 
     @Override
@@ -143,6 +173,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.save_event) {
+            //addToDB(courseCode,courseName);
             this.finish();
             return true;
         } else if (id == android.R.id.home) {
@@ -220,9 +251,10 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
     }
 
     public void addCourseDialog(){
-        LayoutInflater inflater = getParent().getLayoutInflater();
+        LayoutInflater inflater = this.getLayoutInflater();
+        final Activity thisActivity = this;
 
-        final AlertDialog d = new AlertDialog.Builder(getParent())
+        final AlertDialog d = new AlertDialog.Builder(this)
                 .setView(inflater.inflate(R.layout.add_course_dialog, null))
                 .setTitle("Lägg till kurs")
                 .setPositiveButton("Lägg till", null) //Set to null. We override the onclick
@@ -240,16 +272,16 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
                     @Override
                     public void onClick(View view) {
                         if(editTextCoursecode.getText().toString().trim().length() == 0 || editTextCoursename.getText().toString().trim().length() == 0){
-                            Toast toast = Toast.makeText(getParent(), "Både kursnamn och kurskod måste fylls i!", Toast.LENGTH_SHORT);
+                            Toast toast = Toast.makeText(thisActivity, "Både kursnamn och kurskod måste fylls i!", Toast.LENGTH_SHORT);
                             toast.show();
                         }
                         else {
                             long result = addToDB(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
                             if(result > 0) {
-                                Toast toast = Toast.makeText(getParent(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
+                                Toast toast = Toast.makeText(thisActivity, editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
                                 toast.show();
                             } else {
-                                Toast toast = Toast.makeText(getParent(), editTextCoursename.getText().toString() + "s kurskod är upptagen!", Toast.LENGTH_SHORT);
+                                Toast toast = Toast.makeText(thisActivity, editTextCoursename.getText().toString() + "s kurskod är upptagen!", Toast.LENGTH_SHORT);
                                 toast.show();
                             }
                             d.dismiss();
