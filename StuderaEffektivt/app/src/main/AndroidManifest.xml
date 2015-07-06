@@ -84,7 +84,7 @@
         </service>
 
         <activity
-            android:name=".activity.StudyTaskActivity"
+            android:name=".activity.AddAssignmentActivity"
             android:label="@string/title_activity_study_task"
             android:screenOrientation="portrait" >
         </activity>

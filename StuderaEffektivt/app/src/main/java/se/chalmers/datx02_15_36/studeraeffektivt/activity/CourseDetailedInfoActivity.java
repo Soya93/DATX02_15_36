@@ -220,7 +220,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     public void goToAddTasks() {
-        Intent i = new Intent(this, StudyTaskActivity.class);
+        Intent i = new Intent(this, AddAssignmentActivity.class);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);
     }

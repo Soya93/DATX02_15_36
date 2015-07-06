@@ -161,6 +161,10 @@ public class CoursesDBAdapter extends DBAdapter {
         }
     }
 
+    public Cursor getObligatories() {
+        return db.query(TABLE_OBLIG, null, null, null, null, null, null);
+    }
+
     public Cursor getObligatories(String ccode){
         String selection = OBLIG_ccode + " = '" + ccode + "'";
         return db.query(TABLE_OBLIG, null, selection, null, null, null, null);
@@ -184,4 +188,58 @@ public class CoursesDBAdapter extends DBAdapter {
             return -1;
         }
     }
+
+
+    public long setObligatoryDone(int id){
+        ContentValues cv = new ContentValues();
+
+        cv.put(OBLIG_status, AssignmentStatus.DONE.toString());
+
+        try {
+            return db.update(TABLE_OBLIG, cv, OBLIG__id + "=" + id, null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+    public long setObligatoryUndone(int id){
+        ContentValues cv = new ContentValues();
+
+        cv.put(OBLIG_status, AssignmentStatus.UNDONE.toString());
+
+        try {
+            return db.update(TABLE_OBLIG, cv, OBLIG__id + "=" + id, null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+    public  String getObligatoryCourse(int id){
+        String selection = OBLIG__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+        cur.moveToNext();
+        return cur.getString(cur.getColumnIndex(OBLIG_ccode));
+    }
+
+    public  String getObligatoryType(int id){
+        String selection = OBLIG__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+        cur.moveToNext();
+        return cur.getString(cur.getColumnIndex(OBLIG_type));
+    }
+
+    public  String getObligatoryDate(int id){
+        String selection = OBLIG__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+        cur.moveToNext();
+        return cur.getString(cur.getColumnIndex(OBLIG_date));
+    }
+
+    public  String getObligatoryStatus(int id){
+        String selection = OBLIG__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+        cur.moveToNext();
+        return cur.getString(cur.getColumnIndex(OBLIG_status));
+    }
+
 }

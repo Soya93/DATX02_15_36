@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
@@ -52,6 +53,8 @@ public class CourseAssignmentsActivity extends ActionBarActivity {
     private OtherAssignmentsDBAdapter otherDB;
     private ProblemAssignmentsDBAdapter problemDB;
     private ReadAssignmentsDBAdapter readDB;
+    private CoursesDBAdapter courseDB;
+
 
 
     @Override
@@ -64,13 +67,14 @@ public class CourseAssignmentsActivity extends ActionBarActivity {
         courseCode = getIntent().getStringExtra("CourseCode");
         actionBar.setTitle("Uppgifter i kursen " + courseName);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
-        if (this != null) {
-            handInDB = new HandInAssignmentsDBAdapter(this);
-            labDB = new LabAssignmentsDBAdapter(this);
-            otherDB = new OtherAssignmentsDBAdapter(this);
-            problemDB = new ProblemAssignmentsDBAdapter(this);
-            readDB = new ReadAssignmentsDBAdapter(this);
-        }
+
+
+        handInDB = new HandInAssignmentsDBAdapter(this);
+        labDB = new LabAssignmentsDBAdapter(this);
+        otherDB = new OtherAssignmentsDBAdapter(this);
+        problemDB = new ProblemAssignmentsDBAdapter(this);
+        readDB = new ReadAssignmentsDBAdapter(this);
+        courseDB = new CoursesDBAdapter(this);
         initComponents();
     }
 
@@ -111,7 +115,7 @@ public class CourseAssignmentsActivity extends ActionBarActivity {
 
 
         } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.OBLIGATORY.toString())) {
-
+            assignmentsFlowLayout.addObligatoriesFromDatabase(courseCode,courseDB);
 
         } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.OTHER.toString())) {
             assignmentsFlowLayout.addOthersFromDatabase(courseCode, otherDB);
@@ -169,7 +173,7 @@ public class CourseAssignmentsActivity extends ActionBarActivity {
 
 
     public void goToAddTasks() {
-        Intent i = new Intent(this, StudyTaskActivity.class);
+        Intent i = new Intent(this, AddAssignmentActivity.class);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);
     }
