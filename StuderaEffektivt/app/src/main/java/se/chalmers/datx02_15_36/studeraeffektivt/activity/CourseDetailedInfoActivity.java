@@ -17,6 +17,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -27,6 +28,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
@@ -49,33 +52,44 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private Menu menu;
     private MenuItem activeCourseItem;
 
-
     private CoursesDBAdapter coursesDBAdapter;
-    private CourseView courseView;
+    private CourseView alertCreator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_details);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+
         courseName = getIntent().getStringExtra("CourseName");
         courseCode = getIntent().getStringExtra("CourseCode");
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(courseName);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
-        //initFrag(getIntent().getStringExtra("ActivityTitle"));
+
         if (this != null) {
             coursesDBAdapter = new CoursesDBAdapter(this);
         }
-
-        initComponents();
 
         isInitialized = true;
 
         String status = coursesDBAdapter.getCourseStatus(courseCode);
         isActiveCourse = (status.toLowerCase().equals("undone"));
-        courseView = new CourseView();
+        alertCreator = new CourseView();
 
+        initComponents();
+    }
+
+    private void initComponents(){
+
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_course_details);
+
+        TextView examLabel = new TextView(this);
+        examLabel.setText("Tentamen");
+        examLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+
+        layout.addView(examLabel);
     }
 
 
@@ -130,16 +144,12 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void initComponents() {
-
-    }
-
     public void onResume() {
         super.onResume();
     }
 
     private void openConfirmChangeStatusDialog() {
-        AlertDialog.Builder builder = courseView.confirmCourseStatusView(courseName, isActiveCourse, this);
+        AlertDialog.Builder builder = alertCreator.confirmCourseStatusView(courseName, isActiveCourse, this);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override

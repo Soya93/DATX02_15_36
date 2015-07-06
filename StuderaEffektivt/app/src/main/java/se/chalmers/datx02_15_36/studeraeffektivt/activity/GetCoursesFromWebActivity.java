@@ -129,6 +129,8 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
                 if(bool > 0){
                     Toast.makeText(getApplicationContext(), ""+courseCode+" "+courseName+" tillagd.", Toast.LENGTH_SHORT).show();
                     new GetAllCourses().execute();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Ett fel uppstod.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

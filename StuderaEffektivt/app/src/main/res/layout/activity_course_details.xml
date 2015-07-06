@@ -5,58 +5,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:id="@+id/layout_course_details"
     tools:context="se.chalmers.datx02_15_36.studeraeffektivt.view.CourseDetails">
-
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Kurs PM"
-            android:id="@+id/coursespm"
-            android:gravity="left"
-            android:textSize="13sp"
-            android:textColor="#03A9F4"
-            android:layout_weight="0.5"
-            android:paddingBottom="10dp"
-            />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/coursemoment"
-            android:text="Kursmoment"
-            android:layout_below="@+id/coursespm"
-            android:gravity="left"
-            android:textSize="13sp"
-            android:textColor="#03A9F4"
-            android:layout_weight="0.5"
-            android:paddingBottom="10dp"
-            />
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/timeoncourse"
-            android:text="Tid att spendera"
-            android:layout_below="@+id/coursemoment"
-            android:gravity="left"
-            android:textSize="13sp"
-            android:textColor="#03A9F4"
-            android:layout_weight="0.5"
-            android:paddingBottom="10dp"
-            />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/exam"
-            android:text="Tentamen"
-            android:layout_below="@+id/timeoncourse"
-            android:gravity="left"
-            android:textSize="13sp"
-            android:textColor="#03A9F4"
-            android:layout_weight="0.5"
-            />
-
 
 
 
@@ -65,8 +15,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
-        android:id="@+id/fourthLayout"
-        android:layout_below="@+id/savedTaskLabel"
+        android:id="@+id/scrollViewLayout"
         android:layout_centerHorizontal="true"
         android:weightSum="1">
 
