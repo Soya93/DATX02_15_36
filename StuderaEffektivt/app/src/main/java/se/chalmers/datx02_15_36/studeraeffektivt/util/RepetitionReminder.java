@@ -78,7 +78,7 @@ public class RepetitionReminder {
     }
 
     /*public List <Integer> getRandomAssingments(String courseCode) {
-        Cursor doneAssignments = assDBAdapter.getAssignments(courseCode);//dbAdapter.getDoneAssignments(courseCode);
+        Cursor doneAssignments = assDBAdapter.getObligatories(courseCode);//dbAdapter.getDoneAssignments(courseCode);
         List<Integer> finishedAssignments = new ArrayList<>();
 
         while (doneAssignments.moveToNext()) {
@@ -103,7 +103,7 @@ public class RepetitionReminder {
     /*public List <Integer> getRandomWeekAssingments(String courseCode) {
         if(canRepeatCourse(courseCode)) {
 
-            Cursor doneAssignments = assDBAdapter.getAssignments(courseCode);//dbAdapter.getDoneAssignments(courseCode);
+            Cursor doneAssignments = assDBAdapter.getObligatories(courseCode);//dbAdapter.getDoneAssignments(courseCode);
             List<Integer> finishedAssignments = new ArrayList<>();
 
             while (doneAssignments.moveToNext()) {

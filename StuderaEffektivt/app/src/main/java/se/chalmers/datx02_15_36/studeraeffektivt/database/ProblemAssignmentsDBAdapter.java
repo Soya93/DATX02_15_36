@@ -90,6 +90,17 @@ public class ProblemAssignmentsDBAdapter  extends AssignmentsDBAdapter {
         return db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);
     }
 
+    public long deleteAssignments(String code){
+        Cursor cur = getAssignments();
+        Long totAsses= new Long(cur.getCount());
+        long nbrRemoved = 0;
+        while(cur.moveToNext()){
+            int id = cur.getInt(cur.getColumnIndex(PROBLEMS__id));
+            nbrRemoved = deleteAssignment(id) > 0? nbrRemoved + 1: 0;
+        }
+        return totAsses - nbrRemoved;
+    }
+
     public  String getCourse(int id){
         String selection = PROBLEMS__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);

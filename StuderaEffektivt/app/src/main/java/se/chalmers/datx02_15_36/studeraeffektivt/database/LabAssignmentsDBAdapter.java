@@ -92,6 +92,17 @@ public class LabAssignmentsDBAdapter  extends AssignmentsDBAdapter {
         return db.query(TABLE_LABS, null, selection, null, null, null, null);
     }
 
+    public long deleteAssignments(String code){
+        Cursor cur = getAssignments();
+        Long totAsses= new Long(cur.getCount());
+        long nbrRemoved = 0;
+        while(cur.moveToNext()){
+            int id = cur.getInt(cur.getColumnIndex(LABS__id));
+            nbrRemoved = deleteAssignment(id) > 0? nbrRemoved + 1: 0;
+        }
+        return totAsses - nbrRemoved;
+    }
+
     public  String getCourse(int id){
         String selection = LABS__id + " = '" + id + "'";
         Cursor cur =  db.query(TABLE_LABS, null, selection, null, null, null, null);

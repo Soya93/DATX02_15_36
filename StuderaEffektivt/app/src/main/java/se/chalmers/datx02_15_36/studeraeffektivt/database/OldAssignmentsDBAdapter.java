@@ -97,7 +97,7 @@ public class OldAssignmentsDBAdapter extends DBAdapter {
 
     public Cursor getAssignments(String ccode){
 
-        /*Cursor cursor = getAssignments();
+        /*Cursor cursor = getObligatories();
         int counter = 0;
         while (cursor.moveToNext()){
             if(cursor.getString(cursor.getColumnIndex(AssignmentsDBAdapter.ASSIGNMENTS_ccode)).equals(ccode)){
