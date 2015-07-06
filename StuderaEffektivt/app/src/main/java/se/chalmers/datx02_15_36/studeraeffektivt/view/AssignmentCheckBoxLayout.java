@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
@@ -40,6 +41,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapt
 import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.AssignmentCheckBox;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.HandInCheckBox;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.LabCheckBox;
+import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.ObligatoryCheckBox;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.OtherCheckBox;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.ProblemCheckBox;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.ReadCheckBox;
@@ -62,6 +64,8 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     private HashMap<String, ArrayList<AssignmentCheckBox>> otherHashMap;
     private HashMap<String, ArrayList<AssignmentCheckBox>> problemHashMap;
     private HashMap<String, ArrayList<AssignmentCheckBox>> readHashMap;
+    private HashMap<String, ArrayList<AssignmentCheckBox>> obligatoryHashMap;
+
 
     private HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> hashMapOfStudyTasksForWeb = new HashMap<>();
     private HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> hashMapOfReadingAssignmentsWeb = new HashMap<>();
@@ -261,7 +265,7 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
 
     public void addLabsFromDatabase(String courseCode, LabAssignmentsDBAdapter labAssignmentsDBAdapter) {
-        handInHashMap = new HashMap<>();
+        labHashMap = new HashMap<>();
 
         Cursor cursor = labAssignmentsDBAdapter.getAssignments();
 
@@ -282,7 +286,7 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
     public void addLabsFromDatabase(String courseCode, LabAssignmentsDBAdapter labAssignmentsDBAdapter, int week) {
-        handInHashMap = new HashMap<>();
+        labHashMap = new HashMap<>();
 
         Cursor cursor = labAssignmentsDBAdapter.getAssignments();
 
@@ -466,6 +470,7 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
         }
     }
 
+
     private void addCheckBoxToMap(ReadCheckBox readCheckBox){
         if (readHashMap.containsKey(readCheckBox.getSortingString())) {
             readHashMap.get(readCheckBox.getSortingString()).add(readCheckBox);
@@ -481,7 +486,53 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     }
 
 
+    public void addObligatoriesFromDatabase(String courseCode, CoursesDBAdapter coursesDBAdapter) {
+        obligatoryHashMap = new HashMap<>();
 
+        Cursor cursor = coursesDBAdapter.getObligatories();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                if(cursor.getString(cursor.getColumnIndex(CoursesDBAdapter.OBLIG_ccode)).equals(courseCode)
+                        && cursor.getString(cursor.getColumnIndex(CoursesDBAdapter.OBLIG_status)).equals(AssignmentStatus.UNDONE.toString())) {
+
+                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(CoursesDBAdapter.OBLIG_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                    int id =cursor.getInt(cursor.getColumnIndex(CoursesDBAdapter.OBLIG__id));
+                    addCheckBoxToMap(new ObligatoryCheckBox(this.getContext(),id,assignmentStatus));
+                }
+            }
+            if(obligatoryHashMap!=null)
+                addMap(obligatoryHashMap, AssignmentType.OBLIGATORY);
+        }
+    }
+
+    public void addObligatoriesFromDatabase(String courseCode, CoursesDBAdapter coursesDBAdapter, int week) {
+        obligatoryHashMap = new HashMap<>();
+
+        Cursor cursor = coursesDBAdapter.getObligatories();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                if(cursor.getString(cursor.getColumnIndex(CoursesDBAdapter.OBLIG_ccode)).equals(courseCode)
+                        && cursor.getString(cursor.getColumnIndex(CoursesDBAdapter.OBLIG_status)).equals(AssignmentStatus.UNDONE.toString())) {
+
+                    AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(CoursesDBAdapter.OBLIG_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
+                    int id =cursor.getInt(cursor.getColumnIndex(CoursesDBAdapter.OBLIG__id));
+                    addCheckBoxToMap(new ObligatoryCheckBox(this.getContext(),id,assignmentStatus));
+                }
+            }
+            if(obligatoryHashMap!=null)
+                addMap(obligatoryHashMap, AssignmentType.OBLIGATORY);
+        }
+    }
+
+    private void addCheckBoxToMap(ObligatoryCheckBox obligatoryCheckBox){
+        if (obligatoryHashMap.containsKey(obligatoryCheckBox.getSortingString())) {
+            obligatoryHashMap.get(obligatoryCheckBox.getSortingString()).add(obligatoryCheckBox);
+        } else {
+            ArrayList<AssignmentCheckBox> arrayList = new ArrayList<>();
+            arrayList.add(obligatoryCheckBox);
+            obligatoryHashMap.put(obligatoryCheckBox.getSortingString(), arrayList);
+        }
+    }
 
     //Webstuff
     public void addTasksFromWeb( String courseCode, int chapter, int week, String assNr,

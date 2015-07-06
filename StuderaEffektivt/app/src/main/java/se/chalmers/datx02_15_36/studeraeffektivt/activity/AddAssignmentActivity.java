@@ -60,7 +60,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePre
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
 
-public class StudyTaskActivity extends ActionBarActivity {
+public class AddAssignmentActivity extends ActionBarActivity {
 
     //Components in the view
     private EditText taskInput;
@@ -89,7 +89,7 @@ public class StudyTaskActivity extends ActionBarActivity {
 
     private CoursePreferenceHelper coursePrefHelper;
 
-    public StudyTaskActivity() {
+    public AddAssignmentActivity() {
     }
 
     @Override

@@ -502,7 +502,7 @@ public class StatsFrag extends Fragment {
         }
 
         //Insert Assignments
-        /*long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        /*long idA1 = dbAdapter.insertObligatory(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
             Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
         } else {
@@ -539,7 +539,7 @@ public class StatsFrag extends Fragment {
         }
 
         //Insert Assignments
-        /*long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        /*long idA1 = dbAdapter.insertObligatory(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
             Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
         } else {

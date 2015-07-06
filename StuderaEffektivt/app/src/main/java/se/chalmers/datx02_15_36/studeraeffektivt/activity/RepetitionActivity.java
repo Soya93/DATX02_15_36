@@ -307,7 +307,7 @@ public class RepetitionActivity extends ActionBarActivity {
 
     //Returns random assignments of the course
     private List<String> getRandomAssingments(String courseCode) {
-        Cursor doneAssignments = assDBAdapter.getDoneAssignments(courseCode); //dbAdapter.getAssignments(courseCode);
+        Cursor doneAssignments = assDBAdapter.getDoneAssignments(courseCode); //dbAdapter.getObligatories(courseCode);
         List<String> finishedAssignments = new ArrayList<>();
 
         while (doneAssignments.moveToNext()) {

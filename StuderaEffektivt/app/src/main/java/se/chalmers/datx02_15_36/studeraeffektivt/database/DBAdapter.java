@@ -103,9 +103,11 @@ public class DBAdapter {
             + "FOREIGN KEY(" + OtherAssignmentsDBAdapter.OTHER_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
     private static final String CREATE_OBLIG_TABLE = "CREATE TABLE " + CoursesDBAdapter.TABLE_OBLIG + " ("
-            + CoursesDBAdapter.OBLIG_ccode + " VARCHAR(50) PRIMARY KEY NOT NULL, "
+            + CoursesDBAdapter.OBLIG__id + " INT PRIMARY KEY NOT NULL,"
+            + CoursesDBAdapter.OBLIG_ccode + " VARCHAR(50) NOT NULL, "
             + CoursesDBAdapter.OBLIG_type + " VARCHAR(50) NOT NULL, "
             + CoursesDBAdapter.OBLIG_date + " DATE NOT NULL, "
+            + CoursesDBAdapter.OBLIG_status + " VARCHAR(50) NOT NULL, "
             + "FOREIGN KEY(" + CoursesDBAdapter.OBLIG_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
     private static final String CREATE_TIMEONCOURSE_TABLE = "CREATE TABLE " + CoursesDBAdapter.TABLE_TIMEONCOURSE + "("

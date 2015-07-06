@@ -88,7 +88,6 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_getcoursesfromweb);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
         actionBar.setTitle("Lägg till kurs");
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
@@ -100,7 +99,6 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
 
         listViewCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v, int position, long id) {
-
                 HashMap courseMap = (HashMap) parent.getItemAtPosition(position);
                 Course course = (Course) courseMap.get("Courses");
                 showDialog(course.getCourseCode(), course.getCourseName());
@@ -176,37 +174,24 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         actionButton.setImageDrawable(calendarIcon);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_timer, menu);
-        return true;
+    public void onStart() {
+        super.onStart();
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle bar item clicks here. The action bar will
+        // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.save_event) {
-            //addToDB(courseCode,courseName);
-            this.finish();
-            return true;
-        } else if (id == android.R.id.home) {
+        if (id == android.R.id.home){
             this.finish();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onStart() {
-        super.onStart();
-
-
     }
 
 

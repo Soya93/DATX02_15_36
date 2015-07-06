@@ -3,9 +3,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
-
-import java.sql.Date;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 
@@ -26,9 +23,12 @@ public class CoursesDBAdapter extends DBAdapter {
 
     //Variables for Obligatories table.
     public static final String TABLE_OBLIG = "OBLIGATORIES";
+    public static final String OBLIG__id = "_id";
     public static final String OBLIG_ccode = COURSES__ccode;
     public static final String OBLIG_type = "type";
     public static final String OBLIG_date = "date";
+    public static final String OBLIG_status = "status";
+
 
     //Variables for the TimeOnCourse table.
     public static final String TABLE_TIMEONCOURSE = "TIMEONCOURSE";
@@ -128,16 +128,11 @@ public class CoursesDBAdapter extends DBAdapter {
         }
     }
 
-    /**
-     * Get all courses.
-     */
+    //Courses
     public Cursor getCourses() {
         return db.query(TABLE_COURSES, null, null, null, null, null, null);
     }
 
-    /**
-     * Get all ongoing courses.
-     */
     public Cursor getOngoingCourses() {
         String selection = COURSES_cstatus + " = '" + AssignmentStatus.UNDONE.toString() + "'";
         return db.query(TABLE_COURSES, null, selection, null, null, null, null);
@@ -148,17 +143,103 @@ public class CoursesDBAdapter extends DBAdapter {
         return db.query(TABLE_COURSES, null, selection, null, null, null, null);
     }
 
-    public long insertAssignment(String courseCode, String type, String date) {
+
+    //Obligatories
+    public long insertObligatory(String courseCode, int id, String type, String date, AssignmentStatus status) {
         ContentValues cv = new ContentValues();
 
         try {
             cv.put(OBLIG_ccode, courseCode);
             cv.put(OBLIG_type, type);
             cv.put(OBLIG_date, date);
+            cv.put(OBLIG_status, status.toString());
+            cv.put(OBLIG__id, id);
 
             return db.insert(TABLE_OBLIG, null, cv);
         } catch (Exception e) {
             return -1;
         }
     }
+
+    public Cursor getObligatories() {
+        return db.query(TABLE_OBLIG, null, null, null, null, null, null);
+    }
+
+    public Cursor getObligatories(String ccode){
+        String selection = OBLIG_ccode + " = '" + ccode + "'";
+        return db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+    }
+
+    public long deleteObligatories(String ccode){
+        Cursor cur = getObligatories(ccode);
+        Long totAsses= new Long(cur.getCount());
+        long nbrRemoved = 0;
+        while(cur.moveToNext()){
+            int id = cur.getInt(cur.getColumnIndex(OBLIG__id));
+            nbrRemoved = deleteObligatory(id) > 0? nbrRemoved + 1: 0;
+        }
+        return totAsses - nbrRemoved;
+    }
+
+    public long deleteObligatory(int id){
+        try{
+            return db.delete(TABLE_OBLIG, OBLIG__id + "=" +id, null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+
+    public long setObligatoryDone(int id){
+        ContentValues cv = new ContentValues();
+
+        cv.put(OBLIG_status, AssignmentStatus.DONE.toString());
+
+        try {
+            return db.update(TABLE_OBLIG, cv, OBLIG__id + "=" + id, null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+    public long setObligatoryUndone(int id){
+        ContentValues cv = new ContentValues();
+
+        cv.put(OBLIG_status, AssignmentStatus.UNDONE.toString());
+
+        try {
+            return db.update(TABLE_OBLIG, cv, OBLIG__id + "=" + id, null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+    public  String getObligatoryCourse(int id){
+        String selection = OBLIG__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+        cur.moveToNext();
+        return cur.getString(cur.getColumnIndex(OBLIG_ccode));
+    }
+
+    public  String getObligatoryType(int id){
+        String selection = OBLIG__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+        cur.moveToNext();
+        return cur.getString(cur.getColumnIndex(OBLIG_type));
+    }
+
+    public  String getObligatoryDate(int id){
+        String selection = OBLIG__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+        cur.moveToNext();
+        return cur.getString(cur.getColumnIndex(OBLIG_date));
+    }
+
+    public  String getObligatoryStatus(int id){
+        String selection = OBLIG__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+        cur.moveToNext();
+        return cur.getString(cur.getColumnIndex(OBLIG_status));
+    }
+
 }

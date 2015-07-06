@@ -59,6 +59,17 @@ public class ReadAssignmentsDBAdapter  extends AssignmentsDBAdapter  {
         return db.query(TABLE_READ, null, null, null, null, null, null);
     }
 
+    public long deleteAssignments(String code){
+        Cursor cur = getAssignments();
+        Long totAsses= new Long(cur.getCount());
+        long nbrRemoved = 0;
+        while(cur.moveToNext()){
+            int id = cur.getInt(cur.getColumnIndex(READ__id));
+            nbrRemoved = deleteAssignment(id) > 0? nbrRemoved + 1: 0;
+        }
+        return totAsses - nbrRemoved;
+    }
+
     public long setDone(int assignmentId){
         ContentValues cv = new ContentValues();
 

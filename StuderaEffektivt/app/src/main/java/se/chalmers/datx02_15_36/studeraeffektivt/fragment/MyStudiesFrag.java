@@ -37,10 +37,10 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import java.util.Map;
 
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
+    import se.chalmers.datx02_15_36.studeraeffektivt.activity.AddAssignmentActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.ClosedCoursesActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.GetCoursesFromWebActivity;
-    import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.TechsNTipsActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
     import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
@@ -156,7 +156,7 @@ public class MyStudiesFrag extends Fragment {
                 startActivity(in);*/
                 break;
             case R.id.addTask:
-                Intent i = new Intent(getActivity(), StudyTaskActivity.class);
+                Intent i = new Intent(getActivity(), AddAssignmentActivity.class);
                 startActivity(i);
                 break;
             case R.id.tips:
