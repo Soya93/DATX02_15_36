@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.software.shell.fab.ActionButton;
@@ -107,12 +108,21 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
     }
 
     private void showDialog(final String courseCode, final String courseName){
-        /*AlertDialog.Builder builder = courseView.confirmCourseStatusView(courseName, isActiveCourse, this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        View dialogView = getLayoutInflater().inflate(R.layout.confirm_dialog, null);
+
+        TextView eventNameLabel = (TextView) dialogView.findViewById(R.id.confirm_text);
+        if (eventNameLabel != null) {
+            eventNameLabel.setText("Lägg till " + courseCode + " " + courseName + "?");
+        }
+        builder.setView(dialogView);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                Toast.makeText(getParent(), "ska lägga till", Toast.LENGTH_SHORT);
+                //Ska lägga till
+                Log.d("getCW", "lägg till kurs från webb");
             }
         });
 
@@ -128,7 +138,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         Button okButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
         Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));*/
+        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 
     private void initComponents(){
