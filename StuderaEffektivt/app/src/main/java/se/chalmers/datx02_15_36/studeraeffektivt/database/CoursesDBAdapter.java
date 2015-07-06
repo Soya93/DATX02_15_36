@@ -57,6 +57,16 @@ public class CoursesDBAdapter extends DBAdapter {
         }
     }
 
+    public boolean exists(String courseCode){
+        Cursor courses = getCourses();
+        while( courses.moveToNext() ){
+            if( courses.getString( courses.getColumnIndex(COURSES__ccode) ).equals(courseCode) ){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public long setCourseDone(String ccode) {
         ContentValues cv = new ContentValues();
 

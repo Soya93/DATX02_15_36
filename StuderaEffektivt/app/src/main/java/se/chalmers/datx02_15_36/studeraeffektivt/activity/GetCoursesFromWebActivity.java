@@ -126,12 +126,9 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
                 Log.d("getCW", "lägg till kurs från webb");
                 long bool = coursesDBAdapter.insertCourse(courseCode, courseName);
 
-                //Test
-                Cursor cursor = coursesDBAdapter.getCourses();
-                while(cursor.moveToNext()){
-                    if( cursor.getString( cursor.getColumnIndex("_ccode") ).equals(courseCode) ){
-                        Log.d("getCW", "kursen lades till");
-                    }
+                if(bool > 0){
+                    Toast.makeText(getApplicationContext(), ""+courseCode+" "+courseName+" tillagd.", Toast.LENGTH_SHORT).show();
+                    new GetAllCourses().execute();
                 }
             }
         });
@@ -243,7 +240,9 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
                         Log.i("GetCoursesFromWeb", "courseName " + courseName);
 
                         //Update list here
-                        addToList(courseCode, courseName);
+                        if( !coursesDBAdapter.exists(courseCode) ){
+                            addToList(courseCode, courseName);
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

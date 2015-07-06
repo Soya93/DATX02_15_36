@@ -83,7 +83,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private void initComponents(View view) {
         hasInit = true;
 
-
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v.getTag() == actionButton.getTag()) {
@@ -118,7 +117,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                //do nothing
             }
-
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
