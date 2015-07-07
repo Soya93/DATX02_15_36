@@ -34,8 +34,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
@@ -61,6 +59,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     //View objects
     private TextView examLabel;
+    private TextView timeOnCourseLabel;
     private TextView miniexamLabel;
     private TextView labLabel;
     private TextView handinLabel;
@@ -99,59 +98,57 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private void initComponents(){
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_course_details);
 
-        //Only for testing
-        Cursor cursor = coursesDBAdapter.getObligatories();
-        while (cursor.moveToNext()){
-            String type = cursor.getString(cursor.getColumnIndex("type"));
-            String date = cursor.getString(cursor.getColumnIndex("date"));
-            Log.d("CoursePage", type+" "+date);
+        addExam(layout);
+        addTimeOnCourse(layout);
+
+        if(coursesDBAdapter.hasMiniexams(courseCode)){
+            addMiniexams(layout);
         }
 
-        //Exam date
+        if(coursesDBAdapter.hasLabs(courseCode)){
+            addLabs(layout);
+        }
+
+        if(coursesDBAdapter.hasHandins(courseCode)){
+            addHandins(layout);
+        }
+    }
+
+    private void addTimeOnCourse(RelativeLayout layout) {
+        RelativeLayout.LayoutParams paramsTOC = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        timeOnCourseLabel = new TextView(this);
+        timeOnCourseLabel.setId(View.generateViewId());
+        int timeOnCourse = coursesDBAdapter.getTimeOnCourse(courseCode);
+        timeOnCourseLabel.setText("Timmar per vecka: " + timeOnCourse);
+        timeOnCourseLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+
+        //Padding bottom
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (25*scale + 0.5f);
+        timeOnCourseLabel.setPadding(0,0,0,dpAsPixels);
+
+        paramsTOC.addRule(RelativeLayout.BELOW, examLabel.getId());
+        layout.addView(timeOnCourseLabel, paramsTOC);
+    }
+
+    private void addExam(RelativeLayout layout) {
         examLabel = new TextView(this);
         examLabel.setId(View.generateViewId());
         examLabel.setText("Tentamen: " + coursesDBAdapter.getExamDate(courseCode));
         Log.d("CoursePage", "tentadatum: " + coursesDBAdapter.getExamDate(courseCode));
         examLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
 
+        //Padding top
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (18*scale + 0.5f);
+        examLabel.setPadding(0,dpAsPixels,0,0);
+
         layout.addView(examLabel);
-
-        //Miniexams
-        Log.d("CoursePage", "duggor finns: " + coursesDBAdapter.hasMiniexams(courseCode));
-        if(coursesDBAdapter.hasMiniexams(courseCode)){
-            addMiniexams(layout);
-        }
-
-        //Labs
-        Log.d("CoursePage", "labbar finns: "+coursesDBAdapter.hasLabs(courseCode));
-        if(coursesDBAdapter.hasLabs(courseCode)){
-            addLabs(layout);
-        }
-
-        //Handins
-        Log.d("CoursePage", "inluppg finns: " + coursesDBAdapter.hasHandins(courseCode));
-        if(coursesDBAdapter.hasHandins(courseCode)){
-            addHandins(layout);
-        }
     }
 
     private void addHandins(RelativeLayout layout) {
-        RelativeLayout.LayoutParams paramsHandin = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        //The label
-        handinLabel = new TextView(this);
-        handinLabel.setId(View.generateViewId());
-        handinLabel.setText("Inlämningsuppgifter");
-        handinLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
-
-        if(labLabel != null){
-            paramsHandin.addRule(RelativeLayout.BELOW, lastLabId);
-        }else if(miniexamLabel != null){
-            paramsHandin.addRule(RelativeLayout.BELOW, lastMiniExamId);
-        }else{
-            paramsHandin.addRule(RelativeLayout.BELOW, examLabel.getId());
-        }
-        layout.addView(handinLabel, paramsHandin);
+        addHandinLabel(layout);
 
         //The handins
         Cursor handins = coursesDBAdapter.getObligatoryHandins(courseCode);
@@ -177,21 +174,26 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         }
     }
 
-    private void addLabs(RelativeLayout layout) {
-        RelativeLayout.LayoutParams paramsLabs = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    private void addHandinLabel(RelativeLayout layout) {
+        RelativeLayout.LayoutParams paramsHandin = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        //The label
-        labLabel = new TextView(this);
-        labLabel.setId(View.generateViewId());
-        labLabel.setText("Laborationer");
-        labLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+        handinLabel = new TextView(this);
+        handinLabel.setId(View.generateViewId());
+        handinLabel.setText("Inlämningsuppgifter");
+        handinLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
 
-        if(miniexamLabel != null) {
-            paramsLabs.addRule(RelativeLayout.BELOW, lastMiniExamId);
+        if(labLabel != null){
+            paramsHandin.addRule(RelativeLayout.BELOW, lastLabId);
+        }else if(miniexamLabel != null){
+            paramsHandin.addRule(RelativeLayout.BELOW, lastMiniExamId);
         }else{
-            paramsLabs.addRule(RelativeLayout.BELOW, examLabel.getId());
+            paramsHandin.addRule(RelativeLayout.BELOW, examLabel.getId());
         }
-        layout.addView(labLabel, paramsLabs);
+        layout.addView(handinLabel, paramsHandin);
+    }
+
+    private void addLabs(RelativeLayout layout) {
+        addLabsLabel(layout);
 
         //The labs
         Cursor labs = coursesDBAdapter.getObligatoryLabs(courseCode);
@@ -217,17 +219,25 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         }
     }
 
-    private void addMiniexams(RelativeLayout layout) {
-        RelativeLayout.LayoutParams paramsMiniExam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    private void addLabsLabel(RelativeLayout layout) {
+        RelativeLayout.LayoutParams paramsLabs = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         //The label
-        miniexamLabel = new TextView(this);
-        miniexamLabel.setId(View.generateViewId());
-        miniexamLabel.setText("Duggor");
-        miniexamLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+        labLabel = new TextView(this);
+        labLabel.setId(View.generateViewId());
+        labLabel.setText("Laborationer");
+        labLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
 
-        paramsMiniExam.addRule(RelativeLayout.BELOW, examLabel.getId());
-        layout.addView(miniexamLabel, paramsMiniExam);
+        if(miniexamLabel != null) {
+            paramsLabs.addRule(RelativeLayout.BELOW, lastMiniExamId);
+        }else{
+            paramsLabs.addRule(RelativeLayout.BELOW, examLabel.getId());
+        }
+        layout.addView(labLabel, paramsLabs);
+    }
+
+    private void addMiniexams(RelativeLayout layout) {
+        addMiniexamsLabel(layout);
 
         //The miniexams
         Cursor miniexams = coursesDBAdapter.getObligatoryMiniexams(courseCode);
@@ -251,6 +261,19 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             lastMiniExamId = id;
             layout.addView(tv, params);
         }
+    }
+
+    private void addMiniexamsLabel(RelativeLayout layout) {
+        RelativeLayout.LayoutParams paramsMiniExam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        //The label
+        miniexamLabel = new TextView(this);
+        miniexamLabel.setId(View.generateViewId());
+        miniexamLabel.setText("Duggor");
+        miniexamLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+
+        paramsMiniExam.addRule(RelativeLayout.BELOW, timeOnCourseLabel.getId());
+        layout.addView(miniexamLabel, paramsMiniExam);
     }
 
 
