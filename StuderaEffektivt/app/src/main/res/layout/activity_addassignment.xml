@@ -95,10 +95,13 @@
                         android:id="@+id/olbDate"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:layout_weight="0.5"
-                        android:textSize="15sp"
+                        android:textSize="17sp"
+                        android:gravity="left"
                         android:visibility="gone"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:textAlignment="gravity"
                         />
 
                 </LinearLayout>
