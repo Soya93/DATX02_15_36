@@ -91,13 +91,16 @@
                     android:layout_marginLeft="5dp"
                     android:layout_weight="0.5" />
 
-                    <Spinner
-                        android:id="@+id/oblTypesSpinner"
+                    <TextView
+                        android:id="@+id/olbDate"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="0.5"
-                        android:visibility="gone"/>
+                        android:textSize="15sp"
+                        android:visibility="gone"
+                        />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -126,15 +129,13 @@
                         android:layout_weight="0.5"
                         />
 
-                    <TextView
-                        android:id="@+id/olbDate"
+                    <Spinner
+                        android:id="@+id/oblTypesSpinner"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="0.5"
-                        android:textSize="15sp"
-                        android:visibility="gone"
-                        />
+                        android:visibility="gone"/>
 
                 </LinearLayout>
 

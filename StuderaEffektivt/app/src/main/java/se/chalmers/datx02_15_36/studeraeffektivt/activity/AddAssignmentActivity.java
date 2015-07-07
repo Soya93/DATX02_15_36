@@ -36,6 +36,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +54,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.ObligatoryType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
 
@@ -92,7 +94,7 @@ public class AddAssignmentActivity extends ActionBarActivity {
     private OtherAssignmentsDBAdapter otherDB;
     private ProblemAssignmentsDBAdapter problemDB;
     private ReadAssignmentsDBAdapter readDB;
-    private CoursesDBAdapter coursesDBAdapter;
+    private CoursesDBAdapter courseDB;
 
     private int chosenWeek = CalendarUtils.getCurrWeekNumber();
 
@@ -118,7 +120,7 @@ public class AddAssignmentActivity extends ActionBarActivity {
         otherDB = new OtherAssignmentsDBAdapter(this);
         problemDB = new ProblemAssignmentsDBAdapter(this);
         readDB = new ReadAssignmentsDBAdapter(this);
-        coursesDBAdapter = new CoursesDBAdapter(this);
+        courseDB = new CoursesDBAdapter(this);
 
         coursePrefHelper = CoursePreferenceHelper.getInstance(getApplicationContext());
         initComponents();
@@ -180,7 +182,7 @@ public class AddAssignmentActivity extends ActionBarActivity {
 
         olbDate = (TextView) findViewById(R.id.olbDate);
         olbDate.setOnClickListener(myTextViewHandler);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("E d MMM yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         olbDate.setText(dateFormat.format((new Date(CalendarUtils.TODAY_IN_MILLIS))));
         dateCalendar = Calendar.getInstance();
         dateCalendar.setTimeInMillis(CalendarUtils.TODAY_IN_MILLIS);
@@ -196,6 +198,7 @@ public class AddAssignmentActivity extends ActionBarActivity {
         setChapterSpinner();
         setWeekSpinner();
         setAssignmentTypeSpinner();
+        setObligatoryTypeSpinner();
         updateAssignmentsLayout(AssignmentType.PROBLEM);
     }
 
@@ -254,6 +257,14 @@ public class AddAssignmentActivity extends ActionBarActivity {
                 }
             });
         }
+    }
+
+    private void setObligatoryTypeSpinner(){
+        String[] obligatoryTypes = new String[]{ObligatoryType.HANDIN.toString(), ObligatoryType.LAB.toString(), ObligatoryType.MINIEXAM.toString(), ObligatoryType.EXAM.toString()};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, obligatoryTypes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        oblTypesSpinner.setAdapter(adapter);
+        oblTypesSpinner.setSelection(0);
     }
 
     private void updateView(){
@@ -323,14 +334,15 @@ public class AddAssignmentActivity extends ActionBarActivity {
             visibleTasksLabel.setText("Tillagda " + AssignmentType.OBLIGATORY.toString());
             updateAssignmentsLayout(AssignmentType.OBLIGATORY);
             chapterLabel.setVisibility(View.VISIBLE);
-            chapterLabel.setText("TYP");
+            weekLabel.setText("TYP AV MOMENT");
             chapterSpinner.setVisibility(View.GONE);
             oblTypesSpinner.setVisibility(View.VISIBLE);
-            weekLabel.setText("DATUM");
+            chapterLabel.setText("DATUM");
             weekSpinner.setVisibility(View.GONE);
             olbDate.setVisibility(View.VISIBLE);
             taskTitleLabel.setVisibility(View.GONE);
             taskTextInput.setVisibility(View.GONE);
+            taskDigitInput.setVisibility(View.GONE);
             taskDigitParts.setVisibility(View.GONE);
             taskPartsLabel.setVisibility(View.GONE);
             lineSeparator.setVisibility(View.GONE);
@@ -377,6 +389,10 @@ public class AddAssignmentActivity extends ActionBarActivity {
                 assignmentsFlowLayout.addReadsFromDatabase(courseCode, readDB);
                 break;
 
+            case OBLIGATORY:
+                assignmentsFlowLayout.addObligatoriesFromDatabase(courseCode, courseDB);
+                break;
+
             default:
                 //do nothing
         }
@@ -399,15 +415,15 @@ public class AddAssignmentActivity extends ActionBarActivity {
             // when dialog box is closed, below method will be called.
             public void onDateSet(DatePicker view, int selectedYear,
                                   int selectedMonth, int selectedDay) {
-                    dateYear = selectedYear;
-                    dateMonth = selectedMonth;
-                    dateDay = selectedDay;
-                    dateCalendar.set(selectedYear, selectedMonth, selectedDay);
+                dateYear = selectedYear;
+                dateMonth = selectedMonth;
+                dateDay = selectedDay;
+                dateCalendar.set(selectedYear, selectedMonth, selectedDay);
 
-                    SimpleDateFormat startDateFormat = new SimpleDateFormat("E d MMM yyyy");
-                    olbDate.setText(startDateFormat.format((new Date(dateCalendar.getTimeInMillis()))));
+                SimpleDateFormat startDateFormat = new SimpleDateFormat("E d MMM yyyy");
+                olbDate.setText(startDateFormat.format((new Date(dateCalendar.getTimeInMillis()))));
 
-                    dateCalendar.set(dateYear, dateMonth, dateDay);
+                dateCalendar.set(dateYear, dateMonth, dateDay);
             }
         };
 
@@ -441,11 +457,13 @@ public class AddAssignmentActivity extends ActionBarActivity {
             }
 
         } else if(!taskTextInput.getText().toString().equals("") && assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.OTHER.toString())) {
-             addOtherAssignment(Integer.toString(chosenWeek), taskTextInput.getText().toString());
+            addOtherAssignment(Integer.toString(chosenWeek), taskTextInput.getText().toString());
 
         } else {
             if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.OBLIGATORY.toString())){
-                addObligatoryAssignment(Integer.toString(chapter), taskDigitInput.getText().toString());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String date = dateFormat.format(dateCalendar.getTimeInMillis());
+                addObligatoryAssignment(date, oblTypesSpinner.getSelectedItem().toString());
             } else {
                 Toast.makeText(getApplicationContext(), "Format ej godkänt",
                         Toast.LENGTH_LONG).show();
@@ -457,7 +475,7 @@ public class AddAssignmentActivity extends ActionBarActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         courseSpinner.setAdapter(adapter);
-        Cursor cursor = coursesDBAdapter.getOngoingCourses();
+        Cursor cursor = courseDB.getOngoingCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
         while (cursor.moveToNext()) {
@@ -598,7 +616,7 @@ public class AddAssignmentActivity extends ActionBarActivity {
                 end = Integer.parseInt(separateLine[separateLine.length - 1]);
 
                 if(!(assignmentsFlowLayout.contains(sortedString, Integer.toString(start), Integer.toString(end)))) {
-                addToDatabase(courseCode, AssignmentType.READ, AssignmentID.getID(), sortedString, chosenWeek, start, end);
+                    addToDatabase(courseCode, AssignmentType.READ, AssignmentID.getID(), sortedString, chosenWeek, start, end);
                 }
                 else{
                     Toast.makeText(this,"Läsanvisning redan tillagd!",Toast.LENGTH_SHORT).show();
@@ -632,18 +650,11 @@ public class AddAssignmentActivity extends ActionBarActivity {
         }
     }
 
-    public void addObligatoryAssignment(String chapter, String taskString) {
-        if(!taskString.contains(",") && !taskString.contains(".")){
-            if (!(assignmentsFlowLayout.contains(chapter, taskString))) {
-                addToDatabase(courseCode, AssignmentType.OTHER, AssignmentID.getID(), chosenWeek, taskString);
-            } else {
-                Toast.makeText(this, "Fria uppgiften redan tillagd!", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-        else{
-            Toast.makeText(getApplicationContext(), "Format ej godkänt",
-                    Toast.LENGTH_LONG).show();
+    public void addObligatoryAssignment (String sortedString, String obligatoryType) {
+        if (!(assignmentsFlowLayout.contains(sortedString, obligatoryType))) {
+            addToDatabase(courseCode, AssignmentType.OBLIGATORY, AssignmentID.getID(), sortedString, obligatoryType);
+        } else {
+            Toast.makeText(this, "Fria uppgiften redan tillagd!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -686,4 +697,8 @@ public class AddAssignmentActivity extends ActionBarActivity {
         taskDigitParts.setText("");
     }
 
+    public void addToDatabase(String courseCode, AssignmentType type, int id, String date, String obligatoryType) {
+        courseDB.insertObligatory(courseCode, id, obligatoryType, date, AssignmentStatus.UNDONE);
+        updateAssignmentsLayout(type);
+    }
 }
