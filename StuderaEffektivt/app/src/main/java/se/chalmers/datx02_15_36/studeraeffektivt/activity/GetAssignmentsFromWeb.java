@@ -309,8 +309,6 @@ public class GetAssignmentsFromWeb {
                             Toast.makeText(context, "Det gick inte att lägga till läsanvisningarna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
                         }
 
-
-
                        /* Log.i("GetAFWA", "Readasses ");
                         Log.i("GetAFWA", "chapter " + chapter);
                         Log.i("GetAFWA", "week " + week);
