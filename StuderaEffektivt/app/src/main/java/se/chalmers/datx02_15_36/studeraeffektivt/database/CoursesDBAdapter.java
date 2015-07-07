@@ -35,6 +35,7 @@ public class CoursesDBAdapter extends DBAdapter {
     public static final String TIMEONCOURSE__ccode = COURSES__ccode;
     public static final String TIMEONCOURSE_time = "time";
 
+    /** ---- METHODS FOR COURSES TABLE ---- */
     public long insertCourse(String courseCode, String courseName) {
         ContentValues cv = new ContentValues();
 
@@ -98,6 +99,21 @@ public class CoursesDBAdapter extends DBAdapter {
         return cursor.getString(cursor.getColumnIndex(COURSES_cstatus));
     }
 
+    public Cursor getCourses() {
+        return db.query(TABLE_COURSES, null, null, null, null, null, null);
+    }
+
+    public Cursor getOngoingCourses() {
+        String selection = COURSES_cstatus + " = '" + AssignmentStatus.UNDONE.toString() + "'";
+        return db.query(TABLE_COURSES, null, selection, null, null, null, null);
+    }
+
+    public Cursor getDoneCourses() {
+        String selection = COURSES_cstatus + " = '" + AssignmentStatus.DONE.toString() + "'";
+        return db.query(TABLE_COURSES, null, selection, null, null, null, null);
+    }
+
+    /** ---- METHODS FOR TIMEONCOURSE TABLE ---- */
     public long insertTimeOnCourse(String ccode, int minutes) {
         ContentValues cv = new ContentValues();
 
@@ -128,23 +144,7 @@ public class CoursesDBAdapter extends DBAdapter {
         }
     }
 
-    //Courses
-    public Cursor getCourses() {
-        return db.query(TABLE_COURSES, null, null, null, null, null, null);
-    }
-
-    public Cursor getOngoingCourses() {
-        String selection = COURSES_cstatus + " = '" + AssignmentStatus.UNDONE.toString() + "'";
-        return db.query(TABLE_COURSES, null, selection, null, null, null, null);
-    }
-
-    public Cursor getDoneCourses() {
-        String selection = COURSES_cstatus + " = '" + AssignmentStatus.DONE.toString() + "'";
-        return db.query(TABLE_COURSES, null, selection, null, null, null, null);
-    }
-
-
-    //Obligatories
+    /** ---- METHODS FOR OBLIGATORIES TABLE ---- */
     public long insertObligatory(String courseCode, int id, String type, String date, AssignmentStatus status) {
         ContentValues cv = new ContentValues();
 
@@ -170,6 +170,17 @@ public class CoursesDBAdapter extends DBAdapter {
         return db.query(TABLE_OBLIG, null, selection, null, null, null, null);
     }
 
+    public String getExamDate(String courseCode){
+        Cursor obligatories = getObligatories();
+        while (obligatories.moveToNext()){
+            if (obligatories.getString( obligatories.getColumnIndex(OBLIG_ccode) ).equals(courseCode)
+                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals("Tentamen")){
+                return obligatories.getString( obligatories.getColumnIndex(OBLIG_date) );
+            }
+        }
+        return "";
+    }
+
     public long deleteObligatories(String ccode){
         Cursor cur = getObligatories(ccode);
         Long totAsses= new Long(cur.getCount());
@@ -188,7 +199,6 @@ public class CoursesDBAdapter extends DBAdapter {
             return -1;
         }
     }
-
 
     public long setObligatoryDone(int id){
         ContentValues cv = new ContentValues();

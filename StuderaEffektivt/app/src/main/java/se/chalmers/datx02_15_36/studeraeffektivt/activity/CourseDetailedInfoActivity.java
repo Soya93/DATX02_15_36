@@ -86,7 +86,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_course_details);
 
         TextView examLabel = new TextView(this);
-        examLabel.setText("Tentamen");
+        examLabel.setText("Tentamen: "+coursesDBAdapter.getExamDate(courseCode));
         examLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
 
         layout.addView(examLabel);
