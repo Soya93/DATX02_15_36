@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.ObligatoryType;
 
 /**
  * Created by haxmaj0 on 2015-06-22.
@@ -174,11 +175,44 @@ public class CoursesDBAdapter extends DBAdapter {
         Cursor obligatories = getObligatories();
         while (obligatories.moveToNext()){
             if (obligatories.getString( obligatories.getColumnIndex(OBLIG_ccode) ).equals(courseCode)
-                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals("Tentamen")){
+                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals(ObligatoryType.EXAM)){
                 return obligatories.getString( obligatories.getColumnIndex(OBLIG_date) );
             }
         }
         return "";
+    }
+
+    public boolean hasMiniexams(String courseCode){
+        Cursor obligatories = getObligatories();
+        while (obligatories.moveToNext()){
+            if (obligatories.getString( obligatories.getColumnIndex(OBLIG_ccode) ).equals(courseCode)
+                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals(ObligatoryType.MINIEXAM)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasLabs(String courseCode){
+        Cursor obligatories = getObligatories();
+        while (obligatories.moveToNext()){
+            if (obligatories.getString( obligatories.getColumnIndex(OBLIG_ccode) ).equals(courseCode)
+                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals(ObligatoryType.LAB)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasHandins(String courseCode){
+        Cursor obligatories = getObligatories();
+        while (obligatories.moveToNext()){
+            if (obligatories.getString( obligatories.getColumnIndex(OBLIG_ccode) ).equals(courseCode)
+                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals(ObligatoryType.HANDIN)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public long deleteObligatories(String ccode){

@@ -85,11 +85,40 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_course_details);
 
+        //Exam date
         TextView examLabel = new TextView(this);
         examLabel.setText("Tentamen: "+coursesDBAdapter.getExamDate(courseCode));
+        Log.d("CoursePage", "tentadatum: "+coursesDBAdapter.getExamDate(courseCode));
         examLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
 
         layout.addView(examLabel);
+
+        //Miniexams (duggor)
+        if(coursesDBAdapter.hasMiniexams(courseCode)){
+            TextView miniexamLabel = new TextView(this);
+            miniexamLabel.setText("Duggor");
+            miniexamLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+
+            layout.addView(examLabel);
+        }
+
+        //Labs
+        if(coursesDBAdapter.hasLabs(courseCode)){
+            TextView miniexamLabel = new TextView(this);
+            miniexamLabel.setText("Laborationer");
+            miniexamLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+
+            layout.addView(examLabel);
+        }
+
+        //Handins
+        if(coursesDBAdapter.hasHandins(courseCode)){
+            TextView miniexamLabel = new TextView(this);
+            miniexamLabel.setText("Inlämningsuppgifter");
+            miniexamLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+
+            layout.addView(examLabel);
+        }
     }
 
 
