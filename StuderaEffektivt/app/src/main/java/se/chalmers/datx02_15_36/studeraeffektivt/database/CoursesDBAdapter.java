@@ -175,7 +175,7 @@ public class CoursesDBAdapter extends DBAdapter {
         Cursor obligatories = getObligatories();
         while (obligatories.moveToNext()){
             if (obligatories.getString( obligatories.getColumnIndex(OBLIG_ccode) ).equals(courseCode)
-                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals("Tentamen")){
+                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals(ObligatoryType.EXAM.toString())){
                 return obligatories.getString( obligatories.getColumnIndex(OBLIG_date) );
             }
         }
@@ -186,7 +186,7 @@ public class CoursesDBAdapter extends DBAdapter {
         Cursor obligatories = getObligatories();
         while (obligatories.moveToNext()){
             if (obligatories.getString( obligatories.getColumnIndex(OBLIG_ccode) ).equals(courseCode)
-                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals("Dugga")){
+                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals(ObligatoryType.MINIEXAM.toString())){
                 return true;
             }
         }
@@ -197,7 +197,7 @@ public class CoursesDBAdapter extends DBAdapter {
         Cursor obligatories = getObligatories();
         while (obligatories.moveToNext()){
             if (obligatories.getString( obligatories.getColumnIndex(OBLIG_ccode) ).equals(courseCode)
-                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals("Labbuppgift")){
+                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals(ObligatoryType.LAB.toString())){
                 return true;
             }
         }
@@ -208,7 +208,7 @@ public class CoursesDBAdapter extends DBAdapter {
         Cursor obligatories = getObligatories();
         while (obligatories.moveToNext()){
             if (obligatories.getString( obligatories.getColumnIndex(OBLIG_ccode) ).equals(courseCode)
-                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals("Inlämningsuppgift")){
+                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals(ObligatoryType.LAB.toString())){
                 return true;
             }
         }
