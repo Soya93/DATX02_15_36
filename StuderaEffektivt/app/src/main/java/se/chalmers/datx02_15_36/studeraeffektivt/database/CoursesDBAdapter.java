@@ -215,6 +215,21 @@ public class CoursesDBAdapter extends DBAdapter {
         return false;
     }
 
+    public Cursor getObligatoryMiniexams(String courseCode){
+        String selection = OBLIG_type + " = 'Dugga' AND "+OBLIG_ccode+" = '"+courseCode+"'";
+        return db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+    }
+
+    public Cursor getObligatoryLabs(String courseCode){
+        String selection = OBLIG_type + " = 'Labbuppgift' AND "+OBLIG_ccode+" = '"+courseCode+"'";
+        return db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+    }
+
+    public Cursor getObligatoryHandins(String courseCode){
+        String selection = OBLIG_type + " = 'Inlämningsuppgift' AND "+OBLIG_ccode+" = '"+courseCode+"'";
+        return db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+    }
+
     public long deleteObligatories(String ccode){
         Cursor cur = getObligatories(ccode);
         Long totAsses= new Long(cur.getCount());
