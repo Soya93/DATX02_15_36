@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -42,7 +43,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
@@ -63,15 +63,23 @@ import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
 public class AddAssignmentActivity extends ActionBarActivity {
 
     //Components in the view
-    private EditText taskInput;
-    private EditText taskParts;
+    private EditText taskDigitInput;
+    private EditText taskDigitParts;
+    private EditText taskTextInput;
     private AssignmentCheckBoxLayout assignmentsFlowLayout;
     private Spinner chapterSpinner;
     private Spinner courseSpinner;
     private Spinner weekSpinner;
+    private Spinner oblTypesSpinner;
     private Spinner assignmentTypeSpinner;
+    private TextView chapterLabel;
+    private TextView weekLabel;
     private TextView visibleTasksLabel;
+    private TextView taskTitleLabel;
     private TextView taskPartsLabel;
+
+    private View lineSeparator;
+    private DatePicker olbDate;
 
 
     private String courseCode;
@@ -95,7 +103,7 @@ public class AddAssignmentActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_study_task);
+        setContentView(R.layout.activity_addassignment);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
@@ -147,18 +155,25 @@ public class AddAssignmentActivity extends ActionBarActivity {
     }
 
     public void initComponents() {
-        taskInput = (EditText) findViewById(R.id.taskInput);
-        taskParts = (EditText) findViewById(R.id.taskParts);
+        taskDigitInput = (EditText) findViewById(R.id.taskDigitInput);
+        taskDigitParts = (EditText) findViewById(R.id.taskParts);
+        taskTextInput = (EditText) findViewById(R.id.taskTextInput);
         assignmentsFlowLayout = (AssignmentCheckBoxLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
         chapterSpinner = (Spinner) findViewById(R.id.chapterSpinner);
         courseSpinner = (Spinner) findViewById(R.id.courseSpinner);
         weekSpinner = (Spinner) findViewById(R.id.weekSpinner);
+        oblTypesSpinner  = (Spinner) findViewById(R.id.oblTypesSpinner);
         assignmentTypeSpinner = (Spinner) findViewById(R.id.assignmentTypeSpinner);
+        chapterLabel = (TextView) findViewById(R.id.chapterLabel);
         taskPartsLabel = (TextView) findViewById(R.id.taskPartsLabel);
+        taskTitleLabel = (TextView) findViewById(R.id.taskTitleLabel);
+        weekLabel = (TextView) findViewById(R.id.weekLabel);
         visibleTasksLabel = (TextView) findViewById(R.id.tasks_title);
+        lineSeparator = (View) findViewById(R.id.line3);
+        olbDate = (DatePicker) findViewById(R.id.olbDate);
 
-        taskInput.getBackground().setColorFilter(Color.parseColor(Colors.lightGreyColor), PorterDuff.Mode.SRC_ATOP);
-        taskParts.getBackground().setColorFilter(Color.parseColor(Colors.lightGreyColor), PorterDuff.Mode.SRC_ATOP);
+        taskDigitInput.getBackground().setColorFilter(Color.parseColor(Colors.lightGreyColor), PorterDuff.Mode.SRC_ATOP);
+        taskDigitParts.getBackground().setColorFilter(Color.parseColor(Colors.lightGreyColor), PorterDuff.Mode.SRC_ATOP);
 
         setCourseSpinner();
         setChapterSpinner();
@@ -193,18 +208,14 @@ public class AddAssignmentActivity extends ActionBarActivity {
     }
 
     private void setWeekSpinner(){
-        int week = CalendarUtils.getCurrWeekNumber();
-        Integer[] weekItems = new Integer[15];
+        int currentWeek = CalendarUtils.getCurrWeekNumber();
+        Integer[] weekItems = new Integer[52];
         for(int i = 0; i < weekItems.length; i++){
-            if(week > 52)
-                week = 1;
-            weekItems[i] = week;
-            week++;
+            weekItems[i] = i+1;
         }
-
         ArrayAdapter<Integer> weekAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, weekItems);
         weekSpinner.setAdapter(weekAdapter);
-        weekSpinner.setSelection(0);
+        weekSpinner.setSelection(currentWeek-1);
     }
 
     private void setAssignmentTypeSpinner(){
@@ -232,39 +243,84 @@ public class AddAssignmentActivity extends ActionBarActivity {
         if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.HANDIN.toString())) {
             visibleTasksLabel.setText("Tillagda " + AssignmentType.HANDIN.toString());
             updateAssignmentsLayout(AssignmentType.HANDIN);
-            taskParts.setVisibility(View.VISIBLE);
+            chapterLabel.setText("NUMMER");
+            chapterSpinner.setVisibility(View.VISIBLE);
+            weekLabel.setText("VECKA");
+            weekSpinner.setVisibility(View.VISIBLE);
+            taskTitleLabel.setText("UPPGIFTSNUMMER");
+            taskDigitParts.setVisibility(View.VISIBLE);
             taskPartsLabel.setVisibility(View.VISIBLE);
+            lineSeparator.setVisibility(View.VISIBLE);
 
         } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.LAB.toString())) {
             visibleTasksLabel.setText("Tillagda " + AssignmentType.LAB.toString() );
             updateAssignmentsLayout(AssignmentType.LAB);
-            taskParts.setVisibility(View.VISIBLE);
+            chapterLabel.setText("NUMMER");
+            chapterSpinner.setVisibility(View.VISIBLE);
+            oblTypesSpinner.setVisibility(View.GONE);
+            olbDate.setVisibility(View.GONE);
+            weekLabel.setText("VECKA");
+            weekSpinner.setVisibility(View.VISIBLE);
+            taskTitleLabel.setText("UPPGIFTSNUMMER");
+            taskDigitParts.setVisibility(View.VISIBLE);
             taskPartsLabel.setVisibility(View.VISIBLE);
+            lineSeparator.setVisibility(View.VISIBLE);
 
         } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.PROBLEM.toString())) {
             visibleTasksLabel.setText("Tillagda " + AssignmentType.PROBLEM.toString() );
             updateAssignmentsLayout(AssignmentType.PROBLEM);
-            taskParts.setVisibility(View.VISIBLE);
+            chapterLabel.setText("KAPITEL");
+            chapterSpinner.setVisibility(View.VISIBLE);
+            oblTypesSpinner.setVisibility(View.GONE);
+            olbDate.setVisibility(View.GONE);
+            weekLabel.setText("VECKA");
+            weekSpinner.setVisibility(View.VISIBLE);
+            taskTitleLabel.setText("UPPGIFTSNUMMER");
+            taskDigitParts.setVisibility(View.VISIBLE);
             taskPartsLabel.setVisibility(View.VISIBLE);
-            Log.i("StudyTaskActivity", "in updateView with problem");
+            lineSeparator.setVisibility(View.VISIBLE);
 
         } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
             visibleTasksLabel.setText("Tillagda " + AssignmentType.READ.toString());
             updateAssignmentsLayout(AssignmentType.READ);
-            Log.i("StudyTaskActivity", "in updateView with read");
-            taskParts.setVisibility(View.GONE);
+            chapterLabel.setText("KAPITEL");
+            chapterSpinner.setVisibility(View.VISIBLE);
+            oblTypesSpinner.setVisibility(View.GONE);
+            olbDate.setVisibility(View.GONE);
+            weekLabel.setText("VECKA");
+            weekSpinner.setVisibility(View.VISIBLE);
+            taskTitleLabel.setText("SIDNUMMER");
+            taskDigitParts.setVisibility(View.GONE);
             taskPartsLabel.setVisibility(View.GONE);
+            lineSeparator.setVisibility(View.VISIBLE);
 
         } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.OBLIGATORY.toString())) {
             visibleTasksLabel.setText("Tillagda " + AssignmentType.OBLIGATORY.toString());
             updateAssignmentsLayout(AssignmentType.OBLIGATORY);
-            taskParts.setVisibility(View.GONE);
+            chapterLabel.setText("TYP");
+            chapterSpinner.setVisibility(View.GONE);
+            oblTypesSpinner.setVisibility(View.VISIBLE);
+            weekLabel.setText("DATUM");
+            weekSpinner.setVisibility(View.GONE);
+            olbDate.setVisibility(View.VISIBLE);
+            taskDigitParts.setVisibility(View.GONE);
             taskPartsLabel.setVisibility(View.GONE);
+            lineSeparator.setVisibility(View.GONE);
 
         } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.OTHER.toString())) {
             visibleTasksLabel.setText("Tillagda " + AssignmentType.OTHER.toString());
             updateAssignmentsLayout(AssignmentType.OTHER);
-            taskParts.setVisibility(View.GONE);
+
+            chapterLabel.setVisibility(View.GONE);
+            chapterSpinner.setVisibility(View.GONE);
+            weekLabel.setText("VECKA");
+            weekSpinner.setVisibility(View.VISIBLE);
+            lineSeparator.setVisibility(View.VISIBLE);
+            taskTitleLabel.setText("UPPGIFT");
+            taskTextInput.setVisibility(View.VISIBLE);
+            oblTypesSpinner.setVisibility(View.GONE);
+            olbDate.setVisibility(View.GONE);
+            taskDigitParts.setVisibility(View.GONE);
             taskPartsLabel.setVisibility(View.GONE);
         }
 
@@ -313,22 +369,22 @@ public class AddAssignmentActivity extends ActionBarActivity {
         int chapter = Integer.parseInt(chapSep[chapSep.length-1]);
         String[] weekSep = weekSpinner.getSelectedItem().toString().split(" ");
         chosenWeek = Integer.parseInt(weekSep[weekSep.length-1]);
-        if(!taskInput.getText().toString().equals("")) {
+        if(!taskDigitInput.getText().toString().equals("")) {
 
             if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.PROBLEM.toString())) {
-                addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString(), AssignmentType.PROBLEM);
+                addTask(chapter, taskDigitInput.getText().toString(), taskDigitParts.getText().toString(), AssignmentType.PROBLEM);
             }
             else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.LAB.toString())){
-                addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString(), AssignmentType.LAB);
+                addTask(chapter, taskDigitInput.getText().toString(), taskDigitParts.getText().toString(), AssignmentType.LAB);
             }
             else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.HANDIN.toString())){
-                addTask(chapter, taskInput.getText().toString(), taskParts.getText().toString(), AssignmentType.HANDIN);
+                addTask(chapter, taskDigitInput.getText().toString(), taskDigitParts.getText().toString(), AssignmentType.HANDIN);
             }
             else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())){
-                addReadAssignment(chapter, taskInput.getText().toString());
+                addReadAssignment(chapter, taskDigitInput.getText().toString());
             }
             else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.OTHER.toString())){
-                addOtherAssignment(Integer.toString(chapter), taskInput.getText().toString());
+                addOtherAssignment(Integer.toString(chapter), taskDigitInput.getText().toString());
             }
         }
 
@@ -536,23 +592,23 @@ public class AddAssignmentActivity extends ActionBarActivity {
                 //do nothing
         }
         updateAssignmentsLayout(type);
-        taskInput.setText("");
-        taskParts.setText("");
+        taskDigitInput.setText("");
+        taskDigitParts.setText("");
     }
 
     public void addToDatabase(String courseCode, AssignmentType type, int id, String chapter, int week, int startPage, int endPage){
         readDB.insertAssignment(courseCode, id, chapter, week, startPage, endPage, AssignmentStatus.UNDONE);
         updateAssignmentsLayout(type);
-        taskInput.setText("");
-        taskParts.setText("");
+        taskDigitInput.setText("");
+        taskDigitParts.setText("");
     }
 
     public void addToDatabase(String courseCode, AssignmentType type, int id, int week, String assignment) {
         otherDB.insertAssignment(courseCode, id, week, assignment, AssignmentStatus.UNDONE);
 
         updateAssignmentsLayout(type);
-        taskInput.setText("");
-        taskParts.setText("");
+        taskDigitInput.setText("");
+        taskDigitParts.setText("");
     }
 
 
