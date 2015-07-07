@@ -16,12 +16,12 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
 
 /**
  * Created by jesper on 2015-03-27.
+ * Updated by Soyapanda 2015-07-01
  */
 
 import android.content.Context;
 import android.database.Cursor;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -34,7 +34,6 @@ import java.util.TreeMap;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.OldAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
@@ -45,7 +44,6 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.Obli
 import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.OtherCheckBox;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.ProblemCheckBox;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.AssignmentCheckBoxes.ReadCheckBox;
-import se.chalmers.datx02_15_36.studeraeffektivt.model.CheckedStudyTaskToDB;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 
@@ -65,10 +63,6 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
     private HashMap<String, ArrayList<AssignmentCheckBox>> problemHashMap;
     private HashMap<String, ArrayList<AssignmentCheckBox>> readHashMap;
     private HashMap<String, ArrayList<AssignmentCheckBox>> obligatoryHashMap;
-
-
-    private HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> hashMapOfStudyTasksForWeb = new HashMap<>();
-    private HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> hashMapOfReadingAssignmentsWeb = new HashMap<>();
 
     public AssignmentCheckBoxLayout(Context context) {
         super(context);
@@ -184,6 +178,10 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
 
                 case PROBLEM: case READ:
                     sortingText.setText("  Kapitel " + a.get(0).getSortingString());
+                    break;
+
+                case OBLIGATORY:
+                    sortingText.setText("  Datum " + a.get(0).getSortingString());
                     break;
 
                 default:
@@ -532,122 +530,5 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
             arrayList.add(obligatoryCheckBox);
             obligatoryHashMap.put(obligatoryCheckBox.getSortingString(), arrayList);
         }
-    }
-
-    //Webstuff
-    public void addTasksFromWeb( String courseCode, int chapter, int week, String assNr,
-                                 int startPage, int stopPage, String status, String type,OldAssignmentsDBAdapter assDBAdapter) {
-
-
-        AssignmentStatus assignmentStatus;
-        AssignmentType assignmentType;
-        if (status.equals(AssignmentStatus.DONE.toString())) {
-            assignmentStatus = AssignmentStatus.DONE;
-        } else {
-            assignmentStatus = AssignmentStatus.UNDONE;
-        }
-        if (type.equals(AssignmentType.READ.toString())) {
-            assignmentType = AssignmentType.READ;
-        } else {
-            assignmentType = AssignmentType.PROBLEM;
-        }
-
-        CheckedStudyTaskToDB studyTask = new CheckedStudyTaskToDB(
-                this.getContext(),
-                courseCode,
-                chapter,
-                week,
-                assNr,
-                startPage,
-                stopPage,
-                assDBAdapter,
-                assignmentType,
-                assignmentStatus);
-        if (studyTask.getType() == AssignmentType.PROBLEM) {
-
-            if (hashMapOfStudyTasksForWeb.containsKey(studyTask.getChapter())) {
-                hashMapOfStudyTasksForWeb.get(studyTask.getChapter()).add(studyTask);
-            } else {
-                ArrayList<CheckedStudyTaskToDB> a = new ArrayList();
-                a.add(studyTask);
-                hashMapOfStudyTasksForWeb.put(studyTask.getChapter(), a);
-            }
-
-        } else {
-            if (hashMapOfReadingAssignmentsWeb.containsKey(studyTask.getChapter())) {
-                hashMapOfReadingAssignmentsWeb.get(studyTask.getChapter()).add(studyTask);
-            } else {
-                ArrayList<CheckedStudyTaskToDB> a = new ArrayList();
-                a.add(studyTask);
-                hashMapOfReadingAssignmentsWeb.put(studyTask.getChapter(), a);
-            }
-        }
-    }
-
-    public HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> getReadHashMapOfStudyTasks2() {
-        return this.hashMapOfReadingAssignmentsWeb;
-    }
-
-
-    public HashMap<Integer, ArrayList<CheckedStudyTaskToDB>> getOtherHashMapOfStudyTask2(){
-        return this.hashMapOfStudyTasksForWeb;
-    }
-
-    public void addReadAssignmets(){
-        Map<Integer, ArrayList> treeMap;
-        treeMap = new TreeMap<Integer, ArrayList>(hashMapOfReadingAssignmentsWeb);
-        for (Object value : treeMap.values()) {
-            ArrayList<CheckedStudyTaskToDB> a = (ArrayList) value;
-            Log.d("sizeofMap",a.size()+"");
-            TextView kapitelText = new TextView(this.getContext());
-            kapitelText.setText("  KAPITEL " + a.get(0).getChapter());
-            int width = this.getWidth();
-            kapitelText.setWidth(width);
-            this.addView(kapitelText);
-            int counter = this.getChildCount();
-            for(int i = 0; i < a.size(); i++){
-
-                if(a.get(i).getParent()!=null){
-                    ((ViewGroup) a.get(i).getParent()).removeView(a.get(i));
-                }
-                if(!a.get(i).isChecked()) {
-                    this.addView(a.get(i), counter);
-                    counter++;
-                }
-                else{
-                    this.addView(a.get(i),counter);
-                }
-            }
-        }
-        hashMapOfReadingAssignmentsWeb.clear();
-    }
-
-    public void addOtherAssignmets(){
-        Map<Integer, ArrayList> treeMap;
-        treeMap = new TreeMap<Integer, ArrayList>(hashMapOfStudyTasksForWeb);
-        for (Object value : treeMap.values()) {
-            ArrayList<CheckedStudyTaskToDB> a = (ArrayList) value;
-            Log.d("sizeofMap",a.size()+"");
-            TextView kapitelText = new TextView(this.getContext());
-            kapitelText.setText("  KAPITEL " + a.get(0).getChapter());
-            int width = this.getWidth();
-            kapitelText.setWidth(width);
-            this.addView(kapitelText);
-            int counter = this.getChildCount();
-            for(int i = 0; i < a.size(); i++){
-
-                if(a.get(i).getParent()!=null){
-                    ((ViewGroup) a.get(i).getParent()).removeView(a.get(i));
-                }
-                if(!a.get(i).isChecked()) {
-                    this.addView(a.get(i), counter);
-                    counter++;
-                }
-                else{
-                    this.addView(a.get(i),counter);
-                }
-            }
-        }
-        hashMapOfStudyTasksForWeb.clear();
     }
 }

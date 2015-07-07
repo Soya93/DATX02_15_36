@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
@@ -65,7 +66,7 @@ public class CourseAssignmentsActivity extends ActionBarActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         courseName = getIntent().getStringExtra("CourseName");
         courseCode = getIntent().getStringExtra("CourseCode");
-        actionBar.setTitle("Uppgifter i kursen " + courseName);
+        actionBar.setTitle("Uppgifter i " + courseName);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
 
 
@@ -97,28 +98,42 @@ public class CourseAssignmentsActivity extends ActionBarActivity {
     }
 
     private void updateAssignmentsLayout() {
+        AssignmentType assignmentType = AssignmentType.OTHER;
         assignmentsFlowLayout.removeAllViews();
 
         if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.HANDIN.toString())) {
             assignmentsFlowLayout.addHandInsFromDatabase(courseCode, handInDB);
+            assignmentType = AssignmentType.HANDIN;
 
         } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.LAB.toString())) {
             assignmentsFlowLayout.addLabsFromDatabase(courseCode, labDB);
-
+            assignmentType = AssignmentType.LAB;
 
         } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.PROBLEM.toString())) {
             assignmentsFlowLayout.addProblemsFromDatabase(courseCode, problemDB);
-
+            assignmentType = AssignmentType.PROBLEM;
 
         } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
             assignmentsFlowLayout.addReadsFromDatabase(courseCode, readDB);
-
+            assignmentType = AssignmentType.READ;
 
         } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.OBLIGATORY.toString())) {
-            assignmentsFlowLayout.addObligatoriesFromDatabase(courseCode,courseDB);
+            assignmentsFlowLayout.addObligatoriesFromDatabase(courseCode, courseDB);
+            assignmentType = AssignmentType.OBLIGATORY;
 
         } else if (assignmentTypesSpinner.getSelectedItem().toString().equals(AssignmentType.OTHER.toString())) {
             assignmentsFlowLayout.addOthersFromDatabase(courseCode, otherDB);
+            assignmentType = AssignmentType.OTHER;
+        }
+        isAssignmentsLayoutEmpty(assignmentType);
+    }
+
+    private void isAssignmentsLayoutEmpty(AssignmentType type){
+        if(assignmentsFlowLayout.isEmpty()){
+            TextView textView = new TextView(this);
+            textView.setText("Du har för närvaranade inga " + type.toString().toLowerCase() + " för den här kursen, lägg till en uppgift genom att trycka på 'Lägg till uppgifter' i menyvalet.");
+            textView.setPadding(15,5,15,5);
+            assignmentsFlowLayout.addView(textView);
         }
     }
 

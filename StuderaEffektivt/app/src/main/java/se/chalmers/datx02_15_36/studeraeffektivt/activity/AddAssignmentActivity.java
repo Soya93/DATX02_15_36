@@ -271,7 +271,6 @@ public class AddAssignmentActivity extends ActionBarActivity {
     }
 
     private void updateAssignmentsLayout(AssignmentType assignmentType){
-        Log.i("StudyTaskActivity", "in updateAssignmentsLayout type " + assignmentType);
         assignmentsFlowLayout.removeAllViews();
         switch (assignmentType) {
             case HANDIN:
@@ -297,14 +296,13 @@ public class AddAssignmentActivity extends ActionBarActivity {
             default:
                 //do nothing
         }
-        Log.i("StudyTaskActivity", "in updateAssignmentsLayout type " + assignmentType);
         isAssignmentsLayoutEmpty(assignmentType);
     }
 
     private void isAssignmentsLayoutEmpty(AssignmentType type){
         if(assignmentsFlowLayout.isEmpty()){
             TextView textView = new TextView(this);
-            textView.setText("Du har för närvaranade inga " + type.toString() + " för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
+            textView.setText("Du har för närvaranade inga " + type.toString().toLowerCase() + " för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
             textView.setPadding(15,5,15,5);
             assignmentsFlowLayout.addView(textView);
         }

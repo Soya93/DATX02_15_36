@@ -103,7 +103,7 @@ public class TimerFrag extends Fragment {
     private OtherAssignmentsDBAdapter otherDB;
     private ProblemAssignmentsDBAdapter problemDB;
     private ReadAssignmentsDBAdapter readDB;
-    private CoursesDBAdapter coursesDBAdapter;
+    private CoursesDBAdapter coursesDB;
 
     private Handler serviceHandler;
 
@@ -159,7 +159,7 @@ public class TimerFrag extends Fragment {
             otherDB = new OtherAssignmentsDBAdapter(getActivity());
             problemDB = new ProblemAssignmentsDBAdapter(getActivity());
             readDB = new ReadAssignmentsDBAdapter(getActivity());
-            coursesDBAdapter = new CoursesDBAdapter(getActivity());
+            coursesDB = new CoursesDBAdapter(getActivity());
         }
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         cph = CoursePreferenceHelper.getInstance(getActivity());
@@ -322,7 +322,7 @@ public class TimerFrag extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        Cursor cursor = coursesDBAdapter.getOngoingCourses();
+        Cursor cursor = coursesDB.getOngoingCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
         if(cursor.getCount()>0) {
@@ -511,15 +511,17 @@ public class TimerFrag extends Fragment {
                 assignmentsFlowLayout.addReadsFromDatabase(ccode, readDB, week);
                 break;
 
+            case OBLIGATORY:
+                assignmentsFlowLayout.addObligatoriesFromDatabase(ccode, coursesDB, week);
+                break;
+
             default:
                 //do nothing
         }
 
-
-
         if(assignmentsFlowLayout.isEmpty()){
             TextView textView1 = new TextView(getActivity());
-            textView1.setText("Ingen uppgift av den här typen för den valda veckan");
+            textView1.setText("Du har för närvaranade inga " + assignmentType.toString().toLowerCase() + " för den valda veckan");
             assignmentsFlowLayout.addView(textView1);
         }
     }
