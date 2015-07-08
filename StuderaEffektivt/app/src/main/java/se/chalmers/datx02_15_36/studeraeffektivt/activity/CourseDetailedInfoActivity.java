@@ -120,6 +120,18 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         }
     }
 
+    private void updateComponents(){
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_course_details);
+        layout.removeAllViews();
+
+        lastMiniExamId = -1;
+        lastLabId = -1;
+        lastHandinId = -1;
+
+        Log.d("updateCP", "har wipat allt");
+        initComponents();
+    }
+
     private void addTimeOnCourse(RelativeLayout layout) {
         RelativeLayout.LayoutParams paramsTOC = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -142,7 +154,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         examLabel = new TextView(this);
         examLabel.setId(View.generateViewId());
         examLabel.setText("Tentamen: " + coursesDBAdapter.getExamDate(courseCode));
-        Log.d("CoursePage", "tentadatum: " + coursesDBAdapter.getExamDate(courseCode));
         examLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
 
         //Padding top
@@ -247,7 +258,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         //The miniexams
         Cursor miniexams = coursesDBAdapter.getObligatoryMiniexams(courseCode);
-        Log.d("CoursePage", "antal duggor: "+miniexams.getCount());
+        Log.d("CoursePage", "antal duggor: " + miniexams.getCount());
         TextView tv;
         RelativeLayout.LayoutParams params;
         while (miniexams.moveToNext()){
@@ -311,6 +322,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        int i = 0;
 
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
@@ -436,6 +449,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     public void getAssignmentsFromWeb() {
         GetAssignmentsFromWeb getAssignmentsFromWeb = new GetAssignmentsFromWeb(this);
         getAssignmentsFromWeb.addAssignmentsFromWeb(courseCode);
+
+        Log.d("updateCP", "Innan update components");
+        updateComponents();
     }
 
     private void chooseTimeOnCourseDialog() {

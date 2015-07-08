@@ -73,6 +73,9 @@ public class GetAssignmentsFromWeb {
 
     private Context context;
 
+    //For testing
+    String courseCode;
+
     public GetAssignmentsFromWeb(Context context){
         this.context = context;
         initDBS();
@@ -108,7 +111,7 @@ public class GetAssignmentsFromWeb {
         }
 
         protected String doInBackground(String... args) {
-            String courseCode = args[0];
+            courseCode = args[0];
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("courseCode", courseCode));
@@ -154,6 +157,15 @@ public class GetAssignmentsFromWeb {
 
 
         protected void onPostExecute(String file_url) {
+
+            /*Log.d("updateCP", "HAS ADDED HANDINASSIGNMENTS FROM WEB");
+            Cursor cursor = coursesDB.getObligatories(courseCode);
+            while(cursor.moveToNext()){
+                String type = cursor.getString( cursor.getColumnIndex("type") );
+                String date = cursor.getString( cursor.getColumnIndex("date") );
+
+                Log.d("updateCP", type+" "+date);
+            }*/
 
         }
     }

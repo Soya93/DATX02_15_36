@@ -64,17 +64,21 @@ public class AddAssignmentActivity extends ActionBarActivity {
     private EditText taskDigitInput;
     private EditText taskDigitParts;
     private EditText taskTextInput;
+
     private AssignmentCheckBoxLayout assignmentsFlowLayout;
+
     private Spinner chapterSpinner;
     private Spinner courseSpinner;
     private Spinner weekSpinner;
     private Spinner oblTypesSpinner;
     private Spinner assignmentTypeSpinner;
+
     private TextView chapterLabel;
     private TextView weekLabel;
     private TextView visibleTasksLabel;
     private TextView taskTitleLabel;
     private TextView taskPartsLabel;
+
     private View lineSeparator;
     private TextView olbDate;
 
