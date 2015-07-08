@@ -64,7 +64,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private TextView labLabel;
     private TextView handinLabel;
 
-    //Last ids
+    //Last ids in lists
     private int lastMiniExamId = -1;
     private int lastLabId = -1;
     private int lastHandinId = -1;
@@ -449,7 +449,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 if (add > 0) {
 
                     int mins = coursesDBAdapter.getTimeOnCourse(courseCode);
-                    toast = Toast.makeText(getBaseContext(), "Ditt mål är nu att lägga " + mins + " minuter på " + courseCode + " i veckan.", Toast.LENGTH_LONG);
+                    timeOnCourseLabel.setText("Timmar per vecka: "+mins);
+                    toast = Toast.makeText(getBaseContext(), "Ditt mål är att lägga " + mins + " minuter på " + courseName + " i veckan.", Toast.LENGTH_LONG);
                 } else {
                     toast = Toast.makeText(getBaseContext(), "Det gick inte att lägga till.", Toast.LENGTH_SHORT);
                 }

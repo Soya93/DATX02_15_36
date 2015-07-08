@@ -122,8 +122,16 @@ public class CoursesDBAdapter extends DBAdapter {
             cv.put(TIMEONCOURSE__ccode, ccode);
             cv.put(TIMEONCOURSE_time, minutes);
 
-            return db.update(TABLE_TIMEONCOURSE, cv, null, null);
-            //return db.insert(dbHelper.TABLE_TIMEONCOURSE, null, cv);
+            long insert = db.insert(TABLE_TIMEONCOURSE, null, cv);
+            if(insert >= 0){
+                return insert;
+            }else{
+                ContentValues cvUpdate = new ContentValues();
+                cvUpdate.put(TIMEONCOURSE_time, minutes);
+                String selection = TIMEONCOURSE__ccode+" = '"+ccode+"'";
+
+                return db.update(TABLE_TIMEONCOURSE, cvUpdate, selection, null);
+            }
         } catch (Exception e) {
             return -1;
         }
