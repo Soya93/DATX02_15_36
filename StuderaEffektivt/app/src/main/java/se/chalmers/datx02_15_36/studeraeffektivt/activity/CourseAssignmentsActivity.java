@@ -155,48 +155,8 @@ public class CourseAssignmentsActivity extends ActionBarActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_course_tasks, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == android.R.id.home) {
-            this.finish();
-            return true;
-        } else if (id == R.id.action_download) {
-            getAssignmetsFromWeb();
-        } else if (id == R.id.action_add) {
-            goToAddTasks();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     public void onResume() {
         super.onResume();
-    }
-
-
-    public void goToAddTasks() {
-        Intent i = new Intent(this, AddAssignmentActivity.class);
-        i.putExtra("CourseCode", courseCode);
-        startActivity(i);
-    }
-
-    public void getAssignmetsFromWeb() {
-        Intent i = new Intent(this, GetAssignmentsFromWeb.class);
-        i.putExtra("CourseName", courseName);
-        i.putExtra("CourseCode", courseCode);
-        startActivity(i);
     }
 }
