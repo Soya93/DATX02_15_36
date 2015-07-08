@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/rel_layout_GCFW"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -8,21 +9,20 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:id="@+id/list_courses_from_web"
-        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <com.software.shell.fab.ActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:id="@+id/add_fab"
         android:scaleType="centerInside"
-        android:layout_marginRight="7dp"
-        android:layout_marginBottom="7dp"
-        android:adjustViewBounds="false" />
+        android:adjustViewBounds="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"/>
 
 
 </RelativeLayout>
