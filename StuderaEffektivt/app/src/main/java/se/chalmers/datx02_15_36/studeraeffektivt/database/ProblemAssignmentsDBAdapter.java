@@ -79,7 +79,6 @@ public class ProblemAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     }
 
     public Cursor getDoneAssignments(String ccode){
-
         String selection = PROBLEMS_ccode + " = '" + ccode + "' AND "
                 + PROBLEMS_status + " = '" + AssignmentStatus.DONE.toString()+"'";
         return db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);

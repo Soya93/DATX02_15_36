@@ -171,6 +171,17 @@ public class CoursesDBAdapter extends DBAdapter {
         return db.query(TABLE_OBLIG, null, selection, null, null, null, null);
     }
 
+    public int getObligatoriesCount(String ccode){
+        String selection = OBLIG_ccode + " = '" + ccode + "'";
+        return db.query(TABLE_OBLIG, null, selection, null, null, null, null).getCount();
+    }
+
+    public int getDoneObligatoriesCount(String ccode){
+        String selection = OBLIG_ccode + " = '" + ccode + "' AND "
+                + OBLIG_status + " = '" + AssignmentStatus.DONE.toString()+"'";
+        return db.query(TABLE_OBLIG, null, selection, null, null, null, null).getCount();
+    }
+
     public String getExamDate(String courseCode){
         Cursor obligatories = getObligatories();
         while (obligatories.moveToNext()){
