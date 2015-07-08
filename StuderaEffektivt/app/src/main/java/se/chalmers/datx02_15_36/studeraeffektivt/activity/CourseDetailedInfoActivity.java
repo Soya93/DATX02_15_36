@@ -136,7 +136,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         examLabel = new TextView(this);
         examLabel.setId(View.generateViewId());
         examLabel.setText("Tentamen: " + coursesDBAdapter.getExamDate(courseCode));
-        Log.d("CoursePage", "tentadatum: " + coursesDBAdapter.getExamDate(courseCode));
         examLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
 
         //Padding top
@@ -241,7 +240,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         //The miniexams
         Cursor miniexams = coursesDBAdapter.getObligatoryMiniexams(courseCode);
-        Log.d("CoursePage", "antal duggor: "+miniexams.getCount());
+        Log.d("CoursePage", "antal duggor: " + miniexams.getCount());
         TextView tv;
         RelativeLayout.LayoutParams params;
         while (miniexams.moveToNext()){
@@ -425,6 +424,15 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         Toast.makeText(getBaseContext(), "Kursen har uppdaterats", Toast.LENGTH_LONG);
         //TODO: Kolla ifall nätverk finns när användaren klickar på uppdatera
         //Om inte, ge ett passande toast för det.
+        /*
+        Följande utkommenteradekod körs ej:
+        Cursor obl = coursesDBAdapter.getObligatories(courseCode);
+        while (obl.moveToNext()){
+            String type = obl.getString(obl.getColumnIndex("type"));
+            String date = obl.getString(obl.getColumnIndex("date"));
+            Log.d("updateCP", type+" "+date);
+        }
+        initComponents();*/
     }
 
     private void chooseTimeOnCourseDialog() {
