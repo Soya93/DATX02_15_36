@@ -115,6 +115,18 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         }
     }
 
+    private void updateComponents(){
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_course_details);
+        layout.removeAllViews();
+
+        lastMiniExamId = -1;
+        lastLabId = -1;
+        lastHandinId = -1;
+
+        Log.d("updateCP", "har wipat allt");
+        initComponents();
+    }
+
     private void addTimeOnCourse(RelativeLayout layout) {
         RelativeLayout.LayoutParams paramsTOC = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -306,6 +318,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        int i = 0;
+
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
             this.finish();
@@ -423,13 +437,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         GetAssignmentsFromWeb getAssignmentsFromWeb = new GetAssignmentsFromWeb(this);
         getAssignmentsFromWeb.addAssignmentsFromWeb(courseCode);
 
-        Cursor obl = coursesDBAdapter.getObligatories(courseCode);
-        while (obl.moveToNext()){
-            String type = obl.getString(obl.getColumnIndex("type"));
-            String date = obl.getString(obl.getColumnIndex("date"));
-            Log.d("updateCP", type+" "+date);
-        }
-        initComponents();
+        Log.d("updateCP", "Innan update components");
+        updateComponents();
     }
 
     private void chooseTimeOnCourseDialog() {
