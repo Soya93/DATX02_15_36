@@ -1,4 +1,4 @@
-package se.chalmers.datx02_15_36.studeraeffektivt.util;
+package se.chalmers.datx02_15_36.studeraeffektivt.util.web;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

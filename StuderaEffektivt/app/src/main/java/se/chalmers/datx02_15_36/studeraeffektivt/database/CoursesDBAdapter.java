@@ -30,7 +30,6 @@ public class CoursesDBAdapter extends DBAdapter {
     public static final String OBLIG_date = "date";
     public static final String OBLIG_status = "status";
 
-
     //Variables for the TimeOnCourse table.
     public static final String TABLE_TIMEONCOURSE = "TIMEONCOURSE";
     public static final String TIMEONCOURSE__ccode = COURSES__ccode;
@@ -312,12 +311,4 @@ public class CoursesDBAdapter extends DBAdapter {
         cur.moveToNext();
         return cur.getString(cur.getColumnIndex(OBLIG_date));
     }
-
-    public  String getObligatoryStatus(int id){
-        String selection = OBLIG__id + " = '" + id + "'";
-        Cursor cur =  db.query(TABLE_OBLIG, null, selection, null, null, null, null);
-        cur.moveToNext();
-        return cur.getString(cur.getColumnIndex(OBLIG_status));
-    }
-
 }

@@ -104,6 +104,27 @@ public class DBAdapter {
             + CoursesDBAdapter.TIMEONCOURSE_time + " INT NOT NULL, "
             + "FOREIGN KEY(" + CoursesDBAdapter.TIMEONCOURSE__ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
+    private static final String CREATE_REPETITION_TABLE = "CREATE TABLE " + RepetitionAssignmentsDBAdapter.TABLE_REPEAT + " ("
+            + RepetitionAssignmentsDBAdapter.REPEAT__id + " INT PRIMARY KEY NOT NULL,"
+            + RepetitionAssignmentsDBAdapter.REPEAT_ccode+ " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.REPEAT_week + " INT NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.REPEAT_taskString+ " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.REPEAT_sortedString+ " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.REPEAT_type + " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.REPEAT_status + " VARCHAR(50) NOT NULL, "
+            + "FOREIGN KEY(" + RepetitionAssignmentsDBAdapter.REPEAT_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+
+    private static final String CREATE_ALL_REPETITION_TABLE = "CREATE TABLE " + RepetitionAssignmentsDBAdapter.TABLE_ALL_REPEAT + " ("
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT__id + " INT PRIMARY KEY NOT NULL,"
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT_ccode+ " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT_week + " INT NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT_taskString+ " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT_sortedString+ " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT_type + " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT_status + " VARCHAR(50) NOT NULL, "
+            + "FOREIGN KEY(" + RepetitionAssignmentsDBAdapter.REPEAT_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+
+
     public DBAdapter(Context ctx)
     {
         this.context = ctx;
@@ -136,6 +157,8 @@ public class DBAdapter {
             db.execSQL(CREATE_PROBLEMS_TABLE);
             db.execSQL(CREATE_READ_TABLE);
 
+            db.execSQL(CREATE_REPETITION_TABLE);
+            db.execSQL(CREATE_ALL_REPETITION_TABLE);
         }
 
         @Override

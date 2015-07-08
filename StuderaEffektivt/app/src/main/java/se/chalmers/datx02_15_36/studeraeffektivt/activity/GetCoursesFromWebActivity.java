@@ -17,7 +17,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -27,7 +26,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -40,8 +38,6 @@ import android.widget.Toast;
 
 import com.software.shell.fab.ActionButton;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,8 +51,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.web.GetAssignmentsFromWeb;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
-import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
 
 /**
  * Created by Soyapanda on 03/07/15.
@@ -141,6 +137,8 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
                 if(bool > 0){
                     Toast.makeText(getApplicationContext(), ""+courseCode+" "+courseName+" tillagd.", Toast.LENGTH_SHORT).show();
                     new GetAllCourses().execute();
+                    GetAssignmentsFromWeb getAssignmentsFromWeb = new GetAssignmentsFromWeb(getApplicationContext());
+                    getAssignmentsFromWeb.addAssignmentsFromWeb(courseCode);
                 }else{
                     Toast.makeText(getApplicationContext(), "Ett fel uppstod.", Toast.LENGTH_SHORT).show();
                 }

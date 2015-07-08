@@ -23,7 +23,8 @@ public enum AssignmentType {
     PROBLEM ("Övningsuppgifter"),
     READ ("Läsanvisningar"),
     OBLIGATORY ("Obligatoriska moment"),
-    OTHER ("Fria uppgifter");
+    OTHER ("Fria uppgifter"),
+    REPEAT ("Repetitionsuppgifter");
 
     private final String name;
 
