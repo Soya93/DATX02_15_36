@@ -37,6 +37,7 @@ import android.widget.Toast;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.GetAssignmentsFromWeb;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CourseView;
 
 /**
@@ -421,18 +422,14 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     public void getAssignmentsFromWeb() {
         GetAssignmentsFromWeb getAssignmentsFromWeb = new GetAssignmentsFromWeb(this);
         getAssignmentsFromWeb.addAssignmentsFromWeb(courseCode);
-        Toast.makeText(getBaseContext(), "Kursen har uppdaterats", Toast.LENGTH_LONG);
-        //TODO: Kolla ifall nätverk finns när användaren klickar på uppdatera
-        //Om inte, ge ett passande toast för det.
-        /*
-        Följande utkommenteradekod körs ej:
+
         Cursor obl = coursesDBAdapter.getObligatories(courseCode);
         while (obl.moveToNext()){
             String type = obl.getString(obl.getColumnIndex("type"));
             String date = obl.getString(obl.getColumnIndex("date"));
             Log.d("updateCP", type+" "+date);
         }
-        initComponents();*/
+        initComponents();
     }
 
     private void chooseTimeOnCourseDialog() {
