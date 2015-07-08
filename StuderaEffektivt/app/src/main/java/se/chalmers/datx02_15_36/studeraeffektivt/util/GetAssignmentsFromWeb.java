@@ -12,9 +12,11 @@ limitations under the License.
 
 **/
 
-package se.chalmers.datx02_15_36.studeraeffektivt.activity;
+package se.chalmers.datx02_15_36.studeraeffektivt.util;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -33,9 +35,6 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAda
 import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentID;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
 
 /**
@@ -58,6 +57,12 @@ public class GetAssignmentsFromWeb {
     private ProblemAssignmentsDBAdapter problemDB;
     private CoursesDBAdapter coursesDB;
 
+    //Results
+    long addLabResult = 1L;
+    long addHandInResult = 1L;
+    long addReadResult = 1L;
+    long addProblemResult = 1L;
+    long addObligatoryResult = 1L;
 
     private Context context;
 
@@ -72,6 +77,12 @@ public class GetAssignmentsFromWeb {
         new GetProblemAssignments().execute(courseCode);
         new GetReadAssignments().execute(courseCode);
         new GetObligatoryAssignments().execute(courseCode);
+
+        if (allAssignmentsAdded() && new ConnectionDetector(context).isConnectingToInternet()){
+            Toast.makeText(context, "Kursen har uppdaterats med nya uppgifter", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Det gick inte att hämta uppgifter till kursen. Kontrollera att du har internet påslagen.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initDBS(){
@@ -117,15 +128,10 @@ public class GetAssignmentsFromWeb {
                         String assNr = c.getString("assNr");
                         int id = AssignmentID.getID();
 
-                        long result = addToDatabase(courseCode, AssignmentType.HANDIN, id, nr, Integer.parseInt(week), assNr);
-                        if(result < 0){
+                        addHandInResult = addToDatabase(courseCode, AssignmentType.HANDIN, id, nr, Integer.parseInt(week), assNr);
+                        if(addHandInResult < 1L){
                             Toast.makeText(context, "Det gick inte att lägga till inlämningsuppgifter i kursen " + courseCode, Toast.LENGTH_SHORT).show();
                         }
-
-                        /*Log.i("GetAFWA", "HandInAsses ");
-                        Log.i("GetAFWA", "nr " + nr);
-                        Log.i("GetAFWA", "week " + week);
-                        Log.i("GetAFWA", "assNr " + assNr);*/
                     }
 
                 } catch (JSONException e) {
@@ -178,16 +184,11 @@ public class GetAssignmentsFromWeb {
                         String assNr = c.getString("assNr");
                         int id = AssignmentID.getID();
 
-                        long result = addToDatabase(courseCode, AssignmentType.LAB, id, nr, Integer.parseInt(week), assNr);
+                        addLabResult = addToDatabase(courseCode, AssignmentType.LAB, id, nr, Integer.parseInt(week), assNr);
 
-                        if(result < 0){
-                            Toast.makeText(context, "Det gick inte att lägga till labbuppgifterna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
+                        if(addLabResult < 1L){
+                            Toast.makeText(context, "Det gick att lägga till labbuppgifterna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
                         }
-
-                        /*Log.i("GetAFWA", "Labasses ");
-                        Log.i("GetAFWA", "nr " + nr);
-                        Log.i("GetAFWA", "week " + week);
-                        Log.i("GetAFWA", "assNr " + assNr);*/
                     }
 
                 } catch (JSONException e) {
@@ -240,16 +241,11 @@ public class GetAssignmentsFromWeb {
                         String assNr = c.getString("assNr");
                         int id = AssignmentID.getID();
 
-                        long result = addToDatabase(courseCode, AssignmentType.PROBLEM, id, chapter, Integer.parseInt(week), assNr);
+                       addProblemResult = addToDatabase(courseCode, AssignmentType.PROBLEM, id, chapter, Integer.parseInt(week), assNr);
 
-                        if(result < 0){
-                            Toast.makeText(context, "Det gick inte att lägga till övningsuppgiterna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
+                        if(addProblemResult < 1L){
+                            Toast.makeText(context, "Det gick inte att lägga till problemlösningsuppgifterna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
                         }
-
-                        /*Log.i("GetAFWA", "Problems ");
-                        Log.i("GetAFWA", "chapter " + chapter);
-                        Log.i("GetAFWA", "week " + week);
-                        Log.i("GetAFWA", "assNr " + assNr);*/
                     }
 
                 } catch (JSONException e) {
@@ -303,18 +299,11 @@ public class GetAssignmentsFromWeb {
                         String endPage = c.getString("endPage");
                         int id = AssignmentID.getID();
 
-                        long result =  addToDatabase(courseCode, id, chapter, Integer.parseInt(week), Integer.parseInt(startPage), Integer.parseInt(endPage));
+                        addReadResult =  addToDatabase(courseCode, id, chapter, Integer.parseInt(week), Integer.parseInt(startPage), Integer.parseInt(endPage));
 
-                        if(result < 0){
+                        if(addReadResult < 1L){
                             Toast.makeText(context, "Det gick inte att lägga till läsanvisningarna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
                         }
-
-                       /* Log.i("GetAFWA", "Readasses ");
-                        Log.i("GetAFWA", "chapter " + chapter);
-                        Log.i("GetAFWA", "week " + week);
-                        Log.i("GetAFWA", "startPage " + startPage);
-                        Log.i("GetAFWA", "endPage " + endPage);*/
-
                     }
 
                 } catch (JSONException e) {
@@ -366,15 +355,11 @@ public class GetAssignmentsFromWeb {
                         String date = c.getString("date");
                         int id = AssignmentID.getID();
 
-                        long result = addToDatabase(courseCode, id, type, date, AssignmentStatus.UNDONE);
+                        addObligatoryResult = addToDatabase(courseCode, id, type, date, AssignmentStatus.UNDONE);
 
-                        if(result < 0){
-                            Toast.makeText(context, "Det gick inte att lägga till obligatoriska momenten i kursen " + courseCode, Toast.LENGTH_SHORT).show();
+                        if(addObligatoryResult < 1L){
+                            Toast.makeText(context, "Det gick inte att lägga till de obligatoriska momenten i kursen " + courseCode, Toast.LENGTH_SHORT).show();
                         }
-
-                        /*Log.i("GetAFWA", "Oblasses ");
-                        Log.i("GetAFWA", "type " + type);
-                        Log.i("GetAFWA", "date " + date);*/
                     }
 
                 } catch (JSONException e) {
@@ -395,7 +380,7 @@ public class GetAssignmentsFromWeb {
 
 
     public long addToDatabase(String courseCode, AssignmentType type, int id, String chapterOrNumber, int week, String assignment) {
-        long result = -1L;
+        long result = 0L;
         switch (type){
             case PROBLEM:
                 result = problemDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
@@ -403,13 +388,6 @@ public class GetAssignmentsFromWeb {
 
             case LAB:
                 result = labDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
-                /*Cursor cur = labDB.getObligatories(courseCode);
-                while(cur.moveToNext()){
-                    Log.i("GetAsses", "Week: " + cur.getString(cur.getColumnIndex(LabAssignmentsDBAdapter.LABS_week)));
-                    Log.i("GetAsses", "Nr: " + cur.getString(cur.getColumnIndex(LabAssignmentsDBAdapter.LABS_nr)));
-                    Log.i("GetAsses", "AssNr: " + cur.getString(cur.getColumnIndex(LabAssignmentsDBAdapter.LABS_assNr)));
-                }
-                Log.i("GetAsses", "Cur null :(: ");*/
                 break;
 
             case HANDIN:
@@ -422,13 +400,16 @@ public class GetAssignmentsFromWeb {
         return result;
     }
 
-
-        public long addToDatabase(String courseCode, int id, String chapter, int week, int startPage, int endPage){
+    public long addToDatabase(String courseCode, int id, String chapter, int week, int startPage, int endPage){
         return readDB.insertAssignment(courseCode, id, chapter, week, startPage, endPage, AssignmentStatus.UNDONE);
     }
 
     public long addToDatabase(String courseCode, int id, String type, String date, AssignmentStatus status) {
         return coursesDB.insertObligatory(courseCode, id, type, date, status);
+    }
+
+    private boolean allAssignmentsAdded(){
+        return (addHandInResult + addProblemResult + addObligatoryResult + addLabResult + addReadResult) > 4L;
     }
 }
 
