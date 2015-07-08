@@ -163,9 +163,6 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
     }
 
     private void initComponents(){
-        listViewCourses = (ListView) findViewById(R.id.list_courses_from_web);
-        simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
-        listViewCourses.setAdapter(simpleAdpt);
 
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
@@ -183,9 +180,15 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
         actionButton.setButtonColorPressed(Color.parseColor("#ffd6d7d7"));
         actionButton.setShadowXOffset(0);
         actionButton.setShadowYOffset(0);
-        Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
+
+        Drawable calendarIcon = getResources().getDrawable(R.drawable.ic_plus).mutate();
         calendarIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
         actionButton.setImageDrawable(calendarIcon);
+
+        listViewCourses = (ListView) findViewById(R.id.list_courses_from_web);
+        simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
+        listViewCourses.setAdapter(simpleAdpt);
+
     }
 
     public void onStart() {
