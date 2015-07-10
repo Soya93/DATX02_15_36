@@ -24,9 +24,10 @@ public class LabAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     public static final String LABS_nr = "nr";
     public static final String LABS_week = "week";
     public static final String LABS_assNr = "assNr";
+    public static final String LABS_date = "date";
     public static final String LABS_status = "status";
 
-    public long insertAssignment(String courseCode,int id, String nr, int week, String assNr, AssignmentStatus status) {
+    public long insertAssignment(String courseCode,int id, String nr, int week, String assNr, String date, AssignmentStatus status) {
         ContentValues cv = new ContentValues();
 
         try {
@@ -34,6 +35,7 @@ public class LabAssignmentsDBAdapter  extends AssignmentsDBAdapter {
             cv.put(LABS_nr, nr);
             cv.put(LABS_week, week);
             cv.put(LABS_assNr, assNr);
+            cv.put(LABS_date, date);
             cv.put(LABS_status, status.toString());
             cv.put(LABS__id, id);
 

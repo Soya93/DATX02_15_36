@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/layout_add_assignment">
 
     <LinearLayout
         android:id="@+id/courseLayout"
@@ -169,6 +170,43 @@
                         android:layout_weight="0.5" />
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/deadlineLabel"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.5"
+                        android:gravity="right"
+                        android:text="@string/deadline_title"
+                        android:textAlignment="gravity"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/deadline"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:textSize="17sp"
+                        android:gravity="left"
+                        android:layout_gravity="center"
+                        android:text="datum-01-01"
+                        android:layout_marginLeft="5dp"
+                        android:textAlignment="gravity"
+                        />
+
+                </LinearLayout>
+
+
+
             </LinearLayout>
 
 

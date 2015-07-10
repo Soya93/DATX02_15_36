@@ -63,6 +63,7 @@
     <string name="type_place_title">Typ och tid för uppgiften</string>
     <string name="chapter_title">KAPITEL</string>
     <string name="week_title">VECKA</string>
+    <string name="deadline_title">DEADLINE</string>
     <string name="task_info_title">uppgiftsinformation</string>
     <string name="saved_tasks_title">Sparade</string>
 

@@ -130,9 +130,10 @@ public class GetAssignmentsFromWeb {
                         String nr = c.getString("nr");
                         String week = c.getString("week");
                         String assNr = c.getString("assNr");
+                        String date = c.getString("date");
                         int id = AssignmentID.getID();
 
-                        addHandInResult = addToDatabase(courseCode, AssignmentType.HANDIN, id, nr, Integer.parseInt(week), assNr);
+                        addHandInResult = addToDatabase(courseCode, AssignmentType.HANDIN, id, nr, Integer.parseInt(week), date, assNr);
                         if(addHandInResult < 1L){
                             Toast.makeText(context, "Det gick inte att lägga till inlämningsuppgifter i kursen " + courseCode, Toast.LENGTH_SHORT).show();
                         }
@@ -195,9 +196,10 @@ public class GetAssignmentsFromWeb {
                         String nr = c.getString("nr");
                         String week = c.getString("week");
                         String assNr = c.getString("assNr");
+                        String date = c.getString("date");
                         int id = AssignmentID.getID();
 
-                        addLabResult = addToDatabase(courseCode, AssignmentType.LAB, id, nr, Integer.parseInt(week), assNr);
+                        addLabResult = addToDatabase(courseCode, AssignmentType.LAB, id, nr, Integer.parseInt(week), date, assNr);
 
                         if(addLabResult < 1L){
                             Toast.makeText(context, "Det gick att lägga till labbuppgifterna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
@@ -252,9 +254,10 @@ public class GetAssignmentsFromWeb {
                         String chapter = c.getString("chapter");
                         String week = c.getString("week");
                         String assNr = c.getString("assNr");
+                        String date = c.getString("date");
                         int id = AssignmentID.getID();
 
-                       addProblemResult = addToDatabase(courseCode, AssignmentType.PROBLEM, id, chapter, Integer.parseInt(week), assNr);
+                       addProblemResult = addToDatabase(courseCode, AssignmentType.PROBLEM, id, chapter, Integer.parseInt(week), date, assNr);
 
                         if(addProblemResult < 1L){
                             Toast.makeText(context, "Det gick inte att lägga till problemlösningsuppgifterna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
@@ -392,7 +395,7 @@ public class GetAssignmentsFromWeb {
     }
 
 
-    public long addToDatabase(String courseCode, AssignmentType type, int id, String chapterOrNumber, int week, String assignment) {
+    public long addToDatabase(String courseCode, AssignmentType type, int id, String chapterOrNumber, int week, String date, String assignment) {
         long result = 0L;
         switch (type){
             case PROBLEM:
@@ -400,11 +403,11 @@ public class GetAssignmentsFromWeb {
                 break;
 
             case LAB:
-                result = labDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+                result = labDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, date, AssignmentStatus.UNDONE);
                 break;
 
             case HANDIN:
-                result = handInDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, AssignmentStatus.UNDONE);
+                result = handInDB.insertAssignment(courseCode, id, chapterOrNumber, week, assignment, date, AssignmentStatus.UNDONE);
                 break;
 
             default:

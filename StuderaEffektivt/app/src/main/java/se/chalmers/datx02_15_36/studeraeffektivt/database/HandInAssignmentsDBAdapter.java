@@ -22,9 +22,10 @@ public class HandInAssignmentsDBAdapter  extends AssignmentsDBAdapter {
     public static final String HANDIN_nr = "nr";
     public static final String HANDIN_week = "week";
     public static final String HANDIN_assNr = "assNr";
+    public static final String HANDIN_date = "date";
     public static final String HANDIN_status = "status";
 
-    public long insertAssignment(String courseCode, int id, String nr, int week, String assNr, AssignmentStatus status) {
+    public long insertAssignment(String courseCode, int id, String nr, int week, String assNr, String date, AssignmentStatus status) {
         ContentValues cv = new ContentValues();
 
         try {
@@ -32,6 +33,7 @@ public class HandInAssignmentsDBAdapter  extends AssignmentsDBAdapter {
             cv.put(HANDIN_nr, nr);
             cv.put(HANDIN_week, week);
             cv.put(HANDIN_assNr, assNr);
+            cv.put(HANDIN_date, date);
             cv.put(HANDIN_status, status.toString());
             cv.put(HANDIN__id, id);
 
