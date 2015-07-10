@@ -57,6 +57,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentTypeUtil;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.RepetitionUtil;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.TimerService;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
@@ -500,7 +501,18 @@ public class TimerFrag extends Fragment {
                 break;
 
             case REPEAT:
-                assignmentsFlowLayout.addRepeatsFromDatabase(ccode, repeatDB, week);
+                RepetitionUtil repetitionUtil = new RepetitionUtil(getActivity().getApplicationContext());
+                if(repetitionUtil.canRepeat(ccode)){
+                    Log.i("TimerFrag", "canRepeat");
+                    repetitionUtil.addRandomAssignments(ccode);
+                    Log.i("TimerFrag", "passed addRandomAssignments");
+                    assignmentsFlowLayout.addRepeatsFromDatabase(ccode, repeatDB, week);
+                    Log.i("TimerFrag", "passed layout addRepeatsFromDB");
+                } else {
+                    TextView textView1 = new TextView(getActivity());
+                    textView1.setText("Du har för närvaranade inga " + assignmentType.toString().toLowerCase() + " för den valda veckan gjorda för två veckor sedan.");
+                    assignmentsFlowLayout.addView(textView1);
+                }
                 break;
 
             default:
@@ -510,10 +522,6 @@ public class TimerFrag extends Fragment {
         if(assignmentsFlowLayout.isEmpty() && assignmentType!=AssignmentType.REPEAT){
             TextView textView1 = new TextView(getActivity());
             textView1.setText("Du har för närvaranade inga " + assignmentType.toString().toLowerCase() + " för den valda veckan");
-            assignmentsFlowLayout.addView(textView1);
-        } else if (assignmentsFlowLayout.isEmpty()){
-            TextView textView1 = new TextView(getActivity());
-            textView1.setText("Du har för närvaranade inga " + assignmentType.toString().toLowerCase() + " för den valda veckan gjorda för två veckor sedan.");
             assignmentsFlowLayout.addView(textView1);
         }
     }

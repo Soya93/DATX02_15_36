@@ -2,6 +2,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.util;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +28,6 @@ public class RepetitionUtil {
     private OtherAssignmentsDBAdapter otherDB;
     private ProblemAssignmentsDBAdapter problemDB;
     private ReadAssignmentsDBAdapter readDB;
-    private CoursesDBAdapter coursesDB;
     private RepetitionAssignmentsDBAdapter repeatDB;
 
 
@@ -37,22 +37,27 @@ public class RepetitionUtil {
         otherDB = new OtherAssignmentsDBAdapter(context);
         problemDB = new ProblemAssignmentsDBAdapter(context);
         readDB = new ReadAssignmentsDBAdapter(context);
-        coursesDB = new CoursesDBAdapter(context);
         repeatDB = new RepetitionAssignmentsDBAdapter(context);
     }
 
     public boolean canRepeat(String courseCode) {
+
+        emptyRepetitionDB(courseCode);
         int week = setWeek();
+        Log.i("RepetitionUtil", "week: " + week);
         boolean canRepeatHandIn = canRepeatHandIn(courseCode, week);
         boolean canRepeatLab = canRepeatLab(courseCode, week);
         boolean canRepeatOther = canRepeatOther(courseCode, week);
         boolean canRepeatProblem = canRepeatProblem(courseCode, week);
         boolean canRepeatRead = canRepeatRead(courseCode, week);
 
-        return canRepeatHandIn && canRepeatLab && canRepeatOther && canRepeatProblem
-                && canRepeatRead;
+        return canRepeatHandIn || canRepeatLab || canRepeatOther || canRepeatProblem
+                || canRepeatRead;
     }
 
+    private void emptyRepetitionDB(String courseCode){
+        repeatDB.deleteAssignments(courseCode);
+    }
 
     private boolean canRepeatHandIn(String courseCode, int week) {
         Cursor cur = handInDB.getDoneAssignments(courseCode);
@@ -61,9 +66,12 @@ public class RepetitionUtil {
             if (cur.getInt(cur.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN_week)) == week) {
                 numberToRepeat++;
                 int id = cur.getInt(cur.getColumnIndex(HandInAssignmentsDBAdapter.HANDIN__id));
-                repeatDB.insertAllAssignment(courseCode,id, week, handInDB.getAssNr(id), handInDB.getNr(id),AssignmentType.HANDIN, AssignmentStatus.UNDONE);
+                if (!repeatDB.allContainsAssignment(id)) {
+                    repeatDB.insertAllAssignment(courseCode, id, week, handInDB.getAssNr(id), handInDB.getNr(id), AssignmentType.HANDIN, AssignmentStatus.UNDONE);
+                }
             }
         }
+        Log.i("RepetitionUtil", "HandIN: numberToRepeat" + numberToRepeat);
         return numberToRepeat > 0;
     }
 
@@ -74,9 +82,11 @@ public class RepetitionUtil {
             if (cur.getInt(cur.getColumnIndex(LabAssignmentsDBAdapter.LABS_week)) == week) {
                 numberToRepeat++;
                 int id = cur.getInt(cur.getColumnIndex(LabAssignmentsDBAdapter.LABS__id));
-                repeatDB.insertAllAssignment(courseCode,id, week, labDB.getAssNr(id), labDB.getNr(id),AssignmentType.LAB, AssignmentStatus.UNDONE);
-            }
+                if(!repeatDB.allContainsAssignment(id)){
+                    repeatDB.insertAllAssignment(courseCode,id, week, labDB.getAssNr(id), labDB.getNr(id),AssignmentType.LAB, AssignmentStatus.UNDONE);
+            }   }
         }
+        Log.i("RepetitionUtil", "Lab: numberToRepeat" + numberToRepeat);
         return numberToRepeat > 0;
     }
 
@@ -87,9 +97,12 @@ public class RepetitionUtil {
             if (cur.getInt(cur.getColumnIndex(OtherAssignmentsDBAdapter.OTHER_week)) == week) {
                 numberToRepeat++;
                 int id = cur.getInt(cur.getColumnIndex(OtherAssignmentsDBAdapter.OTHER__id));
-                repeatDB.insertAllAssignment(courseCode,id, week, otherDB.getAssNr(id), Integer.toString(otherDB.getWeek(id)),AssignmentType.OTHER, AssignmentStatus.UNDONE);
+                if(!repeatDB.allContainsAssignment(id)) {
+                    repeatDB.insertAllAssignment(courseCode, id, week, otherDB.getAssNr(id), Integer.toString(otherDB.getWeek(id)), AssignmentType.OTHER, AssignmentStatus.UNDONE);
+                }
             }
         }
+        Log.i("RepetitionUtil", "Other: numberToRepeat" + numberToRepeat);
         return numberToRepeat > 0;
     }
 
@@ -100,9 +113,12 @@ public class RepetitionUtil {
             if (cur.getInt(cur.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS_week)) == week) {
                 numberToRepeat++;
                 int id = cur.getInt(cur.getColumnIndex(ProblemAssignmentsDBAdapter.PROBLEMS__id));
-                repeatDB.insertAllAssignment(courseCode,id, week, problemDB.getAssNr(id), problemDB.getChapter(id),AssignmentType.PROBLEM, AssignmentStatus.UNDONE);
+                if(!repeatDB.allContainsAssignment(id)) {
+                    repeatDB.insertAllAssignment(courseCode, id, week, problemDB.getAssNr(id), problemDB.getChapter(id), AssignmentType.PROBLEM, AssignmentStatus.UNDONE);
+                }
             }
         }
+        Log.i("RepetitionUtil", "Problem: numberToRepeat" + numberToRepeat);
         return numberToRepeat > 0;
     }
 
@@ -113,14 +129,17 @@ public class RepetitionUtil {
             if (cur.getInt(cur.getColumnIndex(ReadAssignmentsDBAdapter.READ_week)) == week) {
                 numberToRepeat++;
                 int id = cur.getInt(cur.getColumnIndex(ReadAssignmentsDBAdapter.READ__id));
-                repeatDB.insertAllAssignment(courseCode,id, week, readDB.getStartPage(id) + "-" + readDB.getEndPage(id), readDB.getChapter(id),AssignmentType.READ, AssignmentStatus.UNDONE);
+                if(!repeatDB.allContainsAssignment(id)) {
+                    repeatDB.insertAllAssignment(courseCode, id, week, readDB.getStartPage(id) + "-" + readDB.getEndPage(id), readDB.getChapter(id), AssignmentType.READ, AssignmentStatus.UNDONE);
+                }
             }
         }
+        Log.i("RepetitionUtil", "Read: numberToRepeat" + numberToRepeat);
         return numberToRepeat > 0;
     }
 
     private int setWeek() {
-        int week = CalendarUtils.getCurrWeekNumber() - 1;
+        int week = CalendarUtils.getCurrWeekNumber() - 2;
 
         if (CalendarUtils.getCurrWeekNumber() == 1) {
             week = 51;
@@ -134,8 +153,9 @@ public class RepetitionUtil {
     public void addRandomAssignments(String courseCode) {
         Cursor cur = repeatDB.getRandomUnDoneAllAssignments(courseCode);
         int nrOfRepeatable = cur.getCount();
-        int nrToAdd = 0;
-        while(cur.moveToNext() && nrToAdd < nrOfRepeatable/4){
+        Log.i("RepetitionUtil", "addRaandomAss: nrOfRepeatable" + nrOfRepeatable);
+
+        while (cur.moveToNext()) {
             int id = cur.getInt(cur.getColumnIndex(RepetitionAssignmentsDBAdapter.ALL_REPEAT__id));
             int week = cur.getInt(cur.getColumnIndex(RepetitionAssignmentsDBAdapter.ALL_REPEAT_week));
             String taskString = cur.getString(cur.getColumnIndex(RepetitionAssignmentsDBAdapter.ALL_REPEAT_taskString));
@@ -143,9 +163,20 @@ public class RepetitionUtil {
             String type = cur.getString(cur.getColumnIndex(RepetitionAssignmentsDBAdapter.ALL_REPEAT_type));
             String status = cur.getString(cur.getColumnIndex(RepetitionAssignmentsDBAdapter.ALL_REPEAT_status));
             AssignmentType assignmentType = AssignmentTypeUtil.stringToAssignmentType(type);
-            AssignmentStatus assignmentStatus = status.equals("DONE")? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
-            repeatDB.insertAssignment(courseCode,id,week,taskString,sortedString,assignmentType,assignmentStatus);
+            AssignmentStatus assignmentStatus = status.equals("DONE") ? AssignmentStatus.DONE : AssignmentStatus.UNDONE;
+            if (!repeatDB.containsAssignment(id)) {
+                repeatDB.insertAssignment(courseCode, id, week, taskString, sortedString, assignmentType, assignmentStatus);
+            }
+            Log.i("RepetitionUtil", "inserted id: " + repeatDB.getWeek(id));
+            Log.i("RepetitionUtil", "inserted type: " + repeatDB.getType(id));
+            Log.i("RepetitionUtil", "inserted course: " + repeatDB.getCourse(id));
+            Log.i("RepetitionUtil", "inserted taskString: " + repeatDB.getTaskString(id));
+            Log.i("RepetitionUtil", "inserted sortedString: " + repeatDB.getSortedString(id));
+            Log.i("RepetitionUtil", "inserted getStatus: " + repeatDB.getStatus(id));
         }
+
+        Log.i("RepetitionUtil", "number to repeat in checkboxdb " + repeatDB.getAssignments(courseCode).getCount());
+
     }
 }
 

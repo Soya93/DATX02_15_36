@@ -58,6 +58,12 @@ public class RepetitionAssignmentsDBAdapter extends AssignmentsDBAdapter  {
         }
     }
 
+    public boolean containsAssignment(int id){
+        String selection = REPEAT__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_REPEAT, null, selection, null, null, null, null);
+        return cur.moveToNext();
+    }
+
 
     public long deleteAssignment(int id){
         try{
@@ -174,16 +180,25 @@ public class RepetitionAssignmentsDBAdapter extends AssignmentsDBAdapter  {
             cv.put(ALL_REPEAT_type, type.toString());
             cv.put(ALL_REPEAT_status, status.toString());
 
-            return db.insert(TABLE_REPEAT, null, cv);
+            return db.insert(TABLE_ALL_REPEAT, null, cv);
         } catch (Exception e) {
             return -1;
         }
     }
 
+
+    public boolean allContainsAssignment(int id){
+        String selection = ALL_REPEAT__id + " = '" + id + "'";
+        Cursor cur =  db.query(TABLE_ALL_REPEAT, null, selection, null, null, null, null);
+        boolean contains = cur.moveToNext();
+        cur.close();
+        return contains;
+    }
+
     public Cursor getRandomUnDoneAllAssignments(String ccode){
-        String selection = REPEAT_ccode + " = '" + ccode + "' AND "
-                + REPEAT_status + " = '" + AssignmentStatus.UNDONE.toString()+"'";
-        String orderBy = "RAND()";
-        return db.query(TABLE_REPEAT, null, selection, null, null, null, orderBy);
+        String selection = ALL_REPEAT_ccode + " = '" + ccode + "' AND "
+                + ALL_REPEAT_status + " = '" + AssignmentStatus.UNDONE.toString()+"'";
+        String orderBy = "RANDOM()";
+        return db.query(TABLE_ALL_REPEAT, null, selection, null, null, null, orderBy);
     }
 }

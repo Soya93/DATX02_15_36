@@ -22,6 +22,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.view;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -438,17 +439,16 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
         repeatHashMap = new HashMap<>();
         AssignmentType type = AssignmentType.OTHER;
 
-        Cursor cursor = repetitionAssignmentsDBAdapter.getAssignments();
+        Cursor cursor = repetitionAssignmentsDBAdapter.getAssignments(courseCode);
+
+
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                if(cursor.getString(cursor.getColumnIndex(RepetitionAssignmentsDBAdapter.REPEAT_ccode)).equals(courseCode)) {
-
                     AssignmentStatus assignmentStatus = cursor.getString(cursor.getColumnIndex(RepetitionAssignmentsDBAdapter.REPEAT_status)).equals(AssignmentStatus.DONE.toString())? AssignmentStatus.DONE: AssignmentStatus.UNDONE;
                     int id = cursor.getInt(cursor.getColumnIndex(RepetitionAssignmentsDBAdapter.REPEAT__id));
                     String typeString = cursor.getString(cursor.getColumnIndex(RepetitionAssignmentsDBAdapter.REPEAT_type));
                     type = AssignmentTypeUtil.stringToAssignmentType(typeString);
                     addCheckBoxToMap(new RepeatCheckBox(this.getContext(),id,assignmentStatus));
-                }
             }
             if(repeatHashMap!=null)
                 addMap(repeatHashMap, type);
@@ -461,9 +461,15 @@ public class AssignmentCheckBoxLayout extends ViewGroup {
         AssignmentType type = AssignmentType.OTHER;
 
         Cursor cursor = repetitionAssignmentsDBAdapter.getAssignments();
+
+        Log.i("AssignmentCheckBoxLayout", "cursor get count" + cursor.getCount());
+
+
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                 if(cursor.getString(cursor.getColumnIndex(RepetitionAssignmentsDBAdapter.REPEAT_ccode)).equals(courseCode)
+                Log.i("AssignmentCheckBoxLayout", "cursor is nonnull");
+
+                if(cursor.getString(cursor.getColumnIndex(RepetitionAssignmentsDBAdapter.REPEAT_ccode)).equals(courseCode)
                         && cursor.getInt(cursor.getColumnIndex(RepetitionAssignmentsDBAdapter.REPEAT_week)) == week &&
                         cursor.getString(cursor.getColumnIndex(RepetitionAssignmentsDBAdapter.REPEAT_status)).equals(AssignmentStatus.UNDONE.toString())) {
 
