@@ -32,7 +32,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -128,7 +127,38 @@ public class AddAssignmentActivity extends ActionBarActivity {
         courseDB = new CoursesDBAdapter(this);
 
         coursePrefHelper = CoursePreferenceHelper.getInstance(getApplicationContext());
+
+        if(!hasCourses()){
+            showNoCoursesDialog();
+        }
+
         initComponents();
+    }
+
+    private void showNoCoursesDialog() {
+        Log.d("nocourses", "In !hasCourses: " + hasCourses());
+        final AlertDialog d = new AlertDialog.Builder(this)
+                .setMessage("Du måste lägga till en kurs innan du kan lägga till uppgifter!")
+                .setPositiveButton("OK", null) //Set to null. We override the onclick
+                .create();
+
+        d.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                Button positive = d.getButton(AlertDialog.BUTTON_POSITIVE);
+                positive.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        d.dismiss();
+                        finish();
+                    }
+                });
+            }
+        });
+
+        d.show();
     }
 
     @Override
@@ -241,11 +271,15 @@ public class AddAssignmentActivity extends ActionBarActivity {
         }
         ArrayAdapter<Integer> weekAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, weekItems);
         weekSpinner.setAdapter(weekAdapter);
-        weekSpinner.setSelection(currentWeek-1);
+        weekSpinner.setSelection(currentWeek - 1);
     }
 
     private void setAssignmentTypeSpinner(){
-        String[] assignmentTypes = new String[]{AssignmentType.HANDIN.toString(), AssignmentType.LAB.toString(), AssignmentType.PROBLEM.toString(), AssignmentType.READ.toString(), AssignmentType.OBLIGATORY.toString(), AssignmentType.OTHER.toString()};
+        String[] assignmentTypes = new String[]{AssignmentType.HANDIN.toString(),
+                AssignmentType.LAB.toString(), AssignmentType.PROBLEM.toString(),
+                AssignmentType.READ.toString(), AssignmentType.OBLIGATORY.toString(),
+                AssignmentType.OTHER.toString()};
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, assignmentTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         assignmentTypeSpinner.setAdapter(adapter);
@@ -284,6 +318,7 @@ public class AddAssignmentActivity extends ActionBarActivity {
             weekLabel.setText("VECKA");
             weekSpinner.setVisibility(View.VISIBLE);
             taskTitleLabel.setText("UPPGIFTSNUMMER");
+            taskTitleLabel.setVisibility(View.VISIBLE);
             taskDigitParts.setVisibility(View.VISIBLE);
             taskPartsLabel.setVisibility(View.VISIBLE);
             taskTextInput.setVisibility(View.GONE);
@@ -296,17 +331,24 @@ public class AddAssignmentActivity extends ActionBarActivity {
         } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.LAB.toString())) {
             visibleTasksLabel.setText("Tillagda " + AssignmentType.LAB.toString());
             updateAssignmentsLayout(AssignmentType.LAB);
+
             chapterLabel.setVisibility(View.VISIBLE);
             chapterLabel.setText("NUMMER");
             chapterSpinner.setVisibility(View.VISIBLE);
+
             oblTypesSpinner.setVisibility(View.GONE);
+
             weekLabel.setText("VECKA");
             weekSpinner.setVisibility(View.VISIBLE);
+
             taskTitleLabel.setText("UPPGIFTSNUMMER");
             taskDigitParts.setVisibility(View.VISIBLE);
             taskPartsLabel.setVisibility(View.VISIBLE);
+
             taskTextInput.setVisibility(View.GONE);
+
             lineSeparator.setVisibility(View.VISIBLE);
+
             deadlineLabel.setVisibility(View.VISIBLE);
             deadline.setVisibility(View.VISIBLE);
 
@@ -314,17 +356,25 @@ public class AddAssignmentActivity extends ActionBarActivity {
         } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.PROBLEM.toString())) {
             visibleTasksLabel.setText("Tillagda " + AssignmentType.PROBLEM.toString());
             updateAssignmentsLayout(AssignmentType.PROBLEM);
+
             chapterLabel.setVisibility(View.VISIBLE);
             chapterLabel.setText("KAPITEL");
             chapterSpinner.setVisibility(View.VISIBLE);
+
             oblTypesSpinner.setVisibility(View.GONE);
+
             weekLabel.setText("VECKA");
             weekSpinner.setVisibility(View.VISIBLE);
+
             taskTitleLabel.setText("UPPGIFTSNUMMER");
+            taskTitleLabel.setVisibility(View.VISIBLE);
             taskDigitParts.setVisibility(View.VISIBLE);
             taskPartsLabel.setVisibility(View.VISIBLE);
+
             taskTextInput.setVisibility(View.GONE);
+
             lineSeparator.setVisibility(View.VISIBLE);
+
             deadlineLabel.setVisibility(View.GONE);
             deadline.setVisibility(View.GONE);
 
@@ -332,16 +382,24 @@ public class AddAssignmentActivity extends ActionBarActivity {
         } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
             visibleTasksLabel.setText("Tillagda " + AssignmentType.READ.toString());
             updateAssignmentsLayout(AssignmentType.READ);
+
             chapterLabel.setVisibility(View.VISIBLE);
             chapterLabel.setText("KAPITEL");
             chapterSpinner.setVisibility(View.VISIBLE);
+
             oblTypesSpinner.setVisibility(View.GONE);
+
             weekLabel.setText("VECKA");
             weekSpinner.setVisibility(View.VISIBLE);
+
             taskTitleLabel.setText("SIDNUMMER");
+            taskTitleLabel.setVisibility(View.VISIBLE);
             taskDigitParts.setVisibility(View.GONE);
             taskPartsLabel.setVisibility(View.GONE);
+            taskDigitInput.setVisibility(View.VISIBLE);
+
             taskTextInput.setVisibility(View.GONE);
+
             lineSeparator.setVisibility(View.VISIBLE);
             deadlineLabel.setVisibility(View.GONE);
             deadline.setVisibility(View.GONE);
@@ -350,18 +408,25 @@ public class AddAssignmentActivity extends ActionBarActivity {
         } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.OBLIGATORY.toString())) {
             visibleTasksLabel.setText("Tillagda " + AssignmentType.OBLIGATORY.toString());
             updateAssignmentsLayout(AssignmentType.OBLIGATORY);
+
             chapterLabel.setVisibility(View.VISIBLE);
-            weekLabel.setText("TYP AV MOMENT");
             chapterSpinner.setVisibility(View.GONE);
-            oblTypesSpinner.setVisibility(View.VISIBLE);
             chapterLabel.setVisibility(View.GONE);
+
+            oblTypesSpinner.setVisibility(View.VISIBLE);
+
+            weekLabel.setText("TYP AV MOMENT");
             weekSpinner.setVisibility(View.GONE);
+
             taskTitleLabel.setVisibility(View.GONE);
-            taskTextInput.setVisibility(View.GONE);
             taskDigitInput.setVisibility(View.GONE);
             taskDigitParts.setVisibility(View.GONE);
             taskPartsLabel.setVisibility(View.GONE);
+
+            taskTextInput.setVisibility(View.GONE);
+
             lineSeparator.setVisibility(View.GONE);
+
             deadlineLabel.setVisibility(View.VISIBLE);
             deadline.setVisibility(View.VISIBLE);
 
@@ -369,17 +434,24 @@ public class AddAssignmentActivity extends ActionBarActivity {
         } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.OTHER.toString())) {
             visibleTasksLabel.setText("Tillagda " + AssignmentType.OTHER.toString());
             updateAssignmentsLayout(AssignmentType.OTHER);
+
             chapterLabel.setVisibility(View.GONE);
             chapterSpinner.setVisibility(View.GONE);
+
             weekLabel.setText("VECKA");
             weekSpinner.setVisibility(View.VISIBLE);
+
             oblTypesSpinner.setVisibility(View.GONE);
+
             lineSeparator.setVisibility(View.VISIBLE);
+
             taskDigitInput.setVisibility(View.GONE);
-            taskTextInput.setVisibility(View.VISIBLE);
             taskTitleLabel.setVisibility(View.GONE);
             taskDigitParts.setVisibility(View.GONE);
             taskPartsLabel.setVisibility(View.GONE);
+
+            taskTextInput.setVisibility(View.VISIBLE);
+
             deadlineLabel.setVisibility(View.GONE);
             deadline.setVisibility(View.GONE);
         }
@@ -416,10 +488,10 @@ public class AddAssignmentActivity extends ActionBarActivity {
             default:
                 //do nothing
         }
-        isAssignmentsLayoutEmpty(assignmentType);
+        showNoAssignmentsView(assignmentType);
     }
 
-    private void isAssignmentsLayoutEmpty(AssignmentType type){
+    private void showNoAssignmentsView(AssignmentType type){
         if(assignmentsFlowLayout.isEmpty()){
             TextView textView = new TextView(this);
             textView.setText("Du har för närvaranade inga " + type.toString().toLowerCase() + " för den här kursen, lägg till en uppgift genom att fylla i informationen ovan och trycka på spara-knappen i övre högra hörnet");
@@ -508,9 +580,12 @@ public class AddAssignmentActivity extends ActionBarActivity {
         }
     }
 
+    private boolean hasCourses(){
+        return (courseDB.getCourses().getCount() != 0);
+    }
 
     public void setSelectedCourse() {
-        if(courseSpinner.getSelectedItem() != null) {
+        if (courseSpinner.getSelectedItem() != null) {
             String temp = courseSpinner.getSelectedItem().toString();
             String[] parts = temp.split("-");
             this.courseCode = parts[0];
@@ -520,31 +595,7 @@ public class AddAssignmentActivity extends ActionBarActivity {
 
             //Tests if the update of the sharedpref worked:
             Log.d("sharedcourse", "Timer. set select: " + courseSpinner.getSelectedItemPosition()
-                    + " == " + coursePrefHelper.getSharedCoursePos());        }
-        else{
-            final AlertDialog d = new AlertDialog.Builder(this)
-                    .setMessage("Du måste lägga till en kurs innan du kan lägga till uppgifter!")
-                    .setPositiveButton("OK", null) //Set to null. We override the onclick
-                    .create();
-
-            d.setOnShowListener(new DialogInterface.OnShowListener() {
-
-                @Override
-                public void onShow(DialogInterface dialog) {
-
-                    Button positive = d.getButton(AlertDialog.BUTTON_POSITIVE);
-                    positive.setOnClickListener(new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View view) {
-                            d.dismiss();
-                            finish();
-                        }
-                    });
-                }
-            });
-
-            d.show();
+                    + " == " + coursePrefHelper.getSharedCoursePos());
         }
     }
 
