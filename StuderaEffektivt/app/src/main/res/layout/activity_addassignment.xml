@@ -74,36 +74,23 @@
                     android:weightSum="1">
 
                     <TextView
-                        android:id="@+id/chapterLabel"
+                        android:id="@+id/typeLabel"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginRight="5dp"
                         android:layout_weight="0.5"
                         android:gravity="right"
-                        android:text="@string/chapter_title"
+                        android:text="@string/type_title"
                         android:textAlignment="gravity"
                         android:textSize="17sp" />
 
                     <Spinner
-                    android:id="@+id/chapterSpinner"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="0.5" />
-
-                    <TextView
-                        android:id="@+id/olbDate"
+                        android:id="@+id/assignmentTypeSpinner"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:textSize="17sp"
-                        android:gravity="left"
-                        android:visibility="gone"
-                        android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
-                        android:textAlignment="gravity"
-                        />
+                        android:layout_weight="0.5" />
 
                 </LinearLayout>
 
@@ -151,23 +138,36 @@
                     android:weightSum="1">
 
                     <TextView
-                        android:id="@+id/typeLabel"
+                        android:id="@+id/chapterLabel"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginRight="5dp"
                         android:layout_weight="0.5"
                         android:gravity="right"
-                        android:text="@string/type_title"
+                        android:text="@string/chapter_title"
                         android:textAlignment="gravity"
                         android:textSize="17sp" />
 
                     <Spinner
-                        android:id="@+id/assignmentTypeSpinner"
+                        android:id="@+id/chapterSpinner"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="0.5" />
+
+                    <TextView
+                        android:id="@+id/olbDate"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:textSize="17sp"
+                        android:gravity="left"
+                        android:visibility="gone"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:textAlignment="gravity"
+                        />
 
                 </LinearLayout>
 

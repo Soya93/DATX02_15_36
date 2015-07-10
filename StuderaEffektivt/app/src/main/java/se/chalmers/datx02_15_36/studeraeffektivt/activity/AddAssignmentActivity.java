@@ -266,7 +266,7 @@ public class AddAssignmentActivity extends ActionBarActivity {
     }
 
     private void setObligatoryTypeSpinner(){
-        String[] obligatoryTypes = new String[]{ObligatoryType.HANDIN.toString(), ObligatoryType.LAB.toString(), ObligatoryType.MINIEXAM.toString(), ObligatoryType.EXAM.toString()};
+        String[] obligatoryTypes = new String[]{ObligatoryType.MINIEXAM.toString(), ObligatoryType.EXAM.toString()};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, obligatoryTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         oblTypesSpinner.setAdapter(adapter);
@@ -290,6 +290,7 @@ public class AddAssignmentActivity extends ActionBarActivity {
             lineSeparator.setVisibility(View.VISIBLE);
             deadlineLabel.setVisibility(View.VISIBLE);
             deadline.setVisibility(View.VISIBLE);
+            oblTypesSpinner.setVisibility(View.GONE);
 
         /* LAB */
         } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.LAB.toString())) {
