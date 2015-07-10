@@ -61,6 +61,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private MenuItem activeCourseItem;
 
     private CoursesDBAdapter coursesDBAdapter;
+    private LabAssignmentsDBAdapter labsDBAdapter;
+    private HandInAssignmentsDBAdapter handinsDBAdapter;
+
     private CourseView alertCreator;
 
     //View objects
@@ -90,6 +93,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         if (this != null) {
             coursesDBAdapter = new CoursesDBAdapter(this);
+            labsDBAdapter = new LabAssignmentsDBAdapter(this);
+            handinsDBAdapter = new HandInAssignmentsDBAdapter(this);
         }
 
         isInitialized = true;
@@ -111,11 +116,11 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             addMiniexams(layout);
         }
 
-        if(coursesDBAdapter.hasLabs(courseCode)){
+        if (labsDBAdapter.getAssignments(courseCode).getCount() != 0){
             addLabs(layout);
         }
 
-        if(coursesDBAdapter.hasHandins(courseCode)){
+        if(handinsDBAdapter.getAssignments(courseCode).getCount() != 0){
             addHandins(layout);
         }
     }
@@ -165,10 +170,11 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     private void addHandins(RelativeLayout layout) {
+        Log.d("updateCP", "in add handins");
         addHandinLabel(layout);
 
         //The handins
-        Cursor handins = coursesDBAdapter.getObligatoryHandins(courseCode);
+        Cursor handins = handinsDBAdapter.getAssignments(courseCode);
         Log.d("CoursePage", "antal handins: " + handins.getCount());
         TextView tv;
         RelativeLayout.LayoutParams params;
@@ -210,10 +216,11 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     private void addLabs(RelativeLayout layout) {
+        Log.d("updateCP", "in add labs");
         addLabsLabel(layout);
 
         //The labs
-        Cursor labs = coursesDBAdapter.getObligatoryLabs(courseCode);
+        Cursor labs = labsDBAdapter.getAssignments(courseCode);
         Log.d("CoursePage", "antal labbar: " + labs.getCount());
         TextView tv;
         RelativeLayout.LayoutParams params;

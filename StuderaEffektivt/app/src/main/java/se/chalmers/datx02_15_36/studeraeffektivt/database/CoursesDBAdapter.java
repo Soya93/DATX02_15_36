@@ -211,28 +211,6 @@ public class CoursesDBAdapter extends DBAdapter {
         return false;
     }
 
-    public boolean hasLabs(String courseCode){
-        Cursor obligatories = getObligatories();
-        while (obligatories.moveToNext()){
-            if (obligatories.getString( obligatories.getColumnIndex(OBLIG_ccode) ).equals(courseCode)
-                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals(ObligatoryType.LAB.toString())){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean hasHandins(String courseCode){
-        Cursor obligatories = getObligatories();
-        while (obligatories.moveToNext()){
-            if (obligatories.getString( obligatories.getColumnIndex(OBLIG_ccode) ).equals(courseCode)
-                    && obligatories.getString( obligatories.getColumnIndex(OBLIG_type) ).equals(ObligatoryType.LAB.toString())){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Cursor getObligatoryMiniexams(String courseCode){
         String selection = OBLIG_type + " = 'Dugga' AND "+OBLIG_ccode+" = '"+courseCode+"'";
         return db.query(TABLE_OBLIG, null, selection, null, null, null, null);

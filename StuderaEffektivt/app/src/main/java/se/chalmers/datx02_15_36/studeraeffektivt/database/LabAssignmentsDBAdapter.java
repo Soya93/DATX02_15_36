@@ -47,7 +47,7 @@ public class LabAssignmentsDBAdapter  extends AssignmentsDBAdapter {
 
     public long deleteAssignment(int id){
         try{
-            return db.delete(TABLE_LABS, LABS__id + "=" +id, null);
+            return db.delete(TABLE_LABS, LABS__id + "=" + id, null);
         }catch (Exception e){
             return -1;
         }

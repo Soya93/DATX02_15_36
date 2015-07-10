@@ -45,7 +45,7 @@ public class HandInAssignmentsDBAdapter  extends AssignmentsDBAdapter {
 
     public long deleteAssignment(int id){
         try{
-            return db.delete(TABLE_HANDIN, HANDIN__id + "=" +id, null);
+            return db.delete(TABLE_HANDIN, HANDIN__id + "=" + id, null);
         }catch (Exception e){
             return -1;
         }
