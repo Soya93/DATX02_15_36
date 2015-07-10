@@ -64,7 +64,7 @@ public class RepetitionReminder {
         coursesToRepeat = new ArrayList<>();
 
         if (hasCourses()) {
-            Cursor courses = getCourses();
+            /*Cursor courses = getCourses();
 
             while (courses.moveToNext()) {
                 String ccode = courses.getString(courses.getColumnIndex("_ccode"));
@@ -72,7 +72,7 @@ public class RepetitionReminder {
                     coursesToRepeat.add(ccode);
                 }
 
-            }
+            }*/
         }
         return coursesToRepeat.size() > 0;
     }
@@ -111,24 +111,7 @@ public class RepetitionReminder {
                 finishedAssignments.add(doneAssignments.getColumnIndex("_id"));
                 //}
             }
-            return randomAssignments(finishedAssignments);
-
-        }
-        return null;
-    }*/
-
-    private boolean canRepeatCourse(String courseCode) {
-        if(haveAnyToRepeat()) {
-            return coursesToRepeat.contains(courseCode);
-        }
-        return false;
-    }
-
-    public void setCoursesDBAdapter(CoursesDBAdapter cdba) {
-        this.coursesDBAdapter = cdba;
-    }
-
-    public void setAssesDBAdapter(AssignmentsDBAdapter adba) {
+            return randomAssignment adba) {
         this.assDBAdapter = adba;
     }
 
@@ -160,6 +143,10 @@ public class RepetitionReminder {
             }
         }
         return randomAssignments;
+    }
+
+    private boolean hasCourses(){
+        return true;
     }
 }
 

@@ -12,12 +12,9 @@ limitations under the License.
 
 **/
 
-package se.chalmers.datx02_15_36.studeraeffektivt.util;
+package se.chalmers.datx02_15_36.studeraeffektivt.util.web;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -36,6 +33,9 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAda
 import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentID;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
 
 /**
@@ -64,6 +64,12 @@ public class GetAssignmentsFromWeb {
     long addReadResult = 1L;
     long addProblemResult = 1L;
     long addObligatoryResult = 1L;
+
+    long getLabResult = 1L;
+    long getHandInResult = 1L;
+    long getReadResult = 1L;
+    long getProblemResult = 1L;
+    long getObligatoryResult = 1L;
 
     private Context context;
 
@@ -143,6 +149,7 @@ public class GetAssignmentsFromWeb {
                     e.printStackTrace();
                 }
             } else {
+                getHandInResult = 0L;
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
             }
 
@@ -210,6 +217,7 @@ public class GetAssignmentsFromWeb {
                     e.printStackTrace();
                 }
             } else {
+                getLabResult = 0L;
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
             }
 
@@ -268,6 +276,7 @@ public class GetAssignmentsFromWeb {
                     e.printStackTrace();
                 }
             } else {
+                getProblemResult = 0L;
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
             }
 
@@ -326,6 +335,7 @@ public class GetAssignmentsFromWeb {
                     e.printStackTrace();
                 }
             } else {
+                getReadResult = 0L;
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
             }
 
@@ -382,15 +392,14 @@ public class GetAssignmentsFromWeb {
                     e.printStackTrace();
                 }
             } else {
+                getObligatoryResult = 0L;
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
             }
 
             return null;
         }
 
-
         protected void onPostExecute(String file_url) {
-
         }
     }
 
@@ -416,16 +425,16 @@ public class GetAssignmentsFromWeb {
         return result;
     }
 
-    public long addToDatabase(String courseCode, int id, String chapter, int week, int startPage, int endPage){
+    private long addToDatabase(String courseCode, int id, String chapter, int week, int startPage, int endPage){
         return readDB.insertAssignment(courseCode, id, chapter, week, startPage, endPage, AssignmentStatus.UNDONE);
     }
 
-    public long addToDatabase(String courseCode, int id, String type, String date, AssignmentStatus status) {
+    private long addToDatabase(String courseCode, int id, String type, String date, AssignmentStatus status) {
         return coursesDB.insertObligatory(courseCode, id, type, date, status);
     }
 
     private boolean allAssignmentsAdded(){
-        return (addHandInResult + addProblemResult + addObligatoryResult + addLabResult + addReadResult) > 4L;
+        return (getHandInResult + getProblemResult + getObligatoryResult + getLabResult + getReadResult) > 4L;
     }
 }
 

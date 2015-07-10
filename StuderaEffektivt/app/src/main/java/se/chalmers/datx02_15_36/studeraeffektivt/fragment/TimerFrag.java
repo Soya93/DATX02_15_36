@@ -52,8 +52,10 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.RepetitionAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentTypeUtil;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.TimerService;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
@@ -104,6 +106,7 @@ public class TimerFrag extends Fragment {
     private ProblemAssignmentsDBAdapter problemDB;
     private ReadAssignmentsDBAdapter readDB;
     private CoursesDBAdapter coursesDB;
+    private RepetitionAssignmentsDBAdapter repeatDB;
 
     private Handler serviceHandler;
 
@@ -160,6 +163,7 @@ public class TimerFrag extends Fragment {
             problemDB = new ProblemAssignmentsDBAdapter(getActivity());
             readDB = new ReadAssignmentsDBAdapter(getActivity());
             coursesDB = new CoursesDBAdapter(getActivity());
+            repeatDB = new RepetitionAssignmentsDBAdapter(getActivity());
         }
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         cph = CoursePreferenceHelper.getInstance(getActivity());
@@ -211,8 +215,6 @@ public class TimerFrag extends Fragment {
             }
             if (buttonId == R.drawable.ic_action_pause){
                 startButton.setImageResource(R.drawable.ic_action_pause);
-
-
             }
 
         }
@@ -238,26 +240,8 @@ public class TimerFrag extends Fragment {
 
     }
     private void setCurrentAssignmentType(){
-        if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.HANDIN.toString())) {
-            assignmentType = AssignmentType.HANDIN;
-
-        } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.LAB.toString())) {
-            assignmentType = AssignmentType.LAB;
-
-        } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.PROBLEM.toString())) {
-            assignmentType = AssignmentType.PROBLEM;
-
-        } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.READ.toString())) {
-            assignmentType = AssignmentType.READ;
-
-        } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.OBLIGATORY.toString())) {
-            assignmentType = AssignmentType.OBLIGATORY;
-
-        } else if (assignmentTypeSpinner.getSelectedItem().toString().equals(AssignmentType.OTHER.toString())) {
-            assignmentType = AssignmentType.OTHER;
-        }
+        assignmentType = AssignmentTypeUtil.stringToAssignmentType(assignmentTypeSpinner.getSelectedItem().toString());
         updateAssignmentsLayout(assignmentType,week);
-
     }
 
     public void onResume() {
@@ -515,13 +499,21 @@ public class TimerFrag extends Fragment {
                 assignmentsFlowLayout.addObligatoriesFromDatabase(ccode, coursesDB, week);
                 break;
 
+            case REPEAT:
+                assignmentsFlowLayout.addRepeatsFromDatabase(ccode, repeatDB, week);
+                break;
+
             default:
                 //do nothing
         }
 
-        if(assignmentsFlowLayout.isEmpty()){
+        if(assignmentsFlowLayout.isEmpty() && assignmentType!=AssignmentType.REPEAT){
             TextView textView1 = new TextView(getActivity());
             textView1.setText("Du har för närvaranade inga " + assignmentType.toString().toLowerCase() + " för den valda veckan");
+            assignmentsFlowLayout.addView(textView1);
+        } else if (assignmentsFlowLayout.isEmpty()){
+            TextView textView1 = new TextView(getActivity());
+            textView1.setText("Du har för närvaranade inga " + assignmentType.toString().toLowerCase() + " för den valda veckan gjorda för två veckor sedan.");
             assignmentsFlowLayout.addView(textView1);
         }
     }
@@ -568,7 +560,7 @@ public class TimerFrag extends Fragment {
     }
 
     private void setTaskTypeSpinner(){
-        String[] assignmentTypes = new String[]{AssignmentType.HANDIN.toString(), AssignmentType.LAB.toString(), AssignmentType.PROBLEM.toString(), AssignmentType.READ.toString(), AssignmentType.OBLIGATORY.toString(), AssignmentType.OTHER.toString()};
+        String[] assignmentTypes = new String[]{AssignmentType.HANDIN.toString(), AssignmentType.LAB.toString(), AssignmentType.PROBLEM.toString(), AssignmentType.READ.toString(), AssignmentType.OBLIGATORY.toString(), AssignmentType.OTHER.toString(), AssignmentType.REPEAT.toString()};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assignmentTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         assignmentTypeSpinner.setAdapter(adapter);

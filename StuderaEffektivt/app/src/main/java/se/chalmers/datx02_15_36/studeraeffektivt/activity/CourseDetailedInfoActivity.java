@@ -36,8 +36,13 @@ import android.widget.Toast;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.GetAssignmentsFromWeb;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.web.GetAssignmentsFromWeb;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CourseView;
 
 /**
@@ -397,9 +402,17 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
+                //Delete assignments
+                new HandInAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
+                new ProblemAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
+                new LabAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
+                new ReadAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
+                new OtherAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
+                coursesDBAdapter.deleteObligatories(courseCode);
+
+                //Delete course
                 coursesDBAdapter.deleteCourse(courseCode);
-                     //   coursesDBAdapter.deleteCourseAssignmets(courseCode);
-                //TODO remove all the assignments of the course too
+
                 Toast.makeText(getApplicationContext(), courseName + " borttagen",
                                 Toast.LENGTH_LONG).show();
                         finish();

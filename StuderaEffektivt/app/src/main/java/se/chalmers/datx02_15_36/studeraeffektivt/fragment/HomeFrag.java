@@ -151,8 +151,8 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             //has items in list view so remove tip "dra för att sykronisera..."
             syncText.setVisibility(View.INVISIBLE);
         } else {
-            syncText.setText("Inga planerade händelser idag!");
-            syncText.setVisibility(View.VISIBLE);
+            /*syncText.setText("Inga planerade händelser idag!");
+            syncText.setVisibility(View.VISIBLE);*/
         }
 
     }
