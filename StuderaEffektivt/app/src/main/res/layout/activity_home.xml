@@ -27,14 +27,7 @@
                 android:layout_marginBottom="7dp"
                 android:adjustViewBounds="false" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Dra nedåt för att synkronisera"
-                android:id="@+id/synchronize_lable"
-                android:layout_gravity="center"
-                android:textColor="@android:color/darker_gray" />
+
         </FrameLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>
