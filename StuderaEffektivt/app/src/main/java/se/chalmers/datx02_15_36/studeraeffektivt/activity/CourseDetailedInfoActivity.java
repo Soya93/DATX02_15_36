@@ -120,9 +120,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             addLabs(layout);
         }
 
-        if(handinsDBAdapter.getAssignments(courseCode).getCount() != 0){
+        //if(handinsDBAdapter.getAssignments(courseCode).getCount() != 0){
             addHandins(layout);
-        }
+        //}
     }
 
     private void updateComponents(){
@@ -178,22 +178,27 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         Log.d("CoursePage", "antal handins: " + handins.getCount());
         TextView tv;
         RelativeLayout.LayoutParams params;
+        //String nr = "";
         while (handins.moveToNext()){
             tv = new TextView(this);
             int id = View.generateViewId();
             tv.setId(id);
             params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            String thisNr = handins.getString( handins.getColumnIndex("nr") );
+            //if(thisNr != nr) {
+                String date = handins.getString( handins.getColumnIndex("date") );
+                tv.setText(date);
 
-            String date = handins.getString( handins.getColumnIndex("date") );
-            tv.setText(date);
+                if(lastHandinId == -1){
+                    params.addRule(RelativeLayout.BELOW, handinLabel.getId());
+                }else{
+                    params.addRule(RelativeLayout.BELOW, lastHandinId);
+                }
+                lastHandinId = id;
+                layout.addView(tv, params);
 
-            if(lastHandinId == -1){
-                params.addRule(RelativeLayout.BELOW, handinLabel.getId());
-            }else{
-                params.addRule(RelativeLayout.BELOW, lastHandinId);
-            }
-            lastHandinId = id;
-            layout.addView(tv, params);
+            //    nr = thisNr;
+            //}
         }
     }
 
@@ -224,22 +229,28 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         Log.d("CoursePage", "antal labbar: " + labs.getCount());
         TextView tv;
         RelativeLayout.LayoutParams params;
+        String nr = "";
         while (labs.moveToNext()){
             tv = new TextView(this);
             int id = View.generateViewId();
             tv.setId(id);
             params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            String thisNr = labs.getString( labs.getColumnIndex("nr") );
 
-            String date = labs.getString( labs.getColumnIndex("date") );
-            tv.setText(date);
+            if(thisNr != nr){
+                String date = labs.getString( labs.getColumnIndex("date") );
+                tv.setText(date);
 
-            if(lastLabId == -1){
-                params.addRule(RelativeLayout.BELOW, labLabel.getId());
-            }else{
-                params.addRule(RelativeLayout.BELOW, lastLabId);
+                if(lastLabId == -1){
+                    params.addRule(RelativeLayout.BELOW, labLabel.getId());
+                }else{
+                    params.addRule(RelativeLayout.BELOW, lastLabId);
+                }
+                lastLabId = id;
+                layout.addView(tv, params);
+
+                nr = thisNr;
             }
-            lastLabId = id;
-            layout.addView(tv, params);
         }
     }
 

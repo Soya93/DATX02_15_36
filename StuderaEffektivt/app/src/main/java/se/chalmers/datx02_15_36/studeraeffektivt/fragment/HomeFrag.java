@@ -56,7 +56,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private ListView listView;
     private ArrayList<HomeEventItem> eventsList;
     private SwipeRefreshLayout swipeLayout;
-    private TextView syncText;
     private boolean hasSynced;
     private ActionButton actionButton;
     private HomeAdapter adapter;
@@ -70,10 +69,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
         initComponents(rootView);
         eventsList = getEvents();
-
-        if (hasSynced && !eventsList.isEmpty()) {
-            syncText.setVisibility(View.INVISIBLE);
-        }
 
         calendarFrag.getCalendarModel().refreshCalendars();
         return rootView;
@@ -127,8 +122,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
         listView.setOnScrollListener(listener);
 
-        syncText = (TextView) view.findViewById(R.id.synchronize_lable);
-
     }
 
 
@@ -146,15 +139,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     public void updateView() {
         setTodaysEvents();
         adapter.notifyDataSetChanged();
-
-        if (listView.getCount() > 0) {
-            //has items in list view so remove tip "dra för att sykronisera..."
-            syncText.setVisibility(View.INVISIBLE);
-        } else {
-            /*syncText.setText("Inga planerade händelser idag!");
-            syncText.setVisibility(View.VISIBLE);*/
-        }
-
     }
 
     public void setContentResolver(ContentResolver cr) {
