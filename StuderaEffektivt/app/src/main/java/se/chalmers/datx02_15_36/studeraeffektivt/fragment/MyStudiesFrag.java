@@ -19,7 +19,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import android.content.Intent;
     import android.database.Cursor;
     import android.graphics.Color;
-    import android.net.Uri;
     import android.os.Bundle;
     import android.support.v4.app.Fragment;
     import android.view.LayoutInflater;
@@ -38,15 +37,16 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import java.util.Map;
 
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
-    import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseActivity;
+    import se.chalmers.datx02_15_36.studeraeffektivt.activity.AddAssignmentActivity;
+    import se.chalmers.datx02_15_36.studeraeffektivt.activity.ClosedCoursesActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
-    import se.chalmers.datx02_15_36.studeraeffektivt.activity.StudyTaskActivity;
+    import se.chalmers.datx02_15_36.studeraeffektivt.activity.GetCoursesFromWebActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.TechsNTipsActivity;
-    import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+    import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
     import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
     import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 
-public class MyStudiesPage extends Fragment {
+public class MyStudiesFrag extends Fragment {
 
     private Button addCourseButton;
     private Button seePrevCoursesButton;
@@ -65,7 +65,7 @@ public class MyStudiesPage extends Fragment {
 
 
     //The access point of the database.
-    private DBAdapter dbAdapter;
+    private CoursesDBAdapter coursesDBAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class MyStudiesPage extends Fragment {
 
         //Create the database access point but check if the context is null first.
         if(getActivity() != null){
-            dbAdapter = new DBAdapter(getActivity());
+            coursesDBAdapter = new CoursesDBAdapter(getActivity());
         }
     }
 
@@ -143,15 +143,20 @@ public class MyStudiesPage extends Fragment {
 
         switch (id) {
             case R.id.addCourse:
-                initDialogToAddCourse();
+                Intent courses = new Intent(getActivity(), GetCoursesFromWebActivity.class);
+                startActivity(courses);
+
+                //initDialogToAddCourse();
                 break;
             case R.id.prevCourses:
-
-                Intent iCourse = new Intent(getActivity(), CourseActivity.class);
+                Intent iCourse = new Intent(getActivity(), ClosedCoursesActivity.class);
                 startActivity(iCourse);
+                /*Intent in = new Intent(getActivity(), GetAssignmentsFromWebActivity.class);
+                in.putExtra("CourseCode", "TDA623");
+                startActivity(in);*/
                 break;
             case R.id.addTask:
-                Intent i = new Intent(getActivity(), StudyTaskActivity.class);
+                Intent i = new Intent(getActivity(), AddAssignmentActivity.class);
                 startActivity(i);
                 break;
             case R.id.tips:
@@ -192,7 +197,7 @@ public class MyStudiesPage extends Fragment {
                             toast.show();
                         }
                         else {
-                            long result = dbAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
+                            long result = coursesDBAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
                             if(result > 0) {
                                 Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
                                 toast.show();
@@ -232,7 +237,7 @@ public class MyStudiesPage extends Fragment {
     public void updateCourses(){
         courseList.clear();
 
-        Cursor cursor = dbAdapter.getOngoingCourses();
+        Cursor cursor = coursesDBAdapter.getOngoingCourses();
         if (cursor.getCount() > 0){
             String ccode = "";
             String cname = "";

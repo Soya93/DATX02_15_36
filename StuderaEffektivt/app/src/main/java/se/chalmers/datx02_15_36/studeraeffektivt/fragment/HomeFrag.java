@@ -83,7 +83,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private void initComponents(View view) {
         hasInit = true;
 
-
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v.getTag() == actionButton.getTag()) {
@@ -119,7 +118,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
                //do nothing
             }
 
-
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 //disable update if first item isn't visible
@@ -153,8 +151,8 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
             //has items in list view so remove tip "dra för att sykronisera..."
             syncText.setVisibility(View.INVISIBLE);
         } else {
-            syncText.setText("Inga planerade händelser idag!");
-            syncText.setVisibility(View.VISIBLE);
+            /*syncText.setText("Inga planerade händelser idag!");
+            syncText.setVisibility(View.VISIBLE);*/
         }
 
     }

@@ -33,36 +33,36 @@ import java.util.List;
 import java.util.Map;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 
 
-public class CourseActivity extends ActionBarActivity {
+public class ClosedCoursesActivity extends ActionBarActivity {
 
     private ListView listOfCourses;
     public static List<Map<String, Course>> courseList = new ArrayList<Map<String, Course>>();
-    SimpleAdapter simpleAdpt;
+    public SimpleAdapter simpleAdpt;
 
     //The access point of the database.
-    private DBAdapter dbAdapter;
+    private CoursesDBAdapter coursesDBAdapter;
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course);
+        setContentView(R.layout.activity_closed_courses);
         initComponents();
         simpleAdpt = new SimpleAdapter(this, courseList, android.R.layout.simple_list_item_1, new String[]{"Courses"}, new int[]{android.R.id.text1});
         listOfCourses.setAdapter(simpleAdpt);
 
-        getSupportActionBar().setTitle("Mina avslutade Kurser");
+        getSupportActionBar().setTitle("Mina avslutade kurser");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         android.support.v7.app.ActionBar bar = getSupportActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
 
         //Create the database access point but check if the context is null first.
         if (this != null) {
-            dbAdapter = new DBAdapter(this);
+            coursesDBAdapter = new CoursesDBAdapter(this);
         }
         showCourseList();
     }
@@ -91,14 +91,14 @@ public class CourseActivity extends ActionBarActivity {
     public void showCourseList() {
         courseList.clear();
         Log.d("courseList", "cursorList.size är "+courseList.size());
-        Cursor cursor = dbAdapter.getDoneCourses();
+        Cursor cursor = coursesDBAdapter.getDoneCourses();
         Log.d("DB", "cursor.getCount() är "+cursor.getCount());
         if (cursor.getCount() > 0){
             String ccode = "";
             String cname = "";
             while (cursor.moveToNext()) {
-                ccode = cursor.getString(0);
-                cname = cursor.getString(1);
+                ccode = cursor.getString(cursor.getColumnIndex(CoursesDBAdapter.COURSES__ccode));
+                cname = cursor.getString(cursor.getColumnIndex(CoursesDBAdapter.COURSES_cname));
                 courseList.add(createCourse("Courses", new Course(cname, ccode)));
             }
             simpleAdpt.notifyDataSetChanged();

@@ -14,15 +14,11 @@ limitations under the License.
 
 package se.chalmers.datx02_15_36.studeraeffektivt.database;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentStatus;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 
 /**
  * A database adapter that is used to read and write to/from the database.
@@ -31,389 +27,170 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
  */
 public class DBAdapter {
 
-    private DBHelper dbHelper;
+    private static final String DATABASE_NAME = "studiecoach.db";
+    private static final int DATABASE_VERSION = 1; //Has to be incremented to update.
 
-    public DBAdapter(Context context) {
-        dbHelper = new DBHelper(context);
-        Log.i("DB", "DBAdapter created.");
+    private final Context context;
+    protected DatabaseHelper DBHelper;
+    protected SQLiteDatabase db;
+
+    private static final String CREATE_COURSES_TABLE = "CREATE TABLE " + CoursesDBAdapter.TABLE_COURSES + " ("
+            + CoursesDBAdapter.COURSES__ccode + " VARCHAR(50) PRIMARY KEY, "
+            + CoursesDBAdapter.COURSES_cname + " VARCHAR(50), "
+            + CoursesDBAdapter.COURSES_cstatus + " VARCHAR(50))";
+
+    private static final String CREATE_SESSIONS_TABLE = "CREATE TABLE " + SessionsDBAdapter.TABLE_SESSIONS + " ("
+            + SessionsDBAdapter.SESSIONS__id + " INT PRIMARY KEY, "
+            + SessionsDBAdapter.SESSIONS_minutes + " INT, "
+            + SessionsDBAdapter.SESSIONS_ccode + " VARCHAR(50), "
+            + SessionsDBAdapter.SESSION_timestamp + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
+            + SessionsDBAdapter.SESSION_week + " INT)";
+
+    private static final String CREATE_LABS_TABLE = "CREATE TABLE " + LabAssignmentsDBAdapter.TABLE_LABS + " ("
+            + LabAssignmentsDBAdapter.LABS__id + " INT PRIMARY KEY NOT NULL,"
+            + LabAssignmentsDBAdapter.LABS_ccode + " VARCHAR(50) NOT NULL, "
+            + LabAssignmentsDBAdapter.LABS_nr + " VARCHAR(50) NOT NULL, "
+            + LabAssignmentsDBAdapter.LABS_week + " INT NOT NULL, "
+            + LabAssignmentsDBAdapter.LABS_assNr + " VARCHAR(50) NOT NULL, "
+            + LabAssignmentsDBAdapter.LABS_date + " VARCHAR(50), "
+            + LabAssignmentsDBAdapter.LABS_status + " VARCHAR(50) NOT NULL, "
+            + "FOREIGN KEY(" + LabAssignmentsDBAdapter.LABS_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+
+    private static final String CREATE_PROBLEMS_TABLE = "CREATE TABLE " + ProblemAssignmentsDBAdapter.TABLE_PROBLEMS + " ("
+            + ProblemAssignmentsDBAdapter.PROBLEMS__id + " INT PRIMARY KEY NOT NULL,"
+            + ProblemAssignmentsDBAdapter.PROBLEMS_ccode + " VARCHAR(50) NOT NULL, "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_chapter + " VARCHAR(50) NOT NULL, "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_week + " INT NOT NULL, "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_assNr + " VARCHAR(50) NOT NULL, "
+            + ProblemAssignmentsDBAdapter.PROBLEMS_status + " VARCHAR(50) NOT NULL, "
+            + "FOREIGN KEY(" + ProblemAssignmentsDBAdapter.PROBLEMS_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+
+    private static final String CREATE_READ_TABLE = "CREATE TABLE " + ReadAssignmentsDBAdapter.TABLE_READ + " ("
+            + ReadAssignmentsDBAdapter.READ__id + " INT PRIMARY KEY NOT NULL,"
+            + ReadAssignmentsDBAdapter.READ_ccode + " VARCHAR(50) NOT NULL, "
+            + ReadAssignmentsDBAdapter.READ_chapter + " VARCHAR(50) NOT NULL, "
+            + ReadAssignmentsDBAdapter.READ_week + " INT NOT NULL, "
+            + ReadAssignmentsDBAdapter.READ_startPage + " INT NOT NULL, "
+            + ReadAssignmentsDBAdapter.READ_endPage + " INT NOT NULL, "
+            + ReadAssignmentsDBAdapter.READ_status + " VARCHAR(50) NOT NULL, "
+            + "FOREIGN KEY(" + ReadAssignmentsDBAdapter.READ_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+
+    private static final String CREATE_HANDIN_TABLE = "CREATE TABLE " + HandInAssignmentsDBAdapter.TABLE_HANDIN + " ("
+            + HandInAssignmentsDBAdapter.HANDIN__id + " INT PRIMARY KEY NOT NULL,"
+            + HandInAssignmentsDBAdapter.HANDIN_ccode+ " VARCHAR(50) NOT NULL, "
+            + HandInAssignmentsDBAdapter.HANDIN_nr + " VARCHAR(50) NOT NULL, "
+            + HandInAssignmentsDBAdapter.HANDIN_week + " INT NOT NULL, "
+            + HandInAssignmentsDBAdapter.HANDIN_assNr + " VARCHAR(50) NOT NULL, "
+            + HandInAssignmentsDBAdapter.HANDIN_date + " VARCHAR(50), "
+            + HandInAssignmentsDBAdapter.HANDIN_status + " VARCHAR(50) NOT NULL, "
+            + "FOREIGN KEY(" + HandInAssignmentsDBAdapter.HANDIN_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+
+    private static final String CREATE_OTHER_TABLE = "CREATE TABLE " + OtherAssignmentsDBAdapter.TABLE_OTHER + " ("
+            + OtherAssignmentsDBAdapter.OTHER__id + " INT PRIMARY KEY NOT NULL,"
+            + OtherAssignmentsDBAdapter.OTHER_ccode+ " VARCHAR(50) NOT NULL, "
+            + OtherAssignmentsDBAdapter.OTHER_week + " INT NOT NULL, "
+            + OtherAssignmentsDBAdapter.OTHER_assNr + " VARCHAR(50) NOT NULL, "
+            + OtherAssignmentsDBAdapter.OTHER_status + " VARCHAR(50) NOT NULL, "
+            + "FOREIGN KEY(" + OtherAssignmentsDBAdapter.OTHER_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+
+    private static final String CREATE_OBLIG_TABLE = "CREATE TABLE " + CoursesDBAdapter.TABLE_OBLIG + " ("
+            + CoursesDBAdapter.OBLIG__id + " INT PRIMARY KEY NOT NULL,"
+            + CoursesDBAdapter.OBLIG_ccode + " VARCHAR(50) NOT NULL, "
+            + CoursesDBAdapter.OBLIG_type + " VARCHAR(50) NOT NULL, "
+            + CoursesDBAdapter.OBLIG_date + " DATE NOT NULL, "
+            + CoursesDBAdapter.OBLIG_status + " VARCHAR(50) NOT NULL, "
+            + "FOREIGN KEY(" + CoursesDBAdapter.OBLIG_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+
+    private static final String CREATE_TIMEONCOURSE_TABLE = "CREATE TABLE " + CoursesDBAdapter.TABLE_TIMEONCOURSE + "("
+            + CoursesDBAdapter.TIMEONCOURSE__ccode + " VARCHAR(50) PRIMARY KEY NOT NULL, "
+            + CoursesDBAdapter.TIMEONCOURSE_time + " INT NOT NULL, "
+            + "FOREIGN KEY(" + CoursesDBAdapter.TIMEONCOURSE__ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+
+    private static final String CREATE_REPETITION_TABLE = "CREATE TABLE " + RepetitionAssignmentsDBAdapter.TABLE_REPEAT + " ("
+            + RepetitionAssignmentsDBAdapter.REPEAT__id + " INT PRIMARY KEY NOT NULL,"
+            + RepetitionAssignmentsDBAdapter.REPEAT_ccode+ " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.REPEAT_week + " INT NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.REPEAT_taskString+ " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.REPEAT_sortedString+ " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.REPEAT_type + " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.REPEAT_status + " VARCHAR(50) NOT NULL, "
+            + "FOREIGN KEY(" + RepetitionAssignmentsDBAdapter.REPEAT_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+
+    private static final String CREATE_ALL_REPETITION_TABLE = "CREATE TABLE " + RepetitionAssignmentsDBAdapter.TABLE_ALL_REPEAT + " ("
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT__id + " INT PRIMARY KEY NOT NULL,"
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT_ccode+ " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT_week + " INT NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT_taskString+ " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT_sortedString+ " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT_type + " VARCHAR(50) NOT NULL, "
+            + RepetitionAssignmentsDBAdapter.ALL_REPEAT_status + " VARCHAR(50) NOT NULL, "
+            + "FOREIGN KEY(" + RepetitionAssignmentsDBAdapter.REPEAT_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
+
+
+    public DBAdapter(Context ctx)
+    {
+        this.context = ctx;
+        this.DBHelper = new DatabaseHelper(this.context);
+        this.db = DBHelper.getWritableDatabase();
     }
 
-    public long insertCourse(String courseCode, String courseName) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        try {
-            cv.put(dbHelper.COURSES__ccode, courseCode);
-            cv.put(dbHelper.COURSES_cname, courseName);
-            cv.put(dbHelper.COURSES_cstatus, AssignmentStatus.UNDONE.toString()); //set course as ongoing
-
-            return db.insert(dbHelper.TABLE_COURSES, null, cv);
-        } catch (Exception e) {
-            return -1;
-        }
-    }
-
-    public long deleteCourse(String ccode){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        try{
-            return db.delete(dbHelper.TABLE_COURSES, dbHelper.COURSES__ccode + " = '"+ ccode + "'", null);
-        }catch (Exception e){
-            return -1;
-        }
-    }
-    // Avslutad kurs
-    public long setCourseDone(String ccode) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        cv.put(dbHelper.COURSES_cstatus, AssignmentStatus.DONE.toString());
-
-        try {
-            return db.update(dbHelper.TABLE_COURSES, cv, dbHelper.COURSES__ccode + " = '" + ccode + "'", null);
-        }catch (Exception e){
-            return -1;
-        }
-    }
-
-    //Pågående kurs
-    public long setCourseUndone(String ccode) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        cv.put(dbHelper.COURSES_cstatus, AssignmentStatus.UNDONE.toString());
-
-        try {
-            return db.update(dbHelper.TABLE_COURSES, cv, dbHelper.COURSES__ccode + " = '"+ ccode + "'", null);
-        }catch (Exception e){
-            return -1;
-        }
-    }
-
-    public String getCourseStatus(String ccode) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        String selection = dbHelper.COURSES__ccode + " = '" + ccode + "'";
-        Cursor cursor = db.query(dbHelper.TABLE_COURSES, null, selection, null, null, null, null);
-        cursor.moveToNext();
-        Log.d(selection+"", "database");
-        Log.i("Database", cursor.getString(2));
-        return cursor.getString(2);
-    }
-
-    public long insertSession(String courseCode, int week, int minutes) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        try {
-            cv.put(dbHelper.COURSES__ccode, courseCode);
-            cv.put(dbHelper.SESSION_week, week);
-            cv.put(dbHelper.SESSIONS_minutes, minutes);
-
-            return db.insert(dbHelper.TABLE_SESSIONS, null, cv);
-        } catch (Exception e) {
-            return -1;
-        }
-    }
-
-    public long insertAssignment(String courseCode, int chapter, int week, String assNr,
-                                 int startPage, int stopPage, AssignmentType type, AssignmentStatus status) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        try {
-            cv.put(dbHelper.ASSIGNMENTS_ccode, courseCode);
-            cv.put(dbHelper.ASSIGNMENTS_chapter, chapter);
-            cv.put(dbHelper.ASSIGNMENTS_week, week);
-            cv.put(dbHelper.ASSIGNMENTS_assNr, assNr);
-            cv.put(dbHelper.ASSIGNMENTS_startPage, startPage);
-            cv.put(dbHelper.ASSIGNMENTS_stopPage, stopPage);
-            cv.put(dbHelper.ASSIGNMENTS_type, type.toString());
-            cv.put(dbHelper.ASSIGNMENTS_status, status.toString());
-
-            return db.insert(dbHelper.TABLE_ASSIGNMENTS, null, cv);
-        } catch (Exception e) {
-            return -1;
-        }
-    }
-
-    public long insertAssignment(String courseCode,int id, int chapter, int week, String assNr,
-                                 int startPage, int stopPage, AssignmentType type, AssignmentStatus status) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        try {
-            cv.put(dbHelper.ASSIGNMENTS_ccode, courseCode);
-            cv.put(dbHelper.ASSIGNMENTS_chapter, chapter);
-            cv.put(dbHelper.ASSIGNMENTS_week, week);
-            cv.put(dbHelper.ASSIGNMENTS_assNr, assNr);
-            cv.put(dbHelper.ASSIGNMENTS_startPage, startPage);
-            cv.put(dbHelper.ASSIGNMENTS_stopPage, stopPage);
-            cv.put(dbHelper.ASSIGNMENTS_type, type.toString());
-            cv.put(dbHelper.ASSIGNMENTS_status, status.toString());
-            cv.put(dbHelper.ASSIGNMENTS__id, id);
-
-            return db.insert(dbHelper.TABLE_ASSIGNMENTS, null, cv);
-        } catch (Exception e) {
-            return -1;
-        }
-    }
-
-    public long deleteAssignment(int id){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        try{
-            return db.delete(dbHelper.TABLE_ASSIGNMENTS, dbHelper.ASSIGNMENTS__id+ "=" +id, null);
-        }catch (Exception e){
-            return -1;
-        }
-    }
-
-
-    public void deleteAssignments(String ccode) {
-        Cursor cur = getAssignments(ccode);
-
-        while (cur.moveToNext()){
-            try {
-                deleteAssignment(cur.getColumnIndex("ASSIGNMENTS__id"));
-            } catch (Exception e) {
-            }
-        }
-    }
-
-
-    public long setDone(int assignmentId){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        cv.put(dbHelper.ASSIGNMENTS_status, AssignmentStatus.DONE.toString());
-
-        try {
-            return db.update(dbHelper.TABLE_ASSIGNMENTS, cv, dbHelper.ASSIGNMENTS__id + "=" + assignmentId, null);
-        }catch (Exception e){
-            return -1;
-        }
-    }
-
-    public long setUndone(int assignmentId){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        String nullString = null;
-        cv.put(dbHelper.ASSIGNMENTS_status, AssignmentStatus.UNDONE.toString());
-
-        try {
-            return db.update(dbHelper.TABLE_ASSIGNMENTS, cv, dbHelper.ASSIGNMENTS__id + "=" + assignmentId, null);
-        }catch (Exception e){
-            return -1;
-        }
-    }
-
-    public long insertTimeOnCourse(String ccode, int minutes) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-
-        try {
-            cv.put(dbHelper.TIMEONCOURSE__ccode, ccode);
-            cv.put(dbHelper.TIMEONCOURSE_time, minutes);
-
-            return db.update(dbHelper.TABLE_TIMEONCOURSE, cv, null, null);
-            //return db.insert(dbHelper.TABLE_TIMEONCOURSE, null, cv);
-        } catch (Exception e) {
-            return -1;
-        }
-    }
-
-    public Cursor getAssignments() {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        return db.query(dbHelper.TABLE_ASSIGNMENTS, null, null, null, null, null, null);
-    }
-
-    public Cursor getDoneAssignments(String ccode){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "' AND "
-                + dbHelper.ASSIGNMENTS_status + " = '" + AssignmentStatus.DONE.toString()+"'";
-        return db.query(dbHelper.TABLE_ASSIGNMENTS, null, selection, null, null, null, null);
-    }
-
-    public Cursor getAssignments(String ccode){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        String selection = dbHelper.ASSIGNMENTS_ccode + " = '" + ccode + "'";
-        return db.query(dbHelper.TABLE_ASSIGNMENTS, null, selection, null, null, null, null);
-    }
-
-    public Cursor getSessions() {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        return db.query(dbHelper.TABLE_SESSIONS, null, null, null, null, null, null);
-    }
-
-    public Cursor getSessions(int week){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        return db.query(dbHelper.TABLE_SESSIONS, null, dbHelper.SESSION_week + " = '" + week + "'", null, null, null, null);
-    }
-
-    public Cursor getMinutes(int week, String ccode){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        String[] columns = {"minutes"};
-
-        return db.query(dbHelper.TABLE_SESSIONS,columns, dbHelper.SESSION_week + " = '" + week + "' AND "+
-                dbHelper.SESSIONS_ccode + " = '" + ccode + "'", null, null, null, "minutes");
-    }
-
-    public int getSmallestWeek(String ccode){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        String[] columns = {"min(week)"};
-        Cursor cursor = db.query(dbHelper.TABLE_SESSIONS, columns, dbHelper.SESSIONS_ccode
-                + " = '" + ccode + "'", null, null, null, null);
-
-        cursor.moveToFirst();
-        if (cursor.getCount() == 0 || cursor.getInt(0) == 0) {
-            return 53;
-        }else{
-            return cursor.getInt(0);
-        }
-    }
-
-    public int getSpentTime(String ccode) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        String[] columns = {"SUM(" + dbHelper.SESSIONS_minutes + ")"};
-        String selection = dbHelper.SESSIONS_ccode + " = '" + ccode + "'";
-        Cursor cursor = db.query(dbHelper.TABLE_SESSIONS, columns, selection, null, dbHelper.SESSIONS_ccode, null, null);
-
-        cursor.moveToNext();
-        if (cursor.getCount() > 0) {
-            int i = cursor.getInt(0);
-            cursor.close();
-            return i;
-        } else {
-            return 0;
-        }
-    }
-
-    public int getTimeOnCourse(String ccode) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        String[] columns = {dbHelper.TIMEONCOURSE_time};
-        String selection = dbHelper.TIMEONCOURSE__ccode + " = '" + ccode + "'";
-        Cursor cursor = db.query(dbHelper.TABLE_TIMEONCOURSE, columns, selection, null, null, null, null);
-
-        if (cursor.getCount() > 0) {
-            cursor.moveToNext();
-            int i = cursor.getInt(0);
-            cursor.close();
-            return i;
-        } else {
-            cursor.close();
-            return 0;
-        }
-    }
-
-    /**
-     * Get all courses.
-     */
-    public Cursor getCourses() {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        return db.query(dbHelper.TABLE_COURSES, null, null, null, null, null, null);
-    }
-
-    /**
-     * Get all ongoing courses.
-     */
-    public Cursor getOngoingCourses() {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String selection = dbHelper.COURSES_cstatus + " = '" + AssignmentStatus.UNDONE.toString() + "'";
-        return db.query(dbHelper.TABLE_COURSES, null, selection, null, null, null, null);
-    }
-
-    public Cursor getDoneCourses() {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String selection = dbHelper.COURSES_cstatus + " = '" + AssignmentStatus.DONE.toString() + "'";
-        return db.query(dbHelper.TABLE_COURSES, null, selection, null, null, null, null);
-    }
-
-    /*The DBHelper class*/
-    public static class DBHelper extends SQLiteOpenHelper {
-        private static final String DATABASE_NAME = "pluggapp.db";
-        private static final int DATABASE_VERSION = 1; //Has to be incremented to update.
-
-        //Variables for the Courses table.
-        private static final String TABLE_COURSES = "COURSES";
-        private static final String COURSES__ccode = "_ccode";
-        private static final String COURSES_cname = "cname";
-        private static final String COURSES_cstatus = "cstatus";
-
-        //Variables for the Sessions table.
-        private static final String TABLE_SESSIONS = "SESSIONS";
-        private static final String SESSIONS_ccode = "_ccode";
-        private static final String SESSIONS__id = "_id";
-        private static final String SESSION_timestamp = "timestamp";
-        private static final String SESSION_week = "week";
-        private static final String SESSIONS_minutes = "minutes";
-
-        //Variables for the Assignments table.
-        private static final String TABLE_ASSIGNMENTS = "ASSIGNMENTS";
-        private static final String ASSIGNMENTS__id = "_id";
-        private static final String ASSIGNMENTS_ccode = COURSES__ccode;
-        private static final String ASSIGNMENTS_chapter = "chapter";
-        private static final String ASSIGNMENTS_week = "week";
-        private static final String ASSIGNMENTS_assNr = "assNr";
-        private static final String ASSIGNMENTS_startPage = "startPage";
-        private static final String ASSIGNMENTS_stopPage = "stopPage";
-        private static final String ASSIGNMENTS_type = "type";
-        private static final String ASSIGNMENTS_status = "status";
-
-        //Variables for the TimeOnCourse table.
-        private static final String TABLE_TIMEONCOURSE = "TIMEONCOURSE";
-        private static final String TIMEONCOURSE__ccode = COURSES__ccode;
-        private static final String TIMEONCOURSE_time = "time";
-
-        /*Constructor.*/
-        public DBHelper(Context context) {
+    private static class DatabaseHelper extends SQLiteOpenHelper
+    {
+        DatabaseHelper(Context context)
+        {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
         @Override
-        public void onCreate(SQLiteDatabase db) {
-            //Called when database is created.
-            //Creation of schemas and initial insert of data.
-            db.execSQL("CREATE TABLE " + TABLE_COURSES + " ("
-                    + COURSES__ccode + " VARCHAR(50) PRIMARY KEY, "
-                    + COURSES_cname + " VARCHAR(50), "
-                    + COURSES_cstatus + " VARCHAR(50))");
+        public void onCreate(SQLiteDatabase db)
+        {
 
-            db.execSQL("CREATE TABLE " + TABLE_SESSIONS + " ("
-                    + SESSIONS__id + " INTEGER PRIMARY KEY, "
-                    + SESSIONS_minutes + " INT, "
-                    + SESSIONS_ccode + " VARCHAR(50), "
-                    + SESSION_timestamp + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
-                    + SESSION_week + " INT)");
+            Log.i("DBAdapter", "onCreate");
 
-            db.execSQL("CREATE TABLE " + TABLE_ASSIGNMENTS + " ("
-                    + ASSIGNMENTS__id + " PRIMARY KEY, "
-                    + ASSIGNMENTS_ccode + " VARCHAR(50), "
-                    + ASSIGNMENTS_chapter + " INT, "
-                    + ASSIGNMENTS_week + " INT, "
-                    + ASSIGNMENTS_assNr +" VARCHAR(50), "
-                    + ASSIGNMENTS_startPage + " INT, "
-                    + ASSIGNMENTS_stopPage + " INT, "
-                    + ASSIGNMENTS_type + " VARCHAR(50), "
-                    + ASSIGNMENTS_status + " VARCHAR(50))");
+            db.execSQL(CREATE_COURSES_TABLE);
+            db.execSQL(CREATE_TIMEONCOURSE_TABLE);
+            db.execSQL(CREATE_OBLIG_TABLE);
 
-            db.execSQL("CREATE TABLE " + TABLE_TIMEONCOURSE + "("
-                    + TIMEONCOURSE__ccode + " VARCHAR(50) PRIMARY KEY, "
-                    + TIMEONCOURSE_time + " INT, "
-                    + "FOREIGN KEY(" + TIMEONCOURSE__ccode + ") REFERENCES " + COURSES__ccode + ")");
+            db.execSQL(CREATE_SESSIONS_TABLE);
+
+            db.execSQL(CREATE_HANDIN_TABLE);
+            db.execSQL(CREATE_LABS_TABLE);
+            db.execSQL(CREATE_OTHER_TABLE);
+            db.execSQL(CREATE_PROBLEMS_TABLE);
+            db.execSQL(CREATE_READ_TABLE);
+
+            db.execSQL(CREATE_REPETITION_TABLE);
+            db.execSQL(CREATE_ALL_REPETITION_TABLE);
         }
 
         @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        public void onUpgrade(SQLiteDatabase db, int oldVersion,
+                              int newVersion)
+        {
             db.execSQL("DROP TABLE IF EXISTS COURSES");
             onCreate(db);
         }
     }
+
+    /**
+     * open the db
+     * @return this
+     * @throws android.database.SQLException
+     * return type: DBAdapter
+     */
+    public DBAdapter open() throws SQLException
+    {
+        this.db = this.DBHelper.getWritableDatabase();
+        return this;
+    }
+
+    /**
+     * close the db
+     * return type: void
+     */
+    public void close()
+    {
+        this.DBHelper.close();
+    }
+
 }

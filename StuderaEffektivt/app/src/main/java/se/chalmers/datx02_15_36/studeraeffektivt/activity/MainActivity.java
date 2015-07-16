@@ -44,7 +44,7 @@ import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import java.util.ArrayList;
 import java.util.List;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CalendarFrag;
 //import se.chalmers.datx02_15_36.studeraeffektivt.fragment.CourseDetailedInfoFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.fragment.HomeFrag;
@@ -119,13 +119,13 @@ public class MainActivity extends ActionBarActivity {
         timerFrag = (TimerFrag) mAdapter.getItem(2);
 
         //Sets the unselected tab icons to a lighter blue color
-        Drawable homeUns = getResources().getDrawable( R.drawable.ic_home1).mutate();
+        Drawable homeUns = getResources().getDrawable(R.drawable.ic_home1).mutate();
         homeUns.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
-        Drawable calUns = getResources().getDrawable( R.drawable.ic_cal2).mutate();
+        Drawable calUns = getResources().getDrawable(R.drawable.ic_cal2).mutate();
         calUns.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
-        Drawable timerUns = getResources().getDrawable( R.drawable.ic_timer).mutate();
+        Drawable timerUns = getResources().getDrawable(R.drawable.ic_timer).mutate();
         timerUns.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
-        Drawable statsUns = getResources().getDrawable( R.drawable.ic_action_trending_up).mutate();
+        Drawable statsUns = getResources().getDrawable(R.drawable.ic_action_trending_up).mutate();
         statsUns.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
         Drawable myProfileUns = getResources().getDrawable(R.drawable.ic_examhat).mutate();
         myProfileUns.setColorFilter(Color.parseColor(Colors.secondaryColor), PorterDuff.Mode.SRC_ATOP);
@@ -146,14 +146,14 @@ public class MainActivity extends ActionBarActivity {
                 viewPager.setCurrentItem(tab.getPosition());
 
 
-                if(tab.getPosition() == 0) {
+                if (tab.getPosition() == 0) {
                     actionButton.setVisibility(View.GONE);
                     button1.setVisibility(View.GONE);
                     button2.setVisibility(View.GONE);
                     button3.setVisibility(View.GONE);
                     button4.setVisibility(View.GONE);
                     //homeActionButton.setVisibility(View.VISIBLE);
-                }else if (tab.getPosition() == 1) {
+                } else if (tab.getPosition() == 1) {
                     actionButton.setVisibility(View.VISIBLE);
                     button1.setVisibility(View.VISIBLE);
                     button2.setVisibility(View.VISIBLE);
@@ -174,21 +174,21 @@ public class MainActivity extends ActionBarActivity {
                 int position = tab.getPosition();
 
 
-                switch(position){
+                switch (position) {
                     case 0:
-                        tab.setIcon(getResources().getDrawable( R.drawable.ic_home1).mutate());
+                        tab.setIcon(getResources().getDrawable(R.drawable.ic_home1).mutate());
                         break;
                     case 1:
-                        tab.setIcon(getResources().getDrawable( R.drawable.ic_cal2).mutate());
+                        tab.setIcon(getResources().getDrawable(R.drawable.ic_cal2).mutate());
                         break;
                     case 2:
-                        tab.setIcon(getResources().getDrawable( R.drawable.ic_timer).mutate());
+                        tab.setIcon(getResources().getDrawable(R.drawable.ic_timer).mutate());
                         break;
                     case 3:
-                        tab.setIcon(getResources().getDrawable( R.drawable.ic_action_trending_up).mutate());
+                        tab.setIcon(getResources().getDrawable(R.drawable.ic_action_trending_up).mutate());
                         break;
                     case 4:
-                        tab.setIcon(getResources().getDrawable( R.drawable.ic_examhat).mutate());
+                        tab.setIcon(getResources().getDrawable(R.drawable.ic_examhat).mutate());
                         break;
                     default:
                         break;
@@ -219,16 +219,16 @@ public class MainActivity extends ActionBarActivity {
                 actionBar.setSelectedNavigationItem(position);
 
                 //When home page is selected
-                if(position == 0) {
+                if (position == 0) {
                     homeFrag.setTodaysEvents();
                 }
-                if((position == 1) && calendarFrag.hasInit()) {
+                if ((position == 1) && calendarFrag.hasInit()) {
                     calendarFrag.updateView();
                 }
-                if((position == 2) && timerFrag.hasInit()) {
+                if ((position == 2) && timerFrag.hasInit()) {
                     timerFrag.updateView();
                 }
-                if((position == 3) && statsFrag.hasInit()) {
+                if ((position == 3) && statsFrag.hasInit()) {
                     statsFrag.updateView();
                 }
             }
@@ -250,7 +250,7 @@ public class MainActivity extends ActionBarActivity {
 
 
         //Didnt work T_T Wanted to redirect from a timer notification
-        if(savedInstanceState!=null) {
+        if (savedInstanceState != null) {
             savedInstanceState.getBoolean("goToTimer", false);
             if (savedInstanceState.getBoolean("goToTimer", false)) {
                 actionBar.setSelectedNavigationItem(2);
@@ -265,7 +265,7 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    private void instantiateActionBar(){
+    private void instantiateActionBar() {
         actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -277,7 +277,7 @@ public class MainActivity extends ActionBarActivity {
         actionBar.setStackedBackgroundDrawable(primaryColorDrawable);
     }
 
-    private void instantiateCalendarFloatingActionButton(){
+    private void instantiateCalendarFloatingActionButton() {
         FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
             @Override
             public void onMenuOpened(FloatingActionMenu floatingActionMenu) {
@@ -289,7 +289,7 @@ public class MainActivity extends ActionBarActivity {
         };
 
         ImageView icon = new ImageView(this); // Create an icon
-        Drawable moreIcon = getResources().getDrawable( R.drawable.ic_navigation_more_vert).mutate();
+        Drawable moreIcon = getResources().getDrawable(R.drawable.ic_navigation_more_vert).mutate();
         moreIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP);
         icon.setImageDrawable(moreIcon);
 
@@ -300,7 +300,7 @@ public class MainActivity extends ActionBarActivity {
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
         // repeat many times:
         ImageView itemIcon1 = new ImageView(this);
-        Drawable plusIcon = getResources().getDrawable( R.drawable.ic_content_add).mutate();
+        Drawable plusIcon = getResources().getDrawable(R.drawable.ic_content_add).mutate();
         plusIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon1.setImageDrawable(plusIcon);
         button1 = itemBuilder.setContentView(itemIcon1).build();
@@ -308,7 +308,7 @@ public class MainActivity extends ActionBarActivity {
         button1.setOnClickListener(fabHandler);
 
         ImageView itemIcon2 = new ImageView(this);
-        Drawable repeatIcon = getResources().getDrawable( R.drawable.ic_av_loop).mutate();
+        Drawable repeatIcon = getResources().getDrawable(R.drawable.ic_av_loop).mutate();
         repeatIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon2.setImageDrawable(repeatIcon);
         button2 = itemBuilder.setContentView(itemIcon2).build();
@@ -316,7 +316,7 @@ public class MainActivity extends ActionBarActivity {
         button2.setOnClickListener(fabHandler);
 
         ImageView itemIcon3 = new ImageView(this);
-        Drawable nbrOfVisibleDaysIcon = getResources().getDrawable( R.drawable.ic_image_filter).mutate();
+        Drawable nbrOfVisibleDaysIcon = getResources().getDrawable(R.drawable.ic_image_filter).mutate();
         nbrOfVisibleDaysIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon3.setImageDrawable(nbrOfVisibleDaysIcon);
         button3 = itemBuilder.setContentView(itemIcon3).build();
@@ -324,7 +324,7 @@ public class MainActivity extends ActionBarActivity {
         button3.setOnClickListener(fabHandler);
 
         ImageView itemIcon4 = new ImageView(this);
-        Drawable calendarsIcon = getResources().getDrawable( R.drawable.ic_cal2).mutate();
+        Drawable calendarsIcon = getResources().getDrawable(R.drawable.ic_cal2).mutate();
         calendarsIcon.setColorFilter(Color.parseColor(Colors.primaryColor), PorterDuff.Mode.SRC_ATOP); //Set color to a drawable from hexcode!
         itemIcon4.setImageDrawable(calendarsIcon);
         button4 = itemBuilder.setContentView(itemIcon4).build();
@@ -361,10 +361,11 @@ public class MainActivity extends ActionBarActivity {
 
     public void onlyWhenInAppReminder() {
         // if(Utils.getCurrWeekNumber() == Calendar.MONDAY && Utils.getHourNow() >= 8){
-        RepetitionReminder repetitionReminder = new RepetitionReminder();
-        repetitionReminder.setDBAdapter(new DBAdapter(this));
+      /*  RepetitionReminder repetitionReminder = new RepetitionReminder();
+        repetitionReminder.setAssesDBAdapter(new OldAssignmentsDBAdapter(this));
+        repetitionReminder.setCoursesDBAdapter(new CoursesDBAdapter(this));*/
 
-        List<String> message = repetitionReminder.reminderMessage();
+      /* List<String> message = repetitionReminder.reminderMessage();
 
         Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplication());
@@ -394,21 +395,22 @@ public class MainActivity extends ActionBarActivity {
 
     public void TimeToRemind(){
        // if(Utils.getCurrWeekNumber() == Calendar.MONDAY && Utils.getHourNow() >= 8){
-            RepetitionReminder repetitionReminder = new RepetitionReminder();
-            repetitionReminder.setDBAdapter(new DBAdapter(this));
+           /* RepetitionReminder repetitionReminder = new RepetitionReminder();
+            repetitionReminder.setCoursesDBAdapter(new CoursesDBAdapter(this));
+            repetitionReminder.setAssesDBAdapter(new OldAssignmentsDBAdapter(this));
 
-            List<String> message = repetitionReminder.reminderMessage();
+            List<String> message = repetitionReminder.reminderMessage();*/
 
-            //Notificationstuff
-            Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplication());
-            stackBuilder.addParentStack(MainActivity.class);
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent =
-                    stackBuilder.getPendingIntent(
-                            0,
-                            PendingIntent.FLAG_UPDATE_CURRENT
-                    );
+        //Notificationstuff
+        Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplication());
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
 
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
@@ -419,7 +421,7 @@ public class MainActivity extends ActionBarActivity {
         NotificationCompat.InboxStyle inboxStyle =
                 new NotificationCompat.InboxStyle();
 
-        if(!message.isEmpty()){
+       /* if(!message.isEmpty()){
             for(String text: message)
             inboxStyle.addLine(text);
         }
@@ -436,14 +438,14 @@ public class MainActivity extends ActionBarActivity {
             }
             */
 
-            mBuilder.addAction(R.drawable.ic_av_loop, "Ja", resultPendingIntent);
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("Go_To_Cal", true);
-            resultIntent.putExtras(bundle);
-            //resultIntent.setAction("Go_To_Cal");
+        mBuilder.addAction(R.drawable.ic_av_loop, "Ja", resultPendingIntent);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("Go_To_Cal", true);
+        resultIntent.putExtras(bundle);
+        //resultIntent.setAction("Go_To_Cal");
 
-            inboxStyle.addLine("Vill du skapa ett repetitionspass?");
-            Cursor courses = repetitionReminder.getCourses();
+        inboxStyle.addLine("Vill du skapa ett repetitionspass?");
+           /* Cursor courses = repetitionReminder.getCourses();
 
             while (courses.moveToNext()) {
                 Log.i("courses", courses.getString(courses.getColumnIndex("_ccode")));
@@ -465,7 +467,8 @@ public class MainActivity extends ActionBarActivity {
         testReceiver = new NotificationBroadcastReceiver();
         // if(Utils.getCurrWeekNumber() == Calendar.MONDAY && Utils.getHourNow() >= 8){
         RepetitionReminder repetitionReminder = new RepetitionReminder();
-        repetitionReminder.setDBAdapter(new DBAdapter(this));
+        repetitionReminder.setCoursesDBAdapter(new CoursesDBAdapter(this));
+        repetitionReminder.setAssesDBAdapter(new OldAssignmentsDBAdapter(this));
 
         ArrayList<String> message = repetitionReminder.reminderMessage();
         Intent i = new Intent(this, NotificationService.class);
@@ -521,9 +524,10 @@ public class MainActivity extends ActionBarActivity {
                 + (2 * 1000), pendingIntent);
         Toast.makeText(this, "Alarm set in " + 2 + " seconds",
                 Toast.LENGTH_LONG).show();
+    }*/
+
+
     }
-
-
 }
 
 

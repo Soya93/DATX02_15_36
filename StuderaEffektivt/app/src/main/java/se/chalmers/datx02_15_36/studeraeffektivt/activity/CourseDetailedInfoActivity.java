@@ -17,6 +17,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -25,26 +26,29 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
-
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.web.GetAssignmentsFromWeb;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CourseView;
-import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
 
 /**
  * Created by SoyaPanda on 15-03-06.
  */
 public class CourseDetailedInfoActivity extends ActionBarActivity {
-
-    private FlowLayout layoutWithinScrollViewOfTasks;
-    private FlowLayout layoutWithinScrollViewOfOther;
 
     private boolean isActiveCourse;
     private boolean hasFetchedBefore = false;
@@ -56,62 +60,250 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private Menu menu;
     private MenuItem activeCourseItem;
 
+    private CoursesDBAdapter coursesDBAdapter;
+    private LabAssignmentsDBAdapter labsDBAdapter;
+    private HandInAssignmentsDBAdapter handinsDBAdapter;
 
-    private DBAdapter dbAdapter;
-    private CourseView courseView;
+    private CourseView alertCreator;
+
+    //View objects
+    private TextView examLabel;
+    private TextView timeOnCourseLabel;
+    private TextView miniexamLabel;
+    private TextView labLabel;
+    private TextView handinLabel;
+
+    //Last ids in lists
+    private int lastMiniExamId = -1;
+    private int lastLabId = -1;
+    private int lastHandinId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_details);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+
         courseName = getIntent().getStringExtra("CourseName");
         courseCode = getIntent().getStringExtra("CourseCode");
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(courseName);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
-        //initFrag(getIntent().getStringExtra("ActivityTitle"));
-        if (this != null) {
-            dbAdapter = new DBAdapter(this);
-        }
 
-//        fillActivity(courseCode, courseName);
-        initComponents();
+        if (this != null) {
+            coursesDBAdapter = new CoursesDBAdapter(this);
+            labsDBAdapter = new LabAssignmentsDBAdapter(this);
+            handinsDBAdapter = new HandInAssignmentsDBAdapter(this);
+        }
 
         isInitialized = true;
 
-        String status = dbAdapter.getCourseStatus(courseCode);
-
+        String status = coursesDBAdapter.getCourseStatus(courseCode);
         isActiveCourse = (status.toLowerCase().equals("undone"));
-        courseView = new CourseView();
+        alertCreator = new CourseView();
 
+        initComponents();
     }
 
+    private void initComponents(){
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_course_details);
 
+        addExam(layout);
+        addTimeOnCourse(layout);
 
-
-
-    // listener for FAB menu
-    FloatingActionMenu.MenuStateChangeListener myFABHandler = new FloatingActionMenu.MenuStateChangeListener() {
-        @Override
-        public void onMenuOpened(FloatingActionMenu floatingActionMenu) {
+        if(coursesDBAdapter.hasMiniexams(courseCode)){
+            addMiniexams(layout);
         }
 
-        @Override
-        public void onMenuClosed(FloatingActionMenu floatingActionMenu) {
+        if (labsDBAdapter.getAssignments(courseCode).getCount() != 0){
+            addLabs(layout);
         }
-    };
 
+        if(handinsDBAdapter.getAssignments(courseCode).getCount() != 0){
+            addHandins(layout);
+        }
+    }
+
+    private void updateComponents(){
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_course_details);
+        layout.removeAllViews();
+
+        lastMiniExamId = -1;
+        lastLabId = -1;
+        lastHandinId = -1;
+
+        Log.d("updateCP", "har wipat allt");
+        initComponents();
+    }
+
+    private void addTimeOnCourse(RelativeLayout layout) {
+        RelativeLayout.LayoutParams paramsTOC = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        timeOnCourseLabel = new TextView(this);
+        timeOnCourseLabel.setId(View.generateViewId());
+        int timeOnCourse = coursesDBAdapter.getTimeOnCourse(courseCode);
+        timeOnCourseLabel.setText("Timmar per vecka: " + timeOnCourse);
+        timeOnCourseLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+
+        //Padding bottom
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (25*scale + 0.5f);
+        timeOnCourseLabel.setPadding(0,0,0,dpAsPixels);
+
+        paramsTOC.addRule(RelativeLayout.BELOW, examLabel.getId());
+        layout.addView(timeOnCourseLabel, paramsTOC);
+    }
+
+    private void addExam(RelativeLayout layout) {
+        examLabel = new TextView(this);
+        examLabel.setId(View.generateViewId());
+        examLabel.setText("Tentamen: " + coursesDBAdapter.getExamDate(courseCode));
+        examLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+
+        //Padding top
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (18*scale + 0.5f);
+        examLabel.setPadding(0,dpAsPixels,0,0);
+
+        layout.addView(examLabel);
+    }
+
+    private void addHandins(RelativeLayout layout) {
+        Log.d("updateCP", "in add handins");
+        addHandinLabel(layout);
+
+        //The handins
+        Cursor handins = handinsDBAdapter.getAssignments(courseCode);
+        Log.d("CoursePage", "antal handins: " + handins.getCount());
+        TextView tv;
+        RelativeLayout.LayoutParams params;
+        while (handins.moveToNext()){
+            tv = new TextView(this);
+            int id = View.generateViewId();
+            tv.setId(id);
+            params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            String date = handins.getString( handins.getColumnIndex("date") );
+            tv.setText(date);
+
+            if(lastHandinId == -1){
+                params.addRule(RelativeLayout.BELOW, handinLabel.getId());
+            }else{
+                params.addRule(RelativeLayout.BELOW, lastHandinId);
+            }
+            lastHandinId = id;
+            layout.addView(tv, params);
+        }
+    }
+
+    private void addHandinLabel(RelativeLayout layout) {
+        RelativeLayout.LayoutParams paramsHandin = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        handinLabel = new TextView(this);
+        handinLabel.setId(View.generateViewId());
+        handinLabel.setText("Inlämningsuppgifter");
+        handinLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+
+        if(labLabel != null){
+            paramsHandin.addRule(RelativeLayout.BELOW, lastLabId);
+        }else if(miniexamLabel != null){
+            paramsHandin.addRule(RelativeLayout.BELOW, lastMiniExamId);
+        }else{
+            paramsHandin.addRule(RelativeLayout.BELOW, examLabel.getId());
+        }
+        layout.addView(handinLabel, paramsHandin);
+    }
+
+    private void addLabs(RelativeLayout layout) {
+        Log.d("updateCP", "in add labs");
+        addLabsLabel(layout);
+
+        //The labs
+        Cursor labs = labsDBAdapter.getAssignments(courseCode);
+        Log.d("CoursePage", "antal labbar: " + labs.getCount());
+        TextView tv;
+        RelativeLayout.LayoutParams params;
+        while (labs.moveToNext()){
+            tv = new TextView(this);
+            int id = View.generateViewId();
+            tv.setId(id);
+            params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            String date = labs.getString( labs.getColumnIndex("date") );
+            tv.setText(date);
+
+            if(lastLabId == -1){
+                params.addRule(RelativeLayout.BELOW, labLabel.getId());
+            }else{
+                params.addRule(RelativeLayout.BELOW, lastLabId);
+            }
+            lastLabId = id;
+            layout.addView(tv, params);
+        }
+    }
+
+    private void addLabsLabel(RelativeLayout layout) {
+        RelativeLayout.LayoutParams paramsLabs = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        //The label
+        labLabel = new TextView(this);
+        labLabel.setId(View.generateViewId());
+        labLabel.setText("Laborationer");
+        labLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+
+        if(miniexamLabel != null) {
+            paramsLabs.addRule(RelativeLayout.BELOW, lastMiniExamId);
+        }else{
+            paramsLabs.addRule(RelativeLayout.BELOW, examLabel.getId());
+        }
+        layout.addView(labLabel, paramsLabs);
+    }
+
+    private void addMiniexams(RelativeLayout layout) {
+        addMiniexamsLabel(layout);
+
+        //The miniexams
+        Cursor miniexams = coursesDBAdapter.getObligatoryMiniexams(courseCode);
+        Log.d("CoursePage", "antal duggor: " + miniexams.getCount());
+        TextView tv;
+        RelativeLayout.LayoutParams params;
+        while (miniexams.moveToNext()){
+            tv = new TextView(this);
+            int id = View.generateViewId();
+            tv.setId(id);
+            params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            String date = miniexams.getString( miniexams.getColumnIndex("date") );
+            tv.setText(date);
+
+            if(lastMiniExamId == -1){
+                params.addRule(RelativeLayout.BELOW, miniexamLabel.getId());
+            }else{
+                params.addRule(RelativeLayout.BELOW, lastMiniExamId);
+            }
+            lastMiniExamId = id;
+            layout.addView(tv, params);
+        }
+    }
+
+    private void addMiniexamsLabel(RelativeLayout layout) {
+        RelativeLayout.LayoutParams paramsMiniExam = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        //The label
+        miniexamLabel = new TextView(this);
+        miniexamLabel.setId(View.generateViewId());
+        miniexamLabel.setText("Duggor");
+        miniexamLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
+
+        paramsMiniExam.addRule(RelativeLayout.BELOW, timeOnCourseLabel.getId());
+        layout.addView(miniexamLabel, paramsMiniExam);
+    }
 
 
     @Override
     public void onStart() {
         super.onStart();
-        layoutWithinScrollViewOfTasks.removeAllViews();
-        layoutWithinScrollViewOfOther.removeAllViews();
-        layoutWithinScrollViewOfTasks.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.READ);
-        layoutWithinScrollViewOfOther.addTasksFromDatabase(dbAdapter, courseCode, AssignmentType.OTHER);
-
     }
 
     @Override
@@ -125,9 +317,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     private void updateText(){
         if(isActiveCourse){
-            menu.getItem(3).setTitle("Markera som avslutad");
+            menu.getItem(4).setTitle("Markera som avslutad");
         }else {
-            menu.getItem(3).setTitle("Markera som pågående");
+            menu.getItem(4).setTitle("Markera som pågående");
         }
     }
 
@@ -138,6 +330,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        int i = 0;
+
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
             this.finish();
@@ -147,23 +341,17 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         } else if (id == R.id.action_time_on_course) {
             chooseTimeOnCourseDialog();
         } else if (id == R.id.action_download) {
-            getAssignmetsFromWeb();
+            getAssignmentsFromWeb();
         } else if (id == R.id.action_add) {
-            goToTasks();
+            goToAddTasks();
         } else if (id == R.id.action_activate) {
             openConfirmChangeStatusDialog();
+        } else if (id == R.id.action_tasks) {
+            goToCourseTasks();
         }
         updateText();
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void initComponents() {
-
-        layoutWithinScrollViewOfTasks = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfTasks);
-
-        layoutWithinScrollViewOfOther = (FlowLayout) findViewById(R.id.layoutWithinScrollViewOfOther);
-
     }
 
     public void onResume() {
@@ -171,7 +359,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     private void openConfirmChangeStatusDialog() {
-        AlertDialog.Builder builder = courseView.confirmCourseStatusView(courseName, isActiveCourse, this);
+        AlertDialog.Builder builder = alertCreator.confirmCourseStatusView(courseName, isActiveCourse, this);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -198,17 +386,17 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private void changeStatus() {
         if (!isActiveCourse) {
             // mark as ongoing
-            dbAdapter.setCourseUndone(courseCode);
+            coursesDBAdapter.setCourseUndone(courseCode);
             isActiveCourse = true;
             menu.getItem(3).setTitle("Markera som avslutad");
-            String status = dbAdapter.getCourseStatus(courseCode);
+            String status = coursesDBAdapter.getCourseStatus(courseCode);
 
         } else {
             // mark as completed
-            dbAdapter.setCourseDone(courseCode);
+            coursesDBAdapter.setCourseDone(courseCode);
             isActiveCourse = false;
             menu.getItem(3).setTitle("Markera som pågående");
-            String status = dbAdapter.getCourseStatus(courseCode);
+            String status = coursesDBAdapter.getCourseStatus(courseCode);
         }
 
     }
@@ -221,9 +409,18 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                dbAdapter.deleteCourse(courseCode);
-                     //   dbAdapter.deleteCourseAssignmets(courseCode);
-                        Toast.makeText(getApplicationContext(), courseName + " borttagen",
+                //Delete assignments
+                new HandInAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
+                new ProblemAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
+                new LabAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
+                new ReadAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
+                new OtherAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
+                coursesDBAdapter.deleteObligatories(courseCode);
+
+                //Delete course
+                coursesDBAdapter.deleteCourse(courseCode);
+
+                Toast.makeText(getApplicationContext(), courseName + " borttagen",
                                 Toast.LENGTH_LONG).show();
                         finish();
             }
@@ -243,19 +440,26 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 
-    public void goToTasks() {
-        Intent i = new Intent(this, StudyTaskActivity.class);
+    public void goToCourseTasks() {
+        Intent i = new Intent(this, CourseAssignmentsActivity.class);
         i.putExtra("CourseCode", courseCode);
-        startActivity(i);
-    }
-
-    public void getAssignmetsFromWeb() {
-        Intent i = new Intent(this, GetAssignmetsFromWeb.class);
         i.putExtra("CourseName", courseName);
+        startActivity(i);
+    }
+
+    public void goToAddTasks() {
+        Intent i = new Intent(this, AddAssignmentActivity.class);
         i.putExtra("CourseCode", courseCode);
         startActivity(i);
     }
 
+    public void getAssignmentsFromWeb() {
+        GetAssignmentsFromWeb getAssignmentsFromWeb = new GetAssignmentsFromWeb(this);
+        getAssignmentsFromWeb.addAssignmentsFromWeb(courseCode);
+
+        Log.d("updateCP", "Innan update components");
+        updateComponents();
+    }
 
     private void chooseTimeOnCourseDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -274,12 +478,13 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 Log.d("course", "add " + value + " minutes to " + courseCode);
 
                 //add value
-                long add = dbAdapter.insertTimeOnCourse(courseCode, Integer.parseInt(value));
+                long add = coursesDBAdapter.insertTimeOnCourse(courseCode, Integer.parseInt(value));
                 Toast toast;
                 if (add > 0) {
 
-                    int mins = dbAdapter.getTimeOnCourse(courseCode);
-                    toast = Toast.makeText(getBaseContext(), "Ditt mål är nu att lägga " + mins + " minuter på " + courseCode + " i veckan.", Toast.LENGTH_LONG);
+                    int mins = coursesDBAdapter.getTimeOnCourse(courseCode);
+                    timeOnCourseLabel.setText("Timmar per vecka: "+mins);
+                    toast = Toast.makeText(getBaseContext(), "Ditt mål är att lägga " + mins + " minuter på " + courseName + " i veckan.", Toast.LENGTH_LONG);
                 } else {
                     toast = Toast.makeText(getBaseContext(), "Det gick inte att lägga till.", Toast.LENGTH_SHORT);
                 }

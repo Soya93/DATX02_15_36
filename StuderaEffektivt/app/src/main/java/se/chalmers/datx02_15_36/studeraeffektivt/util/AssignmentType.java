@@ -18,6 +18,27 @@ package se.chalmers.datx02_15_36.studeraeffektivt.util;
  * Created by Patricia on 2015-03-27.
  */
 public enum AssignmentType {
-    READ,
-    OTHER
+    HANDIN ("Inlämningsuppgifter"),
+    LAB ("Laboration"),
+    PROBLEM ("Övningsuppgifter"),
+    READ ("Läsanvisningar"),
+    OBLIGATORY ("Obligatoriska moment"),
+    OTHER ("Fria uppgifter"),
+    REPEAT ("Repetitionsuppgifter");
+
+    private final String name;
+
+    private AssignmentType(String s) {
+        name = s;
+    }
+
+    public boolean equalsName(String otherName){
+        return (otherName == null)? false:name.equals(otherName);
+    }
+
+    public String toString(){
+        return name;
+    }
 }
+
+

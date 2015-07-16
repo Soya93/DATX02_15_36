@@ -38,23 +38,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.activity.TimerSettingsActivity;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.RepetitionAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentTypeUtil;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.TimerService;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
-import se.chalmers.datx02_15_36.studeraeffektivt.view.FlowLayout;
+import se.chalmers.datx02_15_36.studeraeffektivt.view.AssignmentCheckBoxLayout;
 
 
 public class TimerFrag extends Fragment {
@@ -70,8 +75,8 @@ public class TimerFrag extends Fragment {
     private TextView textView;
 
     private View rootView;
-    private FlowLayout taskList;
-    private Switch taskSwitch;
+    private AssignmentCheckBoxLayout assignmentsFlowLayout;
+    private Spinner assignmentTypeSpinner;
     private ImageButton previousWeek;
     private ImageButton nextWeek;
 
@@ -94,7 +99,15 @@ public class TimerFrag extends Fragment {
     private Spinner spinner;
     private ProgressBar progressBar;
 
-    private DBAdapter dbAdapter;
+    //The access point of the database.
+    private HandInAssignmentsDBAdapter handInDB;
+    private LabAssignmentsDBAdapter labDB;
+    private OtherAssignmentsDBAdapter otherDB;
+    private ProblemAssignmentsDBAdapter problemDB;
+    private ReadAssignmentsDBAdapter readDB;
+    private CoursesDBAdapter coursesDB;
+    private RepetitionAssignmentsDBAdapter repeatDB;
+
     private Handler serviceHandler;
 
     private SharedPreferences sharedPref;
@@ -144,7 +157,13 @@ public class TimerFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_timer, container, false);
         if (getActivity() != null) {
-            dbAdapter = new DBAdapter(getActivity());
+            handInDB = new HandInAssignmentsDBAdapter(getActivity());
+            labDB = new LabAssignmentsDBAdapter(getActivity());
+            otherDB = new OtherAssignmentsDBAdapter(getActivity());
+            problemDB = new ProblemAssignmentsDBAdapter(getActivity());
+            readDB = new ReadAssignmentsDBAdapter(getActivity());
+            coursesDB = new CoursesDBAdapter(getActivity());
+            repeatDB = new RepetitionAssignmentsDBAdapter(getActivity());
         }
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         cph = CoursePreferenceHelper.getInstance(getActivity());
@@ -169,8 +188,6 @@ public class TimerFrag extends Fragment {
         if(pauseMin != -1) {
             default_pauseTime = new Time(pauseHour, pauseMin);
         }
-
-
     }
 
     public void onStart() {
@@ -198,8 +215,6 @@ public class TimerFrag extends Fragment {
             }
             if (buttonId == R.drawable.ic_action_pause){
                 startButton.setImageResource(R.drawable.ic_action_pause);
-
-
             }
 
         }
@@ -214,8 +229,7 @@ public class TimerFrag extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setSelectedCourse();
-                taskList.removeAllViews();
-                taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
+                setCurrentAssignmentType();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -224,6 +238,10 @@ public class TimerFrag extends Fragment {
         });
             Log.d("Text", textView.getText().toString());
 
+    }
+    private void setCurrentAssignmentType(){
+        assignmentType = AssignmentTypeUtil.stringToAssignmentType(assignmentTypeSpinner.getSelectedItem().toString());
+        updateAssignmentsLayout(assignmentType,week);
     }
 
     public void onResume() {
@@ -256,13 +274,13 @@ public class TimerFrag extends Fragment {
         });
         spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        taskList = (FlowLayout) rootView.findViewById(R.id.taskList);
-        taskSwitch = (Switch) rootView.findViewById(R.id.taskSwitch);
+        assignmentsFlowLayout = (AssignmentCheckBoxLayout) rootView.findViewById(R.id.taskList);
+        assignmentTypeSpinner = (Spinner) rootView.findViewById(R.id.taskSwitch);
         previousWeek = (ImageButton) rootView.findViewById(R.id.previousWeek);
         nextWeek = (ImageButton) rootView.findViewById(R.id.nextWeek);
         textViewWeek = (TextView) rootView.findViewById(R.id.textViewWeek);
 
-        taskSwitch.setVisibility(View.VISIBLE);
+        assignmentTypeSpinner.setVisibility(View.VISIBLE);
 
         setCourses();
 
@@ -271,24 +289,24 @@ public class TimerFrag extends Fragment {
         textViewWeek.setText("Vecka " + String.valueOf(week));
 
         initButtons();
-        assignmentType = AssignmentType.OTHER;
+        assignmentType = AssignmentType.PROBLEM;
 
         cph.setSpinnerCourseSelection(spinner);
 
         if(spinner.getSelectedItem()!=null) {
             setSelectedCourse();
-            updateTaskList(assignmentType, week);
+            updateAssignmentsLayout(assignmentType, week);
         }
 
         isInitialized = true;
-
+        setTaskTypeSpinner();
     }
 
     private void setCourses() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        Cursor cursor = dbAdapter.getOngoingCourses();
+        Cursor cursor = coursesDB.getOngoingCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
         if(cursor.getCount()>0) {
@@ -453,39 +471,72 @@ public class TimerFrag extends Fragment {
     }
 
 
-    public void updateTaskList(AssignmentType assignmentType, int week) {
+    public void updateAssignmentsLayout(AssignmentType assignmentType, int week) {
 
-        taskList.removeAllViews();
-        taskList.addTasksFromDatabase(dbAdapter, ccode, assignmentType, week);
+        assignmentsFlowLayout.removeAllViews();
+        switch (assignmentType) {
+            case HANDIN:
+                assignmentsFlowLayout.addHandInsFromDatabase(ccode, handInDB, week);
+                break;
 
-        if(taskList.isEmpty()){
+            case LAB:
+                assignmentsFlowLayout.addLabsFromDatabase(ccode, labDB, week);
+                break;
+
+            case OTHER:
+                assignmentsFlowLayout.addOthersFromDatabase(ccode, otherDB, week);
+                break;
+
+            case PROBLEM:
+                assignmentsFlowLayout.addProblemsFromDatabase(ccode, problemDB, week);
+                break;
+
+            case READ:
+                assignmentsFlowLayout.addReadsFromDatabase(ccode, readDB, week);
+                break;
+
+            case OBLIGATORY:
+                assignmentsFlowLayout.addObligatoriesFromDatabase(ccode, coursesDB, week);
+                break;
+
+            case REPEAT:
+                assignmentsFlowLayout.addRepeatsFromDatabase(ccode, repeatDB, week);
+                break;
+
+            default:
+                //do nothing
+        }
+
+        if(assignmentsFlowLayout.isEmpty() && assignmentType!=AssignmentType.REPEAT){
             TextView textView1 = new TextView(getActivity());
-            textView1.setText("Ingen uppgift av den här typen för den valda veckan");
-            taskList.addView(textView1);
+            textView1.setText("Du har för närvaranade inga " + assignmentType.toString().toLowerCase() + " för den valda veckan");
+            assignmentsFlowLayout.addView(textView1);
+        } else if (assignmentsFlowLayout.isEmpty()){
+            TextView textView1 = new TextView(getActivity());
+            textView1.setText("Du har för närvaranade inga " + assignmentType.toString().toLowerCase() + " för den valda veckan gjorda för två veckor sedan.");
+            assignmentsFlowLayout.addView(textView1);
         }
     }
 
     public void initButtons() {
 
-        taskSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            assignmentTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    setCurrentAssignmentType();
+                }
 
-                if(isChecked){
-                    assignmentType = AssignmentType.READ;
-                    updateTaskList(assignmentType, week);
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
                 }
-                else{
-                    assignmentType = AssignmentType.OTHER;
-                    updateTaskList(assignmentType, week);
-                }
-            }
-        });
+            });
 
         previousWeek.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 week--;
                 textViewWeek.setText("Vecka " + String.valueOf(week));
-                updateTaskList(assignmentType, week);
+                updateAssignmentsLayout(assignmentType, week);
                 setSharedPreferences();
                 Log.i("TimerFrag", "backwardclick" + week);
 
@@ -496,7 +547,7 @@ public class TimerFrag extends Fragment {
             public void onClick(View v) {
                 week++;
                 textViewWeek.setText("Vecka " + String.valueOf(week));
-                updateTaskList(assignmentType, week);
+                updateAssignmentsLayout(assignmentType, week);
                 setSharedPreferences();
                 Log.i("TimerFrag", "forwardclick" + week);
             }
@@ -507,6 +558,15 @@ public class TimerFrag extends Fragment {
         colorNextButtonGrey();
         colorPrevButtonGrey();
     }
+
+    private void setTaskTypeSpinner(){
+        String[] assignmentTypes = new String[]{AssignmentType.HANDIN.toString(), AssignmentType.LAB.toString(), AssignmentType.PROBLEM.toString(), AssignmentType.READ.toString(), AssignmentType.OBLIGATORY.toString(), AssignmentType.OTHER.toString(), AssignmentType.REPEAT.toString()};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assignmentTypes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        assignmentTypeSpinner.setAdapter(adapter);
+        assignmentTypeSpinner.setSelection(0);
+    }
+
 
     private void setSharedPreferences(){
         sharedPref = getActivity().getSharedPreferences(weekPrefName, Context.MODE_PRIVATE);
@@ -528,7 +588,7 @@ public class TimerFrag extends Fragment {
         StateListDrawable thumbStates = new StateListDrawable();
         thumbStates.addState(new int[]{android.R.attr.state_checked}, new ColorDrawable(colorOn));
         thumbStates.addState(new int[]{}, new ColorDrawable(colorOff)); // this one has to come last
-        taskSwitch.setThumbDrawable(thumbStates);
+       // assignmentTypeSpinner.setThumbDrawable(thumbStates);
 
         /*/The color of the taskSwitches background/track
         int color1 = Color.parseColor("#B3E5FC");
@@ -536,7 +596,7 @@ public class TimerFrag extends Fragment {
         StateListDrawable trackStates = new StateListDrawable();
         trackStates.addState(new int[]{android.R.attr.state_checked}, new ColorDrawable(color1));
         trackStates.addState(new int[]{}, new ColorDrawable(color2)); // this one has to come last
-        taskSwitch.setTrackDrawable(trackStates);*/
+        assignmentTypeSpinner.setTrackDrawable(trackStates);*/
     }
 
     private void colorNextButtonGrey(){
@@ -556,7 +616,7 @@ public class TimerFrag extends Fragment {
 
     public void updateView(){
         Log.d("sharedcourse", "timer updateview, sharedId: "+ cph.getSharedCoursePos());
-        updateTaskList(assignmentType, getChosenWeek());
+        updateAssignmentsLayout(assignmentType, getChosenWeek());
         cph.setSpinnerCourseSelection(spinner);
     }
 

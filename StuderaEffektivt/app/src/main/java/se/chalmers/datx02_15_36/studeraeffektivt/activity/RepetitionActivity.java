@@ -38,7 +38,8 @@ import java.util.List;
 import java.util.Random;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.CalendarModel;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.AssignmentType;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
@@ -53,7 +54,8 @@ public class RepetitionActivity extends ActionBarActivity {
     private Spinner courseSpinner;
     private TextView taskTextView;
     public static Context cntxofParent;
-    private DBAdapter dbAdapter;
+    private AssignmentsDBAdapter assDBAdapter;
+    private CoursesDBAdapter coursesDBAdapter;
     private String prevCourse = "";
 
 
@@ -77,13 +79,54 @@ public class RepetitionActivity extends ActionBarActivity {
 
         int currentWeek = CalendarUtils.getCurrWeekNumber();
 
-        dbAdapter = new DBAdapter(this);
+        assDBAdapter = new AssignmentsDBAdapter(this) {
+            @Override
+            public long deleteAssignment(int id) {
+                return 0;
+            }
+
+            @Override
+            public Cursor getAssignments() {
+                return null;
+            }
+
+            @Override
+            public long setDone(int assignmentId) {
+                return 0;
+            }
+
+            @Override
+            public long setUndone(int assignmentId) {
+                return 0;
+            }
+
+            @Override
+            public Cursor getDoneAssignments(String ccode) {
+                return null;
+            }
+
+            @Override
+            public Cursor getAssignments(String ccode) {
+                return null;
+            }
+
+            @Override
+            public String getCourse(int id) {
+                return null;
+            }
+
+            @Override
+            public int getWeek(int id) {
+                return 0;
+            }
+        };
+        coursesDBAdapter = new CoursesDBAdapter(this);
 
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         courseSpinner.setAdapter(adapter2);
-        Cursor coursesCursor = dbAdapter.getCourses();
+        Cursor coursesCursor = coursesDBAdapter.getCourses();
         int cnameColumn = coursesCursor.getColumnIndex("cname");
         int ccodeColumn = coursesCursor.getColumnIndex("_ccode");
         int hasAssignments = 0;
@@ -93,7 +136,7 @@ public class RepetitionActivity extends ActionBarActivity {
                 String ccode = coursesCursor.getString(ccodeColumn);
                 String cname = coursesCursor.getString(cnameColumn);
                 adapter2.add(ccode + " " + cname);
-                if(dbAdapter.getDoneAssignments(ccode).getCount()>1){
+                if(assDBAdapter.getDoneAssignments(ccode).getCount()>1){
                     hasAssignments++;
                 }
             }
@@ -102,7 +145,7 @@ public class RepetitionActivity extends ActionBarActivity {
             }
         } else {
             adapter2.add("Inga tillagda kurser");
-            if (dbAdapter.getAssignments().getCount() < 1) {
+            if (assDBAdapter.getAssignments().getCount() < 1) {
                 noCourses();
             }
         }
@@ -236,7 +279,7 @@ public class RepetitionActivity extends ActionBarActivity {
     }
 
     private boolean hasFinishedAssignments(String courseCode, int week){
-        Cursor doneAssignments = dbAdapter.getDoneAssignments(courseCode);
+        Cursor doneAssignments = assDBAdapter.getDoneAssignments(courseCode);
         int nbrOfDoneAssignments = 0;
 
         while (doneAssignments.moveToNext()) {
@@ -250,7 +293,7 @@ public class RepetitionActivity extends ActionBarActivity {
 
     //Returns random finished assignments of the course from a specific week
     private List <String> getRandomAssingments(String courseCode, int week) {
-        Cursor doneAssignments = dbAdapter.getDoneAssignments(courseCode);
+        Cursor doneAssignments = assDBAdapter.getDoneAssignments(courseCode);
         List<String> finishedAssignments = new ArrayList<>();
 
         while (doneAssignments.moveToNext()) {
@@ -304,7 +347,7 @@ public class RepetitionActivity extends ActionBarActivity {
 
     //Returns random assignments of the course
     private List<String> getRandomAssingments(String courseCode) {
-        Cursor doneAssignments = dbAdapter.getDoneAssignments(courseCode); //dbAdapter.getAssignments(courseCode);
+        Cursor doneAssignments = assDBAdapter.getDoneAssignments(courseCode); //dbAdapter.getObligatories(courseCode);
         List<String> finishedAssignments = new ArrayList<>();
 
         while (doneAssignments.moveToNext()) {

@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 
 /**
  * Created by SoyaPanda on 15-05-06.
@@ -28,7 +29,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
 public class RepetitionReminder {
 
 
-    private DBAdapter dbAdapter;
+    private AssignmentsDBAdapter assDBAdapter;
+    private CoursesDBAdapter coursesDBAdapter;
     private ArrayList <String> coursesToRepeat;
 
     public RepetitionReminder() {
@@ -62,31 +64,31 @@ public class RepetitionReminder {
         coursesToRepeat = new ArrayList<>();
 
         if (hasCourses()) {
-            Cursor courses = getCourses();
+            /*Cursor courses = getCourses();
 
             while (courses.moveToNext()) {
                 String ccode = courses.getString(courses.getColumnIndex("_ccode"));
-                if(dbAdapter.getDoneAssignments(ccode).getCount() >= 1){
+                if(assDBAdapter.getDoneAssignments(ccode).getCount() >= 1){
                     coursesToRepeat.add(ccode);
                 }
 
-            }
+            }*/
         }
         return coursesToRepeat.size() > 0;
     }
 
-    public List <Integer> getRandomAssingments(String courseCode) {
-        Cursor doneAssignments = dbAdapter.getAssignments(courseCode);//dbAdapter.getDoneAssignments(courseCode);
+    /*public List <Integer> getRandomAssingments(String courseCode) {
+        Cursor doneAssignments = assDBAdapter.getObligatories(courseCode);//dbAdapter.getDoneAssignments(courseCode);
         List<Integer> finishedAssignments = new ArrayList<>();
 
         while (doneAssignments.moveToNext()) {
             finishedAssignments.add(doneAssignments.getColumnIndex("_id"));
         }
         return randomAssignments(finishedAssignments);
-    }
+    }*/
 
     public List <Integer> getRandomAssingments(String courseCode, int week) {
-            Cursor doneAssignments = dbAdapter.getDoneAssignments(courseCode);
+            Cursor doneAssignments = assDBAdapter.getDoneAssignments(courseCode);
             List<Integer> finishedAssignments = new ArrayList<>();
 
             while (doneAssignments.moveToNext()) {
@@ -98,10 +100,10 @@ public class RepetitionReminder {
             //return randomAssignments(finishedAssignments);
     }
 
-    public List <Integer> getRandomWeekAssingments(String courseCode) {
+    /*public List <Integer> getRandomWeekAssingments(String courseCode) {
         if(canRepeatCourse(courseCode)) {
 
-            Cursor doneAssignments = dbAdapter.getAssignments(courseCode);//dbAdapter.getDoneAssignments(courseCode);
+            Cursor doneAssignments = assDBAdapter.getObligatories(courseCode);//dbAdapter.getDoneAssignments(courseCode);
             List<Integer> finishedAssignments = new ArrayList<>();
 
             while (doneAssignments.moveToNext()) {
@@ -109,29 +111,16 @@ public class RepetitionReminder {
                 finishedAssignments.add(doneAssignments.getColumnIndex("_id"));
                 //}
             }
-            return randomAssignments(finishedAssignments);
-
-        }
-        return null;
-    }
-
-    private boolean canRepeatCourse(String courseCode) {
-        if(haveAnyToRepeat()) {
-            return coursesToRepeat.contains(courseCode);
-        }
-        return false;
-    }
-
-    public void setDBAdapter(DBAdapter dbAdapter) {
-        this.dbAdapter = dbAdapter;
+            return randomAssignment adba) {
+        this.assDBAdapter = adba;
     }
 
     public boolean hasCourses() {
-        Cursor courses = dbAdapter.getCourses();
+        Cursor courses = coursesDBAdapter.getCourses();
         return courses.getCount() > 0;
     }
     public Cursor getCourses() {
-        return dbAdapter.getCourses();
+        return coursesDBAdapter.getCourses();
     }
 
     /* Randomizes done assignments for repetition */
@@ -154,6 +143,10 @@ public class RepetitionReminder {
             }
         }
         return randomAssignments;
+    }
+
+    private boolean hasCourses(){
+        return true;
     }
 }
 

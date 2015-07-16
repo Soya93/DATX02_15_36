@@ -41,7 +41,14 @@ import com.github.mikephil.charting.data.PieDataSet;
 import java.util.ArrayList;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.database.DBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.AssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.SessionsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.CalendarUtils;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.formatter.IntegerValueFormatter;
@@ -60,7 +67,15 @@ public class StatsFrag extends Fragment {
 
     private TextView noDataView;
 
-    private DBAdapter dbAdapter;
+    //The access point of the database.
+    private HandInAssignmentsDBAdapter handInDB;
+    private LabAssignmentsDBAdapter labDB;
+    private OtherAssignmentsDBAdapter otherDB;
+    private ProblemAssignmentsDBAdapter problemDB;
+    private ReadAssignmentsDBAdapter readDB;
+    private CoursesDBAdapter courseDBAdapter;
+    private AssignmentsDBAdapter assDBAdapter;
+    private SessionsDBAdapter sessDBAdapter;
     private CalendarUtils utils;
 
     private boolean hasInit;
@@ -73,7 +88,49 @@ public class StatsFrag extends Fragment {
                              Bundle savedInstanceState) {
 
         if (getActivity() != null) {
-            dbAdapter = new DBAdapter(getActivity());
+            courseDBAdapter = new CoursesDBAdapter(getActivity());
+            assDBAdapter = new AssignmentsDBAdapter(getActivity()) {
+                @Override
+                public long deleteAssignment(int id) {
+                    return 0;
+                }
+
+                @Override
+                public Cursor getAssignments() {
+                    return null;
+                }
+
+                @Override
+                public long setDone(int assignmentId) {
+                    return 0;
+                }
+
+                @Override
+                public long setUndone(int assignmentId) {
+                    return 0;
+                }
+
+                @Override
+                public Cursor getDoneAssignments(String ccode) {
+                    return null;
+                }
+
+                @Override
+                public Cursor getAssignments(String ccode) {
+                    return null;
+                }
+
+                @Override
+                public String getCourse(int id) {
+                    return null;
+                }
+
+                @Override
+                public int getWeek(int id) {
+                    return 0;
+                }
+            };
+            sessDBAdapter = new SessionsDBAdapter(getActivity());
         }
         utils = new CalendarUtils();
         cph = CoursePreferenceHelper.getInstance(getActivity());
@@ -149,11 +206,11 @@ public class StatsFrag extends Fragment {
         ArrayList<String> weeks = new ArrayList<>();
         LineData data;
 
-        Cursor courses = dbAdapter.getOngoingCourses();
+        Cursor courses = courseDBAdapter.getOngoingCourses();
         int c = 0;
         while (courses.moveToNext()) {
             String ccode = courses.getString(courses.getColumnIndex("_ccode"));
-            int smallestWeek = dbAdapter.getSmallestWeek(ccode);
+            int smallestWeek = sessDBAdapter.getSmallestWeek(ccode);
             Log.d("lineChart", "smallestWeek: " + smallestWeek);
             hoursInCourse = new ArrayList<>();
 
@@ -164,7 +221,7 @@ public class StatsFrag extends Fragment {
                     weeks.add("v. " + w);
                 }
 
-                Cursor mins = dbAdapter.getMinutes(w, ccode);
+                Cursor mins = sessDBAdapter.getMinutes(w, ccode);
                 if (mins.getCount() == 0) {
                     hoursInWeek = new Entry(0, i);
                     Log.d("lineChart", "getMinutes().getCount() is 0, week: " + w + ", course: " + ccode);
@@ -313,7 +370,7 @@ public class StatsFrag extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        Cursor cursor = dbAdapter.getOngoingCourses();
+        Cursor cursor = courseDBAdapter.getOngoingCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
         if (cursor.getCount() > 0) {
@@ -344,12 +401,12 @@ public class StatsFrag extends Fragment {
     }
 
     private int getHoursSpent() {
-        return ((dbAdapter.getSpentTime(currCourse) / 60));
+        return ((sessDBAdapter.getSpentTime(currCourse) / 60));
     }
 
     private int getHoursLeft() {
-        int total = (dbAdapter.getTimeOnCourse(currCourse) / 60);
-        int spent = (dbAdapter.getSpentTime(currCourse) / 60);
+        int total = (courseDBAdapter.getTimeOnCourse(currCourse) / 60);
+        int spent = (sessDBAdapter.getSpentTime(currCourse) / 60);
 
         if (total <= spent) {
             return 0;
@@ -359,18 +416,19 @@ public class StatsFrag extends Fragment {
     }
 
     private int getAssDone() {
-        return dbAdapter.getDoneAssignments(currCourse).getCount();
+        return assDBAdapter.getDoneAssignmentsCount(currCourse) +  courseDBAdapter.getDoneObligatoriesCount(currCourse);
     }
 
     private int getAssLeft() {
-        int assignments = dbAdapter.getAssignments(currCourse).getCount();
-        Log.d("ass", "total amount of asses: " + assignments);
-        int doneAssignments = dbAdapter.getDoneAssignments(currCourse).getCount();
-        return (assignments - doneAssignments);
+        int doneAssignments = assDBAdapter.getDoneAssignmentsCount(currCourse);
+        int doneObligatories = courseDBAdapter.getDoneObligatoriesCount(currCourse);
+        int nrAssignments = assDBAdapter.getAssignmentsCount(currCourse);
+        int nrObligatories = courseDBAdapter.getObligatoriesCount(currCourse);
+        return ((nrAssignments+nrObligatories) - (doneAssignments+doneObligatories));
     }
 
     private boolean isCourses() {
-        Cursor courses = dbAdapter.getOngoingCourses();
+        Cursor courses = courseDBAdapter.getOngoingCourses();
         if (courses.getCount() == 0) {
             return false;
         }
@@ -379,8 +437,7 @@ public class StatsFrag extends Fragment {
 
     private boolean courseHasAsses() {
         if (currCourse != null) {
-            Cursor asses = dbAdapter.getAssignments(currCourse);
-            if (asses.getCount() != 0) {
+            if (assDBAdapter.getAssignmentsCount(currCourse) != 0) {
                 return true;
             }
         }
@@ -389,7 +446,7 @@ public class StatsFrag extends Fragment {
 
     private boolean courseHasSessions() {
         if (currCourse != null && isCourses()) {
-            Cursor sessions = dbAdapter.getSessions();
+            Cursor sessions = sessDBAdapter.getSessions();
             while (sessions.moveToNext()) {
                 if (sessions.getString(sessions.getColumnIndex("_ccode")).equals(currCourse)) {
                     return true;
@@ -417,7 +474,7 @@ public class StatsFrag extends Fragment {
 
     private void insertTestDataToDB(String course) {
         //Insert course
-        long idCourse = dbAdapter.insertCourse(course, "Datorteknik");
+        long idCourse = courseDBAdapter.insertCourse(course, "Datorteknik");
         if (idCourse > 0) {
             //Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).showRepsDialog();
         } else {
@@ -425,12 +482,12 @@ public class StatsFrag extends Fragment {
         }
 
         //Insert sessions
-        long idS1 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 60);
-        long idS2 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 120);
-        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 300);
-        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 30);
-        long idS5 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 60);
-        long idS6 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 60);
+        long idS1 = sessDBAdapter.insertSession(course, utils.getCurrWeekNumber(), 60);
+        long idS2 = sessDBAdapter.insertSession(course, utils.getCurrWeekNumber(), 120);
+        long idS3 = sessDBAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 300);
+        long idS4 = sessDBAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 30);
+        long idS5 = sessDBAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 60);
+        long idS6 = sessDBAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 60);
         /*if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
             Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).showRepsDialog();
         } else {
@@ -438,7 +495,7 @@ public class StatsFrag extends Fragment {
         }*/
 
         //Insert TimeOnCourse.
-        long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
+        long idTOC = courseDBAdapter.insertTimeOnCourse(course, 1200);
         if (idTOC > 0) {
             //Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).showRepsDialog();
         } else {
@@ -446,7 +503,7 @@ public class StatsFrag extends Fragment {
         }
 
         //Insert Assignments
-        /*long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        /*long idA1 = dbAdapter.insertObligatory(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
             Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).showRepsDialog();
         } else {
@@ -456,7 +513,7 @@ public class StatsFrag extends Fragment {
 
     private void insertTestDataToDB2(String course) {
         //Insert course
-        long idCourse = dbAdapter.insertCourse(course, "Diskret matematik");
+        long idCourse = courseDBAdapter.insertCourse(course, "Diskret matematik");
         if (idCourse > 0) {
             //Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).showRepsDialog();
         } else {
@@ -464,10 +521,10 @@ public class StatsFrag extends Fragment {
         }
 
         //Insert sessions
-        long idS1 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 60);
-        long idS2 = dbAdapter.insertSession(course, utils.getCurrWeekNumber(), 120);
-        long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 400);
-        long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 50);
+        long idS1 = sessDBAdapter.insertSession(course, utils.getCurrWeekNumber(), 60);
+        long idS2 = sessDBAdapter.insertSession(course, utils.getCurrWeekNumber(), 120);
+        long idS3 = sessDBAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 400);
+        long idS4 = sessDBAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 50);
         /*if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0) {
             Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).showRepsDialog();
         } else {
@@ -475,7 +532,7 @@ public class StatsFrag extends Fragment {
         }*/
 
         //Insert TimeOnCourse.
-        long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
+        long idTOC = courseDBAdapter.insertTimeOnCourse(course, 1200);
         if (idTOC > 0) {
             //Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).showRepsDialog();
         } else {
@@ -483,7 +540,7 @@ public class StatsFrag extends Fragment {
         }
 
         //Insert Assignments
-        /*long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
+        /*long idA1 = dbAdapter.insertObligatory(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
             Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).showRepsDialog();
         } else {
