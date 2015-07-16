@@ -37,6 +37,7 @@ public class CoursePreferenceHelper {
         editor.commit();
     }
 
+
     public int getSharedCoursePos(){
         sharedPref = ctx.getSharedPreferences(CCODE_PREF_NAME, Context.MODE_PRIVATE);
         return sharedPref.getInt(CCODE_POSITION, DEFAULT_CCODE_POSITION);

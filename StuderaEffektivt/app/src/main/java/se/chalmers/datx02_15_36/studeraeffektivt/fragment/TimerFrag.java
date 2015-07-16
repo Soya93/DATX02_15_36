@@ -268,8 +268,7 @@ public class TimerFrag extends Fragment {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(),TimerSettingsActivity.class);
-                startActivity(i);
+                settingsTimer();
             }
         });
         spinner = (Spinner) rootView.findViewById(R.id.spinner_timer);
@@ -422,6 +421,7 @@ public class TimerFrag extends Fragment {
     public void settingsTimer() {
         resetTimer();
         Intent i = new Intent(getActivity(), TimerSettingsActivity.class);
+        i.putExtra("course", ccode);
         startActivity(i);
     }
 

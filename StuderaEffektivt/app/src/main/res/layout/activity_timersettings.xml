@@ -47,7 +47,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Logga tidigare lagd tid"
+        android:text="Logga tidigare studietid"
         android:id="@+id/textView10"
         android:layout_column="0"
         android:paddingTop="20dp"
