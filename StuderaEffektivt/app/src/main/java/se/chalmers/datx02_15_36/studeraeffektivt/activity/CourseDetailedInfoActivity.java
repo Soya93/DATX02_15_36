@@ -120,9 +120,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             addLabs(layout);
         }
 
-        //if(handinsDBAdapter.getAssignments(courseCode).getCount() != 0){
+        if(handinsDBAdapter.getAssignments(courseCode).getCount() != 0){
             addHandins(layout);
-        //}
+        }
     }
 
     private void updateComponents(){
@@ -489,7 +489,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 Log.d("course", "add " + value + " minutes to " + courseCode);
 
                 //add value
-                long add = coursesDBAdapter.insertTimeOnCourse(courseCode, Integer.parseInt(value));
+                long add = coursesDBAdapter.insertTimeOnCourse(courseCode, Integer.parseInt(value)*60);
                 Toast toast;
                 if (add > 0) {
 
