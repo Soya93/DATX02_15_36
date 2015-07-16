@@ -35,6 +35,7 @@ import android.widget.DatePicker;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -42,8 +43,10 @@ import java.util.Date;
 import java.util.HashMap;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.SessionsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
 
 
 /**
@@ -51,9 +54,8 @@ import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
  */
 public class TimerSettingsActivity extends ActionBarActivity {
 
-    private HashMap<Integer, Time> mapping = new HashMap<Integer, Time>();
+
     Context context;
-    private int mSelectedHour, mSelectedMinutes;
     private Time studyTime;
     private Time pauseTime;
     private Time oldTimeT;
@@ -62,15 +64,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
 
     private SharedPreferences sharedPref;
     private String prefName = "ButtonPref";
-    private static Dialog dialog;
     private NumberPicker np;
-    /*
-    private String repetitionsInput;
-    private String studyTimeInput;
-    private String pauseTimeInput;
-    private String oldTimeInput;
-    private String oldDateInput;
-    */
 
     private View rep;
     private View study;
@@ -85,6 +79,8 @@ public class TimerSettingsActivity extends ActionBarActivity {
     private TextView pauseTimeInput;
     private TextView oldTimeInput;
     private TextView oldDateInput;
+
+    private String course;
 
 
 
@@ -123,6 +119,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Inställningar");
+        course = getIntent().getStringExtra("course");
 
         //Find view components
         addButton = (Button) findViewById(R.id.addOldStudyButton);
@@ -165,6 +162,14 @@ public class TimerSettingsActivity extends ActionBarActivity {
                     new TimePickerDialog(TimerSettingsActivity.this, old, oldTimeT.getHour(), oldTimeT.getMin(), true).show();
                 }else if (id == addButton.getId()){
                     //add time to database
+                    SessionsDBAdapter db = new SessionsDBAdapter(context);
+                    int min = oldTimeT.getHour()*60 + oldTimeT.getMin();
+                    int week = oldDateCal.get(Calendar.WEEK_OF_YEAR);
+                    db.insertSession(course, week, min);
+                    String text = min + " minuter har loggats i "+ course;
+                    Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+                    toast.show();
+
                 }
 
             }
