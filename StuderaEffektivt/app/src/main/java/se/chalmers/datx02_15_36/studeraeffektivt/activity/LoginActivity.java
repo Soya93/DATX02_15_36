@@ -79,7 +79,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 
             mPlusSignInButton.setOnClickListener(this);
         } else {
-            //Do not show this window at all, just kill this screen
+            //Do not showRepsDialog this window at all, just kill this screen
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             this.finish();

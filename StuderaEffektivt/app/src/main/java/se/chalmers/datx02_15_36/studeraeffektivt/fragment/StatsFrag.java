@@ -419,9 +419,9 @@ public class StatsFrag extends Fragment {
         //Insert course
         long idCourse = dbAdapter.insertCourse(course, "Datorteknik");
         if (idCourse > 0) {
-            //Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).showRepsDialog();
         } else {
-            //Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT ).show();
+            //Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT ).showRepsDialog();
         }
 
         //Insert sessions
@@ -432,25 +432,25 @@ public class StatsFrag extends Fragment {
         long idS5 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 60);
         long idS6 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 60);
         /*if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0 && idS5 > 0 && idS6 > 0) {
-            Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).showRepsDialog();
         } else {
-            Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).showRepsDialog();
         }*/
 
         //Insert TimeOnCourse.
         long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
         if (idTOC > 0) {
-            //Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).showRepsDialog();
         } else {
-            //Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).showRepsDialog();
         }
 
         //Insert Assignments
         /*long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
-            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).showRepsDialog();
         } else {
-            Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).showRepsDialog();
         }*/
     }
 
@@ -458,9 +458,9 @@ public class StatsFrag extends Fragment {
         //Insert course
         long idCourse = dbAdapter.insertCourse(course, "Diskret matematik");
         if (idCourse > 0) {
-            //Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), course+" created", Toast.LENGTH_SHORT).showRepsDialog();
         } else {
-            //Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Failed to create course in Stats.", Toast.LENGTH_SHORT).showRepsDialog();
         }
 
         //Insert sessions
@@ -469,25 +469,25 @@ public class StatsFrag extends Fragment {
         long idS3 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 1), 400);
         long idS4 = dbAdapter.insertSession(course, (utils.getCurrWeekNumber() - 2), 50);
         /*if (idS1 > 0 && idS2 > 0 && idS3 > 0 && idS4 > 0) {
-            Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added six sessions to "+course, Toast.LENGTH_SHORT).showRepsDialog();
         } else {
-            Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Failed to add Sessions in Stats", Toast.LENGTH_SHORT).showRepsDialog();
         }*/
 
         //Insert TimeOnCourse.
         long idTOC = dbAdapter.insertTimeOnCourse(course, 1200);
         if (idTOC > 0) {
-            //Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Added TimeOnCourse 1200 for "+course, Toast.LENGTH_SHORT).showRepsDialog();
         } else {
-            //Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Failed to add TimeOnCourse in Stats", Toast.LENGTH_SHORT).showRepsDialog();
         }
 
         //Insert Assignments
         /*long idA1 = dbAdapter.insertAssignment(course, 0, Utils.getCurrWeekNumber(), "2B", 15, 30, AssignmentType.READ, AssignmentStatus.DONE);
         if (idA1>0) {
-            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Added DONE ASSIGNMENT for "+course, Toast.LENGTH_SHORT).showRepsDialog();
         } else {
-            Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Failed to add Assignment in Stats", Toast.LENGTH_SHORT).showRepsDialog();
         }*/
     }
 

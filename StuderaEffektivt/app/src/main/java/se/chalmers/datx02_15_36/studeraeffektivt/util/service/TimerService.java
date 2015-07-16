@@ -228,7 +228,7 @@ public class TimerService extends Service {
 
     private void insertIntoDataBase(long millisPassed) {
         Log.d(ccode, "ccode");
-        millisPassed = millisPassed * 60; ///TODO: This is to make it in hours instead of minutes, for the show ;D
+        millisPassed = millisPassed * 60; ///TODO: This is to make it in hours instead of minutes, for the showRepsDialog ;D
         Log.d("databas", "millispassed: "+ milliSecondsToMin(millisPassed));
 
         long inserted = dbAdapter.insertSession(ccode, utils.getCurrWeekNumber(), milliSecondsToMin(millisPassed));
@@ -245,7 +245,7 @@ public class TimerService extends Service {
             }
 
             //Toast toast = Toast.makeText(getBaseContext(), "Added session!", Toast.LENGTH_SHORT);
-            //toast.show();
+            //toast.showRepsDialog();
         } else if (getBaseContext() != null) {
             Toast toast = Toast.makeText(getBaseContext(), "Failed to add a Session", Toast.LENGTH_SHORT);
             toast.show();

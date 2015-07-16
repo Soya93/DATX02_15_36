@@ -1,12 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="25dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:rowCount="8"
+    android:columnCount="1">
 
-
-    <ListView
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listView"
-        android:layout_gravity="center_horizontal" />
-</LinearLayout>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Ställ in tid"
+        android:id="@+id/textView9"
+        android:layout_column="0"
+        android:paddingTop="20dp"
+        android:layout_row="0" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/left_and_right"
+        android:layout_column="0"
+        android:id="@+id/repInput"
+        android:layout_row="1" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/left_and_right"
+        android:layout_column="0"
+        android:id="@+id/studyTimeInput"
+        android:layout_row="2" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/left_and_right"
+        android:layout_column="0"
+        android:id="@+id/pauseTimeInput"
+        android:layout_row="3" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Logga tidigare lagd tid"
+        android:id="@+id/textView10"
+        android:layout_column="0"
+        android:paddingTop="20dp"
+        android:layout_row="4" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/left_and_right"
+        android:layout_column="0"
+        android:id="@+id/oldTimeInput"
+        android:layout_row="5" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/left_and_right"
+        android:layout_column="0"
+        android:id="@+id/oldDateInput"
+        android:layout_row="6" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lägg till"
+        android:id="@+id/addOldStudyButton"
+        android:layout_row="7"
+        android:layout_column="0" />
+
+</GridLayout>

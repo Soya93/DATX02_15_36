@@ -115,7 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/start_time"
-            layout="@layout/date_and_time"
+            layout="@layout/left_and_right"
             android:layout_column="3" />
     </TableRow>
 
@@ -129,7 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/end_time"
-            layout="@layout/date_and_time"
+            layout="@layout/left_and_right"
             android:layout_column="3" />
     </TableRow>
 
