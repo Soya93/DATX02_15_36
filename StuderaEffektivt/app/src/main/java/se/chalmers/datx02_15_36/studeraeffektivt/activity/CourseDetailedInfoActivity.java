@@ -494,8 +494,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 if (add > 0) {
 
                     int mins = coursesDBAdapter.getTimeOnCourse(courseCode);
-                    timeOnCourseLabel.setText("Timmar per vecka: "+mins);
-                    toast = Toast.makeText(getBaseContext(), "Ditt mål är att lägga " + mins + " minuter på " + courseName + " i veckan.", Toast.LENGTH_LONG);
+                    timeOnCourseLabel.setText("Timmar per vecka: "+mins*60);
+                    toast = Toast.makeText(getBaseContext(), "Ditt mål är att lägga " + mins*60 + " timmar på " + courseName + " i veckan.", Toast.LENGTH_LONG);
                 } else {
                     toast = Toast.makeText(getBaseContext(), "Det gick inte att lägga till.", Toast.LENGTH_SHORT);
                 }
