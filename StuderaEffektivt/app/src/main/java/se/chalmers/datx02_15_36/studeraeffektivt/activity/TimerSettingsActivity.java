@@ -35,6 +35,7 @@ import android.widget.DatePicker;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -165,6 +166,9 @@ public class TimerSettingsActivity extends ActionBarActivity {
                     int min = oldTimeT.getHour()*60 + oldTimeT.getMin();
                     int week = oldDateCal.get(Calendar.WEEK_OF_YEAR);
                     db.insertSession(course, week, min);
+                    String text = min + " minuter har loggats i "+ course;
+                    Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+                    toast.show();
 
                 }
 
