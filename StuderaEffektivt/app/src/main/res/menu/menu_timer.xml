@@ -3,9 +3,4 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="se.chalmers.datx02_15_36.studeraeffektivt.fragment.TimerFrag">
 
-
-    <item android:id="@+id/save_event"
-        android:title="Spara"
-        app:showAsAction="ifRoom"
-        />
 </menu>

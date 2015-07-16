@@ -223,21 +223,21 @@ public class EventActivity extends ActionBarActivity {
 
         startView = findViewById(R.id.start_time);
 
-        startDate = (TextView) startView.findViewById(R.id.date_input);
+        startDate = (TextView) startView.findViewById(R.id.left_input);
         startDate.setOnClickListener(myTextViewHandler);
         startDate.setTag(1);
 
-        startTime = (TextView) startView.findViewById(R.id.time_input);
+        startTime = (TextView) startView.findViewById(R.id.right_input);
         startTime.setOnClickListener(myTextViewHandler);
         startTime.setTag(2);
 
         endView = findViewById(R.id.end_time);
 
-        endDate = (TextView) endView.findViewById(R.id.date_input);
+        endDate = (TextView) endView.findViewById(R.id.left_input);
         endDate.setOnClickListener(myTextViewHandler);
         endDate.setTag(3);
 
-        endTime = (TextView) endView.findViewById(R.id.time_input);
+        endTime = (TextView) endView.findViewById(R.id.right_input);
         endTime.setOnClickListener(myTextViewHandler);
         endTime.setTag(4);
 

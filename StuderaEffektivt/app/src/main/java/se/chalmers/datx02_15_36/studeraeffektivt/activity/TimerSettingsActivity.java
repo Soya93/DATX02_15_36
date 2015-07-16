@@ -15,6 +15,7 @@ limitations under the License.
 package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -29,18 +30,20 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.DatePicker;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
-import se.chalmers.datx02_15_36.studeraeffektivt.adapter.TimerSettingsListAdapter;
 
 
 /**
@@ -48,39 +51,43 @@ import se.chalmers.datx02_15_36.studeraeffektivt.adapter.TimerSettingsListAdapte
  */
 public class TimerSettingsActivity extends ActionBarActivity {
 
-    private ListView listView;
     private HashMap<Integer, Time> mapping = new HashMap<Integer, Time>();
     Context context;
-    private static String[] values = {"Repetitioner", "Studietid", "Vilotid"};
     private int mSelectedHour, mSelectedMinutes;
     private Time studyTime;
     private Time pauseTime;
+    private Time oldTimeT;
+    private Calendar oldDateCal;
+    private int reps;
+
     private SharedPreferences sharedPref;
     private String prefName = "ButtonPref";
     private static Dialog dialog;
     private NumberPicker np;
+    /*
+    private String repetitionsInput;
+    private String studyTimeInput;
+    private String pauseTimeInput;
+    private String oldTimeInput;
+    private String oldDateInput;
+    */
 
-    TimePickerDialog.OnTimeSetListener d = new TimePickerDialog.OnTimeSetListener() {
-        public void onTimeSet(TimePicker view, int hourOfDay,
-                              int minute) {
-            if (hourOfDay > 0 || minute > 0) {
-                studyTime = new Time(hourOfDay, minute);
-                mapping.put(1, studyTime);
-                updateView();
-            }
-        }
-    };
+    private View rep;
+    private View study;
+    private View pause;
+    private View oldTime;
+    private View oldDate;
 
-    TimePickerDialog.OnTimeSetListener t = new TimePickerDialog.OnTimeSetListener() {
-        public void onTimeSet(TimePicker view, int hourOfDay,
-                              int minute) {
-            if (hourOfDay > 0 || minute > 0) {
-                pauseTime = new Time(hourOfDay, minute);
-                mapping.put(2, pauseTime);
-                updateView();
-            }
-        }
-    };
+    private Button addButton;
+
+    private TextView repetitionsInput;
+    private TextView studyTimeInput;
+    private TextView pauseTimeInput;
+    private TextView oldTimeInput;
+    private TextView oldDateInput;
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,16 +104,15 @@ public class TimerSettingsActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.save_event) {
-            this.finish();
-            return true;
-        } else if (id == android.R.id.home) {
+
+        if (id == android.R.id.home) {
             this.finish();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,43 +122,83 @@ public class TimerSettingsActivity extends ActionBarActivity {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Ställ in tid");
-        listView = (ListView) findViewById(R.id.listView);
-        initFromSharedPref();
-        updateView();
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Position", String.valueOf(position));
-                switch (position) {
-                    case 0:
-                        show();
-                        break;
-                    case 1: {
-                        new TimePickerDialog(TimerSettingsActivity.this,
-                                d,
-                                studyTime.getHour(), studyTime.getMin(),
-                                true).show();
-                    }
-                    break;
-                    case 2: {
-                        new TimePickerDialog(TimerSettingsActivity.this,
-                                t,
-                                pauseTime.getHour(), pauseTime.getMin(),
-                                true).show();
-                    }
-                    break;
+        actionBar.setTitle("Inställningar");
+
+        //Find view components
+        addButton = (Button) findViewById(R.id.addOldStudyButton);
+
+        rep = findViewById(R.id.repInput);
+        study = findViewById(R.id.studyTimeInput);
+        pause = findViewById(R.id.pauseTimeInput);
+        oldTime = findViewById(R.id.oldTimeInput);
+        oldDate = findViewById(R.id.oldDateInput);
+
+        repetitionsInput = (TextView) rep.findViewById(R.id.right_input);
+        studyTimeInput = (TextView) study.findViewById(R.id.right_input);
+        pauseTimeInput = (TextView) pause.findViewById(R.id.right_input);
+        oldDateInput = (TextView) oldDate.findViewById(R.id.right_input);
+        oldTimeInput = (TextView) oldTime.findViewById(R.id.right_input);
+
+
+        View.OnClickListener myTextViewHandler = new View.OnClickListener() {
+            public void onClick(View v) {
+                int id = v.getId();
+
+                if (id == rep.getId()) {
+                    // set the nuber of repetitions of the study session
+                    showRepsDialog();
+
+                } else if (id == study.getId()) {
+                    // set the study session length
+                    new TimePickerDialog(TimerSettingsActivity.this, d, studyTime.getHour(), studyTime.getMin(), true).show();
+
+                } else if (id == pause.getId()) {
+                    // set the pause legnth
+                    new TimePickerDialog(TimerSettingsActivity.this, t, pauseTime.getHour(), pauseTime.getMin(), true).show();
+
+                } else if (id == oldDate.getId()) {
+                    // set the date of the old study session
+                    openDatePickerDialog();
+
+                }else if(id == oldTime.getId()){
+                    // set the legth of the old study session
+                    new TimePickerDialog(TimerSettingsActivity.this, old, oldTimeT.getHour(), oldTimeT.getMin(), true).show();
+                }else if (id == addButton.getId()){
+                    //add time to database
                 }
 
             }
-        });
+        };
 
+        // add listeners
+        rep.setOnClickListener(myTextViewHandler);
+        study.setOnClickListener(myTextViewHandler);
+        pause.setOnClickListener(myTextViewHandler);
+        oldDate.setOnClickListener(myTextViewHandler);
+        oldTime.setOnClickListener(myTextViewHandler);
+        addButton.setOnClickListener(myTextViewHandler);
+
+        // Set text to the left side
+        ((TextView) rep.findViewById(R.id.left_input)).setText("Antal repetioner");
+        ((TextView) study.findViewById(R.id.left_input)).setText("Studietid");
+        ((TextView) pause.findViewById(R.id.left_input)).setText("Pausetid");
+        ((TextView) oldTime.findViewById(R.id.left_input)).setText("Studietid");
+        ((TextView) oldDate.findViewById(R.id.left_input)).setText("Datum");
+
+        //read default values
+        initFromSharedPref();
+        oldTimeT = new Time(1, 0);
+        oldDateCal = Calendar.getInstance();
+
+        // set the default values to the right side
+        repetitionsInput.setText(reps +"");
+        studyTimeInput.setText(studyTime.getString());
+        pauseTimeInput.setText(pauseTime.getString());
+        oldTimeInput.setText(oldTimeT.getString());
+        SimpleDateFormat startDateFormat = new SimpleDateFormat("E d MMM yyyy");
+        oldDateInput.setText(startDateFormat.format((new Date(oldDateCal.getTimeInMillis()))));
     }
 
-
-    public void updateView() {
-        listView.setAdapter(new TimerSettingsListAdapter(this, values, mapping));
-    }
 
 
 
@@ -164,17 +210,16 @@ public class TimerSettingsActivity extends ActionBarActivity {
         editor.putInt("studyMin", studyTime.getMin());
         editor.putInt("pauseHour", pauseTime.getHour());
         editor.putInt("pauseMin", pauseTime.getMin());
-        editor.putInt("reps", mapping.get(0).getMin());
+        editor.putInt("reps", reps);
         editor.apply();
 
     }
 
+
     protected void initDefaultValues() {
         studyTime = new Time(0, 25);
         pauseTime = new Time(0, 5);
-        mapping.put(0, new Time(0, 2));
-        mapping.put(1, studyTime);
-        mapping.put(2, pauseTime);
+        reps = 2;
     }
 
     protected void initFromSharedPref() {
@@ -189,22 +234,20 @@ public class TimerSettingsActivity extends ActionBarActivity {
 
         if (studyMin != -1) {
             studyTime = new Time(studyHour, studyMin);
-            mapping.put(1, studyTime);
         }
 
         if (pauseMin != -1) {
             pauseTime = new Time(pauseHour, pauseMin);
-            mapping.put(2, pauseTime);
         }
         if (reps != -1) {
-            mapping.put(0, new Time(0, reps));
+            this.reps = reps;
         }
 
 
     }
 
 
-    public void show() {
+    public void showRepsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog, null);
@@ -212,13 +255,14 @@ public class TimerSettingsActivity extends ActionBarActivity {
         np.setMaxValue(10);
         np.setMinValue(1);
         np.setWrapSelectorWheel(false);
+        np.setValue(reps);
 
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
+
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                mapping.put(0, new Time(0, newVal));
-
+                reps = newVal;
             }
         });
 
@@ -226,7 +270,7 @@ public class TimerSettingsActivity extends ActionBarActivity {
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                updateView();
+                setTextToLable(repetitionsInput, reps+"");
             }
         });
         builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
@@ -244,5 +288,66 @@ public class TimerSettingsActivity extends ActionBarActivity {
         cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
 
+    private void setTextToLable(TextView view, String text) {
+        view.setText(text);
+    }
 
+
+
+
+    private void openDatePickerDialog() {
+        Log.i("open date picker", "");
+
+        DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+
+            // when dialog box is closed, below method will be called.
+            public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+
+                Calendar date = Calendar.getInstance();
+                date.set(selectedYear, selectedMonth, selectedDay);
+                SimpleDateFormat startDateFormat = new SimpleDateFormat("E d MMM yyyy");
+                oldDateInput.setText(startDateFormat.format((new Date(date.getTimeInMillis()))));
+            }
+        };
+
+        DatePickerDialog datePickerDialog;
+        int year = oldDateCal.get(Calendar.YEAR);
+        int month = oldDateCal.get(Calendar.MONTH);
+        int day = oldDateCal.get(Calendar.DAY_OF_MONTH);
+
+        datePickerDialog = new DatePickerDialog(TimerSettingsActivity.this, datePickerListener, year,month, day);
+
+        datePickerDialog.show();
+        datePickerDialog.setCancelable(true);
+    }
+
+    TimePickerDialog.OnTimeSetListener t = new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet(TimePicker view, int hourOfDay,
+                              int minute) {
+            if (hourOfDay > 0 || minute > 0) {
+                pauseTime = new Time(hourOfDay, minute);
+                pauseTimeInput.setText(pauseTime.getString());
+            }
+        }
+    };
+
+    TimePickerDialog.OnTimeSetListener d = new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet(TimePicker view, int hourOfDay,
+                              int minute) {
+            if (hourOfDay > 0 || minute > 0) {
+                studyTime = new Time(hourOfDay, minute);
+                studyTimeInput.setText(studyTime.getString());
+            }
+        }
+    };
+
+    TimePickerDialog.OnTimeSetListener old = new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet(TimePicker view, int hourOfDay,
+                              int minute) {
+            if (hourOfDay > 0 || minute > 0) {
+                oldTimeT = new Time(hourOfDay, minute);
+                oldTimeInput.setText(oldTimeT.getString());
+            }
+        }
+    };
 }
