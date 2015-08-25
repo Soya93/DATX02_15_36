@@ -178,16 +178,18 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
 
             public void onClick(View v) {
                 updateView();
-
                 if (v.getTag() == button1.getTag()) {
+                    //Add event
                     openAddEventActivity();
                 } else if (v.getTag() == button2.getTag()) {
-                    addRepetitionSession();
+                    //Sync with google calendar
+                    sync();
+                    //addRepetitionSession();
                 } else if (v.getTag() == button3.getTag()) {
-                    //Instälningar - antal dagar
+                    //Settings - visible number of days
                     changeNbrOfDaysDialog();
                 } else {
-                    //Instälningar - vilka kalendrar
+                    //Settings - visible calendars
                     changeVisibleCalendars();
                 }
 
@@ -672,6 +674,10 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
         editor.apply();
     }
 
+    public void sync(){
+        calendarModel.refreshCalendars();
+    }
+
     public boolean hasInit(){
         return hasInit;
     }
@@ -687,5 +693,6 @@ public class CalendarFrag extends Fragment implements WeekView.MonthChangeListen
     public void setContentResolver(ContentResolver cr) {
         this.cr = cr;
     }
+
 
 }
