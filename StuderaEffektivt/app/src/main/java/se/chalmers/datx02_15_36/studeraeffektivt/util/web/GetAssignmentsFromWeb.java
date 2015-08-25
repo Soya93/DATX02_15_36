@@ -216,6 +216,11 @@ public class GetAssignmentsFromWeb {
                         String date = c.getString("date");
                         int id = AssignmentID.getID();
 
+                        Log.i("HandInGetWeb", "nr " + nr);
+                        Log.i("HandInGetWeb", "week " + week);
+                        Log.i("HandInGetWeb", "assNr " + assNr);
+                        Log.i("HandInGetWeb", "date " + date);
+
                         addLabResult = addToDatabase(courseCode, AssignmentType.LAB, id, nr, Integer.parseInt(week), date, assNr);
 
                         if(addLabResult < 1L){
