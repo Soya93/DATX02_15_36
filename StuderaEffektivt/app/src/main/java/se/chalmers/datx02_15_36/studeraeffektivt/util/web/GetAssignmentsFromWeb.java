@@ -128,8 +128,8 @@ public class GetAssignmentsFromWeb {
                     JSONArray handInAssignments = jsonObj.getJSONArray("handInAssignments");
 
                     //removing the assignments
+                    handInDB.deleteUndoneAssignments(courseCode);
                     Cursor cursor = handInDB.getDoneAssignments(courseCode);
-
 
                     // looping through all obligatory assignments in the web
                     for (int i = 0; i < handInAssignments.length(); i++) {
@@ -142,12 +142,14 @@ public class GetAssignmentsFromWeb {
                         int id = AssignmentID.getID();
 
                         boolean checkIfExists = false;
-                        while(cursor.moveToNext()) {
+                        while(cursor.moveToNext() && !checkIfExists) {
 
                             String dbnr = cursor.getString(cursor.getColumnIndex("nr"));
-                            String dbweek  = cursor.getString(cursor.getColumnIndex("week"));
+                            int dbweek  = cursor.getInt(cursor.getColumnIndex("week"));
                             String dbassNr = cursor.getString(cursor.getColumnIndex("assNr"));
-                            if(dbnr.equals(nr) && dbweek.equals(week) && dbassNr.equals(assNr)){
+                            String dbdate = cursor.getString(cursor.getColumnIndex("date"));
+
+                            if(dbnr.equals(nr) && Integer.toString(dbweek).equals(week) && dbassNr.equals(assNr) && dbdate.equals(date)){
                                 checkIfExists = true;}
 
                         }
@@ -157,8 +159,7 @@ public class GetAssignmentsFromWeb {
                                 Toast.makeText(context, "Det gick inte att lägga till inlämningsuppgifter i kursen " + courseCode, Toast.LENGTH_SHORT).show();
                             }
                         }
-
-                } } catch (JSONException e) {
+                        } } catch (JSONException e) {
                     e.printStackTrace();
                 }
             } else {

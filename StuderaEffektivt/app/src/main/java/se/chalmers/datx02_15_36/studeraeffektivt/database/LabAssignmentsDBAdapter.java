@@ -99,8 +99,21 @@ public class LabAssignmentsDBAdapter  extends AssignmentsDBAdapter {
         Long totAsses= new Long(cur.getCount());
         long nbrRemoved = 0;
         while(cur.moveToNext()){
-            int id = cur.getInt(cur.getColumnIndex(LABS__id));
-            nbrRemoved = deleteAssignment(id) > 0? nbrRemoved + 1: 0;
+                int id = cur.getInt(cur.getColumnIndex(LABS__id));
+                nbrRemoved = deleteAssignment(id) > 0 ? nbrRemoved + 1 : 0;
+        }
+        return totAsses - nbrRemoved;
+    }
+
+    public long deleteUndoneAssignments(String code){
+        Cursor cur = getAssignments();
+        Long totAsses= new Long(cur.getCount());
+        long nbrRemoved = 0;
+        while(cur.moveToNext()){
+            if(cur.getString(cur.getColumnIndex(LABS_status)).equals(AssignmentStatus.UNDONE.toString())) {
+                int id = cur.getInt(cur.getColumnIndex(LABS__id));
+            }
+            nbrRemoved ++;
         }
         return totAsses - nbrRemoved;
     }

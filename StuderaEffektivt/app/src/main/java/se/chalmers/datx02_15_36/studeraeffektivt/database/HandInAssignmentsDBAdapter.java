@@ -66,6 +66,20 @@ public class HandInAssignmentsDBAdapter  extends AssignmentsDBAdapter {
         return totAsses - nbrRemoved;
     }
 
+    public long deleteUndoneAssignments(String code){
+        Cursor cur = getAssignments();
+        Long totAsses= new Long(cur.getCount());
+        long nbrRemoved = 0;
+        while(cur.moveToNext()){
+            if(cur.getString(cur.getColumnIndex(HANDIN_status)).equals(AssignmentStatus.UNDONE.toString())) {
+                int id = cur.getInt(cur.getColumnIndex(HANDIN__id));
+                deleteAssignment(id);
+            }
+            nbrRemoved ++;
+        }
+        return totAsses - nbrRemoved;
+    }
+
     public long setDone(int assignmentId){
         ContentValues cv = new ContentValues();
 
