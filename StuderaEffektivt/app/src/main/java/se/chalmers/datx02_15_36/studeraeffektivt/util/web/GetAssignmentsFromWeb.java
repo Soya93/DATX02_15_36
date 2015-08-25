@@ -15,6 +15,7 @@ limitations under the License.
 package se.chalmers.datx02_15_36.studeraeffektivt.util.web;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -127,7 +128,8 @@ public class GetAssignmentsFromWeb {
                     JSONArray handInAssignments = jsonObj.getJSONArray("handInAssignments");
 
                     //removing the assignments
-                    handInDB.deleteAssignments(courseCode);
+                    Cursor cursor = handInDB.getDoneAssignments(courseCode);
+
 
                     // looping through all obligatory assignments in the web
                     for (int i = 0; i < handInAssignments.length(); i++) {
@@ -139,19 +141,31 @@ public class GetAssignmentsFromWeb {
                         String date = c.getString("date");
                         int id = AssignmentID.getID();
 
-                        addHandInResult = addToDatabase(courseCode, AssignmentType.HANDIN, id, nr, Integer.parseInt(week), date, assNr);
-                        if(addHandInResult < 1L){
-                            Toast.makeText(context, "Det gick inte att lägga till inlämningsuppgifter i kursen " + courseCode, Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                        boolean checkIfExists = false;
+                        while(cursor.moveToNext()) {
 
-                } catch (JSONException e) {
+                            String dbnr = cursor.getString(cursor.getColumnIndex("nr"));
+                            String dbweek  = cursor.getString(cursor.getColumnIndex("week"));
+                            String dbassNr = cursor.getString(cursor.getColumnIndex("assNr"));
+                            if(dbnr.equals(nr) && dbweek.equals(week) && dbassNr.equals(assNr)){
+                                checkIfExists = true;}
+
+                        }
+                        if(!checkIfExists) {
+                            addHandInResult = addToDatabase(courseCode, AssignmentType.HANDIN, id, nr, Integer.parseInt(week), date, assNr);
+                            if (addHandInResult < 1L) {
+                                Toast.makeText(context, "Det gick inte att lägga till inlämningsuppgifter i kursen " + courseCode, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                } } catch (JSONException e) {
                     e.printStackTrace();
                 }
             } else {
                 getHandInResult = 0L;
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
             }
+
 
             return null;
         }
