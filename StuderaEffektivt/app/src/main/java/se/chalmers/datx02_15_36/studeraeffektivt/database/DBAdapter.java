@@ -52,7 +52,7 @@ public class DBAdapter {
             + LabAssignmentsDBAdapter.LABS_nr + " VARCHAR(50) NOT NULL, "
             + LabAssignmentsDBAdapter.LABS_week + " INT NOT NULL, "
             + LabAssignmentsDBAdapter.LABS_assNr + " VARCHAR(50) NOT NULL, "
-            + LabAssignmentsDBAdapter.LABS_date + " VARCHAR(50), "
+            + LabAssignmentsDBAdapter.LABS_date + " DATE, "
             + LabAssignmentsDBAdapter.LABS_status + " VARCHAR(50) NOT NULL, "
             + "FOREIGN KEY(" + LabAssignmentsDBAdapter.LABS_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 
@@ -81,7 +81,7 @@ public class DBAdapter {
             + HandInAssignmentsDBAdapter.HANDIN_nr + " VARCHAR(50) NOT NULL, "
             + HandInAssignmentsDBAdapter.HANDIN_week + " INT NOT NULL, "
             + HandInAssignmentsDBAdapter.HANDIN_assNr + " VARCHAR(50) NOT NULL, "
-            + HandInAssignmentsDBAdapter.HANDIN_date + " VARCHAR(50), "
+            + HandInAssignmentsDBAdapter.HANDIN_date + " DATE, "
             + HandInAssignmentsDBAdapter.HANDIN_status + " VARCHAR(50) NOT NULL, "
             + "FOREIGN KEY(" + HandInAssignmentsDBAdapter.HANDIN_ccode + ") REFERENCES " + CoursesDBAdapter.COURSES__ccode + ")";
 

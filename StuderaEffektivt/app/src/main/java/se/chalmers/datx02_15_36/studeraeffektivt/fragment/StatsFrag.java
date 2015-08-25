@@ -416,15 +416,13 @@ public class StatsFrag extends Fragment {
     }
 
     private int getAssDone() {
-        return assDBAdapter.getDoneAssignmentsCount(currCourse) +  courseDBAdapter.getDoneObligatoriesCount(currCourse);
+        return assDBAdapter.getDoneAssignmentsCount(currCourse);
     }
 
     private int getAssLeft() {
         int doneAssignments = assDBAdapter.getDoneAssignmentsCount(currCourse);
-        int doneObligatories = courseDBAdapter.getDoneObligatoriesCount(currCourse);
         int nrAssignments = assDBAdapter.getAssignmentsCount(currCourse);
-        int nrObligatories = courseDBAdapter.getObligatoriesCount(currCourse);
-        return ((nrAssignments+nrObligatories) - (doneAssignments+doneObligatories));
+        return ((nrAssignments) - (doneAssignments));
     }
 
     private boolean isCourses() {
