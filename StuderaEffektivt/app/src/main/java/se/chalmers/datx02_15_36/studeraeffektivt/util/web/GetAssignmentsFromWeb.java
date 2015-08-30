@@ -134,7 +134,6 @@ public class GetAssignmentsFromWeb {
                     // looping through all obligatory assignments in the web
                     for (int i = 0; i < handInAssignments.length(); i++) {
                         JSONObject c = handInAssignments.getJSONObject(i);
-
                         String nr = c.getString("nr");
                         String week = c.getString("week");
                         String assNr = c.getString("assNr");
@@ -142,6 +141,8 @@ public class GetAssignmentsFromWeb {
                         int id = AssignmentID.getID();
 
                         boolean checkIfExists = false;
+                        Log.i("b4WhileSearch", "checkIfExists = " + checkIfExists);
+                        Log.i("b4WhileSearch", "dbCurHasNext" + cursor.moveToNext());
                         while(cursor.moveToNext() && !checkIfExists) {
 
                             String dbnr = cursor.getString(cursor.getColumnIndex("nr"));
@@ -150,8 +151,9 @@ public class GetAssignmentsFromWeb {
                             String dbdate = cursor.getString(cursor.getColumnIndex("date"));
 
                             if(dbnr.equals(nr) && Integer.toString(dbweek).equals(week) && dbassNr.equals(assNr) && dbdate.equals(date)){
-                                checkIfExists = true;}
-
+                                checkIfExists = true;
+                            }
+                            Log.i("inWhileSearch", "checkIfExists = " + checkIfExists);
                         }
                         if(!checkIfExists) {
                             addHandInResult = addToDatabase(courseCode, AssignmentType.HANDIN, id, nr, Integer.parseInt(week), date, assNr);
@@ -159,6 +161,7 @@ public class GetAssignmentsFromWeb {
                                 Toast.makeText(context, "Det gick inte att lägga till inlämningsuppgifter i kursen " + courseCode, Toast.LENGTH_SHORT).show();
                             }
                         }
+                        Log.i("endOfIf", "checkIfExists = " + checkIfExists);
                         } } catch (JSONException e) {
                     e.printStackTrace();
                 }

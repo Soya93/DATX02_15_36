@@ -479,7 +479,9 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
-        input.setText("0");
+        int time = coursesDBAdapter.getTimeOnCourse(courseCode);
+        String inputText = time > 0? time + "": "0";
+        input.setText(inputText);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(input);
 
@@ -489,13 +491,13 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 Log.d("course", "add " + value + " minutes to " + courseCode);
 
                 //add value
-                long add = coursesDBAdapter.insertTimeOnCourse(courseCode, Integer.parseInt(value)*60);
+                long add = coursesDBAdapter.insertTimeOnCourse(courseCode, Integer.parseInt(value));
                 Toast toast;
                 if (add > 0) {
 
-                    int mins = coursesDBAdapter.getTimeOnCourse(courseCode);
-                    timeOnCourseLabel.setText("Timmar per vecka: "+mins*60);
-                    toast = Toast.makeText(getBaseContext(), "Ditt mål är att lägga " + mins*60 + " timmar på " + courseName + " i veckan.", Toast.LENGTH_LONG);
+                    int hours = coursesDBAdapter.getTimeOnCourse(courseCode);
+                    timeOnCourseLabel.setText("Timmar per vecka: "+hours);
+                    toast = Toast.makeText(getBaseContext(), "Ditt mål är att lägga " + hours + " timmar på " + courseName + " i veckan.", Toast.LENGTH_LONG);
                 } else {
                     toast = Toast.makeText(getBaseContext(), "Det gick inte att lägga till.", Toast.LENGTH_SHORT);
                 }

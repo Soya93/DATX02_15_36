@@ -229,7 +229,6 @@ public class TimerService extends Service {
 
     private void insertIntoDataBase(long millisPassed) {
         Log.d(ccode, "ccode");
-        millisPassed = millisPassed * 60; ///TODO: This is to make it in hours instead of minutes, for the showRepsDialog ;D
         Log.d("databas", "millispassed: "+ milliSecondsToMin(millisPassed));
 
         long inserted = sessionsDBAdapter.insertSession(ccode, utils.getCurrWeekNumber(), milliSecondsToMin(millisPassed));
