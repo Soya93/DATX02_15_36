@@ -44,7 +44,7 @@
         android:layout_alignEnd="@+id/weekView" />
 
     <TextView
-        android:layout_width="60dp"
+        android:layout_width="80dp"
         android:layout_height="30dp"
         android:id="@+id/go_to_today_button"
         android:layout_alignParentTop="true"
