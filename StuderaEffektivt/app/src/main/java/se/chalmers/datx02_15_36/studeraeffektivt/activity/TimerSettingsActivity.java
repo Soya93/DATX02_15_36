@@ -16,7 +16,6 @@ package se.chalmers.datx02_15_36.studeraeffektivt.activity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,13 +39,11 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.SessionsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Time;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
-import se.chalmers.datx02_15_36.studeraeffektivt.util.sharedPreference.CoursePreferenceHelper;
 
 
 /**
@@ -58,8 +55,10 @@ public class TimerSettingsActivity extends ActionBarActivity {
     Context context;
     private Time studyTime;
     private Time pauseTime;
-    private Time oldTimeT;
-    private Calendar oldDateCal;
+    private Time addOldTimeT;
+    private Calendar addOldDateCal;
+    private Time removeOldTimeT;
+    private Calendar removeOldDateCal;
     private int reps;
 
     private SharedPreferences sharedPref;
@@ -69,16 +68,21 @@ public class TimerSettingsActivity extends ActionBarActivity {
     private View rep;
     private View study;
     private View pause;
-    private View oldTime;
-    private View oldDate;
+    private View addOldTime;
+    private View addOldDate;
+    private View removeOldTime;
+    private View removeOldDate;
 
     private Button addButton;
+    private Button removeButton;
 
     private TextView repetitionsInput;
     private TextView studyTimeInput;
     private TextView pauseTimeInput;
-    private TextView oldTimeInput;
-    private TextView oldDateInput;
+    private TextView addOldTimeInput;
+    private TextView addOldDateInput;
+    private TextView removeOldTimeInput;
+    private TextView removeOldDateInput;
 
     private String course;
 
@@ -123,19 +127,26 @@ public class TimerSettingsActivity extends ActionBarActivity {
 
         //Find view components
         addButton = (Button) findViewById(R.id.addOldStudyButton);
+        removeButton = (Button) findViewById(R.id.removeOldStudyButton);
+
 
         rep = findViewById(R.id.repInput);
         study = findViewById(R.id.studyTimeInput);
         pause = findViewById(R.id.pauseTimeInput);
-        oldTime = findViewById(R.id.oldTimeInput);
-        oldDate = findViewById(R.id.oldDateInput);
+        addOldTime = findViewById(R.id.oldTimeInput);
+        addOldDate = findViewById(R.id.oldDateInput);
+
+        removeOldTime = findViewById(R.id.removeTimeInput);
+        removeOldDate = findViewById(R.id.removeDateInput);
 
         repetitionsInput = (TextView) rep.findViewById(R.id.right_input);
         studyTimeInput = (TextView) study.findViewById(R.id.right_input);
         pauseTimeInput = (TextView) pause.findViewById(R.id.right_input);
-        oldDateInput = (TextView) oldDate.findViewById(R.id.right_input);
-        oldTimeInput = (TextView) oldTime.findViewById(R.id.right_input);
+        addOldDateInput = (TextView) addOldDate.findViewById(R.id.right_input);
+        addOldTimeInput = (TextView) addOldTime.findViewById(R.id.right_input);
 
+        removeOldDateInput  = (TextView) removeOldDate.findViewById(R.id.right_input);
+        removeOldTimeInput = (TextView) removeOldTime.findViewById(R.id.right_input);
 
         View.OnClickListener myTextViewHandler = new View.OnClickListener() {
             public void onClick(View v) {
@@ -153,23 +164,46 @@ public class TimerSettingsActivity extends ActionBarActivity {
                     // set the pause legnth
                     new TimePickerDialog(TimerSettingsActivity.this, t, pauseTime.getHour(), pauseTime.getMin(), true).show();
 
-                } else if (id == oldDate.getId()) {
+                } else if (id == addOldDate.getId()) {
                     // set the date of the old study session
                     openDatePickerDialog();
 
-                }else if(id == oldTime.getId()){
+                }else if(id == addOldTime.getId()){
                     // set the legth of the old study session
-                    new TimePickerDialog(TimerSettingsActivity.this, old, oldTimeT.getHour(), oldTimeT.getMin(), true).show();
+                    new TimePickerDialog(TimerSettingsActivity.this, old, addOldTimeT.getHour(), addOldTimeT.getMin(), true).show();
                 }else if (id == addButton.getId()){
                     //add time to database
                     SessionsDBAdapter db = new SessionsDBAdapter(context);
-                    int min = oldTimeT.getHour()*60 + oldTimeT.getMin();
-                    int week = oldDateCal.get(Calendar.WEEK_OF_YEAR);
-                    db.insertSession(course, week, min);
-                    String text = min + " minuter har loggats i "+ course;
+                    int min = addOldTimeT.getMin();
+                    int totmin = addOldTimeT.getHour()*60 + addOldTimeT.getMin();
+                    int week = addOldDateCal.get(Calendar.WEEK_OF_YEAR);
+                    db.insertSession(course, week, totmin);
+                    String text = (addOldTimeT .getHour() > 1? addOldTimeT .getHour() + " timmar " :  addOldTimeT .getHour() + " timme ") + (min > 0? " & " + min + " minuter ": "") + "har loggats i "+ course;
                     Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
                     toast.show();
 
+                } else if (id == removeOldDate.getId()) {
+                    // set the date of the old study session
+                    openDatePickerDialog();
+                }else if(id == removeOldTime.getId()){
+                    // set the legth of the old study session
+                    new TimePickerDialog(TimerSettingsActivity.this, old, addOldTimeT.getHour(), addOldTimeT.getMin(), true).show();
+                }else if (id == removeButton.getId()){
+                    //remove time to database
+                    SessionsDBAdapter db = new SessionsDBAdapter(context);
+                    int min = removeOldTimeT.getMin();
+                    int totmin = addOldTimeT.getHour()*60 + addOldTimeT.getMin();
+                    int week = removeOldDateCal.get(Calendar.WEEK_OF_YEAR);
+
+                    long result = db.removeSession(course, week, totmin);
+
+                    String textWasRemoved = (removeOldTimeT.getHour() > 1? addOldTimeT .getHour() + " timmar " :  addOldTimeT .getHour() + " timme ") + (min > 0? " & " + min + " minuter ": "") + "har tagits bort från "+ course;
+                    String textCouldNotBeRemoved = "Det gick inte att ta bort" + (removeOldTimeT.getHour() > 1? " timmar " :  " timme ") + (min > 0? " & " + min + " minuter ": "") + "från " + course;
+
+                    String toastText = result > 0? textWasRemoved: textCouldNotBeRemoved;
+
+                    Toast toast = Toast.makeText(context, toastText + result, Toast.LENGTH_SHORT);
+                    toast.show();
                 }
 
             }
@@ -179,29 +213,43 @@ public class TimerSettingsActivity extends ActionBarActivity {
         rep.setOnClickListener(myTextViewHandler);
         study.setOnClickListener(myTextViewHandler);
         pause.setOnClickListener(myTextViewHandler);
-        oldDate.setOnClickListener(myTextViewHandler);
-        oldTime.setOnClickListener(myTextViewHandler);
+        addOldDate.setOnClickListener(myTextViewHandler);
+        addOldTime.setOnClickListener(myTextViewHandler);
         addButton.setOnClickListener(myTextViewHandler);
+
+        removeOldDate.setOnClickListener(myTextViewHandler);
+        removeOldTime.setOnClickListener(myTextViewHandler);
+        removeButton.setOnClickListener(myTextViewHandler);
 
         // Set text to the left side
         ((TextView) rep.findViewById(R.id.left_input)).setText("Antal repetioner");
         ((TextView) study.findViewById(R.id.left_input)).setText("Studietid");
         ((TextView) pause.findViewById(R.id.left_input)).setText("Pausetid");
-        ((TextView) oldTime.findViewById(R.id.left_input)).setText("Studietid");
-        ((TextView) oldDate.findViewById(R.id.left_input)).setText("Datum");
+        ((TextView) addOldTime.findViewById(R.id.left_input)).setText("Studietid");
+        ((TextView) addOldDate.findViewById(R.id.left_input)).setText("Datum");
+
+        ((TextView) removeOldTime.findViewById(R.id.left_input)).setText("Studietid");
+        ((TextView) removeOldDate.findViewById(R.id.left_input)).setText("Datum");
+
 
         //read default values
         initFromSharedPref();
-        oldTimeT = new Time(1, 0);
-        oldDateCal = Calendar.getInstance();
+        addOldTimeT = new Time(1, 0);
+        addOldDateCal = Calendar.getInstance();
+
+        removeOldTimeT = addOldTimeT;
+        removeOldDateCal = addOldDateCal;
 
         // set the default values to the right side
         repetitionsInput.setText(reps +"");
         studyTimeInput.setText(studyTime.getString());
         pauseTimeInput.setText(pauseTime.getString());
-        oldTimeInput.setText(oldTimeT.getString());
+        addOldTimeInput.setText(addOldTimeT.getString());
+        removeOldTimeInput.setText(removeOldTimeT.getString());
         SimpleDateFormat startDateFormat = new SimpleDateFormat("E d MMM yyyy");
-        oldDateInput.setText(startDateFormat.format((new Date(oldDateCal.getTimeInMillis()))));
+        addOldDateInput.setText(startDateFormat.format((new Date(addOldDateCal.getTimeInMillis()))));
+        removeOldDateInput.setText(startDateFormat.format((new Date(removeOldDateCal.getTimeInMillis()))));
+
     }
 
 
@@ -311,14 +359,15 @@ public class TimerSettingsActivity extends ActionBarActivity {
                 Calendar date = Calendar.getInstance();
                 date.set(selectedYear, selectedMonth, selectedDay);
                 SimpleDateFormat startDateFormat = new SimpleDateFormat("E d MMM yyyy");
-                oldDateInput.setText(startDateFormat.format((new Date(date.getTimeInMillis()))));
+                addOldDateInput.setText(startDateFormat.format((new Date(date.getTimeInMillis()))));
+                removeOldDateInput.setText(addOldDateInput.getText());
             }
         };
 
         DatePickerDialog datePickerDialog;
-        int year = oldDateCal.get(Calendar.YEAR);
-        int month = oldDateCal.get(Calendar.MONTH);
-        int day = oldDateCal.get(Calendar.DAY_OF_MONTH);
+        int year = addOldDateCal.get(Calendar.YEAR);
+        int month = addOldDateCal.get(Calendar.MONTH);
+        int day = addOldDateCal.get(Calendar.DAY_OF_MONTH);
 
         datePickerDialog = new DatePickerDialog(TimerSettingsActivity.this, datePickerListener, year,month, day);
 
@@ -350,8 +399,10 @@ public class TimerSettingsActivity extends ActionBarActivity {
         public void onTimeSet(TimePicker view, int hourOfDay,
                               int minute) {
             if (hourOfDay > 0 || minute > 0) {
-                oldTimeT = new Time(hourOfDay, minute);
-                oldTimeInput.setText(oldTimeT.getString());
+                addOldTimeT = new Time(hourOfDay, minute);
+                addOldTimeInput.setText(addOldTimeT.getString());
+                removeOldTimeT = addOldTimeT;
+                removeOldTimeInput.setText(addOldTimeInput.getText());
             }
         }
     };

@@ -6,7 +6,7 @@
     android:paddingRight="25dp"
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
-    android:rowCount="8"
+    android:rowCount="12"
     android:columnCount="1">
 
     <TextView
@@ -75,6 +75,40 @@
         android:text="Lägg till"
         android:id="@+id/addOldStudyButton"
         android:layout_row="7"
+        android:layout_column="0" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Ta bort tidigare studietid"
+        android:id="@+id/removeTimeTextView"
+        android:layout_column="0"
+        android:paddingTop="20dp"
+        android:layout_row="8" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/left_and_right"
+        android:layout_column="0"
+        android:id="@+id/removeTimeInput"
+        android:layout_row="9" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/left_and_right"
+        android:layout_column="0"
+        android:id="@+id/removeDateInput"
+        android:layout_row="10" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ta bort"
+        android:id="@+id/removeOldStudyButton"
+        android:layout_row="11"
         android:layout_column="0" />
 
 </GridLayout>
