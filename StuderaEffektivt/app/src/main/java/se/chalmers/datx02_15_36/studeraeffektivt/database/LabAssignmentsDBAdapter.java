@@ -145,4 +145,18 @@ public class LabAssignmentsDBAdapter  extends AssignmentsDBAdapter {
         cur.moveToNext();
         return cur.getString(cur.getColumnIndex(LABS_assNr));
     }
+
+    public boolean checkIfExists(String code,String nr, String week, String assNr,String date){
+        String selection = LABS_ccode  + " = '" + code + "' AND " +
+                LABS_nr  + " = '" + nr + "' AND " +
+                LABS_assNr + " = '" + assNr + "' AND " +
+                LABS_week  + " = '" + week+ "' AND " +
+                LABS_date + " = '" + date+ "'";
+        Cursor cur =  db.query(TABLE_LABS, null, selection, null, null, null, null);
+        boolean result = false;
+        while(cur.moveToNext()){
+            result=true;
+        }
+        return result;
+    }
 }

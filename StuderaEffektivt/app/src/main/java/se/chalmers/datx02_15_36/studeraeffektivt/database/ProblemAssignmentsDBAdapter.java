@@ -44,7 +44,7 @@ public class ProblemAssignmentsDBAdapter  extends AssignmentsDBAdapter {
 
     public long deleteAssignment(int id){
         try{
-            return db.delete(TABLE_PROBLEMS, PROBLEMS__id + "=" +id, null);
+            return db.delete(TABLE_PROBLEMS, PROBLEMS__id + "=" + id, null);
         }catch (Exception e){
             return -1;
         }
@@ -127,4 +127,32 @@ public class ProblemAssignmentsDBAdapter  extends AssignmentsDBAdapter {
         cur.moveToNext();
         return cur.getString(cur.getColumnIndex(PROBLEMS_assNr));
     }
+
+    public boolean checkIfExists(String code,String assNr, String week,String chapter){
+        String selection = PROBLEMS_ccode  + " = '" + code + "' AND " +
+                PROBLEMS_assNr  + " = '" + assNr + "' AND " +
+                PROBLEMS_chapter + " = '" + chapter + "' AND " +
+                PROBLEMS_week  + " = '" + week+ "'";
+        Cursor cur =  db.query(TABLE_PROBLEMS, null, selection, null, null, null, null);
+        boolean result = false;
+        while(cur.moveToNext()){
+            result=true;
+        }
+        return result;
+    }
+
+    public long deleteUndoneAssignments(String code){
+        Cursor cur = getAssignments();
+        Long totAsses= new Long(cur.getCount());
+        long nbrRemoved = 0;
+        while(cur.moveToNext()){
+            if(cur.getString(cur.getColumnIndex(PROBLEMS_status)).equals(AssignmentStatus.UNDONE.toString())) {
+                int id = cur.getInt(cur.getColumnIndex(PROBLEMS__id));
+            }
+            nbrRemoved ++;
+        }
+        return totAsses - nbrRemoved;
+    }
+
+
 }

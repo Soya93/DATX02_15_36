@@ -199,7 +199,7 @@ public class GetAssignmentsFromWeb {
                     JSONArray labAssignments = jsonObj.getJSONArray("labAssignments");
 
                     //removing the assignments
-                    labDB.deleteAssignments(courseCode);
+                    labDB.deleteUndoneAssignments(courseCode);
 
                     // looping through all obligatory assignments in the web
                     for (int i = 0; i < labAssignments.length(); i++) {
@@ -211,10 +211,12 @@ public class GetAssignmentsFromWeb {
                         String date = c.getString("date");
                         int id = AssignmentID.getID();
 
-                        addLabResult = addToDatabase(courseCode, AssignmentType.LAB, id, nr, Integer.parseInt(week), date, assNr);
+                        if (labDB.checkIfExists(courseCode, nr, week, assNr, date)) {
+                            addLabResult = addToDatabase(courseCode, AssignmentType.LAB, id, nr, Integer.parseInt(week), date, assNr);
 
-                        if(addLabResult < 1L){
-                            Toast.makeText(context, "Det gick att lägga till labbuppgifterna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
+                            if (addLabResult < 1L) {
+                                Toast.makeText(context, "Det gick att lägga till labbuppgifterna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 
@@ -258,7 +260,7 @@ public class GetAssignmentsFromWeb {
                     JSONArray labAssignments = jsonObj.getJSONArray("problemAssignments");
 
                     //removing the assignments
-                    problemDB.deleteAssignments(courseCode);
+                    problemDB.deleteUndoneAssignments(courseCode);
 
                     // looping through all obligatory assignments in the web
                     for (int i = 0; i < labAssignments.length(); i++) {
@@ -269,6 +271,8 @@ public class GetAssignmentsFromWeb {
                         String assNr = c.getString("assNr");
                         String date = c.getString("date");
                         int id = AssignmentID.getID();
+
+                        if(problemDB.checkIfExists(courseCode,assNr,week,chapter))
 
                        addProblemResult = addToDatabase(courseCode, AssignmentType.PROBLEM, id, chapter, Integer.parseInt(week), date, assNr);
 
@@ -317,25 +321,27 @@ public class GetAssignmentsFromWeb {
                     JSONArray labAssignments = jsonObj.getJSONArray("readAssignments");
 
                     //removing the assignments
-                    readDB.deleteAssignments(courseCode);
+                    readDB.deleteUndoneAssignments(courseCode);
 
                     // looping through all obligatory assignments in the web
                      for (int i = 0; i < labAssignments.length(); i++) {
-                        JSONObject c = labAssignments.getJSONObject(i);
+                         JSONObject c = labAssignments.getJSONObject(i);
 
-                        String chapter = c.getString("chapter");
-                        String week = c.getString("week");
-                        String startPage = c.getString("startPage");
-                        String endPage = c.getString("endPage");
-                        int id = AssignmentID.getID();
+                         String chapter = c.getString("chapter");
+                         String week = c.getString("week");
+                         String startPage = c.getString("startPage");
+                         String endPage = c.getString("endPage");
+                         int id = AssignmentID.getID();
 
-                        addReadResult =  addToDatabase(courseCode, id, chapter, Integer.parseInt(week), Integer.parseInt(startPage), Integer.parseInt(endPage));
+                         if (readDB.checkIfExists(courseCode, startPage, endPage, chapter, week)) {
 
-                        if(addReadResult < 1L){
-                            Toast.makeText(context, "Det gick inte att lägga till läsanvisningarna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                             addReadResult = addToDatabase(courseCode, id, chapter, Integer.parseInt(week), Integer.parseInt(startPage), Integer.parseInt(endPage));
 
+                             if (addReadResult < 1L) {
+                                 Toast.makeText(context, "Det gick inte att lägga till läsanvisningarna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
+                             }
+                         }
+                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

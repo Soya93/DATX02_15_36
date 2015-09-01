@@ -139,4 +139,33 @@ public class ReadAssignmentsDBAdapter  extends AssignmentsDBAdapter  {
         cur.moveToNext();
         return cur.getString(cur.getColumnIndex(READ_endPage));
     }
+
+    public boolean checkIfExists(String code,String startPage, String endPage,String chapter,String week){
+        String selection = READ_ccode  + " = '" + code + "' AND " +
+                READ_startPage  + " = '" + startPage + "' AND " +
+                READ_endPage + " = '" + endPage + "' AND " +
+                READ_chapter  + " = '" + chapter+ "' AND" +
+                READ_week + " = '" + week + "'";
+        Cursor cur =  db.query(TABLE_READ, null, selection, null, null, null, null);
+        boolean result = false;
+        while(cur.moveToNext()){
+            result=true;
+        }
+        return result;
+    }
+
+    public long deleteUndoneAssignments(String code){
+        Cursor cur = getAssignments();
+        Long totAsses= new Long(cur.getCount());
+        long nbrRemoved = 0;
+        while(cur.moveToNext()){
+            if(cur.getString(cur.getColumnIndex(READ_status)).equals(AssignmentStatus.UNDONE.toString())) {
+                int id = cur.getInt(cur.getColumnIndex(READ__id));
+            }
+            nbrRemoved ++;
+        }
+        return totAsses - nbrRemoved;
+    }
+
+
 }

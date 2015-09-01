@@ -289,4 +289,6 @@ public class CoursesDBAdapter extends DBAdapter {
         cur.moveToNext();
         return cur.getString(cur.getColumnIndex(OBLIG_date));
     }
+
+
 }
