@@ -77,5 +77,17 @@ public class SessionsDBAdapter extends DBAdapter {
         }
     }
 
+    public long removeSession(String courseCode, int week, int minutes) {
+
+        try{
+            return db.delete(TABLE_SESSIONS,
+                    SESSIONS_ccode + " = '" + courseCode + "' AND "+
+                    SESSION_week + " = '" + week + "' AND " +
+                    SESSIONS_minutes + " = '" + minutes + "'",null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
 
     }
