@@ -34,6 +34,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
@@ -180,15 +186,30 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         RelativeLayout.LayoutParams params;
         //String nr = "";
         while (handins.moveToNext()){
-            tv = new TextView(this);
-            int id = View.generateViewId();
-            tv.setId(id);
-            params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            String thisNr = handins.getString( handins.getColumnIndex("nr") );
-            //if(thisNr != nr) {
-                String date = handins.getString( handins.getColumnIndex("date") );
-                tv.setText(date);
+            String date = handins.getString( handins.getColumnIndex("date") );
+            String nr = handins.getString( handins.getColumnIndex("nr") );
 
+            //Formatting the date and the handIn nr so that these will be the id of the textview
+            int id = 0;
+            try {
+                Date tradeDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(date);
+                String convertedText = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH).format(tradeDate);
+                String dateAndNr = convertedText + nr;
+                id = Integer.parseInt(dateAndNr);
+
+            } catch (Exception e){
+                System.err.println("Caught exception: " + e.getMessage());
+            }
+
+
+            //int id = View.generateViewId();
+            Log.i("CDIA", "id: " + id);
+            if(layout.findViewById(id) == null){
+                tv = new TextView(this);
+                tv.setId(id);
+                params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                tv.setText("Inlämning " + nr + ", Deadline: " + date);
                 if(lastHandinId == -1){
                     params.addRule(RelativeLayout.BELOW, handinLabel.getId());
                 }else{
@@ -197,8 +218,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 lastHandinId = id;
                 layout.addView(tv, params);
 
-            //    nr = thisNr;
-            //}
+            }
         }
     }
 
@@ -229,17 +249,30 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         Log.d("CoursePage", "antal labbar: " + labs.getCount());
         TextView tv;
         RelativeLayout.LayoutParams params;
-        String nr = "";
         while (labs.moveToNext()){
-            tv = new TextView(this);
-            int id = View.generateViewId();
-            tv.setId(id);
-            params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            String thisNr = labs.getString( labs.getColumnIndex("nr") );
 
-            if(thisNr != nr){
-                String date = labs.getString( labs.getColumnIndex("date") );
-                tv.setText(date);
+            String date = labs.getString( labs.getColumnIndex("date") );
+            String nr = labs.getString( labs.getColumnIndex("nr") );
+
+            //Formatting the date and the lab nr so that these will be the id of the textview
+            int id = 0;
+            try {
+                Date tradeDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(date);
+                String convertedText = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH).format(tradeDate);
+                String dateAndNr = convertedText + nr;
+                id = Integer.parseInt(dateAndNr);
+
+            } catch (Exception e){
+                System.err.println("Caught exception: " + e.getMessage());
+            }
+
+            Log.i("CDIA", "lab id: " + id);
+            if(layout.findViewById(id) == null){
+                tv = new TextView(this);
+                tv.setId(id);
+                params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                tv.setText("Laboration " + nr + ", Deadline: " + date);
 
                 if(lastLabId == -1){
                     params.addRule(RelativeLayout.BELOW, labLabel.getId());
@@ -249,7 +282,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 lastLabId = id;
                 layout.addView(tv, params);
 
-                nr = thisNr;
             }
         }
     }
