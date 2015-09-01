@@ -164,7 +164,10 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     private void addExam(RelativeLayout layout) {
         examLabel = new TextView(this);
         examLabel.setId(View.generateViewId());
-        examLabel.setText("Tentamen: " + coursesDBAdapter.getExamDate(courseCode));
+        String exam = coursesDBAdapter.getExamDate(courseCode);
+        exam = exam.equals("")? "Det finns inget angivet tentamensdatum": exam;
+
+        examLabel.setText("Tentamen: " + exam);
         examLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
 
         //Padding top
@@ -201,8 +204,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 System.err.println("Caught exception: " + e.getMessage());
             }
 
-
-            //int id = View.generateViewId();
             Log.i("CDIA", "id: " + id);
             if(layout.findViewById(id) == null){
                 tv = new TextView(this);
@@ -295,10 +296,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         labLabel.setText("Laborationer");
         labLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
 
-        if(miniexamLabel != null) {
-            paramsLabs.addRule(RelativeLayout.BELOW, lastMiniExamId);
-        }else{
-            paramsLabs.addRule(RelativeLayout.BELOW, examLabel.getId());
+        if(timeOnCourseLabel != null) {
+            paramsLabs.addRule(RelativeLayout.BELOW, timeOnCourseLabel.getId());
         }
         layout.addView(labLabel, paramsLabs);
     }
