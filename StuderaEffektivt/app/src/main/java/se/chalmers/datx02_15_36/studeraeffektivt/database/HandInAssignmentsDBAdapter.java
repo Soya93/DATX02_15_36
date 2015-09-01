@@ -143,4 +143,18 @@ public class HandInAssignmentsDBAdapter  extends AssignmentsDBAdapter {
         cur.moveToNext();
         return cur.getString(cur.getColumnIndex(HANDIN_assNr));
     }
+
+    public boolean checkIfExists(String code,String nr, String week, String assNr,String date){
+        String selection = HANDIN_ccode  + " = '" + code + "' AND " +
+                            HANDIN_nr  + " = '" + nr + "' AND " +
+                            HANDIN_assNr + " = '" + assNr + "' AND " +
+                            HANDIN_week  + " = '" + week+ "' AND " +
+                            HANDIN_date + " = '" + date+ "'";
+        Cursor cur =  db.query(TABLE_HANDIN, null, selection, null, null, null, null);
+            boolean result = false;
+        while(cur.moveToNext()){
+            result=true;
+        }
+        return result;
+        }
 }

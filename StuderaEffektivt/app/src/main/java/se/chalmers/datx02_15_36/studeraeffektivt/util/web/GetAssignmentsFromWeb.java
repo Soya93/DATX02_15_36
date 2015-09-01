@@ -129,10 +129,10 @@ public class GetAssignmentsFromWeb {
 
                     //removing the assignments
                     handInDB.deleteUndoneAssignments(courseCode);
-                    Cursor cursor = handInDB.getDoneAssignments(courseCode);
 
                     // looping through all obligatory assignments in the web
                     for (int i = 0; i < handInAssignments.length(); i++) {
+                        Cursor cursor = handInDB.getDoneAssignments(courseCode);
                         JSONObject c = handInAssignments.getJSONObject(i);
                         String nr = c.getString("nr");
                         String week = c.getString("week");
@@ -140,21 +140,8 @@ public class GetAssignmentsFromWeb {
                         String date = c.getString("date");
                         int id = AssignmentID.getID();
 
-                        boolean checkIfExists = false;
-                        Log.i("b4WhileSearch", "checkIfExists = " + checkIfExists);
-                        Log.i("b4WhileSearch", "dbCurHasNext" + cursor.moveToNext());
-                        while(cursor.moveToNext() && !checkIfExists) {
-
-                            String dbnr = cursor.getString(cursor.getColumnIndex("nr"));
-                            int dbweek  = cursor.getInt(cursor.getColumnIndex("week"));
-                            String dbassNr = cursor.getString(cursor.getColumnIndex("assNr"));
-                            String dbdate = cursor.getString(cursor.getColumnIndex("date"));
-
-                            if(dbnr.equals(nr) && Integer.toString(dbweek).equals(week) && dbassNr.equals(assNr) && dbdate.equals(date)){
-                                checkIfExists = true;
-                            }
-                            Log.i("inWhileSearch", "checkIfExists = " + checkIfExists);
-                        }
+                        boolean checkIfExists = handInDB.checkIfExists(courseCode,nr,week,assNr,date);
+                            Log.d("checkIfExists",String.valueOf(checkIfExists));
                         if(!checkIfExists) {
                             addHandInResult = addToDatabase(courseCode, AssignmentType.HANDIN, id, nr, Integer.parseInt(week), date, assNr);
                             if (addHandInResult < 1L) {
