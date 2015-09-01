@@ -148,7 +148,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         timeOnCourseLabel = new TextView(this);
         timeOnCourseLabel.setId(View.generateViewId());
-        int timeOnCourse = coursesDBAdapter.getTimeOnCourse(courseCode);
+        int timeOnCourse = (coursesDBAdapter.getTimeOnCourse(courseCode))/60;
         timeOnCourseLabel.setText("Timmar per vecka: " + timeOnCourse);
         timeOnCourseLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
 
@@ -510,7 +510,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
-        int time = coursesDBAdapter.getTimeOnCourse(courseCode);
+        int time = coursesDBAdapter.getTimeOnCourse(courseCode)/60;
         String inputText = time > 0? time + "": "0";
         input.setText(inputText);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -519,14 +519,16 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
-                Log.d("course", "add " + value + " minutes to " + courseCode);
+                int minutes = Integer.parseInt(value);
+                minutes = minutes*60;
+                Log.d("course", "add " + minutes + " minutes to " + courseCode);
 
                 //add value
-                long add = coursesDBAdapter.insertTimeOnCourse(courseCode, Integer.parseInt(value));
+                long add = coursesDBAdapter.insertTimeOnCourse(courseCode, minutes);
                 Toast toast;
                 if (add > 0) {
 
-                    int hours = coursesDBAdapter.getTimeOnCourse(courseCode);
+                    int hours = (coursesDBAdapter.getTimeOnCourse(courseCode))/60;
                     timeOnCourseLabel.setText("Timmar per vecka: "+hours);
                     toast = Toast.makeText(getBaseContext(), "Ditt mål är att lägga " + hours + " timmar på " + courseName + " i veckan.", Toast.LENGTH_LONG);
                 } else {
