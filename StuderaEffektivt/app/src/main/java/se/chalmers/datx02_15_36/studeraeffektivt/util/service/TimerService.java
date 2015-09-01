@@ -141,6 +141,11 @@ public class TimerService extends Service {
         Message msg = mHandler.obtainMessage();
         bundle.putLong("timePassed", countDownTime);
         bundle.putInt("Phace", count);
+        if(count == 0){
+        bundle.putInt("Reps",totalcount);}
+        else{
+            bundle.putInt("Reps",totalcount-1);
+        }
         msg.setData(bundle);
         mHandler.sendMessage(msg);
     }

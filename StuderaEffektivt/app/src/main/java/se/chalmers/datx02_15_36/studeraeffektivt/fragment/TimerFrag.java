@@ -84,12 +84,15 @@ public class TimerFrag extends Fragment {
     public static final int TIMER_FINISHED = 1;
 
     private TextView textViewWeek;
+    private TextView textReps;
 
     private long serviceInt;
 
     private Time default_studyTime;
     private Time default_pauseTime;
     private int reps;
+    private int totalReps;
+    private int repsPassed;
     private String ccode;
     private int phaceInt;
 
@@ -126,11 +129,16 @@ public class TimerFrag extends Fragment {
                     Bundle b = msg.getData();
                     serviceInt = b.getLong("timePassed", -1);
                     phaceInt = b.getInt("Phace", -1);
-                    if(isActivityRunning){
-                    setTimerView(serviceInt);}
+                    repsPassed = b.getInt("Reps", -1);
+                    if (isActivityRunning) {
+                        setTimerView(serviceInt);
+                    }
                     break;
                 case TIMER_FINISHED:
-                    resetTimer();
+
+                    repsPassed = reps;
+                    setTimerView(serviceInt);
+                    finished();
                     break;
             }
 
@@ -145,7 +153,8 @@ public class TimerFrag extends Fragment {
             timerService.setActivityIsRunning();
             serviceHandler = timerService.getServiceHandler();
         }
-         @Override
+
+        @Override
         public void onServiceDisconnected(ComponentName name) {
             timerService = null;
         }
@@ -157,6 +166,7 @@ public class TimerFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.activity_timer, container, false);
         if (getActivity() != null) {
+            textReps = (TextView) rootView.findViewById(R.id.textViewReps);
             handInDB = new HandInAssignmentsDBAdapter(getActivity());
             labDB = new LabAssignmentsDBAdapter(getActivity());
             otherDB = new OtherAssignmentsDBAdapter(getActivity());
@@ -164,6 +174,7 @@ public class TimerFrag extends Fragment {
             readDB = new ReadAssignmentsDBAdapter(getActivity());
             coursesDB = new CoursesDBAdapter(getActivity());
             repeatDB = new RepetitionAssignmentsDBAdapter(getActivity());
+
         }
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         cph = CoursePreferenceHelper.getInstance(getActivity());
@@ -179,13 +190,13 @@ public class TimerFrag extends Fragment {
         int studyHour = sharedPref.getInt("studyHour", -1);
         int pauseMin = sharedPref.getInt("pauseMin", -1);
         int pauseHour = sharedPref.getInt("pauseHour", -1);
-        reps = sharedPref.getInt("reps",1);
+        reps = sharedPref.getInt("reps", 1);
         default_studyTime = new Time(0, 25);
         default_pauseTime = new Time(0, 5);
-        if (studyMin != -1 ) {
+        if (studyMin != -1) {
             default_studyTime = new Time(studyHour, studyMin);
         }
-        if(pauseMin != -1) {
+        if (pauseMin != -1) {
             default_pauseTime = new Time(pauseHour, pauseMin);
         }
     }
@@ -201,29 +212,28 @@ public class TimerFrag extends Fragment {
             long timeLeft = sharedPref.getLong("timeLeft", -1);
 
             hasBeenPaused = sharedPref.getBoolean("hasPaused", false);
-            buttonId = sharedPref.getInt("buttonId",1);
+            buttonId = sharedPref.getInt("buttonId", 1);
             Log.d("onstart", String.valueOf(hasBeenPaused));
             startButton.setImageResource(R.drawable.ic_action_pause);
-            if (hasBeenPaused && (buttonId == R.drawable.ic_action_play )) {
+            if (hasBeenPaused && (buttonId == R.drawable.ic_action_play)) {
                 startButton.setImageResource(R.drawable.ic_action_play);
-                phaceInt = sharedPref.getInt("phaceInt",-1);
-                Log.d("phaceIntStart",String.valueOf(phaceInt));
+                phaceInt = sharedPref.getInt("phaceInt", -1);
+                Log.d("phaceIntStart", String.valueOf(phaceInt));
                 Log.d("timeLeft", String.valueOf(timeLeft));
 
                 setTimerView(timeLeft);
 
             }
-            if (buttonId == R.drawable.ic_action_pause){
+            if (buttonId == R.drawable.ic_action_pause) {
                 startButton.setImageResource(R.drawable.ic_action_pause);
             }
 
-        }
-          else{
-                startButton.setImageResource(R.drawable.ic_action_play);
-                 getTimeFromTimerSettings();
-                startSetTimerView();
+        } else {
+            startButton.setImageResource(R.drawable.ic_action_play);
+            getTimeFromTimerSettings();
+            startSetTimerView();
 
-            }
+        }
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -231,17 +241,19 @@ public class TimerFrag extends Fragment {
                 setSelectedCourse();
                 setCurrentAssignmentType();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
-            Log.d("Text", textView.getText().toString());
+        Log.d("Text", textView.getText().toString());
 
     }
-    private void setCurrentAssignmentType(){
+
+    private void setCurrentAssignmentType() {
         assignmentType = AssignmentTypeUtil.stringToAssignmentType(assignmentTypeSpinner.getSelectedItem().toString());
-        updateAssignmentsLayout(assignmentType,week);
+        updateAssignmentsLayout(assignmentType, week);
     }
 
     public void onResume() {
@@ -292,7 +304,7 @@ public class TimerFrag extends Fragment {
 
         cph.setSpinnerCourseSelection(spinner);
 
-        if(spinner.getSelectedItem()!=null) {
+        if (spinner.getSelectedItem() != null) {
             setSelectedCourse();
             updateAssignmentsLayout(assignmentType, week);
         }
@@ -308,14 +320,13 @@ public class TimerFrag extends Fragment {
         Cursor cursor = coursesDB.getOngoingCourses();
         int cnameColumn = cursor.getColumnIndex("cname");
         int ccodeColumn = cursor.getColumnIndex("_ccode");
-        if(cursor.getCount()>0) {
+        if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String ccode = cursor.getString(ccodeColumn);
                 String cname = cursor.getString(cnameColumn);
                 adapter.add(ccode + " " + cname);
             }
-        }
-        else{
+        } else {
             adapter.add("Inga tillagda kurser");
         }
 
@@ -324,7 +335,7 @@ public class TimerFrag extends Fragment {
 
     public void setSelectedCourse() {
         Log.i("timer", "spinner's selected item: " + spinner.getSelectedItem());
-        if(spinner.getSelectedItem() != null){
+        if (spinner.getSelectedItem() != null) {
             String temp = spinner.getSelectedItem().toString();
             String[] parts = temp.split(" ");
             this.ccode = parts[0];
@@ -332,15 +343,15 @@ public class TimerFrag extends Fragment {
             cph.setSharedCoursePos(spinner.getSelectedItemPosition());
 
             //Tests if the update of the sharedpref worked:
-            Log.d("sharedcourse", "Timer. set select: "+spinner.getSelectedItemPosition()
-                    + " get select: "+ cph.getSharedCoursePos());
+            Log.d("sharedcourse", "Timer. set select: " + spinner.getSelectedItemPosition()
+                    + " get select: " + cph.getSharedCoursePos());
         }
     }
 
 
     public void startTimer() {
-        Log.d("buttonId",String.valueOf(buttonId == R.drawable.ic_action_play));
-        Log.d("hasbeenPause",String.valueOf(hasBeenPaused));
+        Log.d("buttonId", String.valueOf(buttonId == R.drawable.ic_action_play));
+        Log.d("hasbeenPause", String.valueOf(hasBeenPaused));
         if (hasBeenStarted()) {
             spinner.setEnabled(false);
             sendDataToService();
@@ -366,7 +377,7 @@ public class TimerFrag extends Fragment {
         i.putExtra("CCODE", ccode);
         i.putExtra("TIME_STUDY", default_studyTime.timeToMillisSeconds());
         i.putExtra("TIME_PAUSE", default_pauseTime.timeToMillisSeconds());
-        i.putExtra("REPS",reps);
+        i.putExtra("REPS", reps);
         getActivity().bindService(i, sc, Context.BIND_AUTO_CREATE);
         getActivity().startService(i);
 
@@ -377,7 +388,7 @@ public class TimerFrag extends Fragment {
     }
 
     private boolean hasBeenPaused() {
-        return buttonId == R.drawable.ic_action_pause ;
+        return buttonId == R.drawable.ic_action_pause;
     }
 
     private boolean hasBeenRestarted() {
@@ -386,11 +397,13 @@ public class TimerFrag extends Fragment {
 
     public void startSetTimerView() {
         textView.setText(default_studyTime.getString());
+        textReps.setText(Integer.toString(0) + "/" + Integer.toString(reps));
     }
 
 
     public void setTimerView(long secondsUntilFinished) {
         Time t = Time.setTimeFromMilliSeconds(secondsUntilFinished);
+        textReps.setText(Integer.toString(repsPassed) + "/" + Integer.toString(reps));
 
         if (phaceInt == 0) {
             progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
@@ -411,11 +424,26 @@ public class TimerFrag extends Fragment {
         startButton.setImageResource(buttonId);
         progressBar.setProgressDrawable(getActivity().getResources().getDrawable(R.drawable.progressbar_study));
         startSetTimerView();
-        if(isMyServiceRunning(TimerService.class)) {
-            Intent i = new Intent(getActivity().getBaseContext(), TimerService.class);
-            getActivity().stopService(i);
-            getActivity().unbindService(sc);
-        }
+        cancelService();
+
+    }
+
+    public void cancelService() {
+    if(isMyServiceRunning(TimerService.class))
+    {
+        Intent i = new Intent(getActivity().getBaseContext(), TimerService.class);
+        getActivity().stopService(i);
+        getActivity().unbindService(sc);
+    }
+
+}
+    public void finished() {
+
+        buttonId = R.drawable.ic_action_play;
+        hasBeenPaused = false;
+        startButton.setImageResource(buttonId);
+        cancelService();
+
     }
 
     public void settingsTimer() {
