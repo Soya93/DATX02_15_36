@@ -289,6 +289,33 @@ public class CoursesDBAdapter extends DBAdapter {
         cur.moveToNext();
         return cur.getString(cur.getColumnIndex(OBLIG_date));
     }
+    public boolean checkIfExists(String code,String type, String date){
+        String selection = OBLIG_ccode + " = '" + code + "' AND " +
+                            OBLIG_type + " = '" + type + "' AND " +
+                            OBLIG_date + " = '" + date + "'";
+
+        Cursor cur =  db.query(TABLE_OBLIG, null, selection, null, null, null, null);
+        boolean result = false;
+        while(cur.moveToNext()){
+            result=true;
+        }
+        return result;
+    }
+
+    public long deleteUndoneAssignments(String code){
+        Cursor cur = getObligatories(code);
+        Long totAsses= new Long(cur.getCount());
+        long nbrRemoved = 0;
+        while(cur.moveToNext()){
+            if(cur.getString(cur.getColumnIndex(OBLIG_status)).equals(AssignmentStatus.UNDONE.toString())) {
+                int id = cur.getInt(cur.getColumnIndex(OBLIG__id));
+                deleteObligatory(id);
+            }
+            nbrRemoved ++;
+        }
+        return totAsses - nbrRemoved;
+    }
+
 
 
 }

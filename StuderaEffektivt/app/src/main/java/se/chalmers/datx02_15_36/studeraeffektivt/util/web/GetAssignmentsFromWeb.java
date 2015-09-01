@@ -211,7 +211,7 @@ public class GetAssignmentsFromWeb {
                         String date = c.getString("date");
                         int id = AssignmentID.getID();
 
-                        if (labDB.checkIfExists(courseCode, nr, week, assNr, date)) {
+                        if (!labDB.checkIfExists(courseCode, nr, week, assNr, date)) {
                             addLabResult = addToDatabase(courseCode, AssignmentType.LAB, id, nr, Integer.parseInt(week), date, assNr);
 
                             if (addLabResult < 1L) {
@@ -272,7 +272,7 @@ public class GetAssignmentsFromWeb {
                         String date = c.getString("date");
                         int id = AssignmentID.getID();
 
-                        if(problemDB.checkIfExists(courseCode,assNr,week,chapter))
+                        if(!problemDB.checkIfExists(courseCode,assNr,week,chapter))
 
                        addProblemResult = addToDatabase(courseCode, AssignmentType.PROBLEM, id, chapter, Integer.parseInt(week), date, assNr);
 
@@ -333,7 +333,7 @@ public class GetAssignmentsFromWeb {
                          String endPage = c.getString("endPage");
                          int id = AssignmentID.getID();
 
-                         if (readDB.checkIfExists(courseCode, startPage, endPage, chapter, week)) {
+                         if (!readDB.checkIfExists(courseCode, startPage, endPage, chapter, week)) {
 
                              addReadResult = addToDatabase(courseCode, id, chapter, Integer.parseInt(week), Integer.parseInt(startPage), Integer.parseInt(endPage));
 
@@ -392,11 +392,14 @@ public class GetAssignmentsFromWeb {
                         String date = c.getString("date");
                         int id = AssignmentID.getID();
 
+                        if(!coursesDB.checkIfExists(courseCode,type,date)){
+
                         addObligatoryResult = addToDatabase(courseCode, id, type, date, AssignmentStatus.UNDONE);
 
                         if(addObligatoryResult < 1L){
                             Toast.makeText(context, "Det gick inte att lägga till de obligatoriska momenten i kursen " + courseCode, Toast.LENGTH_SHORT).show();
                         }
+                    }
                     }
 
                 } catch (JSONException e) {

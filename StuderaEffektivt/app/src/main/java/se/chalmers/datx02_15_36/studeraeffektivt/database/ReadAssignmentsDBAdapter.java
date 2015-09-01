@@ -144,7 +144,7 @@ public class ReadAssignmentsDBAdapter  extends AssignmentsDBAdapter  {
         String selection = READ_ccode  + " = '" + code + "' AND " +
                 READ_startPage  + " = '" + startPage + "' AND " +
                 READ_endPage + " = '" + endPage + "' AND " +
-                READ_chapter  + " = '" + chapter+ "' AND" +
+                READ_chapter  + " = '" + chapter+ "' AND " +
                 READ_week + " = '" + week + "'";
         Cursor cur =  db.query(TABLE_READ, null, selection, null, null, null, null);
         boolean result = false;

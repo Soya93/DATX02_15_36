@@ -149,7 +149,7 @@ public class HandInAssignmentsDBAdapter  extends AssignmentsDBAdapter {
                             HANDIN_nr  + " = '" + nr + "' AND " +
                             HANDIN_assNr + " = '" + assNr + "' AND " +
                             HANDIN_week  + " = '" + week+ "' AND " +
-                            HANDIN_date + " = '" + date+ "'";
+                            HANDIN_date + " = '" + date+ "' ";
         Cursor cur =  db.query(TABLE_HANDIN, null, selection, null, null, null, null);
             boolean result = false;
         while(cur.moveToNext()){
