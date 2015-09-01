@@ -119,4 +119,12 @@ public class SessionsDBAdapter extends DBAdapter {
             Random rand = new Random();
             return rand.nextInt((99999999 - 10000000) + 1) + 10000000;
         }
+
+    public long deleteSessions(String ccode){
+        try{
+            return db.delete(TABLE_SESSIONS, SESSIONS_ccode + " = '" + ccode + "'", null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
 }

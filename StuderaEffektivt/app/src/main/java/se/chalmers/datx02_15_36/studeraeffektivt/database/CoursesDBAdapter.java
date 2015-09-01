@@ -152,6 +152,17 @@ public class CoursesDBAdapter extends DBAdapter {
         }
     }
 
+
+    public long deleteTimeOnCourse(String ccode){
+        try{
+            return db.delete(TABLE_TIMEONCOURSE, TIMEONCOURSE__ccode + "=" +ccode, null);
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
+
+
     /** ---- METHODS FOR OBLIGATORIES TABLE ---- */
     public long insertObligatory(String courseCode, int id, String type, String date, AssignmentStatus status) {
         ContentValues cv = new ContentValues();

@@ -47,6 +47,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapte
 import se.chalmers.datx02_15_36.studeraeffektivt.database.OtherAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ProblemAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.ReadAssignmentsDBAdapter;
+import se.chalmers.datx02_15_36.studeraeffektivt.database.SessionsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.web.GetAssignmentsFromWeb;
 import se.chalmers.datx02_15_36.studeraeffektivt.view.CourseView;
@@ -253,7 +254,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         while (labs.moveToNext()){
 
             String date = labs.getString( labs.getColumnIndex("date") );
-            String nr = labs.getString( labs.getColumnIndex("nr") );
+            String nr = labs.getString(labs.getColumnIndex("nr"));
 
             //Formatting the date and the lab nr so that these will be the id of the textview
             int id = 0;
@@ -457,7 +458,13 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 new LabAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
                 new ReadAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
                 new OtherAssignmentsDBAdapter(getApplicationContext()).deleteAssignments(courseCode);
-                coursesDBAdapter.deleteObligatories(courseCode);
+                new CoursesDBAdapter(getApplicationContext()).deleteObligatories(courseCode);
+
+                //Delete time for course per week
+                new CoursesDBAdapter(getApplicationContext()).deleteTimeOnCourse(courseCode);
+
+                //Delete time study sessions
+                new SessionsDBAdapter(getApplicationContext()).deleteSessions(courseCode);
 
                 //Delete course
                 coursesDBAdapter.deleteCourse(courseCode);
