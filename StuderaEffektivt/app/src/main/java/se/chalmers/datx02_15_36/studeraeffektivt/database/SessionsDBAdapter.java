@@ -3,6 +3,9 @@ package se.chalmers.datx02_15_36.studeraeffektivt.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
+
+import java.util.Random;
 
 /**
  * Created by haxmaj0 on 2015-06-22.
@@ -28,6 +31,7 @@ public class SessionsDBAdapter extends DBAdapter {
             cv.put(SESSIONS_ccode, courseCode);
             cv.put(SESSION_week, week);
             cv.put(SESSIONS_minutes, minutes);
+            cv.put(SESSIONS__id, getID());
 
             return db.insert(TABLE_SESSIONS, null, cv);
         } catch (Exception e) {
@@ -77,7 +81,7 @@ public class SessionsDBAdapter extends DBAdapter {
         }
     }
 
-    public long removeSession(String courseCode, int week, int minutes) {
+    public long removeSessionAll(String courseCode, int week, int minutes) {
 
         try{
             return db.delete(TABLE_SESSIONS,
@@ -88,6 +92,31 @@ public class SessionsDBAdapter extends DBAdapter {
             return -1;
         }
     }
+    public long removeSession(String courseCode, int week, int minutes) {
+
+            Cursor cur = db.query(TABLE_SESSIONS, null,
+                    SESSIONS_ccode + " = '" + courseCode + "' AND "+
+                            SESSION_week + " = '" + week + "' AND " +
+                            SESSIONS_minutes + " = '" + minutes + "'", null, null, null, null);
+
+            if(cur.moveToNext()) {
+                int id = cur.getInt(cur.getColumnIndex(SESSIONS__id));
+
+                Log.i("SDA", "id " + id);
+                Log.i("SDA", "cur " + id);
 
 
+                try {
+                    return db.delete(TABLE_SESSIONS, SESSIONS__id + "=" + id, null);
+                } catch (Exception e) {
+                    return -1;
+                }
+            }
+        return -2;
     }
+
+        private int getID() {
+            Random rand = new Random();
+            return rand.nextInt((99999999 - 10000000) + 1) + 10000000;
+        }
+}
