@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.HandInAssignmentsDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.LabAssignmentsDBAdapter;
@@ -73,11 +74,18 @@ public class GetAssignmentsFromWeb {
     long getObligatoryResult = 1L;
 
     private Context context;
+    private CourseDetailedInfoActivity courseDetInfoAct;
 
     //For testing
     String courseCode;
 
     public GetAssignmentsFromWeb(Context context){
+        this.context = context;
+        initDBS();
+    }
+
+    public GetAssignmentsFromWeb(CourseDetailedInfoActivity context){
+        this.courseDetInfoAct = context;
         this.context = context;
         initDBS();
     }
@@ -164,14 +172,7 @@ public class GetAssignmentsFromWeb {
 
         protected void onPostExecute(String file_url) {
 
-            /*Log.d("updateCP", "HAS ADDED HANDINASSIGNMENTS FROM WEB");
-            Cursor cursor = coursesDB.getObligatories(courseCode);
-            while(cursor.moveToNext()){
-                String type = cursor.getString( cursor.getColumnIndex("type") );
-                String date = cursor.getString( cursor.getColumnIndex("date") );
-
-                Log.d("updateCP", type+" "+date);
-            }*/
+            courseDetInfoAct.updateComponents();
 
         }
     }
@@ -233,6 +234,7 @@ public class GetAssignmentsFromWeb {
 
 
         protected void onPostExecute(String file_url) {
+            courseDetInfoAct.updateComponents();
 
         }
     }
@@ -269,12 +271,11 @@ public class GetAssignmentsFromWeb {
                         String chapter = c.getString("chapter");
                         String week = c.getString("week");
                         String assNr = c.getString("assNr");
-                        String date = c.getString("date");
                         int id = AssignmentID.getID();
 
                         if(!problemDB.checkIfExists(courseCode,assNr,week,chapter))
 
-                       addProblemResult = addToDatabase(courseCode, AssignmentType.PROBLEM, id, chapter, Integer.parseInt(week), date, assNr);
+                       addProblemResult = addToDatabase(courseCode, AssignmentType.PROBLEM, id, chapter, Integer.parseInt(week), "", assNr);
 
                         if(addProblemResult < 1L){
                             Toast.makeText(context, "Det gick inte att lägga till problemlösningsuppgifterna i kursen " + courseCode, Toast.LENGTH_SHORT).show();
@@ -294,7 +295,6 @@ public class GetAssignmentsFromWeb {
 
 
         protected void onPostExecute(String file_url) {
-
         }
     }
 
@@ -318,14 +318,14 @@ public class GetAssignmentsFromWeb {
                     Log.d(jsonStr, "jsonStr " + jsonStr);
                     JSONObject jsonObj = new JSONObject(jsonStr);
                     // Getting JSON Array node
-                    JSONArray labAssignments = jsonObj.getJSONArray("readAssignments");
+                    JSONArray readAssignments = jsonObj.getJSONArray("readAssignments");
 
                     //removing the assignments
                     readDB.deleteUndoneAssignments(courseCode);
 
                     // looping through all obligatory assignments in the web
-                     for (int i = 0; i < labAssignments.length(); i++) {
-                         JSONObject c = labAssignments.getJSONObject(i);
+                     for (int i = 0; i < readAssignments.length(); i++) {
+                         JSONObject c = readAssignments.getJSONObject(i);
 
                          String chapter = c.getString("chapter");
                          String week = c.getString("week");
@@ -355,6 +355,7 @@ public class GetAssignmentsFromWeb {
 
 
         protected void onPostExecute(String file_url) {
+            courseDetInfoAct.updateComponents();
 
         }
     }
@@ -379,14 +380,14 @@ public class GetAssignmentsFromWeb {
                     Log.d(jsonStr, "jsonStr " + jsonStr);
                     JSONObject jsonObj = new JSONObject(jsonStr);
                     // Getting JSON Array node
-                    JSONArray labAssignments = jsonObj.getJSONArray("obligatoryAssignments");
+                    JSONArray obligatoryAssignments = jsonObj.getJSONArray("obligatoryAssignments");
 
                     //removing the assignments
                     coursesDB.deleteObligatories(courseCode);
 
                     // looping through all obligatory assignments in the web
-                    for (int i = 0; i < labAssignments.length(); i++) {
-                        JSONObject c = labAssignments.getJSONObject(i);
+                    for (int i = 0; i < obligatoryAssignments.length(); i++) {
+                        JSONObject c = obligatoryAssignments.getJSONObject(i);
 
                         String type = c.getString("type");
                         String date = c.getString("date");
@@ -414,6 +415,8 @@ public class GetAssignmentsFromWeb {
         }
 
         protected void onPostExecute(String file_url) {
+            courseDetInfoAct.updateComponents();
+
         }
     }
 

@@ -118,20 +118,19 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         addExam(layout);
         addTimeOnCourse(layout);
 
-        if(coursesDBAdapter.hasMiniexams(courseCode)){
-            addMiniexams(layout);
-        }
-
         if (labsDBAdapter.getAssignments(courseCode).getCount() != 0){
             addLabs(layout);
         }
-
         if(handinsDBAdapter.getAssignments(courseCode).getCount() != 0){
             addHandins(layout);
         }
+
+        if(coursesDBAdapter.hasMiniexams(courseCode)){
+            addMiniexams(layout);
+        }
     }
 
-    private void updateComponents(){
+    public void updateComponents(){
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_course_details);
 
         layout.removeAllViews();
@@ -234,10 +233,8 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
         if(labLabel != null){
             paramsHandin.addRule(RelativeLayout.BELOW, lastLabId);
-        }else if(miniexamLabel != null){
-            paramsHandin.addRule(RelativeLayout.BELOW, lastMiniExamId);
         }else{
-            paramsHandin.addRule(RelativeLayout.BELOW, examLabel.getId());
+            paramsHandin.addRule(RelativeLayout.BELOW, timeOnCourseLabel.getId());
         }
         layout.addView(handinLabel, paramsHandin);
     }
@@ -318,7 +315,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             String date = miniexams.getString( miniexams.getColumnIndex("date") );
-            tv.setText(date);
+            tv.setText("Datum: " + date);
 
             if(lastMiniExamId == -1){
                 params.addRule(RelativeLayout.BELOW, miniexamLabel.getId());
@@ -339,7 +336,13 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         miniexamLabel.setText("Duggor");
         miniexamLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
 
-        paramsMiniExam.addRule(RelativeLayout.BELOW, timeOnCourseLabel.getId());
+        if(handinLabel != null){
+            paramsMiniExam.addRule(RelativeLayout.BELOW, lastHandinId);
+        }else if(labLabel != null){
+            paramsMiniExam.addRule(RelativeLayout.BELOW, lastLabId);
+        } else {
+            paramsMiniExam.addRule(RelativeLayout.BELOW, timeOnCourseLabel.getId());
+        }
         layout.addView(miniexamLabel, paramsMiniExam);
     }
 
@@ -388,10 +391,11 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             goToAddTasks();
         } else if (id == R.id.action_activate) {
             openConfirmChangeStatusDialog();
+            updateText();
         } else if (id == R.id.action_tasks) {
             goToCourseTasks();
         }
-        updateText();
+
         updateComponents();
 
         return super.onOptionsItemSelected(item);
@@ -399,6 +403,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     public void onResume() {
         super.onResume();
+        updateComponents();
     }
 
     private void openConfirmChangeStatusDialog() {
@@ -505,9 +510,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     public void getAssignmentsFromWeb() {
         GetAssignmentsFromWeb getAssignmentsFromWeb = new GetAssignmentsFromWeb(this);
         getAssignmentsFromWeb.addAssignmentsFromWeb(courseCode);
-
-        Log.d("updateCP", "Innan update components");
-        updateComponents();
     }
 
     private void chooseTimeOnCourseDialog() {
