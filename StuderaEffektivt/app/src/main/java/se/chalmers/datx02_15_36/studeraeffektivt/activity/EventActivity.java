@@ -217,10 +217,6 @@ public class EventActivity extends ActionBarActivity {
         descriptionView = (TextView) findViewById(R.id.description_input);
         descriptionView.setText(description);
 
-        calendarTextView = (TextView) findViewById(R.id.calendar_lable_input);
-        calendarTextView.setText(calendarName);
-        calendarTextView.setOnClickListener(myTextViewHandler);
-
         startView = findViewById(R.id.start_time);
 
         startDate = (TextView) startView.findViewById(R.id.left_input);
@@ -241,15 +237,21 @@ public class EventActivity extends ActionBarActivity {
         endTime.setOnClickListener(myTextViewHandler);
         endTime.setTag(4);
 
+        calendarTextView = (TextView) findViewById(R.id.calendar_lable_input);
+        calendarTextView.setText(calendarName);
+        calendarTextView.setOnClickListener(myTextViewHandler);
+        calendarTextView.setTag(5);
+
         notificationView = (TextView) findViewById(R.id.notification_input);
         notificationView.setOnClickListener(myTextViewHandler);
         setNotificationMapValues();
         notificationView.setText(notificationAlternativesMap.get(notification));
+        notificationView.setTag(6);
 
         allDaySwitch = (Switch) findViewById(R.id.all_day_switch);
         allDaySwitch.setChecked(isAllDayEvent);
         allDaySwitch.setOnClickListener(myTextViewHandler);
-        allDaySwitch.setTag(5);
+        allDaySwitch.setTag(7);
 
 
         //add color filter on icons
@@ -328,68 +330,29 @@ public class EventActivity extends ActionBarActivity {
     private void goToTextView(TextView v) {
         int id = v.getId();
         int tag = (Integer) v.getTag();
-        Log.i("goToTextView", id + "");
 
         if (((Integer) startDate.getTag()) == tag) {
-            Log.i("click on text view", "start date");
             openDatePickerDialog(true);
+
         } else if (((Integer) startTime.getTag()) == tag) {
-            Log.i("click on text view", " start time");
             openTimePickerDialog(true);
+
         } else if ((Integer) endDate.getTag() == tag) {
-            Log.i("click on text view", "end date");
             openDatePickerDialog(false);
+
         } else if ((Integer) endTime.getTag() == tag) {
-            Log.i("click on text view", " end time");
             openTimePickerDialog(false);
-        } else {
-            Log.i("click on text view", "all day switch");
+
+        } else if ((Integer) calendarTextView.getTag() == tag) {
+            openChooseCalendar();
+
+        } else if ((Integer) notificationView.getTag() == tag) {
+            chooseNotification();
+        } else if ((Integer) allDaySwitch.getTag() == tag) {
             allDaySwitch.setChecked(allDaySwitch.isChecked());
             isAllDayEvent = allDaySwitch.isChecked();
             hideTimeLabels(isAllDayEvent);
-
         }
-
-
-        /*
-
-        switch (id) {
-            //Start date ID
-            case R.id.start_date_input:
-                Log.i("click on text view", "start date");
-                openDatePickerDialog(true);
-                break;
-            // Start time ID
-            case R.id.start_time_input:
-                Log.i("click on text view", " start time");
-                openTimePickerDialog(true);
-                break;
-            // End date ID
-            case R.id.end_date_input:
-                Log.i("click on text view", "end date");
-                openDatePickerDialog(false);
-                break;
-            // End time ID
-            case R.id.end_time_input:
-                Log.i("click on text view", " end time");
-                openTimePickerDialog(false);
-                break;
-            case R.id.calendar_lable_input:
-                Log.i("click on text view", " calendar lable");
-                //openCalendarPickerDialog();
-                openChooseCalendar();
-                break;
-            case R.id.notification_input:
-                Log.i("click on text view", " notification");
-                chooseNotification();
-                break;
-            case R.id.all_day_switch:
-                allDaySwitch.setChecked(allDaySwitch.isChecked());
-                isAllDayEvent = allDaySwitch.isChecked();
-                hideTimeLabels(isAllDayEvent);
-                break;
-
-        }*/
     }
 
     private void hideTimeLabels(boolean hide) {

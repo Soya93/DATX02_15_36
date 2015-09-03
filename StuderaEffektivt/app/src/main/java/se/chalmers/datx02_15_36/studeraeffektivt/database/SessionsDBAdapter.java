@@ -105,13 +105,14 @@ public class SessionsDBAdapter extends DBAdapter {
                 Log.i("SDA", "id " + id);
                 Log.i("SDA", "cur " + id);
 
-
+                cur.close();
                 try {
                     return db.delete(TABLE_SESSIONS, SESSIONS__id + "=" + id, null);
                 } catch (Exception e) {
                     return -1;
                 }
             }
+            cur.close();
         return -2;
     }
 

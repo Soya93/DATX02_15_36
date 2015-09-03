@@ -98,11 +98,10 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         actionBar.setTitle(courseName);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Colors.primaryColor)));
 
-        if (this != null) {
-            coursesDBAdapter = new CoursesDBAdapter(this);
-            labsDBAdapter = new LabAssignmentsDBAdapter(this);
-            handinsDBAdapter = new HandInAssignmentsDBAdapter(this);
-        }
+
+        coursesDBAdapter = new CoursesDBAdapter(this);
+        labsDBAdapter = new LabAssignmentsDBAdapter(this);
+        handinsDBAdapter = new HandInAssignmentsDBAdapter(this);
 
         isInitialized = true;
 
@@ -134,6 +133,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
 
     private void updateComponents(){
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_course_details);
+
         layout.removeAllViews();
 
         lastMiniExamId = -1;
@@ -354,7 +354,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_course_details, menu);
         this.menu = menu;
-        updateText();
         return true;
     }
 
@@ -393,6 +392,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
             goToCourseTasks();
         }
         updateText();
+        updateComponents();
 
         return super.onOptionsItemSelected(item);
     }
