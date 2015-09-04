@@ -51,6 +51,7 @@ import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.database.CoursesDBAdapter;
 import se.chalmers.datx02_15_36.studeraeffektivt.model.Course;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.web.ConnectionDetector;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.web.GetAssignmentsFromWeb;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
 
@@ -236,7 +237,11 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
                 }
             } else {
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
-                addToList("Hittade inga kurser att lägga till. Kontrollera att du har internetuppkoppling.", "");
+                if(!new ConnectionDetector(getApplicationContext()).isConnectingToInternet()) {
+                    addToList("Hittade inga kurser att lägga till. \nKontrollera att du har internetuppkoppling.", "");
+                } else {
+                    addToList("Hittade inga kurser att lägga till.", "");
+                }
             }
             return null;
         }

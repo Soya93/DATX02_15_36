@@ -40,6 +40,7 @@ import java.util.List;
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.web.ConnectionDetector;
 
 public class AboutStudieCoachActivity extends ActionBarActivity {
 
@@ -123,8 +124,8 @@ public class AboutStudieCoachActivity extends ActionBarActivity {
     }
 
     private void showToast(){
-        if(success){
-            Toast.makeText(getBaseContext(), "Din emailadress har registrerats. Tack för din hjälp!", Toast.LENGTH_LONG).show();
+        if(success && new ConnectionDetector(getApplicationContext()).isConnectingToInternet()){
+            Toast.makeText(getBaseContext(), "Din emailadress har registrerats. Tack för din insats!", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getBaseContext(), "Gick inte att registrera emailadressen. Kontrollera att du har internetuppkoppling", Toast.LENGTH_LONG).show();
         }
@@ -144,27 +145,9 @@ public class AboutStudieCoachActivity extends ActionBarActivity {
             ServiceHandler sh = new ServiceHandler();
 
             String jsonStr = sh.makeServiceCall(URL_CONNECTION, ServiceHandler.POST, params);
-            Log.i("OMGASHU", "email from phone" + getEmail());
-
 
             if (jsonStr != null) {
-                try {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
-                    // Getting JSON Array node
-                    JSONArray addedRow = jsonObj.getJSONArray("addedRow");
-
-                    Log.i("OMGASHU", "email from phone" + getEmail());
-
-                    for (int i = 0; i < addedRow.length(); i++) {
-                        JSONObject c = addedRow.getJSONObject(i);
-                        String email = c.getString("email");
-                        Log.i("OMGASHU", "email from web" + email);
-                        Log.i("OMGASHU", "email from phone" + getEmail());
-                        success = email.equals(getEmail());
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                success = jsonStr.contains("1");
             }
             return null;
         }
