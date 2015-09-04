@@ -51,12 +51,10 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     private View rootView;
     private Context context;
     private CalendarFrag calendarFrag;
-    private boolean hasInit = false;
     private ContentResolver cr;
     private ListView listView;
     private ArrayList<HomeEventItem> eventsList;
     private SwipeRefreshLayout swipeLayout;
-    private boolean hasSynced;
     private ActionButton actionButton;
     private HomeAdapter adapter;
 
@@ -76,8 +74,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
 
 
     private void initComponents(View view) {
-        hasInit = true;
-
         View.OnClickListener myButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v.getTag() == actionButton.getTag()) {
@@ -154,7 +150,6 @@ public class HomeFrag extends Fragment implements SwipeRefreshLayout.OnRefreshLi
     }
 
     public void setTodaysEvents() {
-        hasSynced = true;
         calendarFrag.getCalendarModel().refreshCalendars();
 
         ArrayList<HomeEventItem> visibleEventList = new ArrayList<>();

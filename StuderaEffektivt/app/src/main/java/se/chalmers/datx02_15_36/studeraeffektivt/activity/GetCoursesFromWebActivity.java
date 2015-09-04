@@ -236,7 +236,7 @@ public class GetCoursesFromWebActivity extends ActionBarActivity {
                 }
             } else {
                 Log.e("ServiceHandler", "Couldn't get any data from the url");
-                addToList("Hittade inga kurser att lägga till.", "");
+                addToList("Hittade inga kurser att lägga till. Kontrollera att du har internetuppkoppling.", "");
             }
             return null;
         }

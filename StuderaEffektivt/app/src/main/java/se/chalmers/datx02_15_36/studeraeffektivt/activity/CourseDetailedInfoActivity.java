@@ -170,6 +170,7 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
         examLabel.setText("Tentamen: " + exam);
         examLabel.setTextAppearance(this, android.R.style.TextAppearance_Medium);
 
+
         //Padding top
         float scale = getResources().getDisplayMetrics().density;
         int dpAsPixels = (int) (18*scale + 0.5f);
@@ -204,7 +205,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 System.err.println("Caught exception: " + e.getMessage());
             }
 
-            Log.i("CDIA", "id: " + id);
             if(layout.findViewById(id) == null){
                 tv = new TextView(this);
                 tv.setId(id);
@@ -240,12 +240,10 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
     }
 
     private void addLabs(RelativeLayout layout) {
-        Log.d("updateCP", "in add labs");
         addLabsLabel(layout);
 
         //The labs
         Cursor labs = labsDBAdapter.getAssignments(courseCode);
-        Log.d("CoursePage", "antal labbar: " + labs.getCount());
         TextView tv;
         RelativeLayout.LayoutParams params;
         while (labs.moveToNext()){
@@ -280,7 +278,6 @@ public class CourseDetailedInfoActivity extends ActionBarActivity {
                 }
                 lastLabId = id;
                 layout.addView(tv, params);
-
             }
         }
     }
