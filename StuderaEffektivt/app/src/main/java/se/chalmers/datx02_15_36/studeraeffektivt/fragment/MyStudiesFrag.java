@@ -37,6 +37,7 @@ package se.chalmers.datx02_15_36.studeraeffektivt.fragment;
     import java.util.Map;
 
     import se.chalmers.datx02_15_36.studeraeffektivt.R;
+    import se.chalmers.datx02_15_36.studeraeffektivt.activity.AboutStudieCoachActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.AddAssignmentActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.ClosedCoursesActivity;
     import se.chalmers.datx02_15_36.studeraeffektivt.activity.CourseDetailedInfoActivity;
@@ -53,6 +54,7 @@ public class MyStudiesFrag extends Fragment {
     private Button addTaskButton;
     private Button tipButton;
     private Button techniqueButton;
+    private Button aboutButton;
     private ListView listOfCourses;
     private ViewGroup container;
     private View view;
@@ -110,6 +112,9 @@ public class MyStudiesFrag extends Fragment {
 
         techniqueButton =  (Button) view.findViewById(R.id.techniques);
         techniqueButton.setOnClickListener(myOnlyhandler);
+
+        aboutButton =  (Button) view.findViewById(R.id.about_button);
+        aboutButton.setOnClickListener(myOnlyhandler);
 
         listOfCourses = (ListView) view.findViewById(R.id.listOfCourses);
 
@@ -169,69 +174,11 @@ public class MyStudiesFrag extends Fragment {
                 its.putExtra("ActivityTitle", "Studietekniker");
                 startActivity(its);
                 break;
+            case R.id.about_button:
+                Intent itss = new Intent(getActivity(), AboutStudieCoachActivity.class);
+                startActivity(itss);
+                break;
         }
-    }
-
-    public void initDialogToAddCourse(){
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        final AlertDialog d = new AlertDialog.Builder(getActivity())
-                .setView(inflater.inflate(R.layout.add_course_dialog, null))
-                .setTitle("Lägg till kurs")
-                .setPositiveButton("Lägg till", null) //Set to null. We override the onclick
-                .setNegativeButton("Avbryt", null)
-                .create();
-
-        d.setOnShowListener(new DialogInterface.OnShowListener() {
-
-            @Override
-            public void onShow(DialogInterface dialog) {
-
-                Button positive = d.getButton(AlertDialog.BUTTON_POSITIVE);
-                positive.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        if(editTextCoursecode.getText().toString().trim().length() == 0 || editTextCoursename.getText().toString().trim().length() == 0){
-                            Toast toast = Toast.makeText(getActivity(), "Både kursnamn och kurskod måste fylls i!", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                        else {
-                            long result = coursesDBAdapter.insertCourse(editTextCoursecode.getText().toString(), editTextCoursename.getText().toString());
-                            if(result > 0) {
-                                Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + " tillagd!", Toast.LENGTH_SHORT);
-                                toast.show();
-                            } else {
-                                Toast toast = Toast.makeText(getActivity(), editTextCoursename.getText().toString() + "s kurskod är upptagen!", Toast.LENGTH_SHORT);
-                                toast.show();
-                            }
-                            updateCourses();
-                            d.dismiss();
-                        }
-
-                    }
-                });
-
-                Button negative = d.getButton(AlertDialog.BUTTON_NEGATIVE);
-                negative.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        d.dismiss();
-                    }
-                });
-            }
-        });
-
-        d.show();
-
-
-        Button okButton = d.getButton(DialogInterface.BUTTON_POSITIVE);
-        okButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
-        Button cancelButton = d.getButton(DialogInterface.BUTTON_NEGATIVE);
-        cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
-
-        editTextCoursecode = (EditText) d.findViewById(R.id.codeEditText);
-        editTextCoursename = (EditText) d.findViewById(R.id.nameEditText);
     }
 
     public void updateCourses(){

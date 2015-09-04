@@ -171,8 +171,9 @@ public class GetAssignmentsFromWeb {
 
 
         protected void onPostExecute(String file_url) {
-
-            courseDetInfoAct.updateComponents();
+            if(courseDetInfoAct!=null) {
+                courseDetInfoAct.updateComponents();
+            }
 
         }
     }
@@ -234,8 +235,9 @@ public class GetAssignmentsFromWeb {
 
 
         protected void onPostExecute(String file_url) {
-            courseDetInfoAct.updateComponents();
-
+            if(courseDetInfoAct!=null) {
+                courseDetInfoAct.updateComponents();
+            }
         }
     }
 
@@ -355,8 +357,6 @@ public class GetAssignmentsFromWeb {
 
 
         protected void onPostExecute(String file_url) {
-            courseDetInfoAct.updateComponents();
-
         }
     }
 
@@ -415,8 +415,9 @@ public class GetAssignmentsFromWeb {
         }
 
         protected void onPostExecute(String file_url) {
-            courseDetInfoAct.updateComponents();
-
+            if(courseDetInfoAct!=null) {
+                courseDetInfoAct.updateComponents();
+            }
         }
     }
 

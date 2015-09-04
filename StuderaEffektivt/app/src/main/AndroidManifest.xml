@@ -133,10 +133,17 @@
         <activity
             android:name=".activity.RepetitionActivity"
             android:label="@string/title_activity_repetition" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activity.CourseAssignmentsActivity"
             android:label="@string/title_activity_course_tasks" >
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.AboutStudieCoachActivity"
+            android:label="@string/title_activity_about_sc" >
+            android:screenOrientation="portrait" >
         </activity>
 
         <receiver android:name=".util.notification.NotificationBroadcastReceiver"
