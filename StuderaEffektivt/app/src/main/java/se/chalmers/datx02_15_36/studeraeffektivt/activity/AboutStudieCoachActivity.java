@@ -18,12 +18,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,14 +28,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import se.chalmers.datx02_15_36.studeraeffektivt.R;
-import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TechniquesFrag;
-import se.chalmers.datx02_15_36.studeraeffektivt.fragment.TipFrag;
 import se.chalmers.datx02_15_36.studeraeffektivt.util.Colors;
+import se.chalmers.datx02_15_36.studeraeffektivt.util.service.ServiceHandler;
 
 public class AboutStudieCoachActivity extends ActionBarActivity {
 
     android.support.v7.app.ActionBar actionBar;
+
+
+    //Webconnection
+    private String URL_CONNECTION = "http://studiecoachchalmers.se/php/mobile/StudieCoachUsers.php";
+    private String email;
+    private boolean success;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,18 +93,8 @@ public class AboutStudieCoachActivity extends ActionBarActivity {
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                String email = input.getText().toString();
-
-
-                //add value
-                Toast toast;
-                if (email!= null && !email.equals("")) {
-                    toast = Toast.makeText(getBaseContext(), "hej " + email, Toast.LENGTH_SHORT);
-
-                } else {
-                    toast = Toast.makeText(getBaseContext(), "Man kan inte ange en tom email-adress", Toast.LENGTH_SHORT);
-                }
-                toast.show();
+                setEmail(input.getText().toString());
+                new addEmailToWeb().execute();
             }
         });
 
@@ -112,4 +113,68 @@ public class AboutStudieCoachActivity extends ActionBarActivity {
         Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
         cancelButton.setTextColor(Color.parseColor(Colors.primaryDarkColor));
     }
+
+    private void setEmail(String email){
+        this.email = email;
+    }
+
+    private String getEmail(){
+       return this.email;
+    }
+
+    private void showToast(){
+        if(success){
+            Toast.makeText(getBaseContext(), "Din emailadress har registrerats. Tack för din hjälp!", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getBaseContext(), "Gick inte att registrera emailadressen. Kontrollera att du har internetuppkoppling", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private class addEmailToWeb extends AsyncTask<String, String, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected String doInBackground(String... args) {
+
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("email", email));
+
+            ServiceHandler sh = new ServiceHandler();
+
+            String jsonStr = sh.makeServiceCall(URL_CONNECTION, ServiceHandler.POST, params);
+            Log.i("OMGASHU", "email from phone" + getEmail());
+
+
+            if (jsonStr != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+                    // Getting JSON Array node
+                    JSONArray addedRow = jsonObj.getJSONArray("addedRow");
+
+                    Log.i("OMGASHU", "email from phone" + getEmail());
+
+                    for (int i = 0; i < addedRow.length(); i++) {
+                        JSONObject c = addedRow.getJSONObject(i);
+                        String email = c.getString("email");
+                        Log.i("OMGASHU", "email from web" + email);
+                        Log.i("OMGASHU", "email from phone" + getEmail());
+                        success = email.equals(getEmail());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+
+        protected void onPostExecute(String file_url) {
+            showToast();
+        }
+    }
+
+
 }
+
