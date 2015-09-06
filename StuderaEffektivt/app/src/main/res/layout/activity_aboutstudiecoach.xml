@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
         <ImageView
-            android:paddingTop="20dp"
+            android:paddingTop="40dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -13,40 +13,41 @@
             android:src="@drawable/sc_logo" />
 
             <TextView
-                android:paddingTop="20dp"
+                android:paddingTop="30dp"
                 android:layout_below="@+id/imageView2"
                 android:layout_width="wrap_content"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="StudieCoach syftar till att hjälpa studenter planera, utföra och överblicka sina studier.n\ Applikationen utvecklades till början som ett kandidatarbete på Chalmers Tekniska Högskola vårent 2015."
+                android:text="StudieCoach syftar till att hjälpa studenter planera, utföra och överblicka sina studier. Applikationen utvecklades till början som ett kandidatarbete på Chalmers Tekniska Högskola våren 2015."
                 android:id="@+id/about_text"
-                android:layout_centerHorizontal="true" />
+                />
 
         <TextView
-            android:paddingTop="20dp"
+            android:paddingTop="30dp"
             android:layout_below="@+id/about_text"
             android:layout_width="wrap_content"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Gilla oss på Facebook:"
+            android:text="Gilla oss på Facebook: LÄNK Har ni några frågor eller funderingar kan ni kontakta oss via Facebook."
+
             android:id="@+id/fb_text"
-            android:layout_centerHorizontal="true" />
+             />
 
         <TextView
-            android:paddingTop="20dp"
+            android:paddingTop="60dp"
             android:layout_below="@+id/fb_text"
             android:layout_width="wrap_content"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Utvecklad av:n\ Sara Nadi, Alexandra Back, Patricia Paulsson, Emma Westman, Jesper Karlberg"
+            android:text="Utvecklad av: Sara Nadi, Alexandra Back, Patricia Paulsson, Emma Westman, Jesper Karlberg"
             android:id="@+id/developer_text"
-            android:layout_centerHorizontal="true" />
+             />
 
 
 
